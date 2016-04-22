@@ -1,0 +1,32 @@
+<ion-modal-view view-title="Ionic ResearchKit">
+  <ion-header-bar>
+    <h1 class="title">Choose Email</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeLogin()">Cancel</button>
+    </div>
+  </ion-header-bar>
+
+<ion-content class="scroll-content">
+  <div class="irk-centered">
+     <div class="item irk-step-image">image place</div>
+     <div class="irk-spacer"></div>
+     
+     <label class="item item-input item-select">
+       <div class="input-label">
+       Choose your email
+       </div>
+       <select>
+       <option selected>Choose </option>
+       <option >Green</option>
+       <option>Red</option>
+       </select>
+     </label>
+  </div>
+</ion-content>
+
+<div class="bar bar-footer bar-light">
+   <button class="button icon" ng-click="showEligibilityTestView()"><span class="fontB">New User?</span></button>
+   <button class="button icon" ng-click="openSignIn()"><span class="fontB"> Sign In</span></button>
+</div>
+
+</ion-modal-view>

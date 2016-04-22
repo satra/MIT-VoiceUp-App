@@ -1,0 +1,91 @@
+<ion-modal-view class="irk-modal">
+
+  <irk-ordered-tasks>
+
+    <irk-task>
+        <irk-instruction-step id="s1" title="Your title here." text="Additional text can go here." />
+    </irk-task>
+
+      <irk-task>
+        <irk-scale-question-step id="q1" title="Your question here." text="Additional text can go here." 
+            min="1" max="10" step="1" value="5" />
+    </irk-task>
+
+    <irk-task>
+        <irk-boolean-question-step id="q2" title="Your question here." text="Additional text can go here." 
+            true-text="Yes" false-text="No" />
+      </irk-task>
+
+    <irk-task>
+      <irk-text-question-step id="q3" title="Your question here." text="Additional text can go here." />
+    </irk-task>
+
+    <irk-task>
+      <irk-text-question-step id="q4" title="Your question here." text="Additional text can go here." multiple-lines="false" />
+    </irk-task>
+
+    <irk-task>
+      <irk-text-choice-question-step id="q5" title="Your question here." text="Additional text can go here." style="single">
+        <irk-text-choice text="Choice 1" value="1"></irk-text-choice>
+        <irk-text-choice text="Choice 2" value="2"></irk-text-choice>
+        <irk-text-choice text="Choice 3" value="3" detail-text="Additional text can go here."></irk-text-choice>
+      </irk-text-choice-question-step>
+    </irk-task>
+
+    <irk-task>
+      <irk-text-choice-question-step id="q5" title="Your question here." text="Additional text can go here." style="multiple">
+        <irk-text-choice text="Choice 1" value="1"></irk-text-choice>
+        <irk-text-choice text="Choice 2" value="2"></irk-text-choice>
+        <irk-text-choice text="Choice 3" value="3" detail-text="Additional text can go here."></irk-text-choice>
+      </irk-text-choice-question-step>
+    </irk-task>
+
+    <irk-task>
+      <irk-numeric-question-step id="q6" title="Your question here." text="Additional text can go here." unit="Your unit." />
+    </irk-task>
+
+    <irk-task>
+      <irk-date-question-step id="q7" title="Your question here." text="Additional text can go here." />
+    </irk-task>
+
+    <irk-task>
+      <irk-time-question-step id="q8" title="Your question here." text="Additional text can go here." />
+    </irk-task>
+
+    <irk-task>
+      <irk-value-picker-question-step id="q9" title="Your question here." text="Additional text can go here." >
+        <irk-picker-choice text="Choice 1" value="1"></irk-picker-choice>
+        <irk-picker-choice text="Choice 2" value="2"></irk-picker-choice>
+        <irk-picker-choice text="Choice 3" value="3"></irk-picker-choice>
+      </irk-value-picker-question-step>
+    </irk-task>
+
+    <irk-task>
+      <irk-image-choice-question-step id="q10" title="Your question here." text="Additional text can go here." >
+        <irk-image-choice text="Choice 1" value="1" normal-state-image="ion-sad-outline" selected-state-image="ion-sad"></irk-image-choice>
+        <irk-image-choice text="Choice 2" value="2" normal-state-image="ion-happy-outline" selected-state-image="ion-happy"></irk-image-choice>
+      </irk-image-choice-question-step>
+    </irk-task>
+
+    <irk-task>
+      <irk-form-step id="q11" title="Your question here." text="Additional text can go here." >
+        <irk-form-item title="Your section title."></irk-form-item>
+        <irk-form-item type="text" id="firstName" text="First Name" placeholder="John"></irk-form-item>
+        <irk-form-item type="text" id="lastName" text="Last Name" placeholder="Suhr"></irk-form-item>
+        <irk-form-item title="Your section title."></irk-form-item>
+        <irk-form-item type="email" id="email" text="Email" placeholder="john@suhr.com"></irk-form-item>
+        <irk-form-item type="tel" id="phone" text="Phone" placeholder="555-555-5555"></irk-form-item>
+      </irk-form-step>
+    </irk-task>
+
+    <irk-task>
+      <irk-numeric-question-step id="q12" title="Your question here." text="Additional text can go here." unit="Your unit." />
+    </irk-task>
+
+    <irk-task>
+      <irk-instruction-step id="s2" title="Your title here." text="Additional text can go here." button-text="Done" />
+    </irk-task>
+
+  </irk-ordered-tasks>
+
+</ion-modal-view>
