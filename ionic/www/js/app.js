@@ -5,7 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','consentDataManager','myProfileUpdate','homeController','customDirectives','ionicResearchKit', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','eligiblityDataManager',
+'profileDataManager','consentDataManager','myProfileUpdate','homeController','customDirectives','ionicResearchKit', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

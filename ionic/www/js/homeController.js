@@ -1,6 +1,6 @@
 angular.module('homeController',[])
 //=======Home screen controller======================
-.controller('HomeCtrl', function($scope,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,consentDataManager,irkResults,$state,$location,$window) {
+.controller('HomeCtrl', function($scope,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,consentDataManager,irkResults,$state,$location,$window) {
  //get IP like email ids
  databaseService.createLocalDatabaseSchema();
 
@@ -33,7 +33,7 @@ angular.module('homeController',[])
 
 //========================select eligiblity test view
 $scope.showEligibilityTestView = function() {
-databaseService.getEligibilityQuestions().then(function(eligiblityData){
+eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData){
     $scope.eligiblityData =  eligiblityData ;
     $scope.isDisabled = true;
     $scope.results = new Array();

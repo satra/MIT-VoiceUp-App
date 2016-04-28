@@ -2,8 +2,8 @@ function activitiesDivGenerator(customId,stepData){
    var type = stepData.type;
    var customDiv = '';
 //2============================generate div using switch looking type ====
-      switch(type){ 
-          case 'irk-instruction-step': 
+      switch(type){
+          case 'irk-instruction-step':
                 if(stepData['button-text']){
                 customDiv = '<irk-task><irk-instruction-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" button-text="'+stepData['button-text']+'"/> </irk-task>';
                 }else {
@@ -25,7 +25,7 @@ function activitiesDivGenerator(customId,stepData){
                 customDiv = '<irk-task><irk-text-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /> </irk-task>';
                 }
                 break;
-          
+
           case 'irk-text-choice-question-step':
                         var style = '';
                         if (stepData.text.toLowerCase() ==='Select only one'.toLowerCase())
@@ -36,22 +36,22 @@ function activitiesDivGenerator(customId,stepData){
                         for (var i = 0; i < stepData.choices.length; i++) {
                         if(stepData.choices[i].detail)
                         choice += '<irk-text-choice detail-text="'+stepData.choices[i].detail+'" text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'"></irk-text-choice>';
-                        else 
+                        else
                         choice += '<irk-text-choice text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'"></irk-text-choice>';
                         }
                         customDiv = '<irk-task> <irk-text-choice-question-step id="'+customId+'" title="'+stepData.title+'" style="'+style+'">'+
-                        choice+'</irk-text-choice-question-step></irk-task>'; 
+                        choice+'</irk-text-choice-question-step></irk-task>';
                  break;
-           
-           case 'irk-numeric-question-step': 
+
+           case 'irk-numeric-question-step':
                  customDiv = '<irk-task> <irk-numeric-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" unit="'+stepData['unit']+'"/></irk-task>';
                  break;
 
-           case 'irk-date-question-step': 
+           case 'irk-date-question-step':
                  customDiv = '<irk-task> <irk-date-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /></irk-task>';
                  break;
 
-           case 'irk-time-question-step': 
+           case 'irk-time-question-step':
                  customDiv = '<irk-task> <irk-time-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /></irk-task>';
                  break;
 
@@ -61,7 +61,7 @@ function activitiesDivGenerator(customId,stepData){
                         choice += '<irk-picker-choice text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'"></irk-picker-choice>';
                         }
                         customDiv = '<irk-task> <irk-value-picker-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
-                        choice+'</irk-value-picker-question-step></irk-task>'; 
+                        choice+'</irk-value-picker-question-step></irk-task>';
                  break;
 
            case 'irk-image-choice-question-step':
@@ -70,7 +70,7 @@ function activitiesDivGenerator(customId,stepData){
                         choice += '<irk-image-choice text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'" normal-state-image="'+stepData.choices[i]['normal-state-image']+'" selected-state-image="'+stepData.choices[i]['selected-state-image']+'" ></irk-image-choice>';
                         }
                         customDiv = '<irk-task> <irk-image-choice-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
-                        choice+'</irk-image-choice-question-step></irk-task>'; 
+                        choice+'</irk-image-choice-question-step></irk-task>';
                  break;
 
            case 'irk-form-step':
@@ -79,10 +79,10 @@ function activitiesDivGenerator(customId,stepData){
                         choice += '<irk-form-item text="'+stepData.choices[i].text+'" type="'+stepData.choices[i].type+'" id="'+stepData.choices[i].id+'" placeholder="'+stepData.choices[i].placeholder+'"  ></irk-form-item>';
                         }
                         customDiv = '<irk-task> <irk-form-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
-                        choice+'</irk-form-step></irk-task>'; 
+                        choice+'</irk-form-step></irk-task>';
                  break;
 
-/*           case 'instruction': 
+/*           case 'instruction':
                  customDiv = '<irk-task> <irk-instruction-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" button-text="Get Started" image="'+stepData.image+'" footer-attach="'+stepData['footer-attach']+'"/></irk-task>';
                  break;
 
@@ -94,10 +94,10 @@ function activitiesDivGenerator(customId,stepData){
 
       //1============================generate div dynamically without looking main type ====
     /*
-      var mainTag = '';  var subtag ='';  var nextsubtag =''; 
+      var mainTag = '';  var subtag ='';  var nextsubtag ='';
       angular.forEach(stepData, function(value, key){
             if(key === 'type'){
-             mainTag ='<irk-task><'+value+subtag+'>'+nextsubtag+'</'+value+'></irk-task>'; 
+             mainTag ='<irk-task><'+value+subtag+'>'+nextsubtag+'</'+value+'></irk-task>';
             }else if(typeof(value)!='object'){
               subtag += ' '+key+'="'+value+'"';
             }else if(typeof(value)== 'object'){
@@ -117,13 +117,13 @@ function activitiesDivGenerator(customId,stepData){
 
 }
 
-// utils functions for profileCtrl  
+// utils functions for profileCtrl
 function generateProfileDiv(obj){
-       var type = obj.type; 
+       var type = obj.type;
        var div = '';
          if(!type){
           type = 'label';
-          } 
+          }
         switch(type){
            case 'label': div += '<irk-form-item title="'+obj.title+'"></irk-form-item>'
                          break ;
@@ -140,11 +140,6 @@ function generateProfileDiv(obj){
            case 'number':  div +='<irk-form-item type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
                          break;
            default :  break ;
-        } 
+        }
     return div ;
 }
-
-
-
-
-

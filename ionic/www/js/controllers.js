@@ -12,11 +12,11 @@ angular.module('starter.controllers', [])
         $rootScope.$broadcast('loading:hide')
         return response
       }
-    }
-  })
+     }
+   })
 })
 
-//======Show loader and hide on $scope Done 
+//======Show loader and hide on $scope Done
 .run(function($rootScope, $ionicLoading) {
   $rootScope.$on('loading:show', function() {
     $ionicLoading.show({template: 'Loading data..'})
@@ -25,7 +25,6 @@ angular.module('starter.controllers', [])
     $ionicLoading.hide()
   })
 })
-
 
 // ==== Dummy contorller need to be removed later before production  ========
 .controller('ActiveTasksCtrl', function($scope, $ionicModal) {

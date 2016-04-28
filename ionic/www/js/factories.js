@@ -1,7 +1,6 @@
 angular.module('starter.services', [])
 .factory('factoryList', function($http) {
-	
-	return {  
+	return {
 		parseConsent: function(){ 
 			return 'surya';
 		}
