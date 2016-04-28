@@ -1,11 +1,12 @@
-<ion-modal-view view-title="Ionic ResearchKit">
+<ion-view>
   <ion-header-bar>
+  <button class="button button-clear" ng-click="closeLogin()"> <i class="icon ion-ios-arrow-thin-left icon-font1"></i></button>
     <h1 class="title">Choose Email</h1>
     <div class="buttons">
-      <button class="button button-clear" ng-click="GoBack()">Cancel</button>
+      <button class="button button-clear" ng-click="OpenVerification()">Next</button>
     </div>
   </ion-header-bar>
-<script src="js/utils.js"></script>
+
 <ion-content class="scroll-content">
   <div ng-hide="email">
         <div class="image1">
@@ -19,31 +20,25 @@
 
 </div>
 
-
 <div  ng-show="email" class="pass">
 <div ng-app="ngAnimate">
-<select class="passcode-dropdown"ng-model="email" ng-change="getselectval()" ng-click="hidden=false">
+<select  class="passcode-dropdown"ng-model="email" ng-change="getselectval()" ng-click="hidden=false">
     <option  ng-repeat="email in emails "  ng-click="hidden=false"><a ng-href="welcome.html">{{email.name}}</a></option>
 
 </select>
 </div>
 <br/>
 <br/><br/><br/>
-
-  <label class=" item-input item-stacked-label ">
+ <label class=" item-input item-stacked-label ">
 
  <span style="font-size:31px;font-weight:bold;" class=" font35">Enter Passcode</span>
-  <input class="CirclePasscode txtcenter "  type="text"  name="password" id="password"
+  <input class="CirclePasscode txtcenter"  type="text"  name="password" id="password"
      maxlength="4">
    </label>
-   <div ><a  class="vatag" href="#">Forgot Passcode ?</a></div>
-   </div>
-
+    </div>
+    <div class="buttons irk-centered">
+     <button class="button button-clear  IRK-FONT3 fontB" ng-click="OpenVerification()">Next</button>
+    </div>
 </ion-content>
 
-<div class="bar bar-footer bar-light">
-   <button class="button icon" ng-click="showEligibilityTestView()"><span class="fontB">New User?</span></button>
-   <button class="button icon" ng-click="openSignIn()"><span class="fontB"> Sign In</span></button>
-</div>
-
-</ion-modal-view>
+</ion-view>

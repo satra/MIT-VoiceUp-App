@@ -3,7 +3,6 @@ angular.module('customDirectives',[])
 //======================================================================================
 // Usage: <btc-image-choice-question-step value="choice" text="Your choice." normal-state-image="" selected-state-image="" type="image" />
 // =====================================================================================
-
 .directive('btcImageChoiceQuestionStep', function() {
     return {
         restrict: 'E',
@@ -34,9 +33,9 @@ angular.module('customDirectives',[])
         replace: true,
         scope : true,
         template: function(elem, attr) {
-            return  '<div class="col irk-centered">'+
-                    '<button class="button button-clear '+(attr.type=='image'?'irk-image':'irk-icon-large icon')+' '+attr.normalStateImage+'"></button>'+
-                    '</div>';
+             return  '<div class="col irk-centered">'+
+                    '<button class="irk-btn-round-outline'+(attr.type=='image'?'irk-image':'irk-icon-large icon')+' '+attr.normalStateImage+'">'+attr.optiontext+'</button>'+
+                                    '</div>';
         },
         link: function(scope, element, attrs) {
             var button = element.find('button');
@@ -58,7 +57,7 @@ angular.module('customDirectives',[])
                 button.addClass('button-positive');
                 //save the data to cache element
                 var id = element.parent().parent().attr("id") ;
-                var value = element.attr("value"); 
+                var value = element.attr("value");
                 scope.checkEligibilitySubmitEnable(id,value);
             });
         }

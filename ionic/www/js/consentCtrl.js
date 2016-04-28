@@ -35,17 +35,19 @@ $scope.closeModal = function() {
 
  // Execute action on hide modal
  $scope.$on('modal.hidden', function() {
-   console.log('hidden modal hit');
+    console.log('hidden modal hit');
+    $state.transitionTo('loadSignUp');
  });
 
  // Execute action on remove modal
  $scope.$on('modal.removed', function() {
    console.log(irkResults.getResults());
-  if(irkResults.getResults().childResults.length === $scope.consent_array.length){
+/*  if(irkResults.getResults().childResults.length === $scope.consent_array.length){
     $state.transitionTo('tab.Activities');
    }else {
     $state.transitionTo('home');
    }
+   */
 });
 
 });

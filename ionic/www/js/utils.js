@@ -11,7 +11,7 @@ function activitiesDivGenerator(customId,stepData){
                 }
                 break ;
           case 'irk-scale-question-step':
-                customDiv = '<irk-task><irk-scale-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" step="'+stepData.step+'" value="'+stepData.value+'" /> </irk-task>';
+                customDiv = '<irk-task><irk-scale-question-step  id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" step="'+stepData.step+'" value="'+stepData.value+'" /> </irk-task>';
                 break;
 
           case 'irk-boolean-question-step':
@@ -20,9 +20,9 @@ function activitiesDivGenerator(customId,stepData){
 
           case 'irk-text-question-step':
                 if(stepData['multiple-lines']){
-                customDiv = '<irk-task><irk-text-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" multiple-lines="'+stepData['multiple-lines']+'" /> </irk-task>';
+                customDiv = '<irk-task><irk-text-question-step id="'+customId+'" optional="false" title="'+stepData.title+'" text="'+stepData.text+'" multiple-lines="'+stepData['multiple-lines']+'" /> </irk-task>';
                 }else {
-                customDiv = '<irk-task><irk-text-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /> </irk-task>';
+                customDiv = '<irk-task><irk-text-question-step optional="false" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /> </irk-task>';
                 }
                 break;
 
@@ -35,11 +35,11 @@ function activitiesDivGenerator(customId,stepData){
                         var choice = '';
                         for (var i = 0; i < stepData.choices.length; i++) {
                         if(stepData.choices[i].detail)
-                        choice += '<irk-text-choice detail-text="'+stepData.choices[i].detail+'" text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'"></irk-text-choice>';
+                        choice += '<irk-text-choice  detail-text="'+stepData.choices[i].detail+'" text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'"></irk-text-choice>';
                         else
-                        choice += '<irk-text-choice text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'"></irk-text-choice>';
+                        choice += '<irk-text-choice  text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'"></irk-text-choice>';
                         }
-                        customDiv = '<irk-task> <irk-text-choice-question-step id="'+customId+'" title="'+stepData.title+'" style="'+style+'">'+
+                        customDiv = '<irk-task > <irk-text-choice-question-step id="'+customId+'" title="'+stepData.title+'" style="'+style+'">'+
                         choice+'</irk-text-choice-question-step></irk-task>';
                  break;
 

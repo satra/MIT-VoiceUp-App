@@ -1,13 +1,13 @@
 .center {
-	text-align:center;
+  text-align:center;
 }
 
 button.choice-food-burger {
-	background-image: url(../img/food-burger.png) !important;
+  background-image: url(../img/food-burger.png) !important;
 }
 
 button.choice-food-pizza {
-	background-image: url(../img/food-pizza.png) !important;
+  background-image: url(../img/food-pizza.png) !important;
 }
 
 .custom-ionic {
@@ -212,7 +212,8 @@ input{
 
 .clearboth{clear:both ! important;}
 .linehgt30{line-height:30px;}
-.vatag{color: #888;font-size: 16px;text-decoration: none;}
+.vatag{color: #666666;font-size: 16px;text-decoration: none;}
+.vatagW{color: white;font-size: 16px;text-decoration: none;}
 .Vbtn{
 padding: 12px;
 width: 50%;
@@ -298,3 +299,377 @@ text-align: center ! important;
 .inheight:-ms-input-placeholder { /* Internet Explorer 10+ */
    color:#000;  
 }
+
+
+/*===============================================ANIMATION CSS========================================*/
+.slideup {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 50%;
+}
+.slideup.ng-enter,
+.slideup.ng-leave {
+    -webkit-transition: all 1s ease;
+    transition: all 1s ease;
+}
+.slideup.ng-enter {
+    top: 10%;
+}
+.slideup.ng-enter-active {
+    top: 0;
+}
+.slideup.ng-leave {
+    top: 0;
+}
+.slideup.ng-leave-active {
+    top: -100%;
+}
+.pass{
+    position: absolute;
+    top: 0% !important;
+    left: 0;
+    right: 0;
+    height: 50%;
+}
+.ng-hide {
+  height: 200px;
+  width: 0;
+  background-color: transparent;
+  top:10px;
+  left: 0px;
+}
+/*===============================ANIMATION CSS ENDS HERE===============================*/
+
+
+.passcode-dropdown{
+        border-top: medium none grey;
+    border-right: medium none grey;
+    border-left: medium none grey;
+    padding: 0px;
+    width: 100%;
+    border-color:#888888;
+    text-align: center;
+    border-bottom-color: #e5e5e5;
+  padding: 0 0 2% 13%;
+  font-size:16px;
+  width:90%;
+  margin-left:5%;
+}
+
+.image1{
+    width: 75px;
+height: 100px;
+margin-left: 46%;
+margin-bottom: 20%;
+padding-top: 10%;
+}
+
+.slideup {
+    position: relative;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 50%;
+}
+.slideup.ng-enter,
+.slideup.ng-leave {
+    -webkit-transition: all 1s ease;
+    transition: all 1s ease;
+}
+.slideup.ng-enter {
+    top: 10%;
+}
+.slideup.ng-enter-active {
+    top: 0;
+}
+.slideup.ng-leave {
+    top: 0;
+}
+.slideup.ng-leave-active {
+    top: -100%;
+}
+.pass{
+    position: absolute;
+    margin-top: 17%;
+    left: 0;
+    right: 0;
+    margin-bottom: 30%;
+    text-align: center;
+}
+.ng-hide {
+  
+  width: 0;
+  background-color: transparent;
+  
+  left: 0px;
+}
+  .padT5p{
+    padding-top:5%
+}
+
+.font35{
+    font-size:35px
+}
+.marL20p{
+    margin-left: 18%;
+}
+input.CirclePasscode{
+height:72px;
+-webkit-text-security: circle;
+font-size:72px;
+letter-spacing:.1em;
+color:black;
+font-weight:2px;
+margin-bottom:15%;
+}
+.inln40{
+height:45px;
+font-size:40px;
+}
+
+/*============================ IoNIC RESEARCHKIT BUTTONS========================*/
+.VbtnB{
+padding: 12px;
+width: 50%;
+margin: 0px auto;
+border: 1px solid rgb(0, 0, 0);
+font-size: 16px;
+text-transform: uppercase;
+border-radius: 30px;
+background:black;
+color:white;
+}
+.VbtnG{
+padding: 12px;
+width: 50%;
+margin: 0px auto;
+       border: 1px solid #aaaaaa;
+font-size: 16px;
+text-transform: uppercase;
+border-radius: 30px;
+    background: rgba(0, 0, 0, 0.5);
+color:white;
+}
+.VbtnW{
+padding: 6px;
+width: 50%;
+margin: 0px auto;
+       border: 1px solid #aaaaaa;
+font-size: 16px;
+text-transform: uppercase;
+border-radius: 30px;
+    background:#FFFFFF;
+color:black;
+}
+.Vbtn{
+padding: 12px;
+width: 50%;
+margin: 0px auto;
+border: 1px solid rgb(0, 0, 0);
+font-size: 16px;
+text-transform: uppercase;
+border-radius: 30px;
+background-color: transparent !important;
+}
+
+ /*=================INLINE HEIGHT OF PALCEHOLDER ENDS HERE=========*/
+
+.padT5p{
+    padding-top:5%
+}
+
+.font35{
+    font-size:35px
+}
+.marL20p{
+    margin-left: 18%;
+}
+padT10p{
+    padding-top:10%
+}
+.iconlft{    font-size: 43px;
+    padding-left: 10px;
+}
+.marT5p{
+    margin-top:5% !important;
+}
+.iconlft{    font-size: 43px;
+    padding-left: 10px;
+}
+.font30{
+    font-size:30px !important;
+}
+.marT2P{
+margin-top:2%;
+}
+.marB12P{
+margin-bottom:12%;
+}
+
+
+.marL27p{
+    margin-left:27%;
+   
+}
+.marL32p{
+    margin-left:32%;
+   
+}
+.marL46p{
+    margin-left:46%;
+}
+
+.IRK-MARGIN-BTM60p{
+    margin-bottom: 60% !important ;
+}
+.IRK-MARGIN-BTM57p{
+    margin-bottom: 57% !important ;
+}
+
+.IRK-TRANSPARENT-BUTTON{
+     background: transparent;
+    border-left: transparent;
+    border-right: transparent;
+    border-top: none;
+    border-bottom: none;
+    margin-left: 38%;   
+}
+.IRK-TRANSPARENT-BUTTON-btm{
+     background: transparent;
+    border-left: transparent;
+    border-right: transparent;
+    border-top: none;
+    border-bottom: none;
+
+}
+.marL45p{
+    margin-left:45%;
+   
+}
+.IRK-MARLEFT26P{
+        margin-left: 26%;
+}
+.marB15p{
+        margin-bottom: 15%;
+}
+.marB20p{
+        margin-bottom: 20%;
+}
+.IRK-MARBTM-30p{
+    margin-bottom:30%;
+}
+.IRK-MARBTM-50p{
+    margin-bottom:50% ! important;
+}
+.IRK-BORBTM-NONE{
+    border-bottom: none;
+}
+.marB45p{
+    margin-bottom: 45% !important;
+}
+
+.IRK-TEXT-DECORATION-N{
+    text-decoration: none;
+    color: white;    
+}
+.marB36p{
+    margin-bottom: 30% !important; 
+}
+.marL26p{
+    margin-left:26%;
+}
+.marT45p{
+    margin-top:45% ! important;
+}
+/*=============================================IRK BUTTONS============================================*/
+.wid200{
+    width: 140px;
+  }
+  .round1{
+    padding: 8px 10px !important ;
+    background:#fff !important;
+    border:1px solid #a31f34 !important;
+    border-radius:23px !important ; 
+          width: 180px !important;
+            height: 46px !important;
+  }
+  .round1:hover{
+    background:#a31f34 !important;
+    color:#000 !important;
+  }
+    .irk-btn{
+
+    padding: 8px 10px ;
+    background:#a31f34;
+    border:1px solid #a31f34;
+    border-radius:23px; 
+        width: 180px;
+          height: 46px;
+        color: white;
+  }
+  .irk-btn:hover{
+    background:#a31f34;
+    color:#000;
+  }
+    
+    .marL33{
+        margin-left: 33%;
+    }
+   .marBm{
+     margin-bottom: 1em ! important;
+   }
+   .font_grey{
+       color:8b7a7d;
+       
+   }
+   .IRK-FONT1{
+       color:#3c3c3c !important;
+   }
+    .IRK-FONT2{
+       color:#8b7a7d !important ;
+   }
+   .IRK-FONT3{
+       color:#666666;
+   }
+   .irk-font-helvetica{
+      font-family: Helvetica !important;
+   }
+.irk.font{
+        font-size: 14px;
+        
+}
+.irk-welcome-image{
+
+     width:150px !important;
+     height: auto;
+    
+}
+.wid150{
+    width: 150px;
+}
+.marT65p {
+    margin-top: 65% ! important;
+}
+.marB30p{
+    margin-bottom: 30%;
+}
+.irk-btn-round {
+    padding: 8px 10px;
+    background: #a31f34;
+    border: 1px solid #a31f34;
+    border-radius: 50px;
+    width: 55px;
+    height: 46px;
+    color: white;
+}
+  .irk-btn-round-outline{
+     padding: 8px 10px;
+     background: white;
+     border: 1px solid #a31f34;
+     border-radius: 50px;
+     width: 55px;
+     height: 46px;
+     color: black;
+  }

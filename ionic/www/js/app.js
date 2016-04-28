@@ -6,7 +6,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','eligiblityDataManager',
-'profileDataManager','consentDataManager','myProfileUpdate','homeController','eligibility','consent','customDirectives','ionicResearchKit', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
+'profileDataManager','consentDataManager','myProfileUpdate','homeController','eligibility','signUp','passcode','consent','customDirectives','ionicResearchKit', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -40,9 +40,21 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
   })
 
   .state('eligiblityTest', {
+    templateUrl: 'templates/checkEligiblity.html',
     url: '/eligiblityTest',
-  //  templateUrl: 'templates/home.html',
     controller: 'eligibilityCtrl'
+  })
+
+  .state('eligibleUser', {
+   templateUrl: 'templates/eligiblity-yes.html',
+    url: '/eligibleUser',
+    // controller: 'eligibilityCtrl'
+  })
+
+  .state('not-eligibleUser', {
+   templateUrl: 'templates/not-eligible.html',
+    url: '/not-eligibleUser',
+    // controller: 'eligibilityCtrl'
   })
 
   .state('beginConsent', {
@@ -50,6 +62,25 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
   //  templateUrl: 'templates/home.html',
     controller: 'consentCtrl'
   })
+
+  .state('loadSignUp', {
+   templateUrl: 'templates/SIGNUP-IRK.html',
+    url: '/loadSignUp',
+    controller: 'signUpCtrl'
+  })
+
+ .state('passcodeValidation', {
+   templateUrl: 'templates/choosepassode.html',
+    url: '/passcodeValidation',
+    controller: 'passcodeValidation'
+  })
+  .state('signupverification', {
+    templateUrl: 'templates/verification.html',
+     url: '/signupverification',
+     controller: 'verificationCtrl'
+   })
+
+
 
   // setup an abstract state for the tabs directive
   .state('tab', {
@@ -85,6 +116,9 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
     url: '/profile',
     views: {
       'tab-profile': {
+ //        templateUrl: 'templates/SIGNUP-IRK.html',
+  //       url: '/updateProfile',
+    //     controller: 'signUpCtrl'
         templateUrl: 'templates/tab-profile-update.html',
         controller: 'ProfileCtrl'
       }

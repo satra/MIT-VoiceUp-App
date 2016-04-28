@@ -1,7 +1,8 @@
 angular.module('eligibility',[])
 //=======Home screen controller======================
-.controller('eligibilityCtrl', function($scope,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,consentDataManager,irkResults,$state,$location,$window) {
+.controller('eligibilityCtrl', function($scope,$compile,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,consentDataManager,irkResults,$state,$location,$window) {
 //========================select eligiblity test view
+
 eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData){
     $scope.eligiblityData =  eligiblityData ;
     $scope.isDisabled = true;
@@ -11,47 +12,22 @@ eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData){
     angular.forEach($scope.eligiblityData, function(value, key){
         var id =  value.id;
         var question = value.question;
-        var normalImage = 'ion-happy-outline';//value.normal-state-image;
-        var selectedImage = 'ion-happy';//value.selected-state-image ;
+        var normalImage = 'irk-btn-round-outline';//value.normal-state-image;
+        var selectedImage = 'irk-btn-round';//value.selected-state-image ;
 
         optionList = optionList + '<btc-image-choice-question-step id="'+id+'" title="'+question+'" optional="false" >'+
-                        '<btc-image-choice value="'+value.option1+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'">'+
-                        '</btc-image-choice>'+
-                         '<btc-image-choice value="'+value.option2+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'">'+
-                        '</btc-image-choice>'+
-                       '</btc-image-choice-question-step>'+
-                       '<div class="irk-spacer"></div>';
+                       '<btc-image-choice value="'+value.option1+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+value.option1+'" >'+
+                       '</btc-image-choice>'+
+
+                        '<btc-image-choice value="'+value.option2+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+value.option2+'">'+
+                       '</btc-image-choice>'+
+                      '</btc-image-choice-question-step>'+
+                      '<div class="irk-spacer"></div>';
          });
 
-       $scope.moreview = $ionicModal.fromTemplate(
-                                   '<ion-modal-view>'+
-                                   '<ion-header-bar>'+
-                                   '<i class="icon ion-ios-arrow-thin-left icon-font1" ng-click="SignInback()"></i>'+
-                                   '<h1 class="title"></h1>'+
-                                   '<div class="buttons">'+
-                                   '<button class="button button-clear" ng-click="closeLogin()">Cancel</button>'+
-                                   '</div>'+
-                                   '</ion-header-bar>'+
-                                   '<ion-content >'+
-                                   '<form name="myForm">'+
-                                  '<div class="irk-spacer"></div>'+
-                                   optionList+
-                                   '</form>'+
-                                   '</ion-content>'+
-                                   '<ion-footer-bar class="irk-bottom-bar" keyboard-attach irk-survey-bar>'+
-                                   '<div>'+
-                                   '<a class="button button-block button-outline  button-positive" ng-disabled="isDisabled" ng-click="compareEligiblity()"><i class="icon ion-arrow-right-c icon-font1"></i></a>'+
-                                   '</div>'+
-                                   '</ion-footer-bar>'+
-                                   '</ion-modal-view>'
-                               ,{
-                                   scope: $scope,
-                                   animation: 'slide-in-up'
-                               });
-
-         // $scope.modal.remove();
-         $scope.modal = $scope.moreview;
-         $scope.modal.show();
+         var dynamicContent = angular.element(document.querySelector('#questionList'));
+         dynamicContent.append(optionList);
+         $compile(dynamicContent)($scope);
   });
 
 $scope.checkEligibilitySubmitEnable = function(id,answer) {
@@ -63,7 +39,7 @@ if(Object.keys($scope.results).length === $scope.eligiblityData.length ){
   }
 };
 
- $scope.compareEligiblity = function() {
+$scope.compareEligiblity = function() {
   var check = true ;
   angular.forEach($scope.eligiblityData, function(value, key){
         var questionID = value.id;
@@ -81,54 +57,13 @@ if(Object.keys($scope.results).length === $scope.eligiblityData.length ){
 
 console.log('final status = ' +check);
 // if all set load sign up page
-  if(check){
-   $scope.Eligible();
+if(check){
+   $state.transitionTo('eligibleUser');
   }
-  else{
-   $scope.NotEligible();
+else{
+   $state.transitionTo('not-eligibleUser');
   }
-
 };
-
-// ==== Close the existing modal and open openSignUp in html in new modal========
-  $scope.Eligible = function() {
-    $ionicModal.fromTemplateUrl('templates/eligiblity-yes.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal.remove();
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
-
-// ==== Close the existing modal and open openSignUp in html in new modal========
-
-
-    $scope.NotEligible = function() {
-    $ionicModal.fromTemplateUrl('templates/not-eligible.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal.remove();
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
-
-
-
-// ==== Close the existing modal and open openSignUp in html in new modal========
-  $scope.openSignUp = function() {
-    $ionicModal.fromTemplateUrl('templates/signUp.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal.remove();
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
 
 
 // ==== Close the existing modal and open Sign in html in new modal========
@@ -155,16 +90,6 @@ console.log('final status = ' +check);
     });
   };
 
-  $scope.OpenRegestration = function() {
-    $ionicModal.fromTemplateUrl('templates/SIGNUP-IRK.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal.remove();
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
 
  $scope.ChoosePassode = function() {
     $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
@@ -187,7 +112,7 @@ console.log('final status = ' +check);
       $scope.modal.show();
     });
   };
-  
+
    $scope.OpenPermisssions = function() {
     $ionicModal.fromTemplateUrl('templates/locationservice.html', {
       scope: $scope,
