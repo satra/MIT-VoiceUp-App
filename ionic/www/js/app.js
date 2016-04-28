@@ -6,7 +6,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','eligiblityDataManager',
-'profileDataManager','consentDataManager','myProfileUpdate','homeController','customDirectives','ionicResearchKit', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
+'profileDataManager','consentDataManager','myProfileUpdate','homeController','eligibility','consent','customDirectives','ionicResearchKit', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -37,6 +37,18 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
     templateUrl: 'templates/home.html',
     controller: 'HomeCtrl'
    // controller: 'SurveyCtrl'
+  })
+
+  .state('eligiblityTest', {
+    url: '/eligiblityTest',
+  //  templateUrl: 'templates/home.html',
+    controller: 'eligibilityCtrl'
+  })
+
+  .state('beginConsent', {
+    url: '/beginConsent',
+  //  templateUrl: 'templates/home.html',
+    controller: 'consentCtrl'
   })
 
   // setup an abstract state for the tabs directive
