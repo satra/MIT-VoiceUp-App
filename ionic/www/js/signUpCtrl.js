@@ -2,7 +2,7 @@ angular.module('signUp',[])
 //=======Home screen controller======================
 .controller('signUpCtrl', function($scope,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
 
-profileDataManager.getUserProfileFields().then(function(response){
+      profileDataManager.getUserProfileFields().then(function(response){
       var userProfile = response;
       var thisUser = userProfile.profiles[userProfile.default];
       var items = thisUser.items;
@@ -103,11 +103,15 @@ profileDataManager.getUserProfileFields().then(function(response){
         if(password == password_confirm){
           $scope.emailId = emailId ;
           $scope.launchpinScreen();
-        /* profileDataManager.createUserProfile(dataCache,emailId).then(function(res){
+          profileDataManager.createUserProfile(dataCache,emailId).then(function(res){
+            console.log('oncreate and check '+res);
+            if(res==false){
+            $scope.callAlertDailog('User already exists ');
+            }else {
             $scope.emailId = emailId ;
             $scope.launchpinScreen();
+            }
           });
-          */
         }else {
           formValid = false ; keepGoing = false;
           $scope.callAlertDailog('Password should match with confirm password');
@@ -131,9 +135,9 @@ profileDataManager.getUserProfileFields().then(function(response){
        $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
          scope: $scope,
          animation: 'slide-in-up',
-         backdropClickToClose: true,
-         hardwareBackButtonClose: true,
-         focusFirstInput: true
+         //backdropClickToClose: true,
+         //hardwareBackButtonClose: true,
+         //focusFirstInput: true
        }).then(function(modal) {
          $scope.modal = modal;
          $scope.modal.show();
@@ -142,11 +146,18 @@ profileDataManager.getUserProfileFields().then(function(response){
 
     $scope.checkFourDigits = function(){
            var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
-           if(passcode.length == 4 ){
-           var email = $scope.emailId ;
-           $scope.OpenVerification();
-           }else if(passcode.length > 4) {
-            $scope.callAlertDailog("passcode length should be 4 max ");
+           var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value') ;
+           if(passcode.length == 4 && confirm_passcode.length == 4){
+           if(passcode == confirm_passcode){
+             var email = $scope.emailId ;
+             profileDataManager.addPasscodeToUserID(emailId,passcode).then(function(res){
+                 $scope.OpenVerification();
+               });
+            }else {
+             $scope.callAlertDailog("passcode should match with confirm passcode ");
+             }
+           }else if(passcode.length > 4 || confirm_passcode.length > 4 ) {
+            $scope.callAlertDailog("both passcode length should be 4 max ");
            }
      }
 

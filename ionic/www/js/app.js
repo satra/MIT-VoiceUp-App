@@ -135,7 +135,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
   });
   // if none of the above states are matched, use this as the fallback
   // $urlRouterProvider.otherwise('/tab/Activities');
-   $urlRouterProvider.otherwise('home');
+   $urlRouterProvider.otherwise('loadSignUp');
 
 })
 
