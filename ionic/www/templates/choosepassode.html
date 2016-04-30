@@ -1,44 +1,21 @@
-<ion-view>
-  <ion-header-bar>
-  <button class="button button-clear" ng-click="closeLogin()"> <i class="icon ion-ios-arrow-thin-left icon-font1"></i></button>
-    <h1 class="title">Choose Email</h1>
-    <div class="buttons">
-      <button class="button button-clear" ng-click="OpenVerification()">Next</button>
-    </div>
-  </ion-header-bar>
-
+<ion-modal-view>
 <ion-content class="scroll-content">
-  <div ng-hide="email">
-        <div class="image1">
-          <img src="img/voiceup_icon_1.png">
-          </div>
 
-<select   class="passcode-dropdown"ng-model="email" ng-change="getselectval()" ng-click="hidden=false">
-    <option  ng-repeat="email in emails "  ng-click="hidden=false"><a ng-href="welcome.html">{{email.name}}</a></option>
+  <div class="image1">
+  <img src="img/voiceup_icon_1.png">
+  </div>
 
-</select>
-
-</div>
-
-<div  ng-show="email" class="pass">
-<div ng-app="ngAnimate">
-<select  class="passcode-dropdown"ng-model="email" ng-change="getselectval()" ng-click="hidden=false">
-    <option  ng-repeat="email in emails "  ng-click="hidden=false"><a ng-href="welcome.html">{{email.name}}</a></option>
-
-</select>
-</div>
-<br/>
-<br/><br/><br/>
+ <div class="textcenterinput">  <input type="text" class="fontB" ng-disabled="true" ng-model="emailId"> </div> <br>
+<div class="textcenter">
  <label class=" item-input item-stacked-label ">
+ <span style="font-size:31px;font-weight:bold;" class="font35">Enter Passcode</span>
+ <input class="CirclePasscode txtcenter"  type="text"  name="passcode" id="passcode" ng-model="passcode" ng-change="checkFourDigits()" maxlength="4">
+</label>
+</div>
 
- <span style="font-size:31px;font-weight:bold;" class=" font35">Enter Passcode</span>
-  <input class="CirclePasscode txtcenter"  type="text"  name="password" id="password"
-     maxlength="4">
-   </label>
-    </div>
-    <div class="buttons irk-centered">
+<div class="buttons irk-centered">
      <button class="button button-clear  IRK-FONT3 fontB" ng-click="OpenVerification()">Next</button>
-    </div>
-</ion-content>
+</div>
 
-</ion-view>
+</ion-content>
+</ion-modal-view>

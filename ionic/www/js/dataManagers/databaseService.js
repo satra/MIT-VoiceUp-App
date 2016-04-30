@@ -3,7 +3,8 @@ angular.module('databaseService', [])
   //open connection
   return {
     getConnectionObject : function(){
-      return window.openDatabase("voiceup", "2.0", "Cardova DB", 1000000);
+     return window.openDatabase("voiceup", "2.0", "Cardova DB", 1000000);
+    // return $cordovaSQLite.openDB({name:"voiceup.db",iosDatabaseLocation:"Library"});//, "2.0", "Cardova DB", 1000000);
     },
     createLocalDatabaseSchema: function(){
         var query = "SELECT * FROM AppContent";
@@ -11,6 +12,7 @@ angular.module('databaseService', [])
         //var query = "DROP TABLE AppContent";
         $cordovaSQLite.execute(db, query)
             .then(function(res) {
+              //on success
             }, function (err) {
                     if(err.code == 5){
                      //call a method and read from local json and create schema

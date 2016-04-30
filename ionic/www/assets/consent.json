@@ -1,4 +1,6 @@
 {
+   "version": "0.1.0",
+   "URL": "https://dl.dropbox.com/s/aemu9hsn4brc9ga/new_spec_160413.json",
    "consent_screens":  {
     "enable_review": "True",
     "sections": [{
@@ -122,7 +124,7 @@
         "type": "custom"
       }],
 
-      
+
       [{
         "data": "<p>If you have any questions about the research, please feel free to contact:</p> <p>- Satrajit Ghosh, Ph.D. 617-324-3544 MIT Building 46-4033f, 43 Vassar St., Cambridge, MA 02139</p> <p>- Thomas F. Quatieri, Ph.D. 781-981-8994 MIT Lincoln Laboratory, 244 Wood St, Lexington, MA 02421</p>",
         "id": "c81",
@@ -162,18 +164,18 @@
     "version": "0.1.1"
   },
 
-   "Eligibility_Test": [{
+   "eligibility": [{
      "id": "q1",
      "question": "Are you 18 or older ?",
      "option1":"YES",
      "option2":"NO",
-     "answer":"YES", 
+     "answer":"YES",
      "normal-state-image": "ion-happy-outline",
      "selected-state-image": "ion-happy"
     },
     {
      "id": "q2",
-     "question": "Do you live in the United States of America?", 
+     "question": "Do you live in the United States of America?",
      "option1":"YES",
      "option2":"NO",
      "answer":"YES",
@@ -182,7 +184,7 @@
     },
     {
      "id": "q3",
-     "question": "Are you comfortable reading and writing on your iPhone in English ?", 
+     "question": "Are you comfortable reading and writing on your iPhone in English ?",
      "option1":"YES",
      "option2":"NO",
      "answer":"NO",
@@ -190,1189 +192,1178 @@
      "selected-state-image": "ion-happy"
      }
    ],
-    
+
    "profile": {
-    "default": "profile_1", 
+    "default": "profile_1",
     "profiles": {
       "profile_1": {
         "items": [
           {
             "title": "Profile Info"
-          }, 
+          },
           {
-            "id": "firstName", 
-            "placeholder": "John", 
-            "text": "First Name", 
+            "id": "firstName",
+            "placeholder": "John",
+            "text": "First Name",
             "type": "text"
-          }, 
+          },
           {
-            "id": "lastName", 
-            "placeholder": "Smith", 
-            "text": "Last Name", 
+            "id": "lastName",
+            "placeholder": "Smith",
+            "text": "Last Name",
             "type": "text"
-          }, 
+          },
           {
-            "id": "email", 
-            "placeholder": "john@example.com", 
-            "text": "Email", 
+            "id": "email",
+            "placeholder": "john@example.com",
+            "text": "Email",
             "type": "email"
-          }, 
+          },
           {
-            "id": "password", 
-            "placeholder": "*", 
-            "text": "Password", 
+            "id": "password",
+            "placeholder": "*",
+            "text": "Password",
             "type": "password"
-          }, 
+          },
           {
-            "id": "password_confirm", 
-            "placeholder": "*", 
-            "text": "Confirm Password", 
+            "id": "password_confirm",
+            "placeholder": "*",
+            "text": "Confirm Password",
             "type": "password"
-          }, 
+          },
           {
-            "id": "dateofbirth", 
-            "placeholder": "1971-01-01", 
-            "text": "Date of birth", 
+            "id": "dateofbirth",
+            "placeholder": "1971-01-01",
+            "text": "Date of birth",
             "type": "date"
-          }, 
+          },
           {
-            "choices": [
-              "Undisclosed", 
-              "Male", 
-              "Female", 
-              "Other"
-            ], 
-            "id": "gender", 
-            "placeholder": "Undisclosed", 
-            "text": "Gender", 
-            "type": "radio"
-          }, 
-          {
-            "id": "weight", 
-            "placeholder": 120, 
-            "text": "Weight (lbs)", 
+            "id": "weight",
+            "placeholder": 120,
+            "text": "Weight (lbs)",
             "type": "number"
-          }, 
+          },
           {
-            "id": "Height", 
-            "placeholder": 60, 
-            "text": "Height (inches)", 
+            "id": "Height",
+            "placeholder": 60,
+            "text": "Height (inches)",
             "type": "number"
           }
-        ], 
-        "text": "Enter profile settings here", 
+        ],
+        "text": "Enter profile settings here",
         "title": "Profile Settings"
       }
     }
-  }, 
+  },
   "surveys": [{
-      "date": "0 4 22 * *", 
+      "date": "0 4 28 * *",
       "title": "Mental Health Survey",
       "id" : "1",
       "skippable": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_55", 
-        "MIT_5", 
-        "PCL_C_3", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_55",
+        "MIT_5",
+        "PCL_C_3",
         "OCD_ADAA_6"
-      ], 
+      ],
       "tasks": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_55", 
-        "MIT_5", 
-        "PCL_C_3", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_55",
+        "MIT_5",
+        "PCL_C_3",
         "OCD_ADAA_6"
       ]
-    }, 
+    },
    {
-      "date": "0 4 22 * *", 
+      "date": "0 4 28 * *",
       "title": "Mental Health Survey 2",
       "id" : "2",
 
       "skippable": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_49", 
-        "MIT_24", 
-        "QIDS_10", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_49",
+        "MIT_24",
+        "QIDS_10",
         "PCL_C_18"
-      ], 
+      ],
       "tasks": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_49", 
-        "MIT_24", 
-        "QIDS_10", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_49",
+        "MIT_24",
+        "QIDS_10",
         "PCL_C_18"
       ]
-    }, 
+    },
     {
-      "date": "0 4 22 * *", 
+      "date": "0 4 22 * *",
       "title": "Mental Health Survey 3",
-            "id" : "3", 
+            "id" : "3",
       "skippable": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_53", 
-        "MIT_8", 
-        "PCL_C_3", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_53",
+        "MIT_8",
+        "PCL_C_3",
         "QIDS_6"
-      ], 
+      ],
       "tasks": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_53", 
-        "MIT_8", 
-        "PCL_C_3", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_53",
+        "MIT_8",
+        "PCL_C_3",
         "QIDS_6"
       ]
-    }, 
+    },
     {
       "date": "0 4 22 * *",
       "title": "Mental Health Survey 4",
-      "id" : "5", 
+      "id" : "5",
       "skippable": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_47", 
-        "MIT_28", 
-        "OCD_ADAA_10", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_47",
+        "MIT_28",
+        "OCD_ADAA_10",
         "QIDS_16"
-      ], 
+      ],
       "tasks": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_47", 
-        "MIT_28", 
-        "OCD_ADAA_10", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_47",
+        "MIT_28",
+        "OCD_ADAA_10",
         "QIDS_16"
       ]
-    }, 
+    },
    {
-      "date": "0 4 22 * *", 
+      "date": "0 4 22 * *",
       "title": "Mental Health Survey 5",
       "id" : "9",
       "skippable": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_55", 
-        "MIT_10", 
-        "OCD_ADAA_13", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_55",
+        "MIT_10",
+        "OCD_ADAA_13",
         "PCL_C_11"
-      ], 
+      ],
       "tasks": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_55", 
-        "MIT_10", 
-        "OCD_ADAA_13", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_55",
+        "MIT_10",
+        "OCD_ADAA_13",
         "PCL_C_11"
       ]
-    }, 
+    },
   {
       "date": "0 4 22 * *",
-      "title": "Mental Health Survey 6", 
+      "title": "Mental Health Survey 6",
       "id" : "11",
       "skippable": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_95", 
-        "MIT_9", 
-        "PCL_C_5", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_95",
+        "MIT_9",
+        "PCL_C_5",
         "QIDS_13"
-      ], 
+      ],
       "tasks": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_95", 
-        "MIT_9", 
-        "PCL_C_5", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_95",
+        "MIT_9",
+        "PCL_C_5",
         "QIDS_13"
       ]
-    }, 
+    },
   {
-      "date": "0 4 22 * *",
-      "title": "Mental Health Survey 7", 
+      "date": "0 4 29 * *",
+      "title": "Mental Health Survey 7",
       "id" : "10",
       "skippable": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_5", 
-        "MIT_3", 
-        "PHQ8_1", 
-        "PHQ8_2", 
-        "PHQ8_3", 
-        "PHQ8_4", 
-        "PHQ8_5", 
-        "PHQ8_6", 
-        "PHQ8_7", 
-        "PHQ8_8", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_5",
+        "MIT_3",
+        "PHQ8_1",
+        "PHQ8_2",
+        "PHQ8_3",
+        "PHQ8_4",
+        "PHQ8_5",
+        "PHQ8_6",
+        "PHQ8_7",
+        "PHQ8_8",
         "PHQ8_8"
-      ], 
+      ],
       "tasks": [
-        "SAGE_1", 
-        "SAGE_2", 
-        "SAGE_3", 
-        "SAGE_4", 
-        "SAGE_5", 
-        "EmoSentence_5", 
-        "MIT_3", 
-        "PHQ8_1", 
-        "PHQ8_2", 
-        "PHQ8_3", 
-        "PHQ8_4", 
-        "PHQ8_5", 
-        "PHQ8_6", 
-        "PHQ8_7", 
-        "PHQ8_8", 
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_5",
+        "MIT_3",
+        "PHQ8_1",
+        "PHQ8_2",
+        "PHQ8_3",
+        "PHQ8_4",
+        "PHQ8_5",
+        "PHQ8_6",
+        "PHQ8_7",
+        "PHQ8_8",
         "PHQ8_8"
       ]
     }
-  ], 
+  ],
   "tasks": {
     "EmoSentence_47": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 3, 
-          "text": "If only I could go back", 
+          "duration": 3,
+          "text": "If only I could go back",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "EmoSentence_49": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 3, 
-          "text": "My best friend moved away", 
+          "duration": 3,
+          "text": "My best friend moved away",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "EmoSentence_5": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 2, 
-          "text": "Can you hear me?", 
+          "duration": 2,
+          "text": "Can you hear me?",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "EmoSentence_53": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 3, 
-          "text": "My brother is very sick", 
+          "duration": 3,
+          "text": "My brother is very sick",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "EmoSentence_55": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 4, 
-          "text": "I didn't mean to hurt your feelings", 
+          "duration": 4,
+          "text": "I didn't mean to hurt your feelings",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "EmoSentence_95": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 4, 
-          "text": "I don't like the looks of that house", 
+          "duration": 4,
+          "text": "I don't like the looks of that house",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "MIT_10": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 8, 
-          "text": "Answer: Say the phrase 'good morning?' as if you were asking a friend about their morning.", 
+          "duration": 8,
+          "text": "Answer: Say the phrase 'good morning?' as if you were asking a friend about their morning.",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "MIT_24": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 8, 
-          "text": "Answer: How do you feel about tomorrow? Excited? Bored? Nervous? Anything in particular causing those feelings?", 
+          "duration": 8,
+          "text": "Answer: How do you feel about tomorrow? Excited? Bored? Nervous? Anything in particular causing those feelings?",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "MIT_28": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 5, 
-          "text": "Answer: Did anything go wrong today? If so, what?", 
+          "duration": 5,
+          "text": "Answer: Did anything go wrong today? If so, what?",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "MIT_3": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 5, 
-          "text": "Answer: What do you like most/least about you voice?", 
+          "duration": 5,
+          "text": "Answer: What do you like most/least about you voice?",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "MIT_5": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 4, 
-          "text": "Answer: Say the letters of the alphabet.", 
+          "duration": 4,
+          "text": "Answer: Say the letters of the alphabet.",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "MIT_8": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 10, 
-          "text": "Answer: Read this phrase (it's OK if you mess up - keep recording!): 'Pad kid poured curd pulled cold.'", 
+          "duration": 10,
+          "text": "Answer: Read this phrase (it's OK if you mess up - keep recording!): 'Pad kid poured curd pulled cold.'",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "MIT_9": {
       "steps": [
         {
-          "footer-attach": "true", 
-          "image": "irk-voice-recording", 
-          "text": "Take a breath and read the text on the following page", 
-          "title": "Record voice", 
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
           "type": "irk-instruction-step"
-        }, 
+        },
         {
-          "duration": 7, 
-          "text": "Answer: Say the phrase 'good morning' as if you were greeting a friend.", 
+          "duration": 7,
+          "text": "Answer: Say the phrase 'good morning' as if you were greeting a friend.",
           "type": "irk-audio-task"
         }
       ]
-    }, 
+    },
     "OCD_ADAA_10": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Yes", 
+              "text": "Yes",
               "value": 1
-            }, 
+            },
             {
-              "text": " No", 
+              "text": " No",
               "value": 2
             }
-          ], 
+          ],
           "id":"i1",
-          "text": "Select only one", 
-          "title": "Are you troubled by the following? Do you wash yourself or things around you excessively?", 
+          "text": "Select only one",
+          "title": "Are you troubled by the following? Do you wash yourself or things around you excessively?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "OCD_ADAA_13": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Yes", 
+              "text": "Yes",
               "value": 1
-            }, 
+            },
             {
-              "text": " No", 
+              "text": " No",
               "value": 2
             }
-            
-          ], 
+
+          ],
           "id":"i2",
-          "text": "Select only one", 
-          "title": "Are you troubled by the following? Do you keep many useless things because you feel that you can't throw them away?", 
+          "text": "Select only one",
+          "title": "Are you troubled by the following? Do you keep many useless things because you feel that you can't throw them away?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "OCD_ADAA_6": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Yes", 
+              "text": "Yes",
               "value": 1
-            }, 
+            },
             {
-              "text": " No", 
+              "text": " No",
               "value": 2
             }
-          ], 
+          ],
           "id":"i3",
-          "text": "Select only one", 
-          "title": "Are you troubled by the following? Are you always afraid you will lose something of importance?", 
+          "text": "Select only one",
+          "title": "Are you troubled by the following? Are you always afraid you will lose something of importance?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "PCL_C_11": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " A little bit", 
+              "text": " A little bit",
               "value": 2
-            }, 
+            },
             {
-              "text": " Moderately", 
+              "text": " Moderately",
               "value": 3
-            }, 
+            },
             {
-              "text": " Quite a bit", 
+              "text": " Quite a bit",
               "value": 4
-            }, 
+            },
             {
-              "text": " Extremely", 
+              "text": " Extremely",
               "value": 5
             }
-          ], 
+          ],
           "id":"i4",
-          "text": "Select only one", 
-          "title": "Indicate how much you have been bothered by that problem in the last month: Loss of interest in things that you used to enjoy?", 
+          "text": "Select only one",
+          "title": "Indicate how much you have been bothered by that problem in the last month: Loss of interest in things that you used to enjoy?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "PCL_C_18": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " A little bit", 
+              "text": " A little bit",
               "value": 2
-            }, 
+            },
             {
-              "text": " Moderately", 
+              "text": " Moderately",
               "value": 3
-            }, 
+            },
             {
-              "text": " Quite a bit", 
+              "text": " Quite a bit",
               "value": 4
-            }, 
+            },
             {
-              "text": " Extremely", 
+              "text": " Extremely",
               "value": 5
             }
-          ], 
+          ],
           "id":"i5",
-          "text": "Select only one", 
-          "title": "Indicate how much you have been bothered by that problem in the last month: Being \u201csuper alert\u201d or watchful on guard?", 
+          "text": "Select only one",
+          "title": "Indicate how much you have been bothered by that problem in the last month: Being \u201csuper alert\u201d or watchful on guard?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "PCL_C_3": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " A little bit", 
+              "text": " A little bit",
               "value": 2
-            }, 
+            },
             {
-              "text": " Moderately", 
+              "text": " Moderately",
               "value": 3
-            }, 
+            },
             {
-              "text": " Quite a bit", 
+              "text": " Quite a bit",
               "value": 4
-            }, 
+            },
             {
-              "text": " Extremely", 
+              "text": " Extremely",
               "value": 5
             }
-          ], 
+          ],
           "id":"i6",
-          "text": "Select only one", 
-          "title": "Indicate how much you have been bothered by that problem in the last month: Suddenly acting or feeling as if a stressful experience were happening again (as if you were reliving it)?", 
+          "text": "Select only one",
+          "title": "Indicate how much you have been bothered by that problem in the last month: Suddenly acting or feeling as if a stressful experience were happening again (as if you were reliving it)?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "PCL_C_5": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " A little bit", 
+              "text": " A little bit",
               "value": 2
-            }, 
+            },
             {
-              "text": " Moderately", 
+              "text": " Moderately",
               "value": 3
-            }, 
+            },
             {
-              "text": " Quite a bit", 
+              "text": " Quite a bit",
               "value": 4
-            }, 
+            },
             {
-              "text": " Extremely", 
+              "text": " Extremely",
               "value": 5
             }
-          ], 
+          ],
           "id":"i7",
-          "text": "Select only one", 
-          "title": "Indicate how much you have been bothered by that problem in the last month: Having physical reactions (e.g., heart pounding, trouble breathing, or sweating) when something reminded you of a stressful experience from the past?", 
+          "text": "Select only one",
+          "title": "Indicate how much you have been bothered by that problem in the last month: Having physical reactions (e.g., heart pounding, trouble breathing, or sweating) when something reminded you of a stressful experience from the past?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "PHQ8_1": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " Several days", 
+              "text": " Several days",
               "value": 2
-            }, 
+            },
             {
-              "text": " More than half the days", 
+              "text": " More than half the days",
               "value": 3
-            }, 
+            },
             {
-              "text": " Nearly every day", 
+              "text": " Nearly every day",
               "value": 4
             }
-          ], 
+          ],
           "id":"i8",
-          "text": "Select only one", 
-          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Little interest or pleasure in doing things", 
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Little interest or pleasure in doing things",
           "type": "irk-text-choice-question-step"
         }
-      ], 
+      ],
       "timelimit": "7-0"
-    }, 
+    },
     "PHQ8_2": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " Several days", 
+              "text": " Several days",
               "value": 2
-            }, 
+            },
             {
-              "text": " More than half the days", 
+              "text": " More than half the days",
               "value": 3
-            }, 
+            },
             {
-              "text": " Nearly every day", 
+              "text": " Nearly every day",
               "value": 4
             }
           ],
-          "id":"i9", 
-          "text": "Select only one", 
-          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Feeling down, depressed, or hopeless", 
+          "id":"i9",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Feeling down, depressed, or hopeless",
           "type": "irk-text-choice-question-step"
         }
-      ], 
+      ],
       "timelimit": "7-0"
-    }, 
+    },
     "PHQ8_3": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " Several days", 
+              "text": " Several days",
               "value": 2
-            }, 
+            },
             {
-              "text": " More than half the days", 
+              "text": " More than half the days",
               "value": 3
-            }, 
+            },
             {
-              "text": " Nearly every day", 
+              "text": " Nearly every day",
               "value": 4
             }
           ],
-          "id":"i10", 
-          "text": "Select only one", 
-          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Trouble falling or staying asleep, or sleeping too much", 
+          "id":"i10",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Trouble falling or staying asleep, or sleeping too much",
           "type": "irk-text-choice-question-step"
         }
-      ], 
+      ],
       "timelimit": "7-0"
-    }, 
+    },
     "PHQ8_4": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " Several days", 
+              "text": " Several days",
               "value": 2
-            }, 
+            },
             {
-              "text": " More than half the days", 
+              "text": " More than half the days",
               "value": 3
-            }, 
+            },
             {
-              "text": " Nearly every day", 
+              "text": " Nearly every day",
               "value": 4
             }
-          ], 
+          ],
           "id":"i11",
-          "text": "Select only one", 
-          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Feeling tired or having little energy", 
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Feeling tired or having little energy",
           "type": "irk-text-choice-question-step"
         }
-      ], 
+      ],
       "timelimit": "7-0"
-    }, 
+    },
     "PHQ8_5": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " Several days", 
+              "text": " Several days",
               "value": 2
-            }, 
+            },
             {
-              "text": " More than half the days", 
+              "text": " More than half the days",
               "value": 3
-            }, 
+            },
             {
-              "text": " Nearly every day", 
+              "text": " Nearly every day",
               "value": 4
             }
-          ], 
+          ],
           "id":"i12",
-          "text": "Select only one", 
-          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Poor appetite or overeating", 
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Poor appetite or overeating",
           "type": "irk-text-choice-question-step"
         }
-      ], 
+      ],
       "timelimit": "7-0"
-    }, 
+    },
     "PHQ8_6": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " Several days", 
+              "text": " Several days",
               "value": 2
-            }, 
+            },
             {
-              "text": " More than half the days", 
+              "text": " More than half the days",
               "value": 3
-            }, 
+            },
             {
-              "text": " Nearly every day", 
+              "text": " Nearly every day",
               "value": 4
             }
-          ], 
+          ],
           "id":"i13",
-          "text": "Select only one", 
-          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Feeling bad about yourself - or that you are a failure or have let yourself or your family down", 
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
           "type": "irk-text-choice-question-step"
         }
-      ], 
+      ],
       "timelimit": "7-0"
-    }, 
+    },
     "PHQ8_7": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " Several days", 
+              "text": " Several days",
               "value": 2
-            }, 
+            },
             {
-              "text": " More than half the days", 
+              "text": " More than half the days",
               "value": 3
-            }, 
+            },
             {
-              "text": " Nearly every day", 
+              "text": " Nearly every day",
               "value": 4
             }
-          ], 
+          ],
           "id":"i14",
-          "text": "Select only one", 
-          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Trouble concentrating on things, such as reading the newspaper or watching television", 
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Trouble concentrating on things, such as reading the newspaper or watching television",
           "type": "irk-text-choice-question-step"
         }
-      ], 
+      ],
       "timelimit": "7-0"
-    }, 
+    },
     "PHQ8_8": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Not at all", 
+              "text": "Not at all",
               "value": 1
-            }, 
+            },
             {
-              "text": " Several days", 
+              "text": " Several days",
               "value": 2
-            }, 
+            },
             {
-              "text": " More than half the days", 
+              "text": " More than half the days",
               "value": 3
-            }, 
+            },
             {
-              "text": " Nearly every day", 
+              "text": " Nearly every day",
               "value": 4
             }
-          ], 
+          ],
           "id":"i15",
-          "text": "Select only one", 
-          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Thoughts that you would be better off dead or of hurting yourself in some way ", 
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Thoughts that you would be better off dead or of hurting yourself in some way ",
           "type": "irk-text-choice-question-step"
         }
-      ], 
+      ],
       "timelimit": "7-0"
-    }, 
+    },
     "QIDS_10": {
       "steps": [
         {
           "choices": [
             {
-              "text": "There is no change in my usual capacity to concentrate or make decisions. ", 
+              "text": "There is no change in my usual capacity to concentrate or make decisions. ",
               "value": 1
-            }, 
+            },
             {
-              "text": " I occasionally feel indecisive or find that my attention wanders. ", 
+              "text": " I occasionally feel indecisive or find that my attention wanders. ",
               "value": 2
-            }, 
+            },
             {
-              "text": " Most of the time, I struggle to focus my attention or to make decisions. ", 
+              "text": " Most of the time, I struggle to focus my attention or to make decisions. ",
               "value": 3
-            }, 
+            },
             {
-              "text": " I cannot concentrate well enough to read or cannot make even minor decisions.", 
+              "text": " I cannot concentrate well enough to read or cannot make even minor decisions.",
               "value": 4
             }
-          ], 
+          ],
           "id":"i16",
-          "text": "Select only one", 
-          "title": "During the past seven days, ... Concentration/Decision Making", 
+          "text": "Select only one",
+          "title": "During the past seven days, ... Concentration/Decision Making",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "QIDS_13": {
       "steps": [
         {
           "choices": [
             {
-              "text": "There is no change from usual in a how interested I am in other people or activities.", 
+              "text": "There is no change from usual in a how interested I am in other people or activities.",
               "value": 1
-            }, 
+            },
             {
-              "text": " I notice that I am less interested in people or activities. ", 
+              "text": " I notice that I am less interested in people or activities. ",
               "value": 2
-            }, 
+            },
             {
-              "text": " I find I have interest in only one or two of my formerly pursued activities. ", 
+              "text": " I find I have interest in only one or two of my formerly pursued activities. ",
               "value": 3
-            }, 
+            },
             {
-              "text": " I have virtually no interest in formerly pursued activities.", 
+              "text": " I have virtually no interest in formerly pursued activities.",
               "value": 4
             }
-          ], 
+          ],
           "id":"i17",
-          "text": "Select only one", 
-          "title": "During the past seven days, ... General Interest", 
+          "text": "Select only one",
+          "title": "During the past seven days, ... General Interest",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "QIDS_16": {
       "steps": [
         {
           "choices": [
             {
-              "text": "I do not feel restless. ", 
+              "text": "I do not feel restless. ",
               "value": 1
-            }, 
+            },
             {
-              "text": " I'm often fidgety, wringing my hands, or need to shift how I am sitting. ", 
+              "text": " I'm often fidgety, wringing my hands, or need to shift how I am sitting. ",
               "value": 2
-            }, 
+            },
             {
-              "text": " I have impulses to move about and am quite restless. ", 
+              "text": " I have impulses to move about and am quite restless. ",
               "value": 3
-            }, 
+            },
             {
-              "text": " At times, I am unable to stay seated and need to pace around.", 
+              "text": " At times, I am unable to stay seated and need to pace around.",
               "value": 4
             }
-          ], 
+          ],
           "id":"i18",
-          "text": "Select only one", 
-          "title": "During the past seven days, ... Feeling Restless", 
+          "text": "Select only one",
+          "title": "During the past seven days, ... Feeling Restless",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "QIDS_6": {
       "steps": [
         {
           "choices": [
             {
-              "text": "There is no change in my usual appetite. ", 
+              "text": "There is no change in my usual appetite. ",
               "value": 1
-            }, 
+            },
             {
-              "text": " I eat somewhat less often or lesser amounts of food than usual. ", 
+              "text": " I eat somewhat less often or lesser amounts of food than usual. ",
               "value": 2
-            }, 
+            },
             {
-              "text": " I eat much less than usual and only with personal effort. ", 
+              "text": " I eat much less than usual and only with personal effort. ",
               "value": 3
-            }, 
+            },
             {
-              "text": " I rarely eat within a 24-hour period, and only with extreme personal effort or when others persuade me to eat.", 
+              "text": " I rarely eat within a 24-hour period, and only with extreme personal effort or when others persuade me to eat.",
               "value": 4
             }
-          ], 
+          ],
           "id":"i19",
-          "text": "Select only one", 
-          "title": "During the past seven days, ... Decreased Appetite:", 
+          "text": "Select only one",
+          "title": "During the past seven days, ... Decreased Appetite:",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "SAGE_1": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Perfectly crisp concentration", 
+              "text": "Perfectly crisp concentration",
               "value": 1
-            }, 
+            },
             {
-              "text": " No issues with concentration", 
+              "text": " No issues with concentration",
               "value": 2
-            }, 
+            },
             {
-              "text": " Occasional difficulties with concentration", 
+              "text": " Occasional difficulties with concentration",
               "value": 3
-            }, 
+            },
             {
-              "text": " Difficulties with concentration", 
+              "text": " Difficulties with concentration",
               "value": 4
-            }, 
+            },
             {
-              "text": " No concentration", 
+              "text": " No concentration",
               "value": 5
             }
-          ], 
+          ],
           "id":"i20",
-          "text": "Select only one", 
-          "title": "How is your concentration today?", 
+          "text": "Select only one",
+          "title": "How is your concentration today?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "SAGE_2": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Ready to take on the world", 
+              "text": "Ready to take on the world",
               "value": 1
-            }, 
+            },
             {
-              "text": " Filled with energy through the day", 
+              "text": " Filled with energy through the day",
               "value": 2
-            }, 
+            },
             {
-              "text": " Energy to make it through the day", 
+              "text": " Energy to make it through the day",
               "value": 3
-            }, 
+            },
             {
-              "text": " Energy to do basic functions", 
+              "text": " Energy to do basic functions",
               "value": 4
-            }, 
+            },
             {
-              "text": " No energy", 
+              "text": " No energy",
               "value": 5
             }
-          ], 
+          ],
           "id":"i21",
-          "text": "Select only one", 
-          "title": "How is your energy today?", 
+          "text": "Select only one",
+          "title": "How is your energy today?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "SAGE_3": {
       "steps": [
         {
           "choices": [
             {
-              "text": "The best I have felt", 
+              "text": "The best I have felt",
               "value": 1
-            }, 
+            },
             {
-              "text": " Better than usual", 
+              "text": " Better than usual",
               "value": 2
-            }, 
+            },
             {
-              "text": " Normal ", 
+              "text": " Normal ",
               "value": 3
-            }, 
+            },
             {
-              "text": " Down", 
+              "text": " Down",
               "value": 4
-            }, 
+            },
             {
-              "text": " Extremely down", 
+              "text": " Extremely down",
               "value": 5
             }
-          ], 
+          ],
           "id":"i22",
-          "text": "Select only one", 
-          "title": "How is your mood today?", 
+          "text": "Select only one",
+          "title": "How is your mood today?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "SAGE_4": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Eliminated all deficit", 
+              "text": "Eliminated all deficit",
               "value": 1
-            }, 
+            },
             {
-              "text": " Made up some deficit", 
+              "text": " Made up some deficit",
               "value": 2
-            }, 
+            },
             {
-              "text": " Almost enough", 
+              "text": " Almost enough",
               "value": 3
-            }, 
+            },
             {
-              "text": " Barely enough", 
+              "text": " Barely enough",
               "value": 4
-            }, 
+            },
             {
-              "text": " No real sleep", 
+              "text": " No real sleep",
               "value": 5
             }
-          ], 
+          ],
             "id":"i24",
-          "text": "Select only one", 
-          "title": "How did you sleep?", 
+          "text": "Select only one",
+          "title": "How did you sleep?",
           "type": "irk-text-choice-question-step"
         }
       ]
-    }, 
+    },
     "SAGE_5": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Activities that make you breathe hard and sweat", 
+              "text": "Activities that make you breathe hard and sweat",
               "value": 1
-            }, 
+            },
             {
-              "text": " Walking", 
+              "text": " Walking",
               "value": 2
-            }, 
+            },
             {
-              "text": " Standing", 
+              "text": " Standing",
               "value": 3
-            }, 
+            },
             {
-              "text": " Sitting", 
+              "text": " Sitting",
               "value": 4
-            }, 
+            },
             {
-              "text": " Lying down", 
-              "value": 5, 
+              "text": " Lying down",
+              "value": 5,
               "detail" : "sdflkdsjf dsfjdslfdsfjldsj"
               }
-          ], 
+          ],
          "id":"i25",
-          "text": "Select only one", 
-          "title": "How much did you move today?", 
+          "text": "Select only one",
+          "title": "How much did you move today?",
           "type": "irk-text-choice-question-step"
         }
       ]
     }
-  }, 
+  },
+  "emailList":[{"name": "hell.hanush82@boston-tech.com"},{"name": "nandagopal1291@gmail.com"},{"name": "louis.ranon@gmail.com"}],
   "version": "0.1.0"
 }

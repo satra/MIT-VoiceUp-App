@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.gubster.ionicresearchkit" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>ionicRK</name>
+  <name>VoiceUp</name>
   <description>
-        ResearchKit for Hybrid Apps.
+      MIT VoiceUp
     </description>
-  <author email="nino@gubster.com" href="http://gubster.com/">
-      Nino Guba
-    </author>
+  <author email="solutionsi@boston-technology.com" href="http://www.boston-technology.com/">
+    BTC
+</author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>

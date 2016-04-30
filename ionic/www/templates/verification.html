@@ -1,19 +1,18 @@
 <ion-modal-view>
   <ion-header-bar>
-
     <h1 class="title"></h1>
     <div class="buttons">
-      <button class="button button-clear IRK-FONT1 irk-font-helvetica" ng-click="GoHome()">Cancel</button>
+
     </div>
   </ion-header-bar>
   <ion-content>
     <form ng-submit="doLogin()">
    <div class="txtcenter marT10p">
-       <img src="img/voiceup_icon_1.png"/>
+  <img src="img/voiceup_icon_1.png"/>
    </div>
    <div class="txtcenter font22 linehgt30 marT30 IRK-FONT2 irk-font-helvetica">MIT</div>
    <div class="txtcenter font22 linehgt30 IRK-FONT1 irk-font-helvetica">has sent you verification email at</div>
-   <div class="txtcenter marB15 font22 linehgt30 IRK-FONT3 irk-font-helvetica">abc@gmail.com</div>
+   <div class="txtcenter marB15 font22 linehgt30 IRK-FONT3 irk-font-helvetica">{{emailId}}</div>
    <div class="clearboth"></div>
    <div class="marB50 txtcenter marT10 irk-font-helvetica"><a href="#" class="vatag">Wrong email address? Tap here</a></div>
    <div class="clearboth"></div>

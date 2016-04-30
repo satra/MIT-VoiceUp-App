@@ -127,18 +127,36 @@ function generateProfileDiv(obj){
         switch(type){
            case 'label': div += '<irk-form-item title="'+obj.title+'"></irk-form-item>'
                          break ;
-           case 'text' : div += '<irk-form-item type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
+
+           case 'text' : div += '<label class="item item-input" type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                 '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                                 '<input type="text" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                          break;
-           case 'email': div +='<irk-form-item type="email" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
+
+           case 'email':  div += '<label class="item item-input" type="email" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                 '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                                 '<input type="email" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                          break;
-           case 'password': div +='<irk-form-item type="password" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
+
+           case 'password': div += '<label class="item item-input" type="password" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                 '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                                 '<input type="password" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                          break;
-           case 'date':  div +='<irk-form-item type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
+
+           case 'date': div += '<label class="item item-input" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                 '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                                 '<input type="date" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                          break;
-           case 'radio': div +='<irk-form-item type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
+
+        /*   case 'radio': div +='<irk-form-item type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
                          break;
-           case 'number':  div +='<irk-form-item type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
+          */
+
+           case 'number':  div += '<label class="item item-input" type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                 '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                                 '<input type="number" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                          break;
+
            default :  break ;
         }
     return div ;

@@ -12,7 +12,6 @@ $scope.OpenVerification = function() {
     scope: $scope,
     animation: 'slide-in-up'
    }).then(function(modal) {
-//    $scope.modal.remove();
     $scope.modal = modal;
     $scope.modal.show();
    });

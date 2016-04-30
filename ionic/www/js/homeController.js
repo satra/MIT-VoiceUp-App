@@ -7,6 +7,7 @@ angular.module('homeController',[])
      console.log('Opened!')
   });
 */
+
  databaseService.createLocalDatabaseSchema();
 
   //openOnlineResource
@@ -20,10 +21,26 @@ angular.module('homeController',[])
     });
 };
 
+$scope.go = function () {
+  $scope.modal.remove();
+};
+
+$scope.joinStudy = function () {
+  $state.transitionTo('eligiblityTest', null, {'reload':false});
+};
+
+$scope.GoBack = function () {
+  $scope.modal.remove();
+};
+
+$scope.signInSubmit = function () {
+  $scope.modal.remove();
+};
+
 //==================================Select email view ==========
      $scope.openSignInChooseEmail = function() {
     //get IP like email ids
-    userService.getEmailList().then(function(response){
+     userService.getEmailList().then(function(response){
       $scope.emails = response.emailList;
     });
 

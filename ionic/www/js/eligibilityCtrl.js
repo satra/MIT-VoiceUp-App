@@ -1,6 +1,6 @@
 angular.module('eligibility',[])
 //=======Home screen controller======================
-.controller('eligibilityCtrl', function($scope,$compile,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,consentDataManager,irkResults,$state,$location,$window) {
+.controller('eligibilityCtrl', function($scope,$stateParams,$compile,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,consentDataManager,irkResults,$state,$location,$window) {
 //========================select eligiblity test view
 
 eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData){
@@ -58,10 +58,12 @@ $scope.compareEligiblity = function() {
 console.log('final status = ' +check);
 // if all set load sign up page
 if(check){
-   $state.transitionTo('eligibleUser');
+   $state.go('eligibleUser');
+//   $state.transitionTo('eligibleUser', $stateParams, { reload: true, inherit: false, notify: true });
   }
 else{
-   $state.transitionTo('not-eligibleUser');
+  //$state.transitionTo('not-eligibleUser', $stateParams, { reload: true, inherit: false, notify: true });
+   $state.go('not-eligibleUser');
   }
 };
 
@@ -79,15 +81,8 @@ else{
   };
 
 // ==== on clcik of back from sign in screen ========
-  $scope.SignInback = function() {
-    $scope.modal.remove();
-    $ionicModal.fromTemplateUrl('templates/signIn-choose-email.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
+  $scope.sectionBack = function() {
+    $state.transitionTo('home', null, {'reload':false});
   };
 
 
