@@ -1,10 +1,9 @@
 angular.module('surveyController',[])
 // ==== Dummy contorller need to be removed later before production  ========
-.controller('SurveyCtrl', function($scope, $ionicModal,userService,irkResults) {
+.controller('SurveyCtrl', function($scope,$state, $ionicModal,userService,irkResults) {
     userService.getSurveyMainList().then(function(response){
     $scope.surveyList = response;
     var surveyMainList = response.surveys;
-    console.log(surveyMainList);
     var list = '';
     var items = [];
     var today = new Date() ;
@@ -13,7 +12,6 @@ angular.module('surveyController',[])
             var id = surveyMainList[i].id;
             var date = surveyMainList[i].date;
             var dateArray =date.split(" ");
-
             var min = dateArray[0];
             var month = dateArray[1];
             var day = dateArray[2];
@@ -25,7 +23,6 @@ angular.module('surveyController',[])
             if(day == "*"){
              day = today.getDay();
             }
-//          var d = hr+':'+min +' '+day+'/'+month+'/'+today.getFullYear();
             var surveyDate = new Date(today.getFullYear()+'-'+month+'-'+day);
             if(today.getFullYear()===surveyDate.getFullYear() && today.getMonth()===surveyDate.getMonth() && today.getDay()==surveyDate.getDay() ){
             items.push(surveyMainList[i]);
@@ -59,7 +56,7 @@ $scope.launchSurvey = function (idSelected){
                }
             }
       }
-
+   console.log(surveyHtml);
     $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                       '<irk-ordered-tasks>'+
                                       surveyHtml +
@@ -73,6 +70,15 @@ $scope.launchSurvey = function (idSelected){
       $scope.learnmore.show();
   };
 
+  $scope.cancelClicked = function(){
+   console.log('cancel the stuff ');
+   $state.transitionTo('tab.Activities');
+  };
+
+  $scope.doneClicked = function(){
+   $state.transitionTo('tab.Activities');
+  };
+
   $scope.closeModal = function() {
     $scope.modal.remove();
   };
@@ -80,7 +86,6 @@ $scope.launchSurvey = function (idSelected){
   // Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {
     $scope.modal.remove();
-
   });
 
   // Execute action on hide modal
@@ -183,7 +188,7 @@ $scope.launchSurvey = function (idSelected){
                     break;
 
               case 'irk-audio-task':
-                    customDiv = '<irk-task> <irk-audio-task id="'+customId+'" duration="'+stepData.duration+'" text= "'+stepData.text+'"/></irk-task>';
+                    customDiv = '<irk-task> <irk-audio-task id="'+customId+'_audio" duration="'+stepData.duration+'" text= "'+stepData.text+'"/></irk-task>';
               break;
           }
          return customDiv;

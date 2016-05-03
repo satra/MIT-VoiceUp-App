@@ -6,7 +6,8 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','eligiblityDataManager',
-'profileDataManager','consentDataManager','myProfileUpdate','homeController','eligibility','eligibile','signUp','passcode','consent','customDirectives','ionicResearchKit', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
+'profileDataManager','consentDataManager','apiDataManagerService','homeController','eligibility','eligibile','signUp','passcode','consent',
+'updateProfile','customDirectives','ionicResearchKit', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -23,7 +24,14 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+
+.config(function($stateProvider, $httpProvider,$urlRouterProvider) {
+
+  $httpProvider.defaults.useXDomain = true;
+  $httpProvider.defaults.withCredentials = true;
+  delete $httpProvider.defaults.headers.common["X-Requested-With"];
+  $httpProvider.defaults.headers.common["Accept"] = "application/json";
+  $httpProvider.defaults.headers.common["Content-Type"] = "application/json";
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -104,8 +112,8 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
     url: '/dashboard',
     views: {
       'tab-dashboard': {
-        templateUrl: 'templates/tab-activetasks.html',
-        controller: 'ActiveTasksCtrl'
+       templateUrl: 'templates/tab-activetasks.html',
+       controller: 'ActiveTasksCtrl'
       }
     }
   })
@@ -115,11 +123,8 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
     url: '/profile',
     views: {
       'tab-profile': {
- //        templateUrl: 'templates/SIGNUP-IRK.html',
-  //       url: '/updateProfile',
-    //     controller: 'signUpCtrl'
-        templateUrl: 'templates/tab-profile-update.html',
-        controller: 'ProfileCtrl'
+          templateUrl: 'templates/tab-profile-update.html',
+          controller: 'updateProfileController'
       }
     }
   })
@@ -133,6 +138,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
       }
     }
   });
+
   // if none of the above states are matched, use this as the fallback
   // $urlRouterProvider.otherwise('/tab/Activities');
    $urlRouterProvider.otherwise('loadSignUp');

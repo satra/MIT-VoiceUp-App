@@ -1,6 +1,6 @@
 angular.module('consent',[])
 //=======Home screen controller======================
-.controller('consentCtrl', function($scope,$stateParams,$cordovaSQLite,$controller,$ionicModal,$http,$compile,$ionicLoading,userService,databaseService,consentDataManager,irkResults,$state,$location,$window) {
+.controller('consentCtrl', function($scope,$stateParams,$ionicHistory,$cordovaSQLite,$controller,$ionicModal,$http,$compile,$ionicLoading,userService,databaseService,consentDataManager,irkResults,$state,$location,$window) {
 
     consentDataManager.getAllConsentScreens().then(function(response){
     $scope.enable_review = response.enable_review;
@@ -15,28 +15,6 @@ angular.module('consent',[])
     var dynamicContent = angular.element(document.querySelector('#orderTasks'));
     dynamicContent.append(taskList);
     $compile(dynamicContent)($scope);
-
-  /*  var templateUrl = $sce.getTrustedResourceUrl('templates/consent.html');
-       $templateRequest(templateUrl).then(function(template) {
-       $compile(template)($scope);
-       }, function() {
-           // An error has occurred here
-       });
-       */
-/*
-    $scope.learnmore = $ionicModal.fromTemplate(
-                              '<ion-modal-view class="irk-modal">'+
-                              '<irk-ordered-tasks>'+
-                               taskList +
-                              '</irk-ordered-tasks>'+
-                              '</ion-modal-view>'
-                          ,{
-                              scope: $scope,
-                              animation: 'slide-in-up'
-                          });
-*/
-      //   $scope.modal = $scope.learnmore;
-      //   $scope.learnmore.show();
    });
 
 
@@ -48,14 +26,15 @@ $scope.closeModal = function() {
 
 $scope.cancelClicked = function(){
  console.log('cancel the stuff ');
- // $stateProvider.state('home', { url: '/' });
- $state.transitionTo('home', $stateParams, { reload: true, inherit: false, notify: true });
-// $state.transitionTo('home', null, {'reload':true});
+ $ionicHistory.clearCache().then(function(){
+   $state.transitionTo('home');
+ });
 };
 
 $scope.doneClicked = function(){
-//  $state.current, $stateParams, { reload: true, inherit: false, notify: true });
- $state.transitionTo('loadSignUp');
+ $ionicHistory.clearCache().then(function(){
+    $state.transitionTo('loadSignUp');
+    });
 };
 
  // Cleanup the modal when we're done with it!

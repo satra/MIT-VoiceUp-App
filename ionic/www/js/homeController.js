@@ -1,6 +1,6 @@
 angular.module('homeController',[])
 //=======Home screen controller======================
-.controller('HomeCtrl', function($scope,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,irkResults,$state,$location,$window) {
+.controller('HomeCtrl', function($scope,$cordovaSQLite,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,irkResults,$state,$location,$window) {
  //get IP like email ids
 /* $scope.$on('$ionicView.enter', function() {
      // Code you want executed every time view is opened
@@ -26,7 +26,9 @@ $scope.go = function () {
 };
 
 $scope.joinStudy = function () {
-  $state.transitionTo('eligiblityTest', null, {'reload':false});
+  $ionicHistory.clearCache().then(function(){
+      $state.transitionTo('eligiblityTest');
+  });
 };
 
 $scope.GoBack = function () {
@@ -44,14 +46,14 @@ $scope.signInSubmit = function () {
       $scope.emails = response.emailList;
     });
 
-    $ionicModal.fromTemplateUrl('templates/signIn-choose-email.html', {
+    $ionicModal.fromTemplateUrl('templates/signin-choose-email.html', {
       scope: $scope,
       animation: 'slide-in-up'
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
        });
-   };
+  };
 
    $scope.showEligibilityTestView = function() {
      $scope.modal.remove();

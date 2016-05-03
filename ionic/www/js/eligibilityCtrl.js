@@ -1,6 +1,6 @@
 angular.module('eligibility',[])
 //=======Home screen controller======================
-.controller('eligibilityCtrl', function($scope,$stateParams,$compile,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,consentDataManager,irkResults,$state,$location,$window) {
+.controller('eligibilityCtrl', function($scope,$stateParams,$ionicHistory,$compile,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,consentDataManager,irkResults,$state,$location,$window) {
 //========================select eligiblity test view
 
 eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData){
@@ -55,15 +55,16 @@ $scope.compareEligiblity = function() {
        });
    });
 
-console.log('final status = ' +check);
 // if all set load sign up page
 if(check){
-   $state.go('eligibleUser');
-//   $state.transitionTo('eligibleUser', $stateParams, { reload: true, inherit: false, notify: true });
-  }
+   $ionicHistory.clearCache().then(function(){
+      $state.go('eligibleUser');
+   });
+ }
 else{
-  //$state.transitionTo('not-eligibleUser', $stateParams, { reload: true, inherit: false, notify: true });
-   $state.go('not-eligibleUser');
+  $ionicHistory.clearCache().then(function(){
+     $state.go('not-eligibleUser');
+    });
   }
 };
 
@@ -80,7 +81,7 @@ else{
     });
   };
 
-// ==== on clcik of back from sign in screen ========
+// ==== on click of back from sign in screen ========
   $scope.sectionBack = function() {
     $state.transitionTo('home', null, {'reload':false});
   };
@@ -136,7 +137,7 @@ else{
 
    // Cleanup the modal when we're done with it!
    $scope.$on('$destroy', function() {
-     $scope.modal.remove();
+    // $scope.modal.remove();
    });
 
    // Execute action on hide modal

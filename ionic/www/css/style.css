@@ -425,9 +425,9 @@ padding-top: 20%;
     margin-left: 18%;
 }
 input.CirclePasscode{
-height:72px;
+height:40px;
 -webkit-text-security: circle;
-font-size:72px;
+font-size:40px;
 letter-spacing:.1em;
 color:black;
 font-weight:2px;

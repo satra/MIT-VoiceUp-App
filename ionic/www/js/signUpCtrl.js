@@ -1,8 +1,10 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
-.controller('signUpCtrl', function($scope,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
+.controller('signUpCtrl', function($scope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
+  ,profileDataManager,databaseService,apiDataManagerService,$state) {
 
       profileDataManager.getUserProfileFields().then(function(response){
+
       var userProfile = response;
       var thisUser = userProfile.profiles[userProfile.default];
       var items = thisUser.items;
@@ -27,14 +29,16 @@ angular.module('signUp',[])
       var password_confirm = null;
       var emailId = null;
       var dataCache = new Array();
+      var gradleArray = new Array();
       //iterate the form and validate the form
       for (var i = 0; i < steps.length; i++) {
-      var lableId = steps[i].id;
+       var lableId = steps[i].id;
+       var spanTag = angular.element(document.querySelectorAll('.item-input')[i].querySelector('span'));
+       var text = spanTag[0].textContent ;
       if(keepGoing){
           var inputValue = angular.element(document.querySelectorAll('.item-input')[i].querySelector('input'));
           var type = inputValue.prop('type');
           var placeholder = inputValue.prop('placeholder');
-          var text = inputValue.prop('text');
           var value = inputValue.prop('value') ;
           switch (lableId) {
            case 'firstName':
@@ -45,6 +49,7 @@ angular.module('signUp',[])
                  }else {
                    obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                    dataCache.push(obj);
+                   gradleArray.push({'firstName':value});
                  }
                 break;
             case 'lastName':
@@ -54,6 +59,7 @@ angular.module('signUp',[])
                   }else {
                     obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                     dataCache.push(obj);
+                    gradleArray.push({'lastName':value});
                   }
                 break;
             case 'email':
@@ -64,11 +70,12 @@ angular.module('signUp',[])
                     //is email valid
                     if(inputValue.hasClass('ng-invalid-email') || inputValue.hasClass('ng-invalid')){
                       formValid = false ; keepGoing = false;
-                      $scope.callAlertDailog('Email is invalid '+value);
+                      $scope.callAlertDailog('Email '+value+' is invalid.');
                     }else {
                       emailId = value;
                       obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                       dataCache.push(obj);
+                      gradleArray.push({'email':value});
                     }
                   }
                 break;
@@ -78,8 +85,14 @@ angular.module('signUp',[])
                       formValid = false ; keepGoing = false;
                       $scope.callAlertDailog('Please enter your '+lableId);
                   }else {
-                    obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                    dataCache.push(obj);
+                        if(password.length < 6){
+                          formValid = false ; keepGoing = false;
+                          $scope.callAlertDailog('Password must be at least 6 characters.');
+                        }else {
+                          obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                          dataCache.push(obj);
+                          gradleArray.push({'password':value});
+                        }
                   }
                 break;
             case 'password_confirm':
@@ -88,8 +101,13 @@ angular.module('signUp',[])
                         formValid = false ; keepGoing = false;
                         $scope.callAlertDailog('Please enter your '+lableId);
                     }else {
-                      obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                      dataCache.push(obj);
+                      if(password_confirm.length < 6){
+                        formValid = false ; keepGoing = false;
+                        $scope.callAlertDailog('Confirm Password must be at least 6 characters.');
+                      }else {
+                        obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                        dataCache.push(obj);
+                      }
                     }
                   break;
               default:
@@ -102,15 +120,30 @@ angular.module('signUp',[])
         //check password equal to confirm password
         if(password == password_confirm){
           $scope.emailId = emailId ;
-          $scope.launchpinScreen();
-          profileDataManager.createUserProfile(dataCache,emailId).then(function(res){
-            console.log('oncreate and check '+res);
-            if(res==false){
-            $scope.callAlertDailog('User already exists ');
-            }else {
-            $scope.emailId = emailId ;
-            $scope.launchpinScreen();
-            }
+          profileDataManager.checkUserExistsByEmail(emailId).then(function(res){
+            if(res){ //user email id already exits
+              $scope.callAlertDailog('User already exists ');
+            }else { // insert this user to db
+
+                gradleArray.push({'login':gradleArray[0].firstName+new Date()});
+                console.log(gradleArray);
+
+              $http({
+                    method:'POST',
+                    url: 'http://23.89.199.27:8180/api/v1/user?login=MIT2&email=mit2@btc-girder.com&firstName=mit2&lastName=mit2&password=mit1234&admin=false'
+                    }).success(function(data) {
+                               console.log(data);
+                               $scope.callAlertDailog(data);
+                               })
+              .error(function(error) {
+                         console.log(error);
+                         $scope.callAlertDailog(error);
+              });
+
+                //profileDataManager.createNewUser(dataCache,$scope.emailId).then(function(res){
+                //$scope.launchpinScreen();
+                //   });
+             }
           });
         }else {
           formValid = false ; keepGoing = false;
@@ -121,14 +154,16 @@ angular.module('signUp',[])
 
     $scope.callAlertDailog =  function (message){
          $ionicPopup.alert({
-          title: 'Data Invalid',
+          title: 'Sign Up Validation',
           template: message
          });
     }
 
 
     $scope.skipSignUp = function(){
-       $state.transitionTo('tab.Activities');
+      $ionicHistory.clearCache().then(function(){
+        $state.transitionTo('tab.Activities');
+      });
     }
 
     $scope.launchpinScreen = function(){
@@ -150,8 +185,11 @@ angular.module('signUp',[])
            if(passcode.length == 4 && confirm_passcode.length == 4){
            if(passcode == confirm_passcode){
              var email = $scope.emailId ;
-             profileDataManager.addPasscodeToUserID(emailId,passcode).then(function(res){
-                 $scope.OpenVerification();
+             profileDataManager.getUserIDByEmail(email).then(function(res){
+                    profileDataManager.addPasscodeToUserID(res,passcode).then(function(res){
+                               console.log(res);
+                               $scope.OpenVerification();
+                             });
                });
             }else {
              $scope.callAlertDailog("passcode should match with confirm passcode ");
@@ -195,8 +233,10 @@ angular.module('signUp',[])
       };
 
       $scope.consentReview= function(){
-        $scope.modal.remove();
-        $state.transitionTo('tab.Activities');
+        $ionicHistory.clearCache().then(function(){
+          $scope.modal.remove();
+          $state.transitionTo('tab.Activities');
+        });
       }
 
      $scope.closeModal = function() {
@@ -205,7 +245,7 @@ angular.module('signUp',[])
 
      // Cleanup the modal when we're done with it!
      $scope.$on('$destroy', function() {
-       $scope.modal.remove();
+      // $scope.modal.remove();
      });
 
      // Execute action on hide modal
