@@ -1,13 +1,19 @@
 angular.module('updateProfile',[])
 //=======Home screen controller======================
-.controller('updateProfileController', function($scope,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
+.controller('updateProfileController', function($scope,$rootScope,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
 
-      profileDataManager.getUserUpdateProfile().then(function(response){
+      var email = $rootScope.emailId ;
+
+      console.log('update profile controller email ID passed to get the profile json '+email);
+      profileDataManager.getUserUpdateProfile(email).then(function(response){
       var items = response;
       $scope.updateDiv = '';
       for (var i = 0; i < items.length; i++) {
+
         if(items[i].type != 'password'){
-         $scope.updateDiv += $scope.generateUpdateProfileDiv(items[i]);
+          if (items[i].placeholder != 'Required') { // should be removed later after testing 
+            $scope.updateDiv += $scope.generateUpdateProfileDiv(items[i]);
+          }
         }
       }
 

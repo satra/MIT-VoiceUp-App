@@ -1,54 +1,93 @@
 angular.module('apiDataManagerService', [])
-.factory('apiDataManagerService', function($http,$q) {
+.factory('apiDataManagerService', function($http,$q,$ionicPopup,$ionicLoading) {
+  var base_url = 'http://23.89.199.27:8180/api/v1/';
   //open connection
   return {
+
     getURL: function(type){
        var URL = null ;
       switch (type) {
         case 'user':
-          URL = 'http://23.89.199.27:8180/api/v1/user';
+          URL = 'http://23.89.199.27:8180/api/v1/user?';
           break;
         default:
       }
      return URL;
     },
     createGradleUser: function(postData){
+     var deferred = $q.defer();
+     var URL = this.getURL('user');
+     var stringToken = '';
+     angular.forEach(postData, function(value, key){
+           if(value.firstName){
+             stringToken += 'firstName='+value.firstName ;
+             console.log('first name '+ value.firstName);
+           }else if (value.lastName){
+              stringToken += '&lastName='+value.lastName ;
+             console.log('last name '+ value.lastName);
+           }
+           else if (value.email){
+             stringToken += '&email='+value.email ;
+             console.log('first email '+ value.email);
+           }
+           else if (value.password){
+             stringToken += '&password='+value.password ;
+             console.log('first password '+ value.password);
+           }
+           else if (value.login){
+             stringToken += '&login='+value.login ;
+             console.log('first login '+ value.login);
+           }
+        });
 
-      //  var deferred = $q.defer();
-        var URL = this.getURL('user');
-        var data =  JSON.stringify(postData);
-      /*  data = "{'firstName':'ss'}";
-        var config = {
-        params: data,
-        headers : {'Accept' : 'application/json'}
-        };
-*/
-  /*  var signUp = {  "field": "email",
-                        "message": "That email is already registered.",
-                        "type": "validation"
-                      };
-    */
-
-        return $http({
-                      method:'POST',
-                      url: 'http://23.89.199.27:8180/api/v1/user'
-                      }).success(function(data) {
-                                 console.log(data);
-                                 })
-                .error(function(error) {
-                console.log(error);
-                });
-        //    console.log(URL);
-      /*  var signUp = $http.post(URL,config).then(function(value) {
-                            console.log(value);
-                            return value ;
-                          }).finally(function() {
-                              $scope.example7 += "(Finally called)";
+      var signUp =    $http({   method:'POST',
+                                url: URL+stringToken,
+                                })
+                      .success(function(data) {
+                                console.log(JSON.stringify(data));
+                                return data ;
+                                })
+                      .error(function(error) {
+                                console.log(error);
+                                $ionicLoading.hide();
+                                if (error) {
+                                  $ionicPopup.alert({
+                                  title: 'Error',
+                                  template: error.message
+                                  });
+                                }
                           });
-                  */
 
-      //   deferred.resolve(signUp);
-        // return deferred.promise;
-       }
+         deferred.resolve(signUp);
+         return deferred.promise;
+       },
+
+     signInGradleUser :  function(headerData){
+      console.log(headerData);
+      var deferred = $q.defer();
+      var URL = base_url+'user/authentication';
+      console.log(URL);
+      var signIn =    $http({    method:'GET',
+                                 url: URL,
+                                 headers: {
+                                'Authorization': headerData
+                                    }
+                                 })
+                       .success(function(data) {
+                                 console.log(JSON.stringify(data));
+                                 return data ;
+                                 })
+                       .error(function(error) {
+                                 console.log(error);
+                                 $ionicLoading.hide();
+                                 $ionicPopup.alert({
+                                 title: 'Error',
+                                 template: error.message
+                                 });
+                           });
+
+          deferred.resolve(signIn);
+          return deferred.promise;
+        }
     }
 });

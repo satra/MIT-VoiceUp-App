@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','eligiblityDataManager',
 'profileDataManager','consentDataManager','apiDataManagerService','homeController','eligibility','eligibile','signUp','passcode','consent',
-'updateProfile','customDirectives','ionicResearchKit', 'checklist-model', 'angular-dialgauge', 'ngCordova'])
+'updateProfile','customDirectives','ionicResearchKit', 'checklist-model','base64', 'angular-dialgauge', 'ngCordova'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

@@ -1,6 +1,6 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
-.controller('signUpCtrl', function($scope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
+.controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
   ,profileDataManager,databaseService,apiDataManagerService,$state) {
 
       profileDataManager.getUserProfileFields().then(function(response){
@@ -35,7 +35,7 @@ angular.module('signUp',[])
        var lableId = steps[i].id;
        var spanTag = angular.element(document.querySelectorAll('.item-input')[i].querySelector('span'));
        var text = spanTag[0].textContent ;
-      if(keepGoing){
+       if(keepGoing){
           var inputValue = angular.element(document.querySelectorAll('.item-input')[i].querySelector('input'));
           var type = inputValue.prop('type');
           var placeholder = inputValue.prop('placeholder');
@@ -120,29 +120,44 @@ angular.module('signUp',[])
         //check password equal to confirm password
         if(password == password_confirm){
           $scope.emailId = emailId ;
+          $rootScope.emailId = emailId ; // save it to access in update profile
+
           profileDataManager.checkUserExistsByEmail(emailId).then(function(res){
             if(res){ //user email id already exits
               $scope.callAlertDailog('User already exists ');
             }else { // insert this user to db
-
-                gradleArray.push({'login':gradleArray[0].firstName+new Date()});
-                console.log(gradleArray);
-
-              $http({
-                    method:'POST',
-                    url: 'http://23.89.199.27:8180/api/v1/user?login=MIT2&email=mit2@btc-girder.com&firstName=mit2&lastName=mit2&password=mit1234&admin=false'
-                    }).success(function(data) {
-                               console.log(data);
-                               $scope.callAlertDailog(data);
-                               })
-              .error(function(error) {
-                         console.log(error);
-                         $scope.callAlertDailog(error);
-              });
-
-                //profileDataManager.createNewUser(dataCache,$scope.emailId).then(function(res){
-                //$scope.launchpinScreen();
-                //   });
+               var today = new Date() ;
+               var dateFormatted = today.getFullYear()+'_'+today.getMonth()+'_'+today.getDay();
+               console.log(dateFormatted);
+               var login = gradleArray[0].firstName+gradleArray[1].lastName ;
+               console.log(login);
+                gradleArray.push({'login':login});
+                if(window.Connection) {
+                  if(navigator.connection.type == Connection.NONE) {
+                                  $ionicPopup.confirm({
+                                      title: "Internet Disconnected",
+                                      content: "The internet is disconnected on your device."
+                                  })
+                                  .then(function(result) {
+                                      if(!result) {
+                                          ionic.Platform.exitApp();
+                                      }
+                                  });
+                              }
+                }else {
+                  console.log('connection exists ');
+                  apiDataManagerService.createGradleUser(gradleArray).then(function(res){
+                      console.log('signup controller '+JSON.stringify(res));
+                      if (res.status == 200) {
+                      var resultData = res.data ;
+                        console.log('insert data to db profile created auth token ' + resultData.authToken['token']);
+                           profileDataManager.createNewUser(dataCache,$scope.emailId,resultData.authToken['token']).then(function(insertId){
+                             console.log(insertId);
+                            $scope.launchpinScreen();
+                          });
+                      }
+                   });
+                }
              }
           });
         }else {
