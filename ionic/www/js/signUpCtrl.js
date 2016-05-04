@@ -196,7 +196,9 @@ angular.module('signUp',[])
        });
     }
 
+
 //===================================================passcode handler ============================
+
     $scope.passcodeLabel = "Enter Passcode";
     $scope.managePasscode = false ;
     $scope.managePasscodeConfirm = true ;

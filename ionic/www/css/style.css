@@ -70,7 +70,6 @@ button.choice-food-pizza {
 }
 
 .textcenterinput {
-margin-left: 20%;
 font-weight: bold;
 text-align: center;
 }
@@ -589,9 +588,7 @@ margin-bottom:12%;
 .marB49p{
     margin-bottom: 49% !important;
 }
-.marB17p{
-        margin-bottom: 17%;
-}
+
 .marL26p{
     margin-left:26%;
 }
@@ -601,7 +598,9 @@ margin-bottom:12%;
 /*=============================================IRK BUTTONS============================================*/
 .wid200{
     width: 140px;
-  }.round1{
+  }
+
+  .round1{
     padding: 8px 10px !important ;
     background:#fff !important;
     border:1px solid #a31f34 !important;
@@ -613,24 +612,24 @@ margin-bottom:12%;
             line-height: 30px !important;
             color:#a31f34 !important;
   }
+
   .round1:hover{
     background:#a31f34 !important;
     color:white !important;
-
   }
 
-.roundDisabled{
-      padding: 8px 10px !important ;
-      background:#fff !important;
-      border:1px solid #a31f34 !important;
-      border-radius:23px !important ;
-            width: 180px !important;
-              height: 46px !important;
-              text-align: center !important;
-              vertical-align: middle !important;
-              line-height: 30px !important;
-              color:#a31f34 !important;
-    }
+  .roundDisabled{
+    padding: 8px 10px !important ;
+    background:#fff !important;
+    border:1px solid #a31f34 !important;
+    border-radius:23px !important ;
+          width: 180px !important;
+            height: 46px !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            line-height: 30px !important;
+            color:#a31f34 !important;
+  }
 
 .irk-btn{
 
@@ -833,8 +832,4 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 .irk-button-instruction:hover{
     background:#a31f34 !important;
     color:white !important;
-}
-
-.font33{
-    font-size: 33px
 }
