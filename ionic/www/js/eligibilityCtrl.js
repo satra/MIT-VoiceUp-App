@@ -7,6 +7,7 @@ eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData){
     $scope.eligiblityData =  eligiblityData ;
     $scope.isDisabled = true;
     $scope.results = new Array();
+    $scope.roundClass = 'roundDisabled';
     //generate the view data and launch
     var optionList = '';
     angular.forEach($scope.eligiblityData, function(value, key){
@@ -34,6 +35,7 @@ $scope.checkEligibilitySubmitEnable = function(id,answer) {
 $scope.results[id] = answer;
 if(Object.keys($scope.results).length === $scope.eligiblityData.length ){
        $scope.isDisabled = false;
+       $scope.roundClass = 'round1';
  }else{
      $scope.isDisabled = true;
   }
