@@ -60,7 +60,6 @@ $scope.launchSurvey = function (idSelected){
     $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                       '<irk-ordered-tasks>'+
                                       surveyHtml +
-                                      '<irk-task>'+
                                       '</irk-ordered-tasks>'+
                                       '</ion-modal-view> ', {
                                       scope: $scope,
