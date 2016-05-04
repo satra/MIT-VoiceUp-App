@@ -619,6 +619,19 @@ margin-bottom:12%;
 
   }
 
+.roundDisabled{
+      padding: 8px 10px !important ;
+      background:#fff !important;
+      border:1px solid #a31f34 !important;
+      border-radius:23px !important ;
+            width: 180px !important;
+              height: 46px !important;
+              text-align: center !important;
+              vertical-align: middle !important;
+              line-height: 30px !important;
+              color:#a31f34 !important;
+    }
+
 .irk-btn{
 
     padding: 8px 10px ;
@@ -770,7 +783,7 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
       width: 180px !important;
         height: 46px;
       color:  #a31f34;
-    
+
 
 }
 .button.irk-button-step-previous.button-outline.active, .button.irk-button-step-previous.button-outline.activated,
