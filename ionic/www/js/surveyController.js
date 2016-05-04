@@ -18,13 +18,14 @@ angular.module('surveyController',[])
             //var month = dateArray[3];
             if(month == "*"){
               month = today.getMonth();
-              month = month+1;
+            }
+            else {
+              month = month-1;
             }
             if(day == "*"){
-             day = today.getDay();
+             day = today.getDate();
             }
-            var surveyDate = new Date(today.getFullYear()+'-'+month+'-'+day);
-            if(today.getFullYear()===surveyDate.getFullYear() && today.getMonth()===surveyDate.getMonth() && today.getDay()==surveyDate.getDay() ){
+            if(today.getMonth() == month && today.getDate() == day){
             items.push(surveyMainList[i]);
             }
      }
