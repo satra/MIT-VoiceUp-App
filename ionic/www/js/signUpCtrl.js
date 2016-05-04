@@ -120,16 +120,16 @@ angular.module('signUp',[])
         //check password equal to confirm password
         if(password == password_confirm){
           $scope.emailId = emailId ;
-          $rootScope.emailId = emailId ; // save it to access in update profile
-
           profileDataManager.checkUserExistsByEmail(emailId).then(function(res){
             if(res){ //user email id already exits
               $scope.callAlertDailog('User already exists ');
             }else { // insert this user to db
                var today = new Date() ;
-               var dateFormatted = today.getFullYear()+'_'+today.getMonth()+'_'+today.getDay();
+               var dateFormatted = today.getFullYear();
+               dateFormatted += today.getMonth();
+               dateFormatted +=today.getDay();
                console.log(dateFormatted);
-               var login = gradleArray[0].firstName+gradleArray[1].lastName ;
+               var login = gradleArray[0].firstName+gradleArray[1].lastName+dateFormatted ;
                console.log(login);
                 gradleArray.push({'login':login});
                 if(window.Connection) {
@@ -152,8 +152,10 @@ angular.module('signUp',[])
                       var resultData = res.data ;
                         console.log('insert data to db profile created auth token ' + resultData.authToken['token']);
                            profileDataManager.createNewUser(dataCache,$scope.emailId,resultData.authToken['token']).then(function(insertId){
-                             console.log(insertId);
+
+                            $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
                             $scope.launchpinScreen();
+
                           });
                       }
                    });
@@ -194,26 +196,66 @@ angular.module('signUp',[])
        });
     }
 
-    $scope.checkFourDigits = function(){
-           var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
-           var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value') ;
-           if(passcode.length == 4 && confirm_passcode.length == 4){
-           if(passcode == confirm_passcode){
-             var email = $scope.emailId ;
-             profileDataManager.getUserIDByEmail(email).then(function(res){
-                    profileDataManager.addPasscodeToUserID(res,passcode).then(function(res){
-                               console.log(res);
-                               $scope.OpenVerification();
-                             });
-               });
+//===================================================passcode handler ============================
+    $scope.passcodeLabel = "Enter Passcode";
+    $scope.managePasscode = false ;
+    $scope.managePasscodeConfirm = true ;
+    $scope.confirmLoop = 0;
+
+    $scope.checkConfirmPasscodeDigits = function(){
+        var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
+        var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value');
+           if(confirm_passcode.length == 4){
+            //check is both are equal
+            if($scope.passcode == confirm_passcode){
+                var email = $scope.emailId ;
+                console.log('insert passcode allow '+ email);
+                if (email) {
+                  profileDataManager.getUserIDByEmail(email).then(function(res){
+                         profileDataManager.addPasscodeToUserID(res,passcode).then(function(res){
+                                    console.log(res);
+                                    $scope.OpenVerification();
+                                  });
+                    });
+                }
             }else {
-             $scope.callAlertDailog("passcode should match with confirm passcode ");
-             }
-           }else if(passcode.length > 4 || confirm_passcode.length > 4 ) {
-            $scope.callAlertDailog("both passcode length should be 4 max ");
+              console.log('not equal clear div and run loop ');
+              //reset div
+              $scope.confirm_passcode = '';
+              $compile(confirm_passcode_div)($scope);
+              $scope.callAlertDailog("Passcode should match with confirm");
+              $scope.confirmLoop = $scope.confirmLoop +1;
+              console.log($scope.confirmLoop);
+               if($scope.confirmLoop >= 3){
+                 $scope.passcodeLabel = "Enter Passcode";
+                 $scope.managePasscode = false ;
+                 $scope.managePasscodeConfirm = true ;
+                 $scope.confirmLoop = 0;
+                 //clear div
+                 var passcode_div = angular.element(document.querySelector('#passcode'));
+                 $scope.passcode = '';
+                 $compile(passcode_div)($scope);
+               }
+            }
+           }else if(confirm_passcode.length > 4) {
+            $scope.callAlertDailog("Passcode length should be max 4.");
            }
+    }
+
+    $scope.checkPasscodeDigits = function(){
+         var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
+         if(passcode.length == 4){
+           $scope.passcode = passcode ;
+           $scope.managePasscode = true ;
+           $scope.passcodeLabel = "Confirm Passcode";
+           $scope.managePasscodeConfirm = false ;
+         }else if(passcode.length > 4) {
+          $scope.callAlertDailog("Passcode length should be max 4.");
+         }
      }
 
+
+//========================All set go to next screen ===========================
     $scope.OpenVerification = function() {
       $ionicModal.fromTemplateUrl('templates/verification.html', {
         scope: $scope,

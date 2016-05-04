@@ -23,6 +23,18 @@ angular.module('customDirectives',[])
     }
 })
 
+
+.directive('focusMe', function($timeout) {
+  return {
+    link: function(scope, element, attrs) {
+
+      $timeout(function() {
+        element[0].focus();
+      });
+    }
+  };
+})
+
 //======================================================================================
 // Usage: <btc-image-choice value="choice" text="Your choice." normal-state-image="" selected-state-image="" type="image" />
 // =====================================================================================

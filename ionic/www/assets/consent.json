@@ -283,7 +283,7 @@
       ]
     },
    {
-      "date": "0 5 1 * *",
+      "date": "0 5 4 * *",
       "title": "Mental Health Survey 2",
       "id" : "2",
 
@@ -311,7 +311,7 @@
       ]
     },
     {
-      "date": "0 5 2 * *",
+      "date": "0 5 4 * *",
       "title": "Mental Health Survey 3",
             "id" : "3",
       "skippable": [
@@ -336,7 +336,7 @@
       ]
     },
     {
-      "date": "0 5 2 * *",
+      "date": "0 5 4 * *",
       "title": "Mental Health Survey 4",
       "id" : "5",
       "skippable": [

@@ -11,7 +11,7 @@ angular.module('updateProfile',[])
       for (var i = 0; i < items.length; i++) {
 
         if(items[i].type != 'password'){
-          if (items[i].placeholder != 'Required') { // should be removed later after testing 
+          if (items[i].placeholder != 'Required') { // should be removed later after testing
             $scope.updateDiv += $scope.generateUpdateProfileDiv(items[i]);
           }
         }

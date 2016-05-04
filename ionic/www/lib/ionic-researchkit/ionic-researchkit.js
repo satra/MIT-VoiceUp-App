@@ -435,6 +435,8 @@ angular.module('ionicResearchKit',[])
                     $scope.formData.consent = false;
                     $scope.doSave();
                     $scope.doEnd();
+                    //btc testing
+                    $scope.$parent.cancelClicked();
                 };
 
                 //This is called to reanimate GIF images

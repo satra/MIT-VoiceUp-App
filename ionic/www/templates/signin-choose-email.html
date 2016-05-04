@@ -5,39 +5,42 @@
       <button class="button button-clear" ng-click="GoBack()">Cancel</button>
     </div>
   </ion-header-bar>
-<script src="js/utils.js"></script>
+
 <ion-content class="scroll-content">
   <div ng-hide="email">
         <div class="image1">
           <img src="img/voiceup_icon_1.png">
           </div>
 
-<select   class="passcode-dropdown"ng-model="email" ng-change="getselectval()" ng-click="hidden=false">
-    <option  ng-repeat="email in emails "  ng-click="hidden=false"><a ng-href="welcome.html">{{email.name}}</a></option>
-
-</select>
+          <select   class="passcode-dropdown" ng-model="email" ng-change="resetInput()" >
+              <option  ng-repeat="email in emails ">
+                <a>{{email.emailId}}</a>
+              </option>
+          </select>
 
 </div>
 
 
 <div  ng-show="email" class="pass">
-<div ng-app="ngAnimate">
-<select class="passcode-dropdown"ng-model="email" ng-change="getselectval()" ng-click="hidden=false">
-    <option  ng-repeat="email in emails "  ng-click="hidden=false"><a ng-href="welcome.html">{{email.name}}</a></option>
+          <select class="passcode-dropdown" ng-model="email"  ng-change="resetInput()" >
+              <option  ng-repeat="email in emails " >
+                <a value="email.emailId" >{{email.emailId}}</a>
+              </option>
+          </select>
 
-</select>
+  <br/>
+  <br/><br/><br/>
+<label class=" item-input item-stacked-label ">
+<span style="font-size:31px;font-weight:bold;" class=" font35" >Enter Passcode</span>
+<input class=" CirclePasscode  txtcenter "  type="text"  name="passcode" id="passcode"
+     maxlength="4"  ng-change="passcodeChanged()" ng-model="passcode" focus-me >
+</label>
+
+<div>
+<a  class="vatag" href="#">Forgot Passcode ?</a>
 </div>
-<br/>
-<br/><br/><br/>
 
-  <label class=" item-input item-stacked-label ">
-
- <span style="font-size:31px;font-weight:bold;" class=" font35">Enter Passcode</span>
-  <input class="CirclePasscode txtcenter "  type="text"  name="password" id="password"
-     maxlength="4">
-   </label>
-   <div ><a  class="vatag" href="#">Forgot Passcode ?</a></div>
-   </div>
+</div>
 
 </ion-content>
 

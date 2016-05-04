@@ -8,16 +8,19 @@
  <div class="textcenterinput">  <input type="text" class="fontB" ng-disabled="true" ng-model="emailId"> </div> <br>
 
 <div class="textcenter rk-centered">
- <label class=" item-input item-stacked-label ">
- <span style="font-size:20px;font-weight:bold;" class="font35">Enter Passcode</span>
- <input class="CirclePasscode txtcenter"  style="line-height: 90%;" placeholder="0000" type="password"  name="passcode" id="passcode" ng-model="passcode" ng-change="checkFourDigits()" maxlength="4">
+
+<label class=" item-input item-stacked-label ">
+ <span style="font-size:20px;font-weight:bold;" class="font35" ng-madel="passcodeLabel">{{passcodeLabel}}</span>
+ <input class="CirclePasscode txtcenter"  style="line-height: 90%;" placeholder="0000" type="password"  name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4" ng-hide="managePasscode" focus-me>
+ <input class="CirclePasscode txtcenter" style="line-height: 90%;" placeholder="0000" type="password"  name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()" maxlength="4" ng-hide="managePasscodeConfirm" >
 </label>
 
+<!--
 <label class=" item-input item-stacked-label ">
 <span style="font-size:20px;font-weight:bold;" class="font35">Confirm Passcode</span>
 <input class="CirclePasscode txtcenter" style="line-height: 90%;" placeholder="0000" type="password"  name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkFourDigits()" maxlength="4">
 </label>
-
+-->
 </div>
 
 </ion-content>

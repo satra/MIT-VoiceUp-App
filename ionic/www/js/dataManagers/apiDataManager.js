@@ -63,28 +63,33 @@ angular.module('apiDataManagerService', [])
        },
 
      signInGradleUser :  function(headerData){
-      console.log(headerData);
       var deferred = $q.defer();
       var URL = base_url+'user/authentication';
-      console.log(URL);
       var signIn =    $http({    method:'GET',
                                  url: URL,
                                  headers: {
                                 'Authorization': headerData
                                     }
-                                 })
-                       .success(function(data) {
-                                 console.log(JSON.stringify(data));
-                                 return data ;
-                                 })
-                       .error(function(error) {
-                                 console.log(error);
-                                 $ionicLoading.hide();
-                                 $ionicPopup.alert({
-                                 title: 'Error',
-                                 template: error.message
-                                 });
-                           });
+                                 }).then(function successCallback(data) {
+                                    // when the response is available
+                                    console.log(JSON.stringify(data));
+                                    return data ;
+                                  }, function errorCallback(error) {
+                                    // called asynchronously if an error occurs
+                                    // or server returns response with an error status.
+                                    console.log(error);
+                                    if (!error.data) {
+                                      message = 'Server error'}
+                                    else {
+                                      var message = error.data.message ;
+                                    }
+                                    $ionicLoading.hide();
+                                      $ionicPopup.alert({
+                                      title: 'Error',
+                                      template: message
+                                      });
+                                      return error ;
+                                });
 
           deferred.resolve(signIn);
           return deferred.promise;

@@ -8,19 +8,19 @@
   </ion-header-bar>
   <ion-content >
       <div class="irk-centered  textfld IRK-MARBTM-30p IRK-FONT1 irk-font-helvetica">Sign in</div>
-<div class="list">
+<div class="list" id="signIn">
    <label class="item item-input item-stacked-label irk-centered barTnone">
    <span class="input-label"></span>
-   <input style="text-align: center" type="Email" placeholder="Email">
+   <input style="text-align: center" type="Email" placeholder="Email" class="form-item" focus-me>
    </label>
    <label class="item item-input item-stacked-label irk-centered IRK-BORBTM-NONE">
    <span class="input-label"></span>
-   <input style="text-align: center" type="password" placeholder="Password">
+   <input style="text-align: center" type="password" placeholder="Password" class="form-item">
    </label>
    <br>
-   <button class="irk-btn irk-centered IRK-FONT2 irk-font-helvetica"  ng-click="signInSubmit()">Sign in</button>
+   <button class="irk-btn irk-centered irk-font-helvetica"  ng-click="signInSubmit()">Sign in</button>
    <div class="irk-centered marT10p IRK-MARBTM-30p IRK-FONT2 irk-font-helvetica"><a href="#" class="vatag irk-font-helvetica">Forgot password?</a></div>
-   <div class="irk-centered IRK-FONT3 irk-font-helvetica"><a href="#" class="vatag IRK-FONT3 irk-font-helvetica">Skip</a></div>
+   <div class="irk-centered IRK-FONT3 irk-font-helvetica"><a href="#" class="vatag IRK-FONT3 irk-font-helvetica" ng-click="skipSignIn()" >Skip</a></div>
 </div>
   </ion-content>
 </ion-modal-view>
