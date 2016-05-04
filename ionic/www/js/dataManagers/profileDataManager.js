@@ -1,7 +1,7 @@
 angular.module('profileDataManager', [])
 .factory('profileDataManager', function($http,$cordovaSQLite,$q,databaseService) {
 
-  //open connection
+  //open connection .rows.item(0).userId rows
   return {
        getUserProfileFields: function(){
                 var deferred = $q.defer();
@@ -115,8 +115,7 @@ angular.module('profileDataManager', [])
             console.log(query);
             var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
                    if(res.rows.length > 0){
-                     console.log('insert id in model '+res.rows[0].userId);
-                     return res.rows[0].userId ;
+                     return res.rows.item(0).userId ;
                    }else {
                      return null ;
                      }
