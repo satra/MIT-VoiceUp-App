@@ -28,7 +28,7 @@ angular.module('surveyController',[])
             items.push(surveyMainList[i]);
             }
      }
-   $scope.list= items ;
+       $scope.list= items ;
 });
 
 
@@ -41,9 +41,16 @@ $scope.launchSurvey = function (idSelected){
             var id = surveys[i].id;
             if(id == idSelected){
                //is skippable may needed future to make a screen skippable
-               // var skippable = response[i].skippable;
+              var skippable = surveys[i].skippable;
               var tasksneeded  = surveys[i].tasks;
               for (var k = 0; k < tasksneeded.length; k++) {
+                 var taskselected = tasksneeded[k] ;
+                 var disableSkip = true ;
+                     for (var L = 0; L < skippable.length; L++) {
+                       if (taskselected == skippable[L]) {
+                         disableSkip = false ;
+                         }
+                     }
                  var r = Math.floor(Math.random()*(100-1+1)/1);
                  var customId = tasksneeded[k]+r;
                  var steps = taskList[tasksneeded[k]].steps;
@@ -51,12 +58,12 @@ $scope.launchSurvey = function (idSelected){
                   //  var timelimit =taskList[tasksneeded[k]].timelimit;
                     for (var j = 0; j < steps.length; j++) {
                         var type = steps[j].type;
-                        surveyHtml += $scope.activitiesDivGenerator(customId,steps[j]);
+                        surveyHtml += $scope.activitiesDivGenerator(customId,steps[j],disableSkip);
                      }
                }
             }
       }
-   console.log(surveyHtml);
+
     $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                       '<irk-ordered-tasks>'+
                                       surveyHtml +
@@ -96,33 +103,32 @@ $scope.launchSurvey = function (idSelected){
   $scope.$on('modal.removed', function() {
     // Execute action
    });
-   $scope.activitiesDivGenerator= function(customId,stepData){
+   $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
       var type = stepData.type;
       var customDiv = '';
-      console.log(type);
    //2============================generate div using switch looking type ====
          switch(type){
 
              case 'irk-instruction-step':
                    if(stepData['button-text']){
-                   customDiv = '<irk-task><irk-instruction-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" button-text="'+stepData['button-text']+'"/> </irk-task>';
+                   customDiv = '<irk-task><irk-instruction-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" button-text="'+stepData['button-text']+'"/> </irk-task>';
                    }else {
-                   customDiv = '<irk-task><irk-instruction-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /> </irk-task>';
+                   customDiv = '<irk-task><irk-instruction-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /> </irk-task>';
                    }
                    break ;
              case 'irk-scale-question-step':
-                   customDiv = '<irk-task><irk-scale-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" step="'+stepData.step+'" value="'+stepData.value+'" /> </irk-task>';
+                   customDiv = '<irk-task><irk-scale-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" step="'+stepData.step+'" value="'+stepData.value+'" /> </irk-task>';
                    break;
 
              case 'irk-boolean-question-step':
-                   customDiv = '<irk-task><irk-boolean-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" true-text="'+stepData['true-text']+'" false-text="'+stepData['false-text']+'" /> </irk-task>';
+                   customDiv = '<irk-task><irk-boolean-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" true-text="'+stepData['true-text']+'" false-text="'+stepData['false-text']+'" /> </irk-task>';
                    break;
 
              case 'irk-text-question-step':
                    if(stepData['multiple-lines']){
-                   customDiv = '<irk-task><irk-text-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" multiple-lines="'+stepData['multiple-lines']+'" /> </irk-task>';
+                   customDiv = '<irk-task><irk-text-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" multiple-lines="'+stepData['multiple-lines']+'" /> </irk-task>';
                    }else {
-                   customDiv = '<irk-task><irk-text-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /> </irk-task>';
+                   customDiv = '<irk-task><irk-text-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /> </irk-task>';
                    }
                    break;
 
@@ -139,20 +145,20 @@ $scope.launchSurvey = function (idSelected){
                            else
                            choice += '<irk-text-choice text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'"></irk-text-choice>';
                            }
-                           customDiv = '<irk-task> <irk-text-choice-question-step id="'+customId+'" title="'+stepData.title+'" style="'+style+'">'+
+                           customDiv = '<irk-task > <irk-text-choice-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" style="'+style+'">'+
                            choice+'</irk-text-choice-question-step></irk-task>';
                     break;
 
               case 'irk-numeric-question-step':
-                    customDiv = '<irk-task> <irk-numeric-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" unit="'+stepData['unit']+'"/></irk-task>';
+                    customDiv = '<irk-task > <irk-numeric-question-step optional="'+disableSkip+'" id="'+customId+'"  title="'+stepData.title+'" text="'+stepData.text+'" unit="'+stepData['unit']+'"/></irk-task>';
                     break;
 
               case 'irk-date-question-step':
-                    customDiv = '<irk-task> <irk-date-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /></irk-task>';
+                    customDiv = '<irk-task > <irk-date-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /></irk-task>';
                     break;
 
               case 'irk-time-question-step':
-                    customDiv = '<irk-task> <irk-time-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /></irk-task>';
+                    customDiv = '<irk-task> <irk-time-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /></irk-task>';
                     break;
 
               case 'irk-value-picker-question-step':
@@ -160,7 +166,7 @@ $scope.launchSurvey = function (idSelected){
                            for (var i = 0; i < stepData.choices.length; i++) {
                            choice += '<irk-picker-choice text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'"></irk-picker-choice>';
                            }
-                           customDiv = '<irk-task> <irk-value-picker-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
+                           customDiv = '<irk-task> <irk-value-picker-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
                            choice+'</irk-value-picker-question-step></irk-task>';
                     break;
 
@@ -169,7 +175,7 @@ $scope.launchSurvey = function (idSelected){
                            for (var i = 0; i < stepData.choices.length; i++) {
                            choice += '<irk-image-choice text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'" normal-state-image="'+stepData.choices[i]['normal-state-image']+'" selected-state-image="'+stepData.choices[i]['selected-state-image']+'" ></irk-image-choice>';
                            }
-                           customDiv = '<irk-task> <irk-image-choice-question-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
+                           customDiv = '<irk-task > <irk-image-choice-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
                            choice+'</irk-image-choice-question-step></irk-task>';
                     break;
 
@@ -178,16 +184,16 @@ $scope.launchSurvey = function (idSelected){
                            for (var i = 0; i < stepData.choices.length; i++) {
                            choice += '<irk-form-item text="'+stepData.choices[i].text+'" type="'+stepData.choices[i].type+'" id="'+stepData.choices[i].id+'" placeholder="'+stepData.choices[i].placeholder+'"  ></irk-form-item>';
                            }
-                           customDiv = '<irk-task> <irk-form-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
+                           customDiv = '<irk-task > <irk-form-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
                            choice+'</irk-form-step></irk-task>';
                     break;
 
               case 'instruction':
-                    customDiv = '<irk-task> <irk-instruction-step id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" button-text="Get Started" image="'+stepData.image+'" footer-attach="'+stepData['footer-attach']+'"/></irk-task>';
+                    customDiv = '<irk-task optional="'+disableSkip+'" > <irk-instruction-step  optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" button-text="Get Started" image="'+stepData.image+'" footer-attach="'+stepData['footer-attach']+'"/></irk-task>';
                     break;
 
               case 'irk-audio-task':
-                    customDiv = '<irk-task> <irk-audio-task id="'+customId+'_audio" duration="'+stepData.duration+'" text= "'+stepData.text+'"/></irk-task>';
+                    customDiv = '<irk-task optional="'+disableSkip+'" > <irk-audio-task optional="'+disableSkip+'" id="'+customId+'_audio" duration="'+stepData.duration+'" text= "'+stepData.text+'"/></irk-task>';
               break;
           }
          return customDiv;

@@ -290,11 +290,6 @@
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
-        "SAGE_5",
-        "EmoSentence_49",
-        "MIT_24",
         "QIDS_10",
         "PCL_C_18"
       ],
