@@ -212,7 +212,8 @@ angular.module('signUp',[])
                 console.log('insert passcode allow '+ email);
                 if (email) {
                   profileDataManager.getUserIDByEmail(email).then(function(res){
-                         profileDataManager.addPasscodeToUserID(res,passcode).then(function(res){
+
+                         profileDataManager.addPasscodeToUserID(res,$scope.passcode).then(function(res){
                                     console.log(res);
                                     $scope.OpenVerification();
                                   });
