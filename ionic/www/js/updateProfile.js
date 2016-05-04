@@ -3,7 +3,6 @@ angular.module('updateProfile',[])
 .controller('updateProfileController', function($scope,$rootScope,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
 
       var email = $rootScope.emailId ;
-
       console.log('update profile controller email ID passed to get the profile json '+email);
       profileDataManager.getUserUpdateProfile(email).then(function(response){
       var items = response;

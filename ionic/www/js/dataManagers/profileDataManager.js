@@ -27,14 +27,14 @@ angular.module('profileDataManager', [])
           var query = "SELECT profileJson FROM user WHERE emailId ='"+emailId.trim()+"'";
           console.log('query+ '+ query );
           var profile =  $cordovaSQLite.execute(db, query).then(function(res) {
-                 console.log('Profile data for this user '+JSON.stringify(res));
-                  var len = res.rows.length;
+                   var len = res.rows.length;
                   for (var i=0; i<len; i++){
                      profile = JSON.parse(res.rows.item(i).profileJson);
                     }
+                  console.log(profile);
                     return profile;
                     //resolve here
-                    deferred.resolve(profile);
+                   //  deferred.resolve(profile);
                 }, function (err) {
               });
          deferred.resolve(profile);
@@ -65,11 +65,11 @@ angular.module('profileDataManager', [])
          var deferred = $q.defer();
          var profileJson = JSON.stringify(profileJson);
          var randomNumber =parseInt(Math.floor(Math.random() * 90000) + 10000);
-         console.log('Random number '+ randomNumber);
+         console.log('Random number '+ randomNumber + 'Trim email '+ emailId.trim());
          var db = databaseService.getConnectionObject();
          var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, ceratedDate TEXT, emailId TEXT,profileJson TEXT, updatedDate TEXT, userId TEXT,gardleId TEXT)');
          //chek the email ID exists
-         var insert =  $cordovaSQLite.execute(db, 'INSERT INTO User (ceratedDate, emailId, profileJson, updatedDate, userId,gardleId) VALUES (?,?,?,?,?,?)', [new Date(),emailId,profileJson,new Date(),randomNumber,authToken])
+         var insert =  $cordovaSQLite.execute(db, 'INSERT INTO User (ceratedDate, emailId, profileJson, updatedDate, userId,gardleId) VALUES (?,?,?,?,?,?)', [new Date(),emailId.trim(),profileJson,new Date(),randomNumber,authToken])
                           .then(function(res) {
                               return res.insertId ;
                           }, function (err) {
