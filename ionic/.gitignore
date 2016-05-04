@@ -4,7 +4,6 @@
 node_modules/
 platforms/
 plugins/
-resources/
 www/lib/ionic
 .tmp
 .sass-cache

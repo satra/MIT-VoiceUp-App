@@ -589,7 +589,9 @@ margin-bottom:12%;
 .marB49p{
     margin-bottom: 49% !important;
 }
-
+.marB17p{
+        margin-bottom: 17%;
+}
 .marL26p{
     margin-left:26%;
 }
@@ -818,4 +820,8 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 .irk-button-instruction:hover{
     background:#a31f34 !important;
     color:white !important;
+}
+
+.font33{
+    font-size: 33px
 }
