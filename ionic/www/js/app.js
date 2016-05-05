@@ -22,6 +22,11 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
       StatusBar.styleLightContent();
     }
   });
+
+  $ionicPlatform.registerBackButtonAction(function (event) {
+                 event.preventDefault();
+   }, 100);
+
 })
 
 

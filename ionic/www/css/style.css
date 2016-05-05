@@ -13,7 +13,6 @@ button.choice-food-pizza {
 .custom-ionic {
   background-image: url(../img/ionic.png);
 }
-
 === btc css ===================================================================
 
 .pad200 {
@@ -99,6 +98,8 @@ input{
   text-align: center;
   padding-top: 85px;
 }
+
+
 /*Font **************************/
 .font22{font-size:20px !important;}
 .font15{font-size:15px !important;}
@@ -832,4 +833,7 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 .irk-button-instruction:hover{
     background:#a31f34 !important;
     color:white !important;
+}
+.backgroundTrans {
+  background-color: transparent !important;
 }

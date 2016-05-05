@@ -83,7 +83,7 @@ angular.module('apiDataManagerService', [])
                                     else {
                                       var message = error.data.message ;
                                     }
-                                    $ionicLoading.hide();
+                                      $ionicLoading.hide();
                                       $ionicPopup.alert({
                                       title: 'Error',
                                       template: message
@@ -93,6 +93,35 @@ angular.module('apiDataManagerService', [])
 
           deferred.resolve(signIn);
           return deferred.promise;
+        },
+
+      userForgotPassword:function (emailId){
+        var deferred = $q.defer();
+        var URL = base_url+'user/password?email='+emailId.trim();
+        console.log(URL);
+        var forgotPassword =  $http({ method:'DELETE',
+                                      url: URL
+                                  }).then(function successCallback(data) {
+                                    // when the response is available
+                                    return data ;
+                                  }, function errorCallback(error) {
+                                       console.log('error');
+                                       if (!error.data) {
+                                        message = 'Server error'
+                                       }
+                                       else {
+                                          var message = error.data.message ;
+                                        }
+                                        $ionicLoading.hide();
+                                        $ionicPopup.alert({
+                                        title: 'Error',
+                                        template: message
+                                        });
+
+                                        return error ;
+                                  });
+        deferred.resolve(forgotPassword);
+        return deferred.promise;
         }
     }
 });
