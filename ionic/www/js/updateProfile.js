@@ -1,25 +1,85 @@
 angular.module('updateProfile',[])
 //=======Home screen controller======================
-.controller('updateProfileController', function($scope,$rootScope,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
+.controller('updateProfileController', function($scope,$rootScope,$ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
 
       var email = $rootScope.emailId ;
       console.log('update profile controller email ID passed to get the profile json '+email);
       profileDataManager.getUserUpdateProfile(email).then(function(response){
-      var items = response;
-      $scope.updateDiv = '';
-      for (var i = 0; i < items.length; i++) {
-
-        if(items[i].type != 'password'){
-          if (items[i].placeholder != 'Required') { // should be removed later after testing
-            $scope.updateDiv += $scope.generateUpdateProfileDiv(items[i]);
+          if (response) {
+            var items = response;
+            $scope.updateDiv = '';
+            for (var i = 0; i < items.length; i++) {
+              if(items[i].type != 'password'){
+                if (items[i].placeholder != 'Required') {  // should be removed later after testing
+                  $scope.updateDiv += $scope.generateUpdateProfileDiv(items[i]);
+                }
+              }
+            }
+            var updateProfile = angular.element(document.querySelector('#updateProfile'));
+            updateProfile.append($scope.updateDiv);
+            $compile(updateProfile)($scope);
           }
-        }
+     });
+
+     $scope.userSettings = function() {
+       $ionicModal.fromTemplateUrl('templates/settings.html', {
+         scope: $scope,
+         animation: 'slide-in-up'
+       }).then(function(modal) {
+         $scope.modal = modal;
+         $scope.modal.show();
+       });
+     };
+
+     $scope.settingsBack = function (){
+       $scope.modal.remove();
+     }
+
+     $scope.notification = false;
+     $scope.dailyNotification = false ;
+     $scope.BiweekNotification = false ;
+
+     $scope.toggleNotification = function(){
+              if ($scope.notification == false) {
+                  $scope.notification = true;
+              } else{
+                  $scope.notification = false;
+                  $scope.dailyNotification = false ;
+                  $scope.BiweekNotification = false ;
+                }
+     }
+
+     $scope.toggleDailyNotification = function(){
+            if ($scope.dailyNotification == false) {
+                  $scope.notification = true;
+                  $scope.dailyNotification = true;
+              } else{
+                  $scope.dailyNotification = false;
+                }
+     }
+
+     $scope.toggleBiweekNotification = function(){
+       if ($scope.BiweekNotification == false) {
+                  $scope.notification = true;
+                  $scope.BiweekNotification = true;
+              } else {
+                  $scope.BiweekNotification = false;
+                }
+    }
+
+      $scope.viewPermissions = function(){
+        $ionicModal.fromTemplateUrl('templates/locationservice.html', {
+          scope: $scope,
+          animation: 'slide-in-up'
+        }).then(function(modal) {
+          $scope.permission = modal;
+          $scope.permission.show();
+        });
       }
 
-      var updateProfile = angular.element(document.querySelector('#updateProfile'));
-      updateProfile.append($scope.updateDiv);
-      $compile(updateProfile)($scope);
-     });
+    $scope.OpenVerification = function() {
+        $scope.permission.remove();
+      };
 
      $scope.closeModal = function() {
        $scope.modal.remove();
