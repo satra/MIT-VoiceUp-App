@@ -22,24 +22,23 @@ angular.module('profileDataManager', [])
           },
 
    getUserUpdateProfile : function(emailId){
-          var deferred = $q.defer();
-          var db = databaseService.getConnectionObject();
-          var query = "SELECT profileJson FROM user WHERE emailId ='"+emailId.trim()+"'";
-          console.log('query+ '+ query );
-          var profile =  $cordovaSQLite.execute(db, query).then(function(res) {
-                   var len = res.rows.length;
-                  for (var i=0; i<len; i++){
-                     profile = JSON.parse(res.rows.item(i).profileJson);
-                    }
-                  console.log(profile);
-                    return profile;
-                    //resolve here
-                   //  deferred.resolve(profile);
-                }, function (err) {
-              });
-         deferred.resolve(profile);
-         return deferred.promise;
-          },
+           var deferred = $q.defer();
+           var db = databaseService.getConnectionObject();
+          if (emailId) {
+            var query = "SELECT profileJson FROM user WHERE emailId ='"+emailId.trim()+"'";
+            var profile =  $cordovaSQLite.execute(db, query).then(function(res) {
+                    var len = res.rows.length;
+                    for (var i=0; i<len; i++){
+                       profile = JSON.parse(res.rows.item(i).profileJson);
+                      }
+                    console.log(profile);
+                      return profile;
+                  }, function (err) {
+                });
+             }
+             deferred.resolve(profile);
+             return deferred.promise;
+      },
 
      checkUserExistsByEmail : function(emailId){
            var deferred = $q.defer();

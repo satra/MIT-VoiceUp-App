@@ -837,3 +837,33 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 .backgroundTrans {
   background-color: transparent !important;
 }
+
+/* Empty. Add your own CSS if you like */
+.btn {
+    display: inline-block;
+    margin: 0 0 10px 0;
+    padding: 3px 6px;
+    border: medium none;
+
+    color: #FFFFFF;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+    .text-align-left{
+        text-align:left !important;
+    }
+    .IRK-FONT1{
+       color:#3c3c3c !important;
+   }
+    .IRK-FONT2{
+       color:#8b7a7d !important ;
+   }
+   .IRK-FONT3{
+       color:#666666;
+   }
+   .font-settings{
+       font-size:5px !important;
+   }
