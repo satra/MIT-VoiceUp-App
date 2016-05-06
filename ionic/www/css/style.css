@@ -572,6 +572,9 @@ margin-bottom:12%;
 .IRK-MARBTM-50p{
     margin-bottom:50% ! important;
 }
+.IRK-MARBTM-25p{
+    margin-bottom:25%;
+}
 .IRK-BORBTM-NONE{
     border-bottom: none;
 }
@@ -839,6 +842,9 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Empty. Add your own CSS if you like */
+.width150{
+    width:150px!important;
+}
 .btn {
     display: inline-block;
     margin: 0 0 10px 0;
@@ -852,9 +858,27 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
     white-space: nowrap;
 }
 
+ .icon-settings{
+      content: attr(data-button-icon);
+      float: right;
+      padding-left: 1em;
+    }
     .text-align-left{
         text-align:left !important;
     }
+   
+   .font-settings{
+       font-size:5px !important;
+   }
+   font33{
+       font-size: 33px !important;
+   }
+   .IRK-MARBTM-23p{
+    margin-bottom:23%;
+}
+.icon-font-button{
+   font-size: 33px !important ;
+}
     .IRK-FONT1{
        color:#3c3c3c !important;
    }
@@ -867,3 +891,4 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
    .font-settings{
        font-size:5px !important;
    }
+ 
