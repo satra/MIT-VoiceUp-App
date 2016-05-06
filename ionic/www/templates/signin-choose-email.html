@@ -12,7 +12,7 @@
      <img src="img/logo-2.png" class="irk-step-image">
    </div>
 
-          <select   class="passcode-dropdown" ng-model="email" ng-change="resetInput()" >
+          <select   class="passcode-dropdown marT10p" ng-model="email" ng-change="resetInput()" >
               <option  ng-repeat="email in emails ">
                 <a>{{email.emailId}}</a>
               </option>
@@ -44,7 +44,7 @@
 
 </ion-content>
 
-<div class="bar bar-footer bar-light">
+<div class="bar bar-footer bar-light border-top-none">
    <button class="button icon" ng-click="showEligibilityTestView()"><span class="fontB">New User?</span></button>
    <button class="button icon" ng-click="openSignIn()"><span class="fontB"> Sign In</span></button>
 </div>
