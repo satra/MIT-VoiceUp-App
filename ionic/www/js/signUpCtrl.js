@@ -147,9 +147,9 @@ if (formValid) {
                       console.log('signup controller '+JSON.stringify(res));
                       if (res.status == 200) {
                       var resultData = res.data ;
-                        console.log('insert data to db profile created auth token '+dataCache);
                            profileDataManager.createNewUser(dataCache,$scope.emailId,resultData.authToken['token']).then(function(insertId){
                             $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
+                            $rootScope.authuser =  $scope.emailId ;
                             $scope.launchpinScreen();
                           });
                       }
@@ -212,8 +212,7 @@ if (formValid) {
                 console.log('insert passcode allow '+ email);
                 if (email) {
                   profileDataManager.getUserIDByEmail(email).then(function(res){
-
-                         profileDataManager.addPasscodeToUserID(res,$scope.passcode).then(function(res){
+                         profileDataManager.addPasscodeToUserID(res,$scope.passcode,email).then(function(res){
                                     console.log(res);
                                     $scope.OpenVerification();
                                   });

@@ -143,11 +143,9 @@ getUserSettingsJson : function(emailId){
          var deferred = $q.defer();
          var db = databaseService.getConnectionObject();
          //chek the email ID exists
-         var query = "SELECT token FROM Session WHERE userId ='"+userId+"' AND passcode ='"+passcode+"' ";
+         var query = "SELECT id FROM Session WHERE userId ='"+userId+"' AND passcode ='"+passcode+"' ";
          var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
                 if(res.rows.length > 0){
-                  console.log(res.rows);
-                  console.log('return  token '+res.rows[0].token);
                   return true ;
                 }else {
                   return false ;
@@ -175,12 +173,12 @@ getUserSettingsJson : function(emailId){
              return deferred.promise;
       },
 
-    addPasscodeToUserID : function (userId,passcode){
+    addPasscodeToUserID : function (userId,passcode,email){
           var deferred = $q.defer();
           var db = databaseService.getConnectionObject();
-          var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Session(id INTEGER PRIMARY KEY AUTOINCREMENT, passcode TEXT, token TEXT,userId TEXT)');
+          var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Session(id INTEGER PRIMARY KEY AUTOINCREMENT, passcode TEXT, token TEXT,userId TEXT,emailId TEXT)');
           //chek the email ID exists
-          var insert =  $cordovaSQLite.execute(db, 'INSERT INTO Session (passcode, token, userId) VALUES (?,?,?)', [passcode,'',userId])
+          var insert =  $cordovaSQLite.execute(db, 'INSERT INTO Session (passcode, token, userId,emailId) VALUES (?,?,?,?)', [passcode,'',userId,email.trim()])
                            .then(function(res) {
                                console.log("passcode inserted "+res.insertId);
                                return res.insertId ;
