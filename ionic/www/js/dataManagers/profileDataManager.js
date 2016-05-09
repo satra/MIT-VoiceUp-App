@@ -58,7 +58,7 @@ getUserSettingsJson : function(emailId){
      checkUserExistsByEmail : function(emailId){
            var deferred = $q.defer();
            var db = databaseService.getConnectionObject();
-           var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, ceratedDate TEXT, emailId TEXT,profileJson TEXT,settingsJson TEXT,updatedDate TEXT, userId TEXT,gardleId TEXT)');
+           var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, createdDate TEXT, emailId TEXT,profileJson TEXT,settingsJson TEXT,updatedDate TEXT, userId TEXT,gardleId TEXT)');
            //chek the email ID exists
            var query = "SELECT userId FROM User WHERE emailId ='"+emailId+"'";
            var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
@@ -75,17 +75,15 @@ getUserSettingsJson : function(emailId){
            return deferred.promise;
         },
 
-   createNewUser : function(profileJson,emailId,authToken){
+   createNewUser : function(profile,emailId,authToken){
          var deferred = $q.defer();
-         var profileJson = JSON.stringify(profileJson);
+         var profileJson = JSON.stringify(profile);
          //var randomNumber =parseInt(Math.floor(Math.random() * 90000) + 10000);
          var randomNumber=Math.ceil(Math.random()*100)
-         console.log(randomNumber);
-
          var db = databaseService.getConnectionObject();
-         var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, ceratedDate TEXT, emailId TEXT,profileJson TEXT, settingsJson TEXT,updatedDate TEXT, userId TEXT,gardleId TEXT)');
+         var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, createdDate TEXT, emailId TEXT,profileJson TEXT, settingsJson TEXT,updatedDate TEXT, userId TEXT,gardleId TEXT)');
          //chek the email ID exists
-         var insert =  $cordovaSQLite.execute(db, 'INSERT INTO User (ceratedDate, emailId, profileJson, updatedDate, userId,gardleId) VALUES (?,?,?,?,?,?)', [new Date(),emailId.trim(),profileJson,new Date(),randomNumber,authToken])
+         var insert =  $cordovaSQLite.execute(db, 'INSERT INTO User (createdDate, emailId, profileJson, updatedDate, userId,gardleId) VALUES (?,?,?,?,?,?)', [new Date(),emailId.trim(),profileJson,new Date(),randomNumber,authToken])
                           .then(function(res) {
                               return res.insertId ;
                           }, function (err) {
@@ -207,7 +205,39 @@ getUserSettingsJson : function(emailId){
                        });
           deferred.resolve(update);
           return deferred.promise;
-       }
+       },
+       checkPasscodeExistsForUserID : function(userId,passcode){
+         var deferred = $q.defer();
+         var db = databaseService.getConnectionObject();
+         //chek the email ID exists
+         var query = "SELECT id FROM Session WHERE userId ='"+userId+"' AND passcode ='"+passcode+"' ";
+         var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
+                if(res.rows.length > 0){
+                  console.log('return  token id '+res.rows[0].id);
+                  return true ;
+                }else {
+                  return false ;
+                 }
+               }, function (err) {
+             });
+         deferred.resolve(insert);
+         return deferred.promise;
+       },
+       updatePasscodeToUserID : function (userId,passcode){
+             var deferred = $q.defer();
+             var db = databaseService.getConnectionObject();
+             //chek the email ID exists
+             var query = "UPDATE Session SET passcode = '"+passcode+"' WHERE userId = ?";
+             var update =  $cordovaSQLite.execute(db, query , [userId.trim()] )
+                              .then(function(res) {
+                                  return res.rowsAffected ;
+                              }, function (err) {
+                                  console.error(err);
+                          });
+
+             deferred.resolve(update);
+             return deferred.promise;
+           }
 
     }
 });

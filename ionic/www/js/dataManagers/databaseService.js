@@ -8,7 +8,7 @@ angular.module('databaseService', [])
     createLocalDatabaseSchema: function(){
         var query = "SELECT * FROM AppContent";
         var db = this.getConnectionObject();
-        //var query = "DROP TABLE AppContent";
+        var query = "DROP TABLE AppContent";
         $cordovaSQLite.execute(db, query)
             .then(function(res) {
               //on success

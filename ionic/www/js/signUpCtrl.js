@@ -30,110 +30,106 @@ angular.module('signUp',[])
       var emailId = null;
       var dataCache = [];
       var gradleArray = new Array();
-      //iterate the form and validate the form
-      for (var i = 0; i < steps.length; i++) {
-       var lableId = steps[i].id;
-       var spanTag = angular.element(document.querySelectorAll('.item-input')[i].querySelector('span'));
-       var text = spanTag[0].textContent ;
-       if(keepGoing){
-          var inputValue = angular.element(document.querySelectorAll('.item-input')[i].querySelector('input'));
-          var type = inputValue.prop('type');
-          var placeholder = inputValue.prop('placeholder');
-          var value = inputValue.prop('value') ;
-          switch (lableId.toLowerCase()) {
-           case 'firstname':
-                 if(value ==''){
-                   formValid = false;
-                   keepGoing = false;
-                   //clear the array
+//get the data by id
+//iterate the form and validate the form
+console.log('steps ' +steps.length);
+
+ for (var i = 0; i < steps.length; i++) {
+  var lableId = steps[i].id;
+  var spanTag = angular.element(document.querySelectorAll('.item-input')[i].querySelector('span'));
+  var text = spanTag[0].textContent ;
+  if(keepGoing){
+     var inputValue = angular.element(document.querySelectorAll('.item-input')[i].querySelector('input'));
+     var type = inputValue.prop('type');
+     var placeholder = inputValue.prop('placeholder');
+     var value = inputValue.prop('value') ;
+     switch (lableId.toLowerCase()) {
+      case 'firstname':
+            if(value ==''){
+              formValid = false;
+              keepGoing = false;
+              //clear the array
+              $scope.callAlertDailog('Please enter your '+lableId);
+            }else {
+              obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+              dataCache.push(obj);
+              gradleArray.push({'firstName':value});
+            }
+           break;
+       case 'lastname':
+             if(value ==''){
+                 formValid = false ; keepGoing = false;
+                 $scope.callAlertDailog('Please enter your '+lableId);
+             }else {
+               obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+               dataCache.push(obj);
+               gradleArray.push({'lastName':value});
+             }
+           break;
+       case 'email':
+             if(value ==''){
+                 formValid = false ; keepGoing = false;
+                 $scope.callAlertDailog('Please enter your '+lableId);
+             }else {
+               //is email valid
+               if(inputValue.hasClass('ng-invalid-email') || inputValue.hasClass('ng-invalid')){
+                 formValid = false ; keepGoing = false;
+                 $scope.callAlertDailog('Email '+value+' is invalid.');
+               }else {
+                 emailId = value;
+                 obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                 dataCache.push(obj);
+                 gradleArray.push({'email':value});
+               }
+             }
+           break;
+       case 'password':
+             password = value ;
+             if(password ==''){
+                 formValid = false ; keepGoing = false;
+                 $scope.callAlertDailog('Please enter your '+lableId);
+             }else {
+                   if(password.length < 6){
+                     formValid = false ; keepGoing = false;
+                     $scope.callAlertDailog('Password must be at least 6 characters.');
+                   }else {
+                     gradleArray.push({'password':value});
+                   }
+             }
+           break;
+       case 'password_confirm':
+               password_confirm = value ;
+               if(password_confirm ==''){
+                   formValid = false ; keepGoing = false;
                    $scope.callAlertDailog('Please enter your '+lableId);
-                 }else {
-                   obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                   dataCache.push(obj);
-                   gradleArray.push({'firstName':value});
+               }else {
+                 if(password_confirm.length < 6){
+                   formValid = false ; keepGoing = false;
+                   $scope.callAlertDailog('Confirm Password must be at least 6 characters.');
                  }
-                break;
-            case 'lastname':
-                  if(value ==''){
-                      formValid = false ; keepGoing = false;
-                      $scope.callAlertDailog('Please enter your '+lableId);
-                  }else {
-                    obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                    dataCache.push(obj);
-                    gradleArray.push({'lastName':value});
-                  }
-                break;
-            case 'email':
-                  if(value ==''){
-                      formValid = false ; keepGoing = false;
-                      $scope.callAlertDailog('Please enter your '+lableId);
-                  }else {
-                    //is email valid
-                    if(inputValue.hasClass('ng-invalid-email') || inputValue.hasClass('ng-invalid')){
-                      formValid = false ; keepGoing = false;
-                      $scope.callAlertDailog('Email '+value+' is invalid.');
-                    }else {
-                      emailId = value;
+               }
+             break;
+
+         case 'dateofbirth':
+                     obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                     dataCache.push(obj);
+          break;
+
+         case 'weight':
                       obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                       dataCache.push(obj);
-                      gradleArray.push({'email':value});
-                    }
-                  }
-                break;
-            case 'password':
-                  password = value ;
-                  if(password ==''){
-                      formValid = false ; keepGoing = false;
-                      $scope.callAlertDailog('Please enter your '+lableId);
-                  }else {
-                        if(password.length < 6){
-                          formValid = false ; keepGoing = false;
-                          $scope.callAlertDailog('Password must be at least 6 characters.');
-                        }else {
-                          //obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                          //dataCache.push(obj);
-                          gradleArray.push({'password':value});
-                        }
-                  }
-                break;
-            case 'password_confirm':
-                    password_confirm = value ;
-                    if(password_confirm ==''){
-                        formValid = false ; keepGoing = false;
-                        $scope.callAlertDailog('Please enter your '+lableId);
-                    }else {
-                      if(password_confirm.length < 6){
-                        formValid = false ; keepGoing = false;
-                        $scope.callAlertDailog('Confirm Password must be at least 6 characters.');
-                      }else {
-                      //  obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                      //  dataCache.push(obj);
-                      }
-                    }
-                  break;
+           break;
 
-              case 'dateofbirth':
-                          obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                          dataCache.push(obj);
-               break;
+         case 'height':
+                       obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                       dataCache.push(obj);
+         break;
+       default: break ;
+       }
+     }
+  }
 
-              case 'weight':
-                           obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                           dataCache.push(obj);
-                break;
-
-              case 'height':
-                            obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                            dataCache.push(obj);
-              break;
-
-              default: break ;
-            //  obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-            //  dataCache.push(obj);
-            }
-        }
-      }
-    if (formValid) {
+if (formValid) {
         //check password equal to confirm password
         if(password == password_confirm){
           $scope.emailId = emailId ;
@@ -145,38 +141,19 @@ angular.module('signUp',[])
                var dateFormatted = today.getFullYear();
                dateFormatted += today.getMonth();
                dateFormatted +=today.getDay();
-               console.log(dateFormatted);
                var login = gradleArray[0].firstName+gradleArray[1].lastName+dateFormatted ;
-               console.log(login);
-                gradleArray.push({'login':login});
-                if(window.Connection) {
-                  if(navigator.connection.type == Connection.NONE) {
-                                  $ionicPopup.confirm({
-                                      title: "Internet Disconnected",
-                                      content: "The internet is disconnected on your device."
-                                  })
-                                  .then(function(result) {
-                                      if(!result) {
-                                          ionic.Platform.exitApp();
-                                      }
-                                  });
-                              }
-                }else {
-                  console.log('connection exists ');
-                  apiDataManagerService.createGradleUser(gradleArray).then(function(res){
+               gradleArray.push({'login':login});
+                 apiDataManagerService.createGradleUser(gradleArray).then(function(res){
                       console.log('signup controller '+JSON.stringify(res));
                       if (res.status == 200) {
                       var resultData = res.data ;
-                        console.log('insert data to db profile created auth token ' + resultData.authToken['token']);
+                        console.log('insert data to db profile created auth token '+dataCache);
                            profileDataManager.createNewUser(dataCache,$scope.emailId,resultData.authToken['token']).then(function(insertId){
-
                             $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
                             $scope.launchpinScreen();
-
                           });
                       }
                    });
-                }
              }
           });
         }else {

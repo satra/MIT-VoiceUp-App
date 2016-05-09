@@ -1,4 +1,11 @@
 <ion-modal-view>
+  <ion-header-bar>
+        <button class="button font40 IRK-FONT2" ng-click="closePasscodeModal()"><i class="icon ion-ios-arrow-thin-left icon-font-button"></i></i></button>
+    <h1 class="title"></h1>
+    <div class="buttons">
+    </div>
+  </ion-header-bar>
+
     <ion-content content scroll="false">
       <div class="irk-image irk-centered  width150">
      <img src="img/logo-2.png" class="irk-step-image">
@@ -8,6 +15,7 @@
             <label class=" item-input item-stacked-label" style="margin-top: 20px;">
                 <span style="font-size:20px;font-weight:bold;" class="font35">{{passcodeLabel}}</span>
                 <input class="CirclePasscode txtcenter"  style="line-height: 90%;" placeholder="0000" type="password"  name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4" ng-hide="managePasscode" focus-me>
+                <input class="CirclePasscode txtcenter" style="line-height: 90%;" placeholder="0000" type="password"  name="new_passcode" id="new_passcode" ng-model="new_passcode" ng-change="checkNewPasscodeDigits()" maxlength="4" ng-hide="managePasscodeNew" focus-me>
                 <input class="CirclePasscode txtcenter" style="line-height: 90%;" placeholder="0000" type="password"  name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()" maxlength="4" ng-hide="managePasscodeConfirm" focus-me>
             </label>
         </div>
