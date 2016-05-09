@@ -1,16 +1,36 @@
 angular.module('homeController',[])
 //=======Home screen controller======================
 .controller('HomeCtrl', function($scope,$compile,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,
-  apiDataManagerService,profileDataManager,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
+  apiDataManagerService,profileDataManager,broadcast,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
  //get IP like email ids
  $scope.$on('$ionicView.enter', function() {
      // Code you want executed every time view is opened
      console.log('Opened!')
-
      //ionic.Platform.exitApp();
   });
 
-  databaseService.createLocalDatabaseSchema();
+$scope.$on(broadcast.events.onPause, function (event) {
+   if ($rootScope.authuser) {
+     var authUser = $rootScope.authuser ;
+       $ionicPopup.alert({
+        title: 'pause',
+        template: authUser
+       });
+   }
+});
+
+$scope.$on(broadcast.events.onResume, function (event) {
+  if ($rootScope.authuser) {
+      var authUser = $rootScope.authuser ;
+      $ionicPopup.alert({
+       title: 'pause',
+       template: authUser
+      });
+   }
+
+});
+
+databaseService.createLocalDatabaseSchema();
 
   //openOnlineResource
   $scope.openOnlineResource = function() {
