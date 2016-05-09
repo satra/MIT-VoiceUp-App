@@ -28,7 +28,7 @@ angular.module('signUp',[])
       var password = null ;
       var password_confirm = null;
       var emailId = null;
-      var dataCache = new Array();
+      var dataCache = [];
       var gradleArray = new Array();
       //iterate the form and validate the form
       for (var i = 0; i < steps.length; i++) {
@@ -40,11 +40,12 @@ angular.module('signUp',[])
           var type = inputValue.prop('type');
           var placeholder = inputValue.prop('placeholder');
           var value = inputValue.prop('value') ;
-          switch (lableId) {
-           case 'firstName':
+          switch (lableId.toLowerCase()) {
+           case 'firstname':
                  if(value ==''){
                    formValid = false;
                    keepGoing = false;
+                   //clear the array
                    $scope.callAlertDailog('Please enter your '+lableId);
                  }else {
                    obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
@@ -52,7 +53,7 @@ angular.module('signUp',[])
                    gradleArray.push({'firstName':value});
                  }
                 break;
-            case 'lastName':
+            case 'lastname':
                   if(value ==''){
                       formValid = false ; keepGoing = false;
                       $scope.callAlertDailog('Please enter your '+lableId);
@@ -89,8 +90,8 @@ angular.module('signUp',[])
                           formValid = false ; keepGoing = false;
                           $scope.callAlertDailog('Password must be at least 6 characters.');
                         }else {
-                          obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                          dataCache.push(obj);
+                          //obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                          //dataCache.push(obj);
                           gradleArray.push({'password':value});
                         }
                   }
@@ -105,14 +106,30 @@ angular.module('signUp',[])
                         formValid = false ; keepGoing = false;
                         $scope.callAlertDailog('Confirm Password must be at least 6 characters.');
                       }else {
-                        obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                        dataCache.push(obj);
+                      //  obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                      //  dataCache.push(obj);
                       }
                     }
                   break;
-              default:
-              obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-              dataCache.push(obj);
+
+              case 'dateofbirth':
+                          obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                          dataCache.push(obj);
+               break;
+
+              case 'weight':
+                           obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                           dataCache.push(obj);
+                break;
+
+              case 'height':
+                            obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                            dataCache.push(obj);
+              break;
+
+              default: break ;
+            //  obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+            //  dataCache.push(obj);
             }
         }
       }
@@ -166,6 +183,10 @@ angular.module('signUp',[])
           formValid = false ; keepGoing = false;
           $scope.callAlertDailog('Password should match with confirm password');
           }
+       }else {
+         console.log(dataCache);
+          // redefine the array make sure to clear the array
+         dataCache = [];
        }
     }
 

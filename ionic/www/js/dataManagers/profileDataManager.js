@@ -27,11 +27,10 @@ angular.module('profileDataManager', [])
           if (emailId) {
             var query = "SELECT profileJson FROM user WHERE emailId ='"+emailId.trim()+"'";
             var profile =  $cordovaSQLite.execute(db, query).then(function(res) {
-                    var len = res.rows.length;
-                    for (var i=0; i<len; i++){
+                      var len = res.rows.length;
+                      for (var i=0; i<len; i++){
                        profile = JSON.parse(res.rows.item(i).profileJson);
                       }
-                    console.log(profile);
                       return profile;
                   }, function (err) {
                 });
@@ -39,11 +38,27 @@ angular.module('profileDataManager', [])
              deferred.resolve(profile);
              return deferred.promise;
       },
-
+getUserSettingsJson : function(emailId){
+        var deferred = $q.defer();
+        var db = databaseService.getConnectionObject();
+        if (emailId) {
+         var query = "SELECT settingsJson FROM user WHERE emailId ='"+emailId.trim()+"'";
+         var settings =  $cordovaSQLite.execute(db, query).then(function(res) {
+                   var len = res.rows.length;
+                   for (var i=0; i<len; i++){
+                    settings = JSON.parse(res.rows.item(i).settingsJson);
+                   }
+                   return settings;
+               }, function (err) {
+             });
+          }
+          deferred.resolve(settings);
+          return deferred.promise;
+   },
      checkUserExistsByEmail : function(emailId){
            var deferred = $q.defer();
            var db = databaseService.getConnectionObject();
-           var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, ceratedDate TEXT, emailId TEXT,profileJson TEXT, updatedDate TEXT, userId TEXT,gardleId TEXT)');
+           var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, ceratedDate TEXT, emailId TEXT,profileJson TEXT,settingsJson TEXT,updatedDate TEXT, userId TEXT,gardleId TEXT)');
            //chek the email ID exists
            var query = "SELECT userId FROM User WHERE emailId ='"+emailId+"'";
            var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
@@ -63,10 +78,12 @@ angular.module('profileDataManager', [])
    createNewUser : function(profileJson,emailId,authToken){
          var deferred = $q.defer();
          var profileJson = JSON.stringify(profileJson);
-         var randomNumber =parseInt(Math.floor(Math.random() * 90000) + 10000);
-         console.log('Random number '+ randomNumber + 'Trim email '+ emailId.trim());
+         //var randomNumber =parseInt(Math.floor(Math.random() * 90000) + 10000);
+         var randomNumber=Math.ceil(Math.random()*100)
+         console.log(randomNumber);
+
          var db = databaseService.getConnectionObject();
-         var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, ceratedDate TEXT, emailId TEXT,profileJson TEXT, updatedDate TEXT, userId TEXT,gardleId TEXT)');
+         var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, ceratedDate TEXT, emailId TEXT,profileJson TEXT, settingsJson TEXT,updatedDate TEXT, userId TEXT,gardleId TEXT)');
          //chek the email ID exists
          var insert =  $cordovaSQLite.execute(db, 'INSERT INTO User (ceratedDate, emailId, profileJson, updatedDate, userId,gardleId) VALUES (?,?,?,?,?,?)', [new Date(),emailId.trim(),profileJson,new Date(),randomNumber,authToken])
                           .then(function(res) {
@@ -159,6 +176,7 @@ angular.module('profileDataManager', [])
              deferred.resolve(insert);
              return deferred.promise;
       },
+
     addPasscodeToUserID : function (userId,passcode){
           var deferred = $q.defer();
           var db = databaseService.getConnectionObject();
@@ -173,6 +191,23 @@ angular.module('profileDataManager', [])
                           });
           deferred.resolve(insert);
           return deferred.promise;
-        }
+        },
+
+        updateSettingsJsonToUserID : function (emailId,settingsJson){
+          var deferred = $q.defer();
+          var settingsJson = JSON.stringify(settingsJson);
+          console.log('settings json '+settingsJson);
+          var db = databaseService.getConnectionObject();
+          var query = "UPDATE User SET updatedDate = '"+new Date()+"' , settingsJson = '"+settingsJson+"'  WHERE emailId = ?";
+          var update =  $cordovaSQLite.execute(db, query , [emailId.trim()] )
+                           .then(function(res) {
+                               return res.rowsAffected ;
+                           }, function (err) {
+                               console.error(err);
+                       });
+          deferred.resolve(update);
+          return deferred.promise;
+       }
+
     }
 });

@@ -1,17 +1,20 @@
 <ion-view  hide-nav-bar="true" class="pane">
+
   <ion-header-bar>
    <div class="buttons">
       <button class="button button-clear" ng-click="userSettings()"><i class="icon ion-ios-gear IRK-FONT2"></i></button>
     </div>
     <h1 class="title">Profile Update</h1>
+
+    <div class="buttons">
+      <button type="submit" class="button button-clear" ng-click="switchProfileModeOnOff()">{{profileModeLabel}}</button>
+    </div>
+
   </ion-header-bar>
 
 <ion-content>
   <div id="updateProfile">
   </div>
-  <button  class="round1 irk-centered marT5p marB20 irk.font IRK-FONT3 irk-font-helvetica" ng-click="updateProfile()">
-  UPDATE PROFILE
-  </button>
 </ion-content>
 
 </ion-view>

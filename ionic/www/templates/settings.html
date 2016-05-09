@@ -1,4 +1,4 @@
-<ion-modal-view >
+<ion-modal-view>
   <ion-header-bar>
     <div class="buttons">
       <button class="button button-clear" ng-click="settingsBack()"><i class="ion-arrow-left-c"></i></button>
@@ -6,20 +6,12 @@
     <h1 class="title">Settings</h1>
   </ion-header-bar>
 
-  <ion-content>
-
-<!--    <ion-toggle ng-model=notification ng-change="toggleNotification()" > one  </ion-toggle>
-    <ion-toggle ng-model=dailyNotification ng-change="toggleDailyNotification()" > two  </ion-toggle>
-    <ion-toggle ng-model=BiweekNotification ng-change="toggleBiweekNotification()" > three  </ion-toggle>
-
--->
-
+<ion-content>
   <div class="list">
-
     <li class="item item-toggle IRK-FONT1 ">
          Notifications
-         <label class="toggle toggle">
-             <input type="checkbox" ng-model=notification ng-change="toggleNotification()"  >
+         <label class="toggle toggle "  >
+             <input type="checkbox" ng-model="notification" ng-change="toggleNotification()" type="submit" >
              <div class="track">
                  <div class="handle"></div>
              </div>
@@ -28,8 +20,8 @@
 
      <li class="item item-toggle IRK-FONT1">
          Daily Push Notification
-         <label class="toggle toggle">
-             <input type="checkbox" ng-model=dailyNotification ng-change="toggleDailyNotification()">
+         <label class="toggle toggle" >
+             <input type="checkbox" ng-model="daily" ng-change="toggleDailyNotification()" type="submit">
              <div class="track">
                  <div class="handle"></div>
              </div>
@@ -39,7 +31,7 @@
      <li class="item item-toggle IRK-FONT1">
          Biweekly Push Notification
          <label class="toggle toggle">
-             <input type="checkbox" ng-model=BiweekNotification ng-change="toggleBiweekNotification()" >
+             <input type="checkbox" ng-model="week" ng-change="toggleBiweekNotification()" type="submit">
              <div class="track">
                  <div class="handle"></div>
              </div>
@@ -53,20 +45,24 @@
   <div class="item IRK-FONT1">Download Data</div>
 
   <div class="item item-icon-right IRK-FONT1">  View Permissions
-     <button class="button button-clear icon"" ng-click="viewPermissions()"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></button>
+     <button class="button button-clear icon" ng-click="viewPermissions()"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></button>
    </div>
 
    <div class="item IRK-FONT1">Review Consent</div>
 
-   <div class="item item-icon-right IRK-FONT1">  Privacy Consent
-     <button class="button button-clear icon""> <i class="icon ion-chevron-right icon IRK-FONT1"></i></button>
+   <div class="item item-icon-right IRK-FONT1">  Privacy Policy
+     <button class="button button-clear icon"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></button>
    </div>
 
    <div class="item item-icon-right IRK-FONT1"> Copyright Information
-     <button class="button button-clear icon""> <i class="icon ion-chevron-right icon IRK-FONT1"></i></button>
+     <button class="button button-clear icon"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></button>
+   </div>
+
+   <div class="item item-icon-right IRK-FONT1">  Change Passcode
+     <button class="button button-clear icon" ng-click="changePasscode()"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></button>
    </div>
 
    </div>
-
   </ion-content>
+
 </ion-modal-view >

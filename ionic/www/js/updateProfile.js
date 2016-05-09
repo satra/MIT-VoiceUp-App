@@ -1,27 +1,62 @@
 angular.module('updateProfile',[])
 //=======Home screen controller======================
-.controller('updateProfileController', function($scope,$rootScope,$ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
+.controller('updateProfileController', function($scope,$rootScope,$ionicHistory,$state, $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
 
       var email = $rootScope.emailId ;
+      $rootScope.emailId = email ;
+//=============================get user fields saved locally ===============================
       console.log('update profile controller email ID passed to get the profile json '+email);
       profileDataManager.getUserUpdateProfile(email).then(function(response){
+        console.log(response);
           if (response) {
             var items = response;
+            $scope.profileFields = response;
             $scope.updateDiv = '';
-            for (var i = 0; i < items.length; i++) {
-              if(items[i].type != 'password'){
-                if (items[i].placeholder != 'Required') {  // should be removed later after testing
-                  $scope.updateDiv += $scope.generateUpdateProfileDiv(items[i]);
+            if ($scope.profileFields!='') {
+              for (var i = 0; i < items.length; i++) {
+                if(items[i].type != 'password'){
+                  if (items[i].id != '') {  // should be removed later after testing
+                    $scope.updateDiv += $scope.generateUpdateProfileDiv(items[i]);
+                  }
                 }
               }
             }
+
+            $scope.profileModeLabel = 'Edit';
+            $scope.isDisabled = true;
+
             var updateProfile = angular.element(document.querySelector('#updateProfile'));
             updateProfile.append($scope.updateDiv);
             $compile(updateProfile)($scope);
+          }else {
+              $scope.updateDiv = '<button class="round1 irk-centered  marT5p marB20 irk.font IRK-FONT3 irk-font-helvetica padB2p " ng-click="beginSignUp()">Sign Up</button>';
+              var updateProfile = angular.element(document.querySelector('#updateProfile'));
+              updateProfile.append($scope.updateDiv);
+              $compile(updateProfile)($scope);
           }
      });
 
+     // by defalut
+     $scope.notification = false;
+     $scope.daily = false;
+     $scope.week = false ;
+
      $scope.userSettings = function() {
+      // get the settings from database
+      console.log($rootScope.emailId);
+      profileDataManager.getUserSettingsJson($rootScope.emailId).then(function(response){
+        console.log('settings screen' + response);
+          if (response) {
+             if (response!='') {
+               for (var i = 0; i < response.length; i++) {
+                 $scope.notification = response[i].notification;
+                 $scope.daily = response[i].dailyNotification ;
+                 $scope.week = response[i].weeklyNotification ;
+                 }
+               }
+             }
+        });
+
        $ionicModal.fromTemplateUrl('templates/settings.html', {
          scope: $scope,
          animation: 'slide-in-up'
@@ -35,39 +70,49 @@ angular.module('updateProfile',[])
        $scope.modal.remove();
      }
 
-     $scope.notification = false;
-     $scope.dailyNotification = false ;
-     $scope.BiweekNotification = false ;
-
      $scope.toggleNotification = function(){
-              if ($scope.notification == false) {
-                  $scope.notification = true;
-              } else{
-                  $scope.notification = false;
-                  $scope.dailyNotification = false ;
-                  $scope.BiweekNotification = false ;
-                }
+      if ($scope.notification == false) {
+          $scope.notification = true;
+          console.log('inside first if ');
+        }else {
+          $scope.notification = false;
+          $scope.daily =false ;
+          $scope.week =false ;
+        }
+       $scope.updateToggleValue();
      }
 
      $scope.toggleDailyNotification = function(){
-            if ($scope.dailyNotification == false) {
-                  $scope.notification = true;
-                  $scope.dailyNotification = true;
-              } else{
-                  $scope.dailyNotification = false;
-                }
+            if ($scope.daily == false) {
+                $scope.notification = true;
+                $scope.daily =true ;
+              }else {
+                $scope.daily =false ;
+              }
+          $scope.updateToggleValue();
      }
 
      $scope.toggleBiweekNotification = function(){
-       if ($scope.BiweekNotification == false) {
+            if ($scope.week == false) {
                   $scope.notification = true;
-                  $scope.BiweekNotification = true;
-              } else {
-                  $scope.BiweekNotification = false;
-                }
+                  $scope.week = true;
+              }else {
+                  $scope.week = false;
+              }
+        $scope.updateToggleValue();
     }
 
-      $scope.viewPermissions = function(){
+    $scope.updateToggleValue = function(){
+      var emailId = $rootScope.emailId ;
+      var settingsJson = new Array({"notification": $scope.notification,  "dailyNotification":$scope.daily ,"weeklyNotification":$scope.week});
+      profileDataManager.updateSettingsJsonToUserID(emailId,settingsJson).then(function(response){
+           if (response) {
+             console.log(response);
+           }
+        });
+    }
+
+   $scope.viewPermissions = function(){
         $ionicModal.fromTemplateUrl('templates/locationservice.html', {
           scope: $scope,
           animation: 'slide-in-up'
@@ -108,17 +153,11 @@ angular.module('updateProfile',[])
         $scope[id] = [value];
         }
         var div = '';
-              if(!type){
-               type = 'label';
-               }
              switch(type){
-                case 'label': div += '<irk-form-item title="'+obj.title+'"></irk-form-item>'
-                              break ;
-
                 case 'text' :
                               div += '<label class="item item-input" type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                       '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                      '<input type="text" ng-model="'+id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style="" ></label>';
+                                      '<input type="text" ng-disabled="isDisabled"   ng-model="'+id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style="" ></label>';
                               break;
 
                 case 'email':
@@ -127,22 +166,11 @@ angular.module('updateProfile',[])
                                       '<input type="email"  ng-model="'+id+'" ng-disabled="true" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
 
-                case 'password':
-                                var label = obj.text;
-                                if(obj.text == 'Confirm Password'){
-                                  var res = obj.text.split(" ");
-                                  label = res[0]+'<br>'+res[1];
-                                }
-                                div += '<label class="item item-input" type="password" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
-                                      '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+label+'</span>'+
-                                      '<input type="password" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
-                               break;
-
                 case 'date':   var id = obj.id ;
                                $scope[id] = new Date(value);
                                div += '<label class="item item-input" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                       '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                      '<input type="date" ng-model="'+id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
+                                      '<input type="date" ng-model="'+id+'" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
 
              /*   case 'radio': div +='<irk-form-item type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
@@ -153,7 +181,7 @@ angular.module('updateProfile',[])
                                 $scope[id] = int;
                                 div += '<label class="item item-input" type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                       '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                      '<input type="number" ng-model="'+id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
+                                      '<input type="number" ng-model="'+id+'" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
 
                 default :  break ;
@@ -161,7 +189,19 @@ angular.module('updateProfile',[])
          return div ;
      }
 
-     $scope.updateProfile = function(){
+
+     $scope.switchProfileModeOnOff = function(){
+           if ($scope.profileModeLabel == 'Save') {
+              $scope.updateProfile();
+              $scope.profileModeLabel = 'Edit';
+              $scope.isDisabled = true;
+            }else {
+              $scope.profileModeLabel = 'Save';
+              $scope.isDisabled = false;
+            }
+     }
+
+      $scope.updateProfile = function(){
        // to get all the items
       var steps = angular.element(document.querySelectorAll('.item-input'));
       var formValid = true;
@@ -217,7 +257,6 @@ angular.module('updateProfile',[])
 
     if (formValid) {
           $scope.emailId = emailId ;
-          console.log('All set '+emailId+' json '+JSON.stringify(dataCache));
           profileDataManager.updateUserByEmailId(dataCache,$scope.emailId).then(function(res){
             if(res){
                $scope.successAlertMsg('Profile Data Updated');
@@ -227,6 +266,85 @@ angular.module('updateProfile',[])
           });
        }
      }
+
+      $scope.beginSignUp = function(){
+        $ionicHistory.clearCache().then(function(){
+            $state.transitionTo('loadSignUp');
+        });
+      }
+
+      //===================================================passcode handler ============================
+      $scope.changePasscode = function(){
+        $scope.passcodeLabel = "Enter Passcode";
+        $scope.managePasscode = false ;
+        $scope.managePasscodeConfirm = true ;
+        $scope.confirmLoop = 0;
+
+        $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
+          scope: $scope,
+          animation: 'slide-in-up',
+        }).then(function(modal) {
+          $scope.passcodeModal = modal;
+          $scope.passcodeModal.show();
+        });
+    }
+
+      $scope.checkPasscodeDigits = function(){
+           var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
+           if(passcode.length == 4){
+             $scope.passcode = passcode ;
+             $scope.managePasscode = true ;
+             $scope.passcodeLabel = "Confirm Passcode";
+             $scope.managePasscodeConfirm = false ;
+           }else if(passcode.length > 4) {
+            $scope.callAlertDailog("Passcode length should be max 4.");
+           }
+       }
+
+       $scope.checkConfirmPasscodeDigits = function(){
+           var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
+           var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value');
+              if(confirm_passcode.length == 4){
+               //check is both are equal
+               if($scope.passcode == confirm_passcode){
+                   var email = $scope.emailId ;
+                   console.log('insert passcode allow '+ email);
+                   if (email) {
+                     profileDataManager.getUserIDByEmail(email).then(function(res){
+                            profileDataManager.addPasscodeToUserID(res,$scope.passcode).then(function(res){
+                                         console.log(res);
+                                         $scope.passcodeModal.remove();
+                                     });
+                       });
+                   }
+               }else {
+                 console.log('not equal clear div and run loop ');
+                 //reset div
+                 $scope.confirm_passcode = '';
+                 // $compile(confirm_passcode_div);
+                 //$scope.temp = angular.copy(confirm_passcode_div);
+                 //$scope.temp.$setPristine();
+
+                 $scope.callAlertDailog("Passcode should match with confirm");
+                 $scope.confirmLoop = $scope.confirmLoop +1;
+                 console.log($scope.confirmLoop);
+                  if($scope.confirmLoop >= 3){
+                    $scope.passcodeLabel = "Enter Passcode";
+                    $scope.managePasscode = false ;
+                    $scope.managePasscodeConfirm = true ;
+                    $scope.confirmLoop = 0;
+                    //clear div
+                    var passcode_div = angular.element(document.querySelector('#passcode'));
+                    $scope.passcode = '';
+                    //$scope.temp = angular.copy(passcode_div);
+                    //$scope.temp.$setPristine();
+                  }
+               }
+              }else if(confirm_passcode.length > 4) {
+               $scope.callAlertDailog("Passcode length should be max 4.");
+              }
+       }
+
 
      $scope.callAlertDailog =  function (message){
           $ionicPopup.alert({
