@@ -157,21 +157,21 @@ angular.module('updateProfile',[])
         var div = '';
              switch(type){
                 case 'text' :
-                              div += '<label class="item item-input" type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
-                                      '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                              div += '<label class="item item-input IRK-FONT2" type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                      '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                       '<input type="text" ng-disabled="isDisabled"   ng-model="'+id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style="" ></label>';
                               break;
 
                 case 'email':
-                              div += '<label class="item item-input" type="email" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
-                                      '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                              div += '<label class="item item-input IRK-FONT2" type="email" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                      '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                       '<input type="email"  ng-model="'+id+'" ng-disabled="true" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
 
                 case 'date':   var id = obj.id ;
                                $scope[id] = new Date(value);
-                               div += '<label class="item item-input" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
-                                      '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                               div += '<label class="item item-input IRK-FONT2" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                      '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                       '<input type="date" ng-model="'+id+'" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
 
@@ -181,8 +181,8 @@ angular.module('updateProfile',[])
 
                 case 'number':  var int = parseInt(value, 10);
                                 $scope[id] = int;
-                                div += '<label class="item item-input" type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
-                                      '<span class="input-label irk-form-input-label" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                                div += '<label class="item item-input IRK-FONT2" type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                      '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                       '<input type="number" ng-model="'+id+'" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
 
