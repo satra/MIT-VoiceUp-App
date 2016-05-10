@@ -1,34 +1,13 @@
 angular.module('homeController',[])
 //=======Home screen controller======================
 .controller('HomeCtrl', function($scope,$compile,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,
-  apiDataManagerService,profileDataManager,broadcast,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
+  apiDataManagerService,profileDataManager,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
  //get IP like email ids
  $scope.$on('$ionicView.enter', function() {
      // Code you want executed every time view is opened
      console.log('Opened!')
      //ionic.Platform.exitApp();
   });
-
-$scope.$on(broadcast.events.onPause, function (event) {
-   if ($rootScope.authuser) {
-     var authUser = $rootScope.authuser ;
-       $ionicPopup.alert({
-        title: 'pause',
-        template: authUser
-       });
-   }
-});
-
-$scope.$on(broadcast.events.onResume, function (event) {
-  if ($rootScope.authuser) {
-      var authUser = $rootScope.authuser ;
-      $ionicPopup.alert({
-       title: 'pause',
-       template: authUser
-      });
-   }
-
-});
 
 databaseService.createLocalDatabaseSchema();
 
@@ -61,7 +40,6 @@ $scope.GoBack = function () {
      $scope.openSignInChooseEmail = function() {
     //get IP like email ids
      profileDataManager.getEmailList().then(function(response){
-
        var griderArray = new Array() ;
        angular.forEach(response, function(value, key){
          griderArray.push({'emailId':value.emailId});
@@ -76,7 +54,6 @@ $scope.GoBack = function () {
       $scope.modal = modal;
       $scope.modal.show();
     });
-
   };
 
   $scope.resetInput = function() {

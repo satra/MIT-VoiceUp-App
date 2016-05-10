@@ -19,23 +19,25 @@ angular.module('consent',[])
 
 
 $scope.closeModal = function() {
-    // $scope.modal.remove();
-    console.log('move to next screen');
-  //  $state.transitionTo('loadSignUp');
- };
-
-$scope.cancelClicked = function(){
- console.log('cancel the stuff ');
- $ionicHistory.clearCache().then(function(){
-   $state.transitionTo('home');
- });
-};
-
-$scope.doneClicked = function(){
- $ionicHistory.clearCache().then(function(){
-    $state.transitionTo('loadSignUp');
-    });
-};
+  if (irkResults.getResults().canceled) {
+     $ionicHistory.clearCache().then(function(){
+        $state.transitionTo('home');
+        });
+    }else if (irkResults.getResults()) { // launch sign up
+      var childresult = irkResults.getResults().childResults ;
+          childresult.every(function(value, key){
+          if (value.type == "IRK-CONSENT-REVIEW-STEP") {
+             if (value.answer) {
+               $state.transitionTo('loadSignUp');
+             }else {
+               $state.transitionTo('home');
+             }
+             return false;
+          }
+          return true ;
+       });
+    }
+}
 
  // Cleanup the modal when we're done with it!
  $scope.$on('$destroy', function() {

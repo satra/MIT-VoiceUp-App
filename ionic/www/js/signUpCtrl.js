@@ -144,12 +144,11 @@ if (formValid) {
                var login = gradleArray[0].firstName+gradleArray[1].lastName+dateFormatted ;
                gradleArray.push({'login':login});
                  apiDataManagerService.createGradleUser(gradleArray).then(function(res){
-                      console.log('signup controller '+JSON.stringify(res));
                       if (res.status == 200) {
                       var resultData = res.data ;
                            profileDataManager.createNewUser(dataCache,$scope.emailId,resultData.authToken['token']).then(function(insertId){
                             $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
-                            $rootScope.authuser =  $scope.emailId ;
+                            $rootScope.activeUser =  $scope.emailId ;
                             $scope.launchpinScreen();
                           });
                       }

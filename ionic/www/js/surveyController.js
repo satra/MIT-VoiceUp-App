@@ -77,18 +77,28 @@ $scope.launchSurvey = function (idSelected){
       $scope.learnmore.show();
   };
 
-  $scope.cancelClicked = function(){
-   console.log('cancel the stuff ');
-   $state.transitionTo('tab.Activities');
-  };
-
-  $scope.doneClicked = function(){
-   $state.transitionTo('tab.Activities');
-  };
 
   $scope.closeModal = function() {
     $scope.modal.remove();
-  };
+    if (irkResults.getResults().canceled) {
+       $ionicHistory.clearCache().then(function(){
+          $state.transitionTo('tab.Activities');
+          });
+      }else if (irkResults.getResults()) { // launch sign up
+        var childresult = irkResults.getResults().childResults ;
+            childresult.every(function(value, key){
+            if (value.type == "IRK-CONSENT-REVIEW-STEP") {
+               if (value.answer) {
+                 $state.transitionTo('tab.Activities');
+               }else {
+                 $state.transitionTo('tab.Activities');
+               }
+               return false;
+            }
+            return true ;
+         });
+      }
+};
 
   // Cleanup the modal when we're done with it!
   $scope.$on('$destroy', function() {

@@ -204,7 +204,8 @@ getUserSettingsJson : function(emailId){
           deferred.resolve(update);
           return deferred.promise;
        },
-       checkPasscodeExistsForUserID : function(userId,passcode){
+
+checkPasscodeExistsForUserID : function(userId,passcode){
          var deferred = $q.defer();
          var db = databaseService.getConnectionObject();
          //chek the email ID exists
@@ -221,7 +222,8 @@ getUserSettingsJson : function(emailId){
          deferred.resolve(insert);
          return deferred.promise;
        },
-       updatePasscodeToUserID : function (userId,passcode){
+
+  updatePasscodeToUserID : function (userId,passcode){
              var deferred = $q.defer();
              var db = databaseService.getConnectionObject();
              //chek the email ID exists
@@ -235,7 +237,24 @@ getUserSettingsJson : function(emailId){
 
              deferred.resolve(update);
              return deferred.promise;
-           }
+           },
 
+  checkUserExistsByEmailAndPasscode:function(email,passcode){
+                 var deferred = $q.defer();
+                 var db = databaseService.getConnectionObject();
+                 //chek the email ID exists
+                 var query = "SELECT userId FROM Session WHERE emailId ='"+email.trim()+"' AND passcode ='"+passcode.trim()+"' ";
+                 console.log(query);
+                 var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
+                        if(res.rows.length > 0){
+                          return res.rows.item(0).userId ;
+                        }else {
+                          return false ;
+                        }
+                       }, function (err) {
+                     });
+                 deferred.resolve(insert);
+                 return deferred.promise;
+      }
     }
 });
