@@ -32779,7 +32779,7 @@ cite {
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  color: #000;
+  color:#3c3c3c;
   font-weight: 500;
   font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
   line-height: 1.2; }
@@ -33208,7 +33208,7 @@ a.subdued {
     color: inherit; }
   .bar .button, .bar button {
     z-index: 1;
-    padding: 0 8px;
+    padding: 3px 8px;
     min-width: initial;
     min-height: 31px;
     font-weight: 400;
