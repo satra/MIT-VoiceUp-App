@@ -425,13 +425,18 @@ padding-top: 20%;
     margin-left: 18%;
 }
 input.CirclePasscode{
-height:40px;
+height:90px;
 -webkit-text-security: circle;
 font-size:40px;
 letter-spacing:.1em;
 color:black;
 font-weight:2px;
 margin-bottom:15%;
+ background: transparent !important;
+    border-left: transparent !important;
+    border-right: transparent !important;
+    border-top: none !important;
+    border-bottom: none !important;
 }
 .inln40{
 height:45px;
