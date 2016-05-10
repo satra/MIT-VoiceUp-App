@@ -223,16 +223,20 @@ button.irk-image:before {
   margin-right: auto;
 }
 
-.irk-countdown .dialgauge-value {
-  font-size: 50px;
-  font-weight: 200;
-  fill: white;
-  stroke: white;
+.irk-timer-progress-wrapper {
+  position: relative;
+  margin: 20px auto;
+  font-size: 21px;
 }
 
-.irk-countdown-started .dialgauge-value {
-  fill: black;
-  stroke: black;
+.irk-timer-progress {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 9em;
+  font-size: 1em;
+  text-align: center;
+  font-weight: 100;
 }
 
 .irk-completion-icon {
@@ -292,4 +296,22 @@ button.irk-image:before {
 
 .irk-voice-recording {
   background-image: url(resources/phonesoundwaves.png);
+}
+
+.irk-audio-button-container {
+  position: absolute; 
+  bottom: 150px; 
+  width: 100%;
+}
+
+.irk-audio-button {
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  margin: 10px;
+}
+
+.irk-spinner-audio-task svg {
+  width: 100px;
+  height: 100px;
 }

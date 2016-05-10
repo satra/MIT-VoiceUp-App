@@ -1,6 +1,6 @@
 angular.module('surveyController',[])
 // ==== Dummy contorller need to be removed later before production  ========
-.controller('SurveyCtrl', function($scope,$state, $ionicModal,userService,irkResults) {
+.controller('SurveyCtrl', function($scope,$ionicHistory,$state, $ionicModal,userService,irkResults) {
     userService.getSurveyMainList().then(function(response){
     $scope.surveyList = response;
     var surveyMainList = response.surveys;
@@ -61,6 +61,7 @@ $scope.launchSurvey = function (idSelected){
                         var type = steps[j].type;
                         surveyHtml += $scope.activitiesDivGenerator(customId,steps[j],disableSkip);
                      }
+                     console.log(surveyHtml);
                }
             }
       }
@@ -204,7 +205,7 @@ $scope.launchSurvey = function (idSelected){
                     break;
 
               case 'irk-audio-task':
-                    customDiv = '<irk-task optional="'+disableSkip+'" > <irk-audio-task optional="'+disableSkip+'" id="'+customId+'_audio" duration="'+stepData.duration+'" text= "'+stepData.text+'"/></irk-task>';
+                    customDiv = '<irk-task optional="'+disableSkip+'" > <irk-audio-task auto-record="false" auto-complete="false"  optional="'+disableSkip+'" id="'+customId+'_audio" duration="'+stepData.duration+'" text= "'+stepData.text+'"/></irk-task>';
               break;
           }
          return customDiv;
