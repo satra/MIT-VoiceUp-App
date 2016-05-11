@@ -2,10 +2,10 @@
 <ion-content>
 
 <div  ng-show="email" class="pass">
-  <div class="image1">
-    <img src="img/voiceup_icon_1.png">
-  </div>
-  <select class="passcode-dropdown" ng-model="email"  ng-change="resetInput()">
+   <div class="irk-image irk-centered  width150 marT10p">
+     <img src="img/logo-2.png" class="irk-step-image">
+   </div>
+  <select class="passcode-dropdown marT10p" ng-model="email"  ng-change="resetInput()">
               <option  ng-repeat="email in emails " ng-selected="{{selectedEmail==email.emailId}}">
                 <a value="email.emailId" >{{email.emailId}}</a>
               </option>
