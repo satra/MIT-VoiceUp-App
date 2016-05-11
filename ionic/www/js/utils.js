@@ -154,9 +154,17 @@ function generateProfileDiv(obj){
                                  '<input type="date" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                          break;
 
-        /*   case 'radio': div +='<irk-form-item type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
-                         break;
-          */
+          case 'radio':  var optionDiv = '';
+                         for (i = 0; i < obj.choices.length; i++) {
+                              optionDiv += '<option value="'+obj.choices[i]+'">'+obj.choices[i]+'</option>';
+                         }
+
+                        div += '<label class="item item-input item-select IRK-FONT2" type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                                '<select type="radio" placeholder="'+obj.placeholder+'" ng-required="false">'+
+                                 optionDiv+
+                                '</select>  </label>';
+                        break;
 
            case 'number':  var label = obj.text;
                             var res = obj.text.split(" ");

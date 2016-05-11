@@ -2,6 +2,7 @@ angular.module('updateProfile',[])
 //=======Home screen controller======================
 .controller('updateProfileController', function($scope,$rootScope,$ionicHistory,$state, $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
 
+
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
 //=============================get user fields saved locally ===============================
@@ -175,9 +176,20 @@ angular.module('updateProfile',[])
                                       '<input type="date" ng-model="'+id+'" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
 
-             /*   case 'radio': div +='<irk-form-item type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'"></irk-form-item>';
-                              break;
-               */
+                case 'radio':  var optionDiv = '';
+                                for (i = 0; i < obj.choices.length; i++) {
+                                if (obj.value.toLowerCase() == obj.choices[i].toLowerCase() ) {
+                                    optionDiv += '<option value="'+obj.choices[i]+'" selected >'+obj.choices[i]+'</option>';
+                                   }else {
+                                     optionDiv += '<option value="'+obj.choices[i]+'">'+obj.choices[i]+'</option>';
+                                   }
+                                }
+                                div += '<label class="item item-input item-select IRK-FONT2" type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
+                                '<select type="radio" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false">'+
+                                optionDiv+
+                                '</select>  </label>';
+                                break;
 
                 case 'number':  var int = parseInt(value, 10);
                                 $scope[id] = int;
@@ -202,6 +214,7 @@ angular.module('updateProfile',[])
               $scope.isDisabled = false;
             }
      }
+
 
       $scope.updateProfile = function(){
        // to get all the items
@@ -248,7 +261,20 @@ angular.module('updateProfile',[])
                           emailId = value;
                           obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                           dataCache.push(obj);
-                    break;
+                          break;
+
+          case 'gender':
+                            var select = angular.element(document.querySelectorAll('.item-input')[i].querySelector('select'));
+                            var value = select.prop('value');
+                            var options = select.prop('options');
+                            var placeholder = select.prop('placeholder');
+                            var choices = new Array();
+                            for (var k = 0; k < options.length; k++) {
+                            choices.push(options[k].value);
+                            }
+                            obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": 'radio',"value":value,"choices":choices};
+                            dataCache.push(obj);
+                            break;
 
               default:
               obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
@@ -312,7 +338,11 @@ angular.module('updateProfile',[])
                                 $scope.managePasscode = true ;
 
                               }else{
-                                  $scope.callAlertDailog("Passcode doesn't match with the existing passcode.");
+                                //clear div
+                                var passcode = angular.element(document.querySelector('#passcode'));
+                                $scope.passcode = '';
+                                $compile(passcode)($scope);
+                                $scope.callAlertDailog("Passcode doesn't match with the existing passcode.");
                               }
                   });
              });

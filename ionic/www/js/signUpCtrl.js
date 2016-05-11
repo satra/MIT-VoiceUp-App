@@ -30,9 +30,9 @@ angular.module('signUp',[])
       var emailId = null;
       var dataCache = [];
       var gradleArray = new Array();
-//get the data by id
+ //get the data by id
+
 //iterate the form and validate the form
-console.log('steps ' +steps.length);
 
  for (var i = 0; i < steps.length; i++) {
   var lableId = steps[i].id;
@@ -43,6 +43,7 @@ console.log('steps ' +steps.length);
      var type = inputValue.prop('type');
      var placeholder = inputValue.prop('placeholder');
      var value = inputValue.prop('value') ;
+
      switch (lableId.toLowerCase()) {
       case 'firstname':
             if(value ==''){
@@ -110,17 +111,30 @@ console.log('steps ' +steps.length);
                }
              break;
 
-         case 'dateofbirth':
+        case 'gender':
+                        var select = angular.element(document.querySelectorAll('.item-input')[i].querySelector('select'));
+                        var value = select.prop('value');
+                        var options = select.prop('options');
+                        var placeholder = select.prop('placeholder');
+                        var choices = new Array();
+                        for (var k = 0; k < options.length; k++) {
+                            choices.push(options[k].value);
+                        }
+                   obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": 'radio',"value":value,"choices":choices};
+                   dataCache.push(obj);
+        break;
+
+        case 'dateofbirth':
                      obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                      dataCache.push(obj);
           break;
 
-         case 'weight':
+        case 'weight':
                       obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                       dataCache.push(obj);
            break;
 
-         case 'height':
+        case 'height':
                        obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                        dataCache.push(obj);
          break;
@@ -194,7 +208,21 @@ if (formValid) {
     }
 
 
-//===================================================passcode handler ============================
+//=================================================== forgot passcode handler ============================
+
+    $scope.checkPasscodeDigits = function(){
+         var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
+         if(passcode.length == 4){
+           $scope.passcode = passcode ;
+           $scope.managePasscode = true ;
+           $scope.passcodeLabel = "Confirm Passcode";
+           $scope.managePasscodeConfirm = false ;
+         }else if(passcode.length > 4) {
+          $scope.callAlertDailog("Passcode length should be max 4.");
+         }
+     }
+
+     //=================================================== confirm  passcode handler ============================
 
     $scope.passcodeLabel = "Enter Passcode";
     $scope.managePasscode = false ;
@@ -211,6 +239,7 @@ if (formValid) {
                 console.log('insert passcode allow '+ email);
                 if (email) {
                   profileDataManager.getUserIDByEmail(email).then(function(res){
+
                          profileDataManager.addPasscodeToUserID(res,$scope.passcode,email).then(function(res){
                                     console.log(res);
                                     $scope.OpenVerification();
@@ -240,18 +269,6 @@ if (formValid) {
             $scope.callAlertDailog("Passcode length should be max 4.");
            }
     }
-
-    $scope.checkPasscodeDigits = function(){
-         var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
-         if(passcode.length == 4){
-           $scope.passcode = passcode ;
-           $scope.managePasscode = true ;
-           $scope.passcodeLabel = "Confirm Passcode";
-           $scope.managePasscodeConfirm = false ;
-         }else if(passcode.length > 4) {
-          $scope.callAlertDailog("Passcode length should be max 4.");
-         }
-     }
 
 
 //========================All set go to next screen ===========================

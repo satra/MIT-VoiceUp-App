@@ -238,6 +238,18 @@
             "type": "date"
           },
           {
+            "choices": [
+              "Undisclosed",
+              "Male",
+              "Female",
+              "Other"
+            ],
+            "id": "gender",
+            "placeholder": "Undisclosed",
+            "text": "Gender", 
+            "type": "radio"
+          },
+          {
             "id": "weight",
             "placeholder": 120,
             "text": "Weight (lbs)",
