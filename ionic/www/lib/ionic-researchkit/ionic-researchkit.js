@@ -1,4 +1,4 @@
-/**
+/** 
 * Author: Nino Guba
 * Date: 08-26-2015
 * Directives for ResearchKit in Ionic
@@ -10,7 +10,8 @@
 * Required dependencies:
 * checklist-model (https://github.com/vitalets/checklist-model)
 * signature_pad (https://github.com/szimek/signature_pad)
-* angular-dialgauge (https://github.com/cdjackson/angular-dialgauge)
+* angular-svg-round-progressbar (https://github.com/crisbeto/angular-svg-round-progressbar)
+* pdfmake (https://github.com/bpampuch/pdfmake)
 */
 angular.module('ionicResearchKit',[])
 //======================================================================================
@@ -19,7 +20,7 @@ angular.module('ionicResearchKit',[])
 
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .service('irkResults', function() {
     var service = this;
@@ -51,7 +52,7 @@ angular.module('ionicResearchKit',[])
                 "index": index,
                 "start": new Date(),
                 "end": null
-            });
+            });            
         }
         else
         {
@@ -71,7 +72,7 @@ angular.module('ionicResearchKit',[])
                 results.childResults[index].answer = (stepValue?stepValue.toDateString():null);
             else if (stepType == 'IRK-TIME-QUESTION-STEP')
                 results.childResults[index].answer = (stepValue?stepValue.toTimeString():null);
-            else if (stepType != 'IRK-INSTRUCTION-STEP' && stepType != 'IRK-COUNTDOWN-STEP' && stepType != 'IRK-COMPLETION-STEP' && stepType != 'IRK-VISUAL-CONSENT-STEP' && !(stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='signature') && stepType != 'IRK-TWO-FINGER-TAPPING-INTERVAL-TASK' && stepType != 'IRK-AUDIO-TASK')
+            else if (stepType != 'IRK-INSTRUCTION-STEP' && stepType != 'IRK-COUNTDOWN-STEP' && stepType != 'IRK-COMPLETION-STEP' && stepType != 'IRK-VISUAL-CONSENT-STEP' && !(stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='signature') && !(stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='name') && stepType != 'IRK-TWO-FINGER-TAPPING-INTERVAL-TASK' && stepType != 'IRK-AUDIO-TASK')
                 results.childResults[index].answer = (stepValue?stepValue:null);
             else if (stepType == 'IRK-TWO-FINGER-TAPPING-INTERVAL-TASK')
                 results.childResults[index].samples = (stepValue && stepValue.samples?stepValue.samples:null);
@@ -82,6 +83,12 @@ angular.module('ionicResearchKit',[])
 
             if (stepType == 'IRK-NUMERIC-QUESTION-STEP')
                 results.childResults[index].unit = (stepUnit?stepUnit:null);
+
+            if (stepType == 'IRK-CONSENT-REVIEW-STEP' && consentType == 'name') {
+                results.childResults[index].participantTitle = (angular.isDefined(formData.participantTitle)?formData.participantTitle:null);
+                results.childResults[index].participantGivenName = (angular.isDefined(formData.participantGivenName)?formData.participantGivenName:null);
+                results.childResults[index].participantFamilyName = (angular.isDefined(formData.participantFamilyName)?formData.participantFamilyName:null);
+            }
 
             if (stepType == 'IRK-CONSENT-REVIEW-STEP' && consentType == 'signature') {
                 results.childResults[index].signature = (angular.isDefined(formData.signature)?formData.signature:null);
@@ -95,16 +102,19 @@ angular.module('ionicResearchKit',[])
 })
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .service('irkConsentDocument', function($filter) {
     var service = this;
     var consentDocument = null;
     var pdfDefinition = null;
     var pdfContent = null;
+    var pdfTitle = null;
+    var pdfName = null;
+    var pdfSignature = null;
 
     service.initDocument = function() {
-        pdfDefinition = {
+        pdfDefinition = { 
             pageSize: 'LEGAL',
             pageMargins: [ 50, 50, 50, 50 ],
             styles: {
@@ -115,32 +125,38 @@ angular.module('ionicResearchKit',[])
             },
             footer: function(currentPage, pageCount) { return { text: 'Page ' + currentPage.toString() + ' of ' + pageCount, style: 'footer' }; },
         };
-
-        pdfContent = [{ text: 'Consent', style: 'title' }, ' '];
     };
 
-    service.addContent = function(text, style) {
+    service.addConsentTitle = function(title) {
         if (!pdfDefinition) service.initDocument();
-        pdfContent.push({ text: text, style: style });
+        pdfContent = [{ text: title, style: 'title' }, ' '];
     };
 
     service.addConsentSection = function(title, content) {
-        if (!pdfDefinition) service.initDocument();
-        pdfContent.push({ text: title, style: 'header' });
-        pdfContent.push({ text: content, style: 'paragraph' });
+        if (pdfDefinition) {
+            pdfContent.push({ text: title, style: 'header' });
+            pdfContent.push({ text: content, style: 'paragraph' });
+        }
     };
 
-    service.addParticipant = function(label, name) {
+    service.addParticipantName = function(formdata) {
+        pdfName = formdata.participantGivenName + ' ' + formdata.participantFamilyName;
+        pdfTitle = formdata.participantTitle;
+    }
+
+    service.addParticipantSignature = function(signature) {
+        pdfSignature = signature;
+    };
+
+    service.addConsentParticipant = function() {
         if (pdfDefinition) {
+            pdfContent.push({ text: '\n\n\n', style: 'paragraph' });
+            pdfContent.push({ image: pdfSignature, fit: [150, 150] });
             pdfContent.push({
                 columns: [
                     {
                         width: '*',
-                        text: name
-                    },
-                    {
-                        width: '*',
-                        text: ''
+                        text: pdfName.toUpperCase()
                     },
                     {
                         width: '*',
@@ -148,13 +164,9 @@ angular.module('ionicResearchKit',[])
                     }
                 ],
                 columnGap: 10
-            });
+            });            
             pdfContent.push({
                 columns: [
-                    {
-                        width: '*',
-                        text: '______________________________'
-                    },
                     {
                         width: '*',
                         text: '______________________________'
@@ -170,11 +182,7 @@ angular.module('ionicResearchKit',[])
                 columns: [
                     {
                         width: '*',
-                        text: label + ' Name'
-                    },
-                    {
-                        width: '*',
-                        text: 'Signature'
+                        text: pdfTitle + ' Name & Signature' 
                     },
                     {
                         width: '*',
@@ -186,20 +194,18 @@ angular.module('ionicResearchKit',[])
         }
     };
 
-    service.addSignature = function() {
-    };
-
     service.getDocument = function() {
         if (pdfDefinition) {
+            service.addConsentParticipant();
             pdfDefinition.content = pdfContent;
             consentDocument = pdfMake.createPdf(pdfDefinition);
         }
         return consentDocument;
-    };
+    };   
 })
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkOrderedTasks', [
     '$rootScope',
@@ -278,7 +284,7 @@ angular.module('ionicResearchKit',[])
                         return $ionicHistory.isActiveScope($scope);
                     }
                 );
-
+                
                 $scope.$on('$destroy', function() {
                     deregisterInstance();
                     slider.kill();
@@ -307,15 +313,11 @@ angular.module('ionicResearchKit',[])
 
                 $scope.doNext = function() {
                     $scope.doSave();
-                    if (slider.currentIndex() < slider.slidesCount()-1){
+
+                    if (slider.currentIndex() < slider.slidesCount()-1)
                         slider.next();
-                    }
-                    else{
-                      // call your
-                        $scope.doEnd() ;
-                        $scope.$parent.doneClicked();
-                        console.log('clicked done');
-                    }
+                    else
+                        $scope.doEnd();
                 };
 
                 $scope.doCancel = function() {
@@ -324,7 +326,7 @@ angular.module('ionicResearchKit',[])
                     var stepType = step.prop('tagName');
 
                     if (stepType=='IRK-COMPLETION-STEP' && index==slider.slidesCount()-1)
-                    {
+                    {                    
                         $scope.doNext();
                     }
                     else
@@ -340,7 +342,6 @@ angular.module('ionicResearchKit',[])
                                 irkResults.cancel();
                                 $scope.doSave();
                                 $scope.doEnd();
-                                $scope.$parent.cancelClicked();
                                 return true;
                             }
                         });
@@ -352,15 +353,15 @@ angular.module('ionicResearchKit',[])
 
                     //This is needed to set the Android back button to map back to the step back action
                     $scope.deregisterStepBack();
-
+                    
                     //Just in case we're coming from a countdown step
-                    $scope.stopCountdown();
+                    $scope.stopCountdown();                    
                 };
 
                 $scope.$on("step:Previous", function() {
                     slider.prev();
                 });
-
+                
                 $scope.$on("step:Next", function() {
                     $scope.doNext();
                 });
@@ -434,9 +435,7 @@ angular.module('ionicResearchKit',[])
                 $scope.doDisagree = function() {
                     $scope.formData.consent = false;
                     $scope.doSave();
-                    $scope.doEnd();
-                    //btc testing
-                    $scope.$parent.cancelClicked();
+                    $scope.doEnd();                    
                 };
 
                 //This is called to reanimate GIF images
@@ -481,11 +480,10 @@ angular.module('ionicResearchKit',[])
                     }
 
                     $scope.previousIndex = index;
-                };
+                }; 
 
                 //This is called when input changes (faster than form.$dirty)
                 $scope.dirty = function() {
-                  console.log('gettting dirty ');
                     //Enable only when current form is dirtied and valid
                     $timeout(function() {
                         var index = slider.currentIndex();
@@ -494,14 +492,14 @@ angular.module('ionicResearchKit',[])
                         var form = step.find('form');
                         var input = form.find('input');
                         var next = angular.element(document.querySelectorAll('.irk-next-button'));
-                        if (form.length > 0
+                        if (form.length > 0  
                             && ((stepType!='IRK-DATE-QUESTION-STEP' && stepType!='IRK-TIME-QUESTION-STEP' && form.hasClass('ng-invalid'))
                                 || ((stepType=='IRK-DATE-QUESTION-STEP' || stepType=='IRK-TIME-QUESTION-STEP') && input.hasClass('ng-invalid'))))
                         {
                             angular.element(next[0]).attr("disabled", "disabled");
                             angular.element(next[1]).attr("disabled", "disabled");
-                        }
-                        else
+                        } 
+                        else 
                         {
                             angular.element(next[0]).removeAttr("disabled");
                             angular.element(next[1]).removeAttr("disabled");
@@ -516,7 +514,7 @@ angular.module('ionicResearchKit',[])
                 //This is called to capture the results
                 $scope.doSave = function() {
                     irkResults.addResult(slider.currentIndex(), $scope.formData);
-                };
+                }; 
 
                 $scope.$on("slideBox.slideChanged", function(e, index) {
                     $scope.doSave();
@@ -654,7 +652,7 @@ angular.module('ionicResearchKit',[])
                 var step = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-step'));
                 var stepType = step.prop('tagName');
                 var consentType = step.attr('type');
-                element.toggleClass('ng-hide', stepType=='IRK-INSTRUCTION-STEP' || (stepType=='IRK-VISUAL-CONSENT-STEP' && consentType=='overview') || stepType=='IRK-CONSENT-SHARING-STEP' || (stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='review'));
+                element.toggleClass('ng-hide', stepType=='IRK-INSTRUCTION-STEP' || (stepType=='IRK-VISUAL-CONSENT-STEP' && consentType=='overview') || stepType=='IRK-CONSENT-SHARING-STEP' || (stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='review'));                
 
                 //Show for Instruction Step only if footerAttach is set to true
                 var footerAttach = step.attr('footer-attach')=='true';
@@ -666,7 +664,7 @@ angular.module('ionicResearchKit',[])
                 //Enable only when current form is dirtied and valid
                 var form = step.find('form');
                 var input = form.find('input');
-                if (form.length > 0
+                if (form.length > 0  
                     && ((stepType!='IRK-DATE-QUESTION-STEP' && stepType!='IRK-TIME-QUESTION-STEP' && (form.hasClass('ng-pristine') || form.hasClass('ng-invalid')))
                         || ((stepType=='IRK-DATE-QUESTION-STEP' || stepType=='IRK-TIME-QUESTION-STEP') && (input.hasClass('ng-pristine') || input.hasClass('ng-invalid')))))
                     element.attr("disabled", "disabled");
@@ -754,7 +752,7 @@ angular.module('ionicResearchKit',[])
         },
         link: function(scope, element, attrs, controller) {
             element.addClass('irk-step');
-        }
+        }        
     }
 })
 
@@ -900,7 +898,7 @@ angular.module('ionicResearchKit',[])
                     '<input type="radio" name="'+elem.parent().attr("id")+'" value="'+attr.value+'" ng-model="$parent.$parent.formData.'+elem.parent().attr("id")+'" ng-required="'+(attr.optional=='false'?'true':'false')+'" ng-change="$parent.$parent.dirty()">'
                     )+
                     '<div class="radio-content">' +
-                    '<div class="item-content disable-pointer-events irk-item-content">'+
+                    '<div class="item-content item-text-wrap disable-pointer-events irk-item-content">'+
                     attr.text+
                     (attr.detailText?'<p>'+attr.detailText+'</p>':'')+
                     '</div>'+
@@ -1173,7 +1171,7 @@ angular.module('ionicResearchKit',[])
 })
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkVisualConsentStep', function() {
     return {
@@ -1233,12 +1231,12 @@ angular.module('ionicResearchKit',[])
                     break;
             }
 
-            if (consentType == 'only-in-document')
+            if (consentType == 'only-in-document') 
             {
                 return  '<div class="irk-learn-more-content" ng-transclude>'+
                         '</div>';
             }
-            else
+            else 
             {
                 return  '<div class="irk-centered">'+
                         '<div class="item irk-step-image '+consentImageClass+' positive"></div>'+
@@ -1291,12 +1289,12 @@ angular.module('ionicResearchKit',[])
 
                 element.attr('title', consentTitle);
             };
-        }
+        }        
     }
 })
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkConsentSharingStep', function() {
     return {
@@ -1332,7 +1330,7 @@ angular.module('ionicResearchKit',[])
 })
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkConsentReviewStep', ['irkConsentDocument', function(irkConsentDocument) {
     return {
@@ -1392,6 +1390,10 @@ angular.module('ionicResearchKit',[])
                     var reviewType = attrs.type;
                     if (reviewType == 'review' && (!attrs.hasHtmlContent || attrs.hasHtmlContent == 'false')) {
                         scope.reviewContent = '';
+
+                        //Add the consent title to the consent document (PDF)
+                        irkConsentDocument.addConsentTitle(attrs.title);
+
                         var steps = angular.element(document.querySelectorAll('.irk-visual-consent-step'));
                         for (var i=0; i<steps.length; i++) {
                             var step = angular.element(steps[i]);
@@ -1401,10 +1403,10 @@ angular.module('ionicResearchKit',[])
                             var stepContent = angular.element(steps[i].querySelector('.irk-learn-more-content'));
                             scope.reviewContent += '<div>'+stepContent.html()+'</div>';
 
-                            //Add the content section to the consent document (PDF)
+                            //Add the consent section to the consent document (PDF)
                             irkConsentDocument.addConsentSection(stepTitle, stepContent.text());
                         };
-
+                        
                         var container = angular.element(document.querySelector('.irk-consent-review-derived-content'));
                         container.append(scope.reviewContent);
                     }
@@ -1415,47 +1417,38 @@ angular.module('ionicResearchKit',[])
 }])
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkConsentName', ['irkConsentDocument', function(irkConsentDocument) {
     return {
         restrict: 'E',
         replace: true,
         require: '^?irkConsentReviewStep',
+        controller: ['$scope', '$attrs', function($scope, $attrs) {
+            $scope.$parent.$parent.formData.participantTitle = $attrs.title;
+
+            $scope.consented = function() {
+                //Add the participant name to the consent document (PDF)
+                irkConsentDocument.addParticipantName($scope.$parent.$parent.formData);
+            }
+        }],
         template: function(elem, attr) {
             return  '<div class="list">'+
                     '<label class="item item-input">'+
                     '<span class="input-label irk-form-input-label">First Name</span>'+
-                    '<input type="text" placeholder="Required" ng-model="$parent.$parent.formData.'+elem.parent().attr("id")+'.'+attr.id+'.givenName" ng-required="true" ng-change="$parent.$parent.dirty()">'+
+                    '<input type="text" placeholder="Required" ng-model="$parent.$parent.formData.participantGivenName" ng-required="true" ng-change="$parent.$parent.dirty()" ng-blur="consented()">'+
                     '</label>'+
                     '<label class="item item-input">'+
                     '<span class="input-label irk-form-input-label">Last Name</span>'+
-                    '<input type="text" placeholder="Required" ng-model="$parent.$parent.formData.'+elem.parent().attr("id")+'.'+attr.id+'.familyName" ng-required="true" ng-change="$parent.$parent.dirty()">'+
+                    '<input type="text" placeholder="Required" ng-model="$parent.$parent.formData.participantFamilyName" ng-required="true" ng-change="$parent.$parent.dirty()" ng-blur="consented()">'+
                     '</label>'+
                     '</div>'
-        },
-        link: function(scope, element, attrs, controller) {
-            var stepId = element.parent().parent().parent().attr("id");
-            var sigId = attrs.id;
-            scope.$parent.$parent.formData[stepId] = {};
-            scope.$parent.$parent.formData[stepId][sigId] = { "title": attrs.title };
-
-            scope.$on("slideBox.slideChanged", function(e, index, count) {
-                var step = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-step'));
-                var stepType = step.prop('tagName');
-                var consentType = step.attr('type');
-
-                if (stepType=='IRK-CONSENT-REVIEW-STEP' && consentType=='name') {
-                    //Add the participant to the consent document (PDF)
-                    irkConsentDocument.addParticipant(attrs.title, 'John Doe');
-                }
-            });
         }
     }
 }])
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkConsentSignature', ['irkConsentDocument', function(irkConsentDocument) {
     return {
@@ -1476,8 +1469,8 @@ angular.module('ionicResearchKit',[])
                 {
                     angular.element(next[0]).attr("disabled", "disabled");
                     angular.element(next[1]).attr("disabled", "disabled");
-                }
-                else
+                } 
+                else 
                 {
                     angular.element(next[0]).removeAttr("disabled");
                     angular.element(next[1]).removeAttr("disabled");
@@ -1492,7 +1485,10 @@ angular.module('ionicResearchKit',[])
 
             $scope.saveSignature = function() {
                 $scope.$parent.$parent.formData.signature = $scope.signaturePad.toDataURL();
-            }
+
+                //Add the participant signature to the consent document (PDF)
+                irkConsentDocument.addParticipantSignature($scope.$parent.$parent.formData.signature);
+            }   
         }],
         template: function(elem, attr) {
             return  '<div>'+
@@ -1501,7 +1497,7 @@ angular.module('ionicResearchKit',[])
                     '<a class="button button-clear button-dark irk-button-signature-sign" ng-disabled="true">Sign Here</a>'+
                     '</div>'
         },
-        link: function(scope, element, attrs, controller) {
+        link: function(scope, element, attrs, controller) {            
             scope.$on("slideBox.slideChanged", function(e, index, count) {
                 //Show only for Consent Review Signature
                 var step = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-step'));
@@ -1521,7 +1517,7 @@ angular.module('ionicResearchKit',[])
 
                         canvasEl.on('touchend', function (e) {
                             scope.saveSignature();
-                        });
+                        });                        
                     }
 
                     //Set the Next/Done state
@@ -1535,50 +1531,35 @@ angular.module('ionicResearchKit',[])
 }])
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkCountdownStep', function() {
     return {
         restrict: 'E',
         controller: ['$scope', '$element', '$attrs', '$interval', function($scope, $element, $attrs, $interval) {
             $scope.startCountdown = function() {
-                $scope.duration = ($attrs.duration?$attrs.duration:5)+1;
+                $scope.duration = ($attrs.duration?$parseInt($attrs.duration,10):5);
                 $scope.countdown = $scope.duration;
 
-                var index = $scope.$parent.currentSlide;
-                var countdownEl = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-countdown'));
-                countdownEl.toggleClass('irk-countdown-started', false);
-
                 $scope.$parent.currentCountdown = $interval(function() {
-                    countdownEl.toggleClass('irk-countdown-started', true);
-
                     if ($scope.countdown == 0)
                         $scope.$parent.doStepNext();
                     else
                         $scope.countdown--;
                 }, 1000, $scope.duration+1);
-            }
+            }   
         }],
         template: function(elem, attr) {
             return  '<div class="irk-offcentered-container"><div class="irk-offcentered-content">'+
                     '<p>Starting activity in</p>'+
                     '<div class="irk-countdown">'+
-                    '<ng-dial-gauge id="'+attr.id+'"'+
-                    '   ng-model="countdown"'+
-                    '   scale-min="0"'+
-                    '   scale-max="{{duration || 5}}"'+
-                    '   border-width="1"'+
-                    '   track-color="#ffffff"'+
-                    '   bar-color="#387ef5"'+
-                    '   bar-color-end="#387ef5"'+
-                    '   bar-width="2"'+
-                    '   angle="360"'+
-                    '   rotate="360"'+
-                    '   scale-minor-length="0"'+
-                    '   scale-major-length="0"'+
-                    '   line-cap="butt"'+
-                    '/>'+
-                    '</div>'+
+                    '<div class="irk-timer-progress-wrapper">' +
+                    '   <div class="irk-timer-progress">' +
+                    '       {{countdown}}' +
+                    '   </div>' +
+                    '   <div round-progress max="duration" current="countdown" clockwise="false" color="#387ef5" rounded="true" class="text-center" style="left:-25px"></div>' +
+                    '</div>' +
+                    '</div>' +
                     '</div></div>'
         },
         link: function(scope, element, attrs, controller) {
@@ -1588,17 +1569,18 @@ angular.module('ionicResearchKit',[])
                 //Start the countdown
                 var step = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-step'));
                 var stepType = step.prop('tagName');
+                var stepID = step.attr('id');
 
-                if (stepType=='IRK-COUNTDOWN-STEP') {
+                if (stepType=='IRK-COUNTDOWN-STEP' && stepID==attrs.id) {
                     scope.startCountdown();
                 }
-            });
+            });            
         }
     }
 })
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkCompletionStep', function() {
     return {
@@ -1625,12 +1607,14 @@ angular.module('ionicResearchKit',[])
 })
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkTwoFingerTappingIntervalTask', function() {
     return {
         restrict: 'E',
         controller: ['$scope', '$element', '$attrs', '$interval', function($scope, $element, $attrs, $interval) {
+
+            $scope.activeStepID;
 
             $scope.toggleProgressBar = function(isVisible) {
                 var index = $scope.$parent.currentSlide;
@@ -1639,7 +1623,7 @@ angular.module('ionicResearchKit',[])
             }
 
             $scope.startProgress = function() {
-                $scope.duration = ($attrs.duration?$attrs.duration:20);
+                $scope.duration = ($attrs.duration?$parseInt($attrs.duration,10):20);
                 $scope.progress = 0;
                 $scope.toggleProgressBar(true);
 
@@ -1649,19 +1633,20 @@ angular.module('ionicResearchKit',[])
                     else
                         $scope.progress++;
                 }, 1000, $scope.duration);
-            }
+            } 
 
-            $scope.initActiveTask = function() {
+            $scope.initActiveTask = function(stepID) {
                 $scope.taskStarted = false;
                 $scope.toggleProgressBar(false);
+                $scope.activeStepID = stepID;
+
+                $scope.tapsCount = 0;  
+                $scope.$parent.formData[$scope.activeStepID] = {};
+                $scope.$parent.formData[$scope.activeStepID].samples = {};
             }
 
             $scope.startActiveTask = function() {
-                $scope.tapsCount = 0;
-                $scope.tapsStartTime = (new Date()).getTime();
-                $scope.$parent.formData[$attrs.id] = {};
-                $scope.$parent.formData[$attrs.id].samples = {};
-
+                $scope.tapsStartTime = (new Date()).getTime();  
                 $scope.taskStarted = true;
                 $scope.startProgress();
             }
@@ -1671,8 +1656,8 @@ angular.module('ionicResearchKit',[])
                     $scope.startActiveTask();
                 }
 
-                var tapsCurrentTime = ((new Date()).getTime() - $scope.tapsStartTime) / 1000;
-                $scope.$parent.formData[$attrs.id].samples[tapsCurrentTime] = (buttonId?buttonId:'none');
+                var tapsCurrentTime = ((new Date()).getTime() - $scope.tapsStartTime) / 1000;  
+                $scope.$parent.formData[$scope.activeStepID].samples[tapsCurrentTime] = (buttonId?buttonId:'none');
                 if (buttonId) $scope.tapsCount++;
             }
         }],
@@ -1699,39 +1684,53 @@ angular.module('ionicResearchKit',[])
             scope.$on("slideBox.slideChanged", function(e, index, count) {
                 var step = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-step'));
                 var stepType = step.prop('tagName');
+                var stepID = step.attr('id');
 
-                if (stepType=='IRK-TWO-FINGER-TAPPING-INTERVAL-TASK') {
-                    scope.initActiveTask();
+                if (stepType=='IRK-TWO-FINGER-TAPPING-INTERVAL-TASK' && stepID==attrs.id) {
+                    scope.initActiveTask(stepID);
                 }
-            });
+            });            
         }
     }
 })
 
 //======================================================================================
-// Usage:
+// Usage: 
 // =====================================================================================
 .directive('irkAudioTask', function() {
     return {
         restrict: 'E',
         controller: ['$scope', '$element', '$attrs', '$interval', '$cordovaMedia', function($scope, $element, $attrs, $interval, $cordovaMedia) {
 
-            $scope.initActiveTask = function() {
-                $scope.duration = ($attrs.duration?$attrs.duration:10);
-                $scope.progress = $scope.duration;
-                $scope.$parent.formData[$attrs.id] = {};
-                $scope.recordAudio();
+            $scope.activeStepID;
+            $scope.audioSample;
+            $scope.audioActive;
+            $scope.audioActivity;
+            $scope.audioTimer = ' ';
+
+            $scope.initActiveTask = function(stepID) {
+                $scope.activeStepID = stepID;
+                $scope.audioActive = false;
+                $scope.duration = ($attrs.duration?parseInt($attrs.duration,10):10);
+
+                if (!$scope.$parent.formData[$scope.activeStepID] || !$scope.$parent.formData[$scope.activeStepID].fileURL) {
+                    $scope.$parent.formData[$scope.activeStepID] = {};
+                    $scope.audioSample = null;
+                    if (!$attrs.autoRecord || $attrs.autoRecord=="true") $scope.recordAudio();
+                } else {
+                    $scope.audioSample = $cordovaMedia.newMedia($scope.$parent.formData[$scope.activeStepID].fileURL);
+                }
             }
 
             $scope.recordAudio = function() {
-                var audioFileName = "sample" + (new Date().getTime()) + (ionic.Platform.isAndroid() ? ".amr" : ".wav");
-                $scope.$parent.formData[$attrs.id].fileURL = "documents://" + audioFileName;
-                $scope.$parent.formData[$attrs.id].contentType = "audio/" + (ionic.Platform.isAndroid() ? "amr" : "wav");
-                //var audioFileName = "sample" + (new Date().getTime()) + ".m4a";
-                //$scope.$parent.formData[$attrs.id].fileURL = "documents://" + audioFileName;
-                //$scope.$parent.formData[$attrs.id].contentType = "audio/m4a";
+                var audioFileName = "irk-sample" + (new Date().getTime()) + (ionic.Platform.isAndroid() ? ".amr" : ".wav");
+                $scope.$parent.formData[$scope.activeStepID].fileURL = audioFileName;
+                $scope.$parent.formData[$scope.activeStepID].contentType = "audio/" + (ionic.Platform.isAndroid() ? "amr" : "wav");
+                //var audioFileName = "irk-sample" + (new Date().getTime()) + ".m4a";
+                //$scope.$parent.formData[$scope.activeStepID].fileURL = "documents://" + audioFileName;
+                //$scope.$parent.formData[$scope.activeStepID].contentType = "audio/m4a";
 
-                var audioSample = $cordovaMedia.newMedia(audioFileName);
+                $scope.audioSample = $cordovaMedia.newMedia(audioFileName);
 
                 /*
                 // Get amplitude every 250 ms
@@ -1745,36 +1744,77 @@ angular.module('ionicResearchKit',[])
                 }, 250);
                 */
 
+                // Record audio
+                $scope.progress = $scope.duration;
+                $scope.updateTimer();
+                $scope.audioSample.startRecord();
+                $scope.audioActive = true;
+                $scope.audioActivity = "Recording";
+                console.log('Audio recording started');
+
                 // Show timer
                 $scope.$parent.currentCountdown = $interval(function() {
                     $scope.progress--;
+                    $scope.updateTimer();
+                    if ($scope.progress==0) {
+                        $scope.audioSample.stopRecord();
+                        $scope.audioActive = false;
+                        console.log('Audio recording stopped');
+                        if (!$attrs.autoComplete || $attrs.autoComplete=="true") $scope.$parent.doStepNext();
+                    }
                 }, 1000, $scope.duration);
-
-                // Record audio
-                audioSample.startRecord();
-
-                // Stop recording after 10 seconds by default
-                setTimeout(function() {
-                    audioSample.stopRecord();
-                    //audioSample.play();
-                    //audioSample.stop();
-                    //audioSample.release();
-                    $scope.$parent.doStepNext();
-                }, $scope.duration*1000);
             }
 
+            $scope.playAudio = function() {
+                if ($scope.audioSample) {
+                    // Play audio
+                    $scope.progress = 0;
+                    $scope.updateTimer();
+                    $scope.audioSample.play();
+                    $scope.audioActive = true;
+                    $scope.audioActivity = "Playing";
+                    console.log('Audio playback started');
+
+                    // Show timer
+                    $scope.$parent.currentCountdown = $interval(function() {
+                        if ($scope.progress==$scope.duration) {
+                            $scope.audioSample.stop();
+                            $scope.audioActive = false;
+                            console.log('Audio playback stopped');
+                        }
+                        $scope.progress++;
+                        $scope.updateTimer();
+                    }, 1000, $scope.duration+1);
+                }
+            }
+
+            $scope.updateTimer = function() {
+                var minutes = Math.floor($scope.progress / 60);
+                var seconds = $scope.progress - minutes * 60;
+                $scope.audioTimer = minutes + ':' + (seconds<10?'0':'') + seconds;
+            }
         }],
         template: function(elem, attr) {
             return  '<div class="irk-centered">'+
                     '<div class="irk-text-centered">'+
                     '<h2>' + (attr.text ? attr.text : 'Your more specific voice instruction goes here. For example, say \'Aaaah\'.') + '</h2>'+
-                    '<div class="irk-spacer"></div>'+
+                    '</div>'+
+                    '<div class="irk-audio-button-container" ng-show="audioActive">'+
+                    '<ion-spinner icon="lines" class="spinner-positive irk-spinner-audio-task"></ion-spinner>' + 
+                    '<h4 class="dark">{{audioActivity}} Audio</h4>'+
+                    '<h4 class="dark">{{audioTimer}}</h4>'+
+                    '</div>'+
+                    '<div class="irk-audio-button-container" ng-hide="audioActive">'+
+                    '<button class="button button-outline button-positive irk-audio-button irk-button-audio-record icon ion-android-microphone" ng-click="recordAudio()"></button>'+
+                    '<button class="button button-outline button-positive irk-audio-button irk-button-audio-play icon ion-play" ng-click="playAudio()" ng-disabled="!audioSample"></button>'+
                     '</div>'+
                     '</div>'+
-                    '<div class="irk-tap-button-container">'+
-                    '<h2 class="positive">. . . recording . . .</h2>'+
-                    '<h4 class="dark">{{progress}}</h4>'+
-                    '</div>'
+                    '<ion-footer-bar class="irk-bottom-bar" keyboard-attach irk-audio-bar>'+
+                    '<div>'+
+                    ((attr.autoComplete && attr.autoComplete=="false")?'<a class="button button-block button-outline button-positive irk-bottom-button irk-button-step-next" ng-click="$parent.doNext()" ng-disabled="!audioSample || audioActive">Next</a>':'')+
+                    ((attr.optional && attr.optional=="true")?'<a class="button button-block button-clear button-positive irk-bottom-button irk-button-step-skip" ng-click="$parent.doSkip()" ng-disabled="audioSample || audioActive">Skip this task</a>':'')+
+                    '</div>'+
+                    '</ion-footer-bar>'
 
         },
         link: function(scope, element, attrs, controller) {
@@ -1783,11 +1823,21 @@ angular.module('ionicResearchKit',[])
             scope.$on("slideBox.slideChanged", function(e, index, count) {
                 var step = angular.element(document.querySelectorAll('.irk-slider-slide')[index].querySelector('.irk-step'));
                 var stepType = step.prop('tagName');
+                var stepID = step.attr('id');
 
-                if (stepType=='IRK-AUDIO-TASK') {
-                    scope.initActiveTask();
+                if (stepType=='IRK-AUDIO-TASK' && stepID==attrs.id) {
+                    scope.initActiveTask(stepID);
                 }
-            });
+
+                // Stop and release any audio resources on slide change
+                if (stepType!='IRK-AUDIO-TASK' && scope.audioSample) {
+                    scope.audioSample.stopRecord();
+                    scope.audioSample.stop();
+                    scope.audioSample.release();
+                    scope.audioSample = null;
+                    console.log('Audio task aborted');
+                }
+            });            
         }
     }
 })

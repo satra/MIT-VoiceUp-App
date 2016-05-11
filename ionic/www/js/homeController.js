@@ -41,9 +41,9 @@ $scope.GoBack = function () {
     //get IP like email ids
      profileDataManager.getEmailList().then(function(response){
        var griderArray = new Array() ;
-       angular.forEach(response, function(value, key){
-         griderArray.push({'emailId':value.emailId});
-        })
+       for (var i = 0; i < response.length; i++) {
+         griderArray.push({'emailId':response.item(i).emailId});
+       }
        $scope.emails = griderArray;
     });
 
@@ -78,8 +78,8 @@ $scope.GoBack = function () {
                        if (!response) {
                           if(!popupShow){
                              $ionicPopup.alert({
-                              title: 'Validation Error',
-                              template: 'Passcode not found try later !!!'
+                              title: 'Error',
+                              template: 'Invalid passcode!!!'
                              })
                               popupShow = true;
                             }
@@ -89,6 +89,7 @@ $scope.GoBack = function () {
                                $rootScope.emailId = email ; // save it to access in update profile
                                $scope.modal.remove();
                                console.log('inside transitionTo ....');
+                               $rootScope.activeUser = email;
                                $state.transitionTo('tab.Activities');
                              });
                          }

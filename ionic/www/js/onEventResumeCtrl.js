@@ -2,13 +2,13 @@ angular.module('eventResume',[])
 //=======Home screen controller======================
 .controller('onEventResumeCtrl', function($scope,$rootScope,$state,$ionicPopup,$ionicHistory,$compile,profileDataManager,passcodehandler,$ionicModal) {
 
-  var griderArray = new Array() ;
-
   if ($rootScope.activeUser) {
+    var griderArray = new Array() ;
+
         profileDataManager.getEmailList().then(function(response){
-         angular.forEach(response, function(value, key){
-          griderArray.push({'emailId':value.emailId.trim()});
-           })
+          for (var i = 0; i < response.length; i++) {
+            griderArray.push({'emailId':response.item(i).emailId.trim()});
+          }
           $scope.emails = griderArray;
       });
 
@@ -42,8 +42,8 @@ $scope.passcodeChanged = function (){
                        $state.transitionTo($rootScope.lastState);
                       }else {
                        $ionicPopup.alert({
-                       title: 'Validation Error',
-                       template: 'Passcode not found try later !!!'
+                       title: 'Error',
+                       template: 'Invalid Passcode!!!'
                       })
                    }
                 });

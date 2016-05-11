@@ -205,7 +205,7 @@ angular.module('updateProfile',[])
 
       $scope.updateProfile = function(){
        // to get all the items
-      var steps = angular.element(document.querySelectorAll('.item-input'));
+      var steps = angular.element(document.getElementById("updateProfile").querySelectorAll(".item-input"));
       var formValid = true;
       var keepGoing = true;
       var password = null ;

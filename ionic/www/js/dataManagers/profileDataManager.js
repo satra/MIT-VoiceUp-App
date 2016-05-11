@@ -212,7 +212,7 @@ checkPasscodeExistsForUserID : function(userId,passcode){
          var query = "SELECT id FROM Session WHERE userId ='"+userId+"' AND passcode ='"+passcode+"' ";
          var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
                 if(res.rows.length > 0){
-                  console.log('return  token id '+res.rows[0].id);
+                  console.log('return  token id '+res.rows.item(0).id);
                   return true ;
                 }else {
                   return false ;
