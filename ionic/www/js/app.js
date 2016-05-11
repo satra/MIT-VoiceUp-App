@@ -32,12 +32,12 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
   });
 
 //on resume handler
-  document.addEventListener("resume", function() {
-    if ($rootScope.activeUser) {
-      $rootScope.lastState = $ionicHistory.currentStateName() ;
-      $state.transitionTo('onResumehandler');
-    }
-  }, false);
+//  document.addEventListener("resume", function() {
+//    if ($rootScope.activeUser) {
+//      $rootScope.lastState = $ionicHistory.currentStateName() ;
+//      $state.transitionTo('onResumehandler');
+//    }
+//  }, false);
 
 $ionicPlatform.registerBackButtonAction(function (event) {
                  event.preventDefault();
