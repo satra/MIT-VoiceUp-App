@@ -12,7 +12,7 @@
           <img src="img/voiceup_icon_1.png">
           </div>
 
-          <select   class="passcode-dropdown" ng-model="email" ng-change="resetInput()" >
+          <select   class="passcode-dropdown marT10p" ng-model="email" ng-change="resetInput()" >
               <option  ng-repeat="email in emails ">
                 <a>{{email.emailId}}</a>
               </option>
@@ -32,7 +32,7 @@
   <br/><br/><br/>
 <label class=" item-input item-stacked-label ">
 <span  class=" font35 fontB IRK-FONT1" >Enter Passcode</span>
-<input class=" CirclePasscode  irk-centered " placeholder="OOOO" type="text"  name="passcode" id="passcode"
+<input class=" CirclePasscode  irk-centered "style="line-height: 90%;" placeholder="OOOO" type="text"  name="passcode" id="passcode"
       maxlength="4"  ng-change="passcodeChanged()" ng-model="passcode" focus-me >
 </label>
 
