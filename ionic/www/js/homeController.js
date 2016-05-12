@@ -1,6 +1,6 @@
 angular.module('homeController',[])
 //=======Home screen controller======================
-.controller('HomeCtrl', function($scope,$compile,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,
+.controller('HomeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,
   apiDataManagerService,profileDataManager,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
  //get IP like email ids
  $scope.$on('$ionicView.enter', function() {
@@ -53,57 +53,44 @@ $scope.GoBack = function () {
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
+      $scope.hidePasscodeDiv = true;
     });
   };
 
   $scope.resetInput = function() {
-      var dynamicContent = angular.element(document.querySelectorAll('#passcode'));
-      $scope.passcode = '';
-      $compile(dynamicContent)($scope);
+       $scope.hidePasscodeDiv = false;
+       var passcode_div = angular.element(document.querySelector('#passcode'));
+       $scope.passcodeDiv = '';
+       $scope.setPasscodeFocus = true ;
+       passcode_div.val('');
   };
 
 //sign in via email and passcode on change of passcode call this function
-  $scope.passcodeChanged = function (){
+  $scope.loginViaPasscode = function (){
       var inputValue = angular.element(document.querySelectorAll('#passcode'));
       var passcode = inputValue.prop('value') ;
       if(passcode.length == 4){
         var emailDiv = angular.element(document.querySelectorAll('.passcode-dropdown'));
         var email = emailDiv.prop('selectedOptions')[0].value ;
         if (email && passcode) {
-          var popupShow = false;
           //get IP like email ids
-           profileDataManager.getUserIDByEmail(email).then(function(userId){
-                if (userId) {
-                  profileDataManager.logInViaPasscode(userId,passcode).then(function(response){
-                       if (!response) {
-                          if(!popupShow){
-                             $ionicPopup.alert({
-                              title: 'Error',
-                              template: 'Invalid passcode!!!'
-                             })
-                              popupShow = true;
-                            }
-                          }else {
-                              // All set go to next page
-                              $ionicHistory.clearCache().then(function(){
-                               $rootScope.emailId = email ; // save it to access in update profile
-                               $scope.modal.remove();
-                               console.log('inside transitionTo ....');
-                               $rootScope.activeUser = email;
-                               $state.transitionTo('tab.Activities');
-                             });
-                         }
+          profileDataManager.logInViaPasscode(email,passcode).then(function(res){
+                       if (res) {
+                          // All set go to next page
+                          $ionicHistory.clearCache().then(function(){
+                          $rootScope.emailId = email ; // save it to access in update profile
+                          $scope.modal.remove();
+                          $rootScope.activeUser = email;
+                          $state.transitionTo('tab.Activities');
+                          });
+                       }else {
+                         $scope.resetInput();
+                         $scope.callAlertDailog('Invalid passcode!!!');
+                        }
                     });
-                }else {
-                    $ionicPopup.alert({
-                     title: 'Validation Error',
-                     template: 'EmailId not found try later !!!'
-                    });
-                }
-            });
-         }
+           }
       }
-  }
+  };
 
 //from Sign in screen to  eligiblityTest
   $scope.showEligibilityTestView = function() {
@@ -122,7 +109,6 @@ $scope.GoBack = function () {
          $scope.modal.show();
        });
   };
-
 
   //=========================================== from sign in screen to forgot passcode ===================
   $scope.forgotPasscodeDialog = function() {
@@ -143,16 +129,33 @@ $scope.GoBack = function () {
 $scope.signInSubmit = function (statePassed) { // recive the state to determine the UI Input and the call is coming from
     var keepGoing = true; var formValid = true;
     // validate input fields
-    var inputValue = angular.element(document.querySelectorAll('.form-item'));
+    var inputValue = angular.element(document.getElementById("signIn").querySelectorAll(".item-input"));
     for (var i = 0; i < inputValue.length; i++) {
-           var value = inputValue[i].value;
-           var placeholder = inputValue[i].placeholder;
-             if(value == ''){
-                 if(keepGoing){
-                    keepGoing = false;  formValid = false;
-                    $scope.callAlertDailog('Please enter '+placeholder);
-                  }
-               }
+          var inputTag = angular.element(document.querySelectorAll('.item-input')[i].querySelector('input'));
+          var value = inputTag.prop('value');
+          var placeholder = inputTag.prop('placeholder');
+          if(keepGoing){
+            switch (placeholder.toLowerCase()) {
+             case 'email':
+                       if(value ==''){
+                         formValid = false; keepGoing = false;
+                         $scope.callAlertDailog('Please enter your '+placeholder);
+                       }else {
+                         //is email valid
+                         if(inputTag.hasClass('ng-invalid-email') || inputTag.hasClass('ng-invalid')){
+                           formValid = false ; keepGoing = false;
+                           $scope.callAlertDailog('Email '+value+' is invalid.');
+                          }
+                       }
+                   break;
+              case 'password':  if(value ==''){
+                                formValid = false; keepGoing = false;
+                                $scope.callAlertDailog('Please enter your '+placeholder);
+                                }
+                                break ;
+               default: break ;
+                 }
+          }
     }
 
     if (formValid) {
@@ -160,7 +163,6 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
         var email  = angular.element(document.querySelector('#email')).prop('value');
         if (email && password ) {
           var beforeEncode = email.trim()+':'+password.trim();
-          console.log("encoded value "+ beforeEncode);
           var encoded = 'Basic '+ $base64.encode(unescape(encodeURIComponent(beforeEncode)));
           apiDataManagerService.signInGradleUser(encoded).then(function(res){
               if (res.status == 200) {
@@ -179,6 +181,7 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                }
            });
          } // validate
+
       } // form valid
 } // submit
 
@@ -216,7 +219,9 @@ $scope.launchpinScreen = function(){
             }else {
             //reset div
             $scope.confirm_passcode = '';
-            $compile(confirm_passcode_div)($scope);
+            $scope.passcodeDiv = '';
+            confirm_passcode_div.val(''); // clear the div
+
             $scope.callAlertDailog("Passcode should match with confirm");
             $scope.confirmLoop = $scope.confirmLoop +1;
              if($scope.confirmLoop >= 3){
@@ -227,7 +232,7 @@ $scope.launchpinScreen = function(){
                //clear div
                var passcode_div = angular.element(document.querySelector('#passcode'));
                $scope.passcode = '';
-               $compile(passcode_div)($scope);
+               passcode_div.val(''); // clear the div
              }
            }
           }else if(confirm_passcode.length > 4) {

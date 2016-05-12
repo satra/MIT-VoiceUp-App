@@ -207,6 +207,12 @@ if (formValid) {
        });
     }
 
+//=====sign up cancel ====================================
+$scope.backtohome = function(){
+          $ionicHistory.clearCache().then(function(){
+            $state.transitionTo('home');
+          });
+}
 
 //=================================================== forgot passcode handler ============================
 

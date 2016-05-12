@@ -7,33 +7,27 @@
   </ion-header-bar>
 
 <ion-content class="scroll-content">
-  <div ng-hide="email">
-       <div class="irk-image irk-centered marT10p width150">
+<div>
+  <div class="irk-image irk-centered marT10p width150">
      <img src="img/logo-2.png" class="irk-step-image">
-   </div>
+  </div>
 
-          <select   class="passcode-dropdown marT10p" ng-model="email" ng-change="resetInput()" >
-              <option  ng-repeat="email in emails ">
-                <a>{{email.emailId}}</a>
-              </option>
-          </select>
+  <select class="passcode-dropdown" ng-model="email"  ng-change="resetInput()" >
+      <option  ng-repeat="email in emails " >
+        <a value="email.emailId" >{{email.emailId}}</a>
+      </option>
+  </select>
 
 </div>
 
 
-<div  ng-show="email" class="pass">
-          <select class="passcode-dropdown" ng-model="email"  ng-change="resetInput()" >
-              <option  ng-repeat="email in emails " >
-                <a value="email.emailId" >{{email.emailId}}</a>
-              </option>
-          </select>
+<div ng-hide="hidePasscodeDiv" class="pass">
 
-  <br/>
-  <br/><br/><br/>
 <label class=" item-input item-stacked-label ">
 <span  class=" font35 fontB IRK-FONT1" >Enter Passcode</span>
-<input class=" CirclePasscode  irk-centered "style="line-height: 90%;" placeholder="OOOO" type="text"  name="passcode" id="passcode"
-      maxlength="4"  ng-change="passcodeChanged()" ng-model="passcode" focus-me >
+<input class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="text"  name="passcode" id="passcode"
+      maxlength="4"  ng-change="loginViaPasscode()"  ng-model="passcode" focus-me >
+
 </label>
 
 <div>
