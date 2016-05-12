@@ -139,22 +139,22 @@ getUserSettingsJson : function(emailId){
             return deferred.promise;
          },
 
-   logInViaPasscode :  function(userId,passcode){
-         var deferred = $q.defer();
+   logInViaPasscode :  function(emailId,passcode){
+        var deferred = $q.defer();
          var db = databaseService.getConnectionObject();
          //chek the email ID exists
-         var query = "SELECT id FROM Session WHERE userId ='"+userId+"' AND passcode ='"+passcode+"' ";
-         var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
+         var query = "SELECT id FROM Session WHERE emailId ='"+emailId.trim()+"' AND passcode ='"+passcode.trim()+"' ";
+         var select =  $cordovaSQLite.execute(db, query).then(function(res) {
                 if(res.rows.length > 0){
-                  return true ;
+                  return res.rows ;
                 }else {
-                  return false ;
+                   return null ;
                  }
                }, function (err) {
              });
-         deferred.resolve(insert);
-         return deferred.promise;
-      },
+         deferred.resolve(select);
+       return deferred.promise;
+    },
 
    getEmailList : function(){
              var deferred = $q.defer();

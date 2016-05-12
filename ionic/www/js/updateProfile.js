@@ -25,7 +25,7 @@ angular.module('updateProfile',[])
               }
             }
 
-            $scope.profileModeLabel = 'Edit';
+            $scope.profileMode = 'Edit';
             $scope.isDisabled = true;
 
             var updateProfile = angular.element(document.querySelector('#updateProfile'));
@@ -205,12 +205,12 @@ angular.module('updateProfile',[])
 
 
      $scope.switchProfileModeOnOff = function(){
-           if ($scope.profileModeLabel == 'Save') {
+           if ($scope.profileMode == 'Save') {
               $scope.updateProfile();
-              $scope.profileModeLabel = 'Edit';
+              $scope.profileMode = 'Edit';
               $scope.isDisabled = true;
             }else {
-              $scope.profileModeLabel = 'Save';
+              $scope.profileMode = 'Save';
               $scope.isDisabled = false;
             }
      }
@@ -379,8 +379,10 @@ $scope.checkNewPasscodeDigits = function(){
                    if (email) {
                      profileDataManager.getUserIDByEmail(email).then(function(res){
                             profileDataManager.updatePasscodeToUserID(res.trim(),$scope.passcode).then(function(res){
-                                         console.log('passcode updated '+res);
-                                         $scope.closePasscodeModal();
+                                         if (res) {
+                                           $scope.callAlertDailog("Passcode updated.");
+                                           $scope.closePasscodeModal();
+                                         }
                                      });
                        });
                    }

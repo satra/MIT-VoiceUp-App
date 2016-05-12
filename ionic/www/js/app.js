@@ -7,12 +7,12 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','eligiblityDataManager',
 'profileDataManager','consentDataManager','apiDataManagerService','homeController','eligibility','eligibile','signUp','passcode','consent',
-'updateProfile','customDirectives','ionicResearchKit', 'checklist-model','base64', 'eventResume', 'passcodehandler','angular-dialgauge', 'ngCordova'])
+'updateProfile','customDirectives','ionicResearchKit', 'checklist-model','base64','learnModule','eventResume', 'passcodehandler','angular-dialgauge', 'ngCordova'])
 
 .run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state) {
 
   $ionicPlatform.ready(function() {
-    
+
     if ($rootScope.activeUser) {
       $rootScope.lastState = $ionicHistory.currentStateName() ;
        if ($ionicHistory.currentStateName()) {
@@ -159,7 +159,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     views: {
       'tab-learn': {
         templateUrl: 'templates/modal-online-resource.html',
-        controller: 'ActiveTasksCtrl'
+        controller: 'LearnCtrl'
       }
     }
   });
