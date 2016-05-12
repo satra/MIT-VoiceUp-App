@@ -379,8 +379,10 @@ $scope.checkNewPasscodeDigits = function(){
                    if (email) {
                      profileDataManager.getUserIDByEmail(email).then(function(res){
                             profileDataManager.updatePasscodeToUserID(res.trim(),$scope.passcode).then(function(res){
-                                         console.log('passcode updated '+res);
-                                         $scope.closePasscodeModal();
+                                         if (res) {
+                                           $scope.callAlertDailog("Passcode updated.");
+                                           $scope.closePasscodeModal();
+                                         }
                                      });
                        });
                    }
