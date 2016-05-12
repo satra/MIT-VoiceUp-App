@@ -13,7 +13,7 @@
   </div>
 
   <select class="passcode-dropdown" ng-model="email"  ng-change="resetInput()" >
-      <option value="" disabled selected>Select your email</option>
+      <option value="" disabled selected>Choose email</option>
       <option  ng-repeat="email in emails " >
         <a value="email.emailId" >{{email.emailId}}</a>
       </option>
@@ -27,7 +27,7 @@
 <label class=" item-input item-stacked-label ">
 <span  class=" font35 fontB IRK-FONT1" >Enter Passcode</span>
 <input class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="text"  name="passcode" id="passcode"
-      maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="passcode" focus-me focus-me-disable={{disableFlag}} >
+      maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="passcode" focus-me>
 
 </label>
 

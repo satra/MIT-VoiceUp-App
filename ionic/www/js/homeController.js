@@ -136,7 +136,7 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
     // validate input fields
     var inputValue = angular.element(document.getElementById("signIn").querySelectorAll(".item-input"));
     for (var i = 0; i < inputValue.length; i++) {
-          var inputTag = angular.element(document.querySelectorAll('.item-input')[i].querySelector('input'));
+          var inputTag = angular.element(inputValue[i].querySelector('input'));
           var value = inputTag.prop('value');
           var placeholder = inputTag.prop('placeholder');
           if(keepGoing){
@@ -217,6 +217,7 @@ $scope.launchpinScreen = function(){
               if (email) {
                 profileDataManager.getUserIDByEmail(email).then(function(res){
                        profileDataManager.addPasscodeToUserID(res,$scope.passcode,email).then(function(res){
+                            $scope.modal.remove();
                             $scope.transition('tab.Activities');
                           });
                     });
