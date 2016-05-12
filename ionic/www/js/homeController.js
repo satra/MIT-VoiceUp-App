@@ -53,12 +53,14 @@ $scope.GoBack = function () {
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
-      $scope.hidePasscodeDiv = true;
+      $scope.hidePasscodeDiv = true ;
+      $scope.hideImageDiv = false ;
     });
   };
 
   $scope.resetInput = function() {
        $scope.hidePasscodeDiv = false;
+       $scope.hideImageDiv = true ;
        var passcode_div = angular.element(document.querySelector('#passcode'));
        $scope.passcodeDiv = '';
        $scope.setPasscodeFocus = true ;

@@ -8,11 +8,12 @@
 
 <ion-content class="scroll-content">
 <div>
-  <div class="irk-image irk-centered marT10p width150">
+  <div class="irk-image irk-centered marT10p width150" ng-hide="hideImageDiv" >
      <img src="img/logo-2.png" class="irk-step-image">
   </div>
 
   <select class="passcode-dropdown" ng-model="email"  ng-change="resetInput()" >
+      <option value="" disabled selected>Select your email</option>
       <option  ng-repeat="email in emails " >
         <a value="email.emailId" >{{email.emailId}}</a>
       </option>
@@ -26,7 +27,7 @@
 <label class=" item-input item-stacked-label ">
 <span  class=" font35 fontB IRK-FONT1" >Enter Passcode</span>
 <input class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="text"  name="passcode" id="passcode"
-      maxlength="4"  ng-change="loginViaPasscode()"  ng-model="passcode" focus-me >
+      maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="passcode" focus-me >
 
 </label>
 
