@@ -211,7 +211,7 @@ $scope.launchpinScreen = function(){
               var email = $scope.emailId ;
               if (email) {
                 profileDataManager.getUserIDByEmail(email).then(function(res){
-                       profileDataManager.addPasscodeToUserID(res,$scope.passcode).then(function(res){
+                       profileDataManager.addPasscodeToUserID(res,$scope.passcode,email).then(function(res){
                             $scope.transition('tab.Activities');
                           });
                     });
