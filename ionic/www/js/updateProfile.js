@@ -229,10 +229,10 @@ angular.module('updateProfile',[])
       //iterate the form and validate the form
       for (var i = 0; i < steps.length; i++) {
        var lableId = steps[i].id;
-       var spanTag = angular.element(document.querySelectorAll('.item-input')[i].querySelector('span'));
+       var spanTag = angular.element(document.getElementById("updateProfile").querySelectorAll(".item-input")[i].querySelector('span'));
        var text = spanTag[0].textContent ;
       if(keepGoing){
-          var inputValue = angular.element(document.querySelectorAll('.item-input')[i].querySelector('input'));
+          var inputValue = angular.element(document.getElementById("updateProfile").querySelectorAll(".item-input")[i].querySelector('input'));
           var type = inputValue.prop('type');
           var placeholder = inputValue.prop('placeholder');
           var value = inputValue.prop('value') ;
@@ -264,7 +264,7 @@ angular.module('updateProfile',[])
                           break;
 
           case 'gender':
-                            var select = angular.element(document.querySelectorAll('.item-input')[i].querySelector('select'));
+                            var select = angular.element(document.getElementById("updateProfile").querySelectorAll("select"));
                             var value = select.prop('value');
                             var options = select.prop('options');
                             var placeholder = select.prop('placeholder');
@@ -284,6 +284,7 @@ angular.module('updateProfile',[])
       }
 
     if (formValid) {
+      console.log(dataCache);
           $scope.emailId = emailId ;
           profileDataManager.updateUserByEmailId(dataCache,$scope.emailId).then(function(res){
             if(res){
