@@ -97,8 +97,10 @@ $scope.GoBack = function () {
 //from Sign in screen to  eligiblityTest
   $scope.showEligibilityTestView = function() {
      $scope.modal.remove();
+     $ionicHistory.clearCache().then(function(){
      $state.transitionTo('eligiblityTest');
-   };
+   });
+};
 
    // ==== Close the existing modal and open Sign in html in new modal========
   $scope.openSignIn = function() {
