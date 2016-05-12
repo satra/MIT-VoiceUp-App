@@ -251,7 +251,7 @@ if (formValid) {
               //reset div
               $scope.confirm_passcode = '';
               $compile(confirm_passcode_div)($scope);
-              $scope.callAlertDailog("Passcode should match with confirm");
+              $scope.callAlertDailog("Passcode should match with confirm Passcode ");
               $scope.confirmLoop = $scope.confirmLoop +1;
               console.log($scope.confirmLoop);
                if($scope.confirmLoop >= 3){
