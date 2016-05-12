@@ -53,6 +53,7 @@ $scope.GoBack = function () {
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
+      $scope.setPasscodeFocus = true ;
       $scope.hidePasscodeDiv = true ;
       $scope.hideImageDiv = false ;
     });
