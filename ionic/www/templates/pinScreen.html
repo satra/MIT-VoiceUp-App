@@ -1,25 +1,24 @@
 <ion-modal-view view-title="Ionic ResearchKit">
-<ion-content>
+  <ion-header-bar>
+    <h1 class="title">Passcode</h1>
+  </ion-header-bar>
 
-<div  ng-show="email" class="pass">
-   <div class="irk-image irk-centered  width150 marT10p">
-     <img src="img/logo-2.png" class="irk-step-image">
-   </div>
-  <select class="passcode-dropdown marT10p" ng-model="email"  ng-change="resetInput()">
-              <option  ng-repeat="email in emails " ng-selected="{{selectedEmail==email.emailId}}">
-                <a value="email.emailId" >{{email.emailId}}</a>
-              </option>
-  </select>
-<br/>
-<br/><br/><br/>
-<label class=" item-input item-stacked-label ">
-<span style="font-size:31px;font-weight:bold;" class=" font35" >Enter Passcode</span>
-<input class=" CirclePasscode  txtcenter " style="line-height: 90%;" placeholder="OOOO" type="text"  name="passcode" id="passcode"
-     maxlength="4"  ng-change="passcodeChanged()" ng-model="passcode" focus-me >
-</label>
+<ion-content class="scroll-content">
+ <div id="selectEmailForPin">
+    <div class="irk-image irk-centered marT10p width150" ng-hide="hideImageDiv" >
+       <img src="img/logo-2.png" class="irk-step-image">
+    </div>
+    <select class="passcode-dropdown" ng-change="clearPinDiv()"
+    ng-options="item as item.emailId for item in emails track by item.emailId"
+    ng-model="selectedEmail"></select>
+ </div>
 
-</div>
-
+<div ng-hide="hidePasscodeDiv" class="pass">
+  <label class=" item-input item-stacked-label ">
+  <span  class=" font35 fontB IRK-FONT1" >Enter Passcode</span>
+  <input class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="text"  name="pinpasscode" id="pinpasscode"
+        maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="pinpasscode" focus-me>
+  </label>
+ </div>
 </ion-content>
-
 </ion-modal-view>

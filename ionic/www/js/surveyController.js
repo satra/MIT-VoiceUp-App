@@ -1,6 +1,72 @@
 angular.module('surveyController',[])
 // ==== Dummy contorller need to be removed later before production  ========
-.controller('SurveyCtrl', function($scope,$ionicHistory,$state, $ionicModal,userService,irkResults) {
+.controller('SurveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
+  pinModalService,userService,$ionicPopup,irkResults,profileDataManager) {
+
+//on resume handler===================================================================
+$scope.hideImageDiv = true;
+document.addEventListener("resume", function() {
+    if ($rootScope.activeUser) {
+     // get email list
+     var griderArray = new Array() ;
+     for (var i = 0; i < response.length; i++) {
+       griderArray.push({'emailId':response.item(i).emailId});
+       if (response.item(i).emailId == $rootScope.activeUser) {
+          $scope.selectedEmail = griderArray[i];
+       }
+    }
+     $scope.emails = griderArray;
+     pinModalService.init('templates/pinScreen.html', $scope)
+         .then(function(pin) {
+          pin.show();
+        });
+     }
+  }, false);
+
+
+//sign in via email and passcode on change of passcode call this function
+  $scope.loginViaPasscode = function (){
+      var inputValue = angular.element(document.querySelectorAll('#pinpasscode'));
+      var passcode = inputValue.prop('value') ;
+      if(passcode.length == 4){
+        var emailDiv = angular.element(document.querySelectorAll('.passcode-dropdown'));
+        var email = emailDiv.prop('selectedOptions')[0].value ;
+        if (email && passcode) {
+          console.log(email);
+          console.log(passcode);
+          //get IP like email ids
+          profileDataManager.logInViaPasscode(email,passcode).then(function(res){
+                       if (res) {
+                          // All set go to next page
+                          $ionicHistory.clearCache().then(function(){
+                          $rootScope.emailId = email ; // save it to access in update profile
+                          $scope.pin.remove();
+                          $rootScope.activeUser = email;
+                          });
+                       }else {
+                         $scope.clearPinDiv();
+                         $scope.callAlertDailog('Invalid passcode!!!');
+                        }
+                    });
+           }
+      }
+  };
+
+    $scope.clearPinDiv = function(){
+      var passcode_div = angular.element(document.querySelector('#pinpasscode'));
+      passcode_div.val('');
+    }
+
+  //error handler dailog
+  $scope.callAlertDailog =  function (message){
+          $ionicPopup.alert({
+           title: 'Error',
+           template: message
+          });
+    }
+//============== resume handler finished ============================================
+
+
     userService.getSurveyMainList().then(function(response){
     $scope.surveyList = response;
     var surveyMainList = response.surveys;
