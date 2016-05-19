@@ -9,7 +9,41 @@ angular.module('homeController',[])
      //ionic.Platform.exitApp();
   });
 
-databaseService.createLocalDatabaseSchema();
+ databaseService.checkDatabaseExists().then(function(res){
+
+       if (res == 5 ) {
+            //call a method and read from local json and create schema
+             userService.getConfigJson().then(function(response){
+            var eligibility = JSON.stringify(response.eligibility);
+            var profile = JSON.stringify(response.profile);
+            var consent_screens = JSON.stringify(response.consent_screens);
+            var surveyJson =  JSON.stringify(response.surveys);
+            var tasksJson =  JSON.stringify(response.tasks);
+            var completeJson = JSON.stringify(response);
+
+            databaseService.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
+                 console.log('createAppContentTable  '+ resp);
+            });
+
+            databaseService.createSurveysTable(surveyJson).then(function(resp){
+                 console.log('createSurveysTable  '+ resp);
+            });
+
+            databaseService.createTasksTable(tasksJson).then(function(resp){
+                 console.log('createTasksTable  '+ resp);
+            });
+
+            databaseService.createSurveyTempTable().then(function(resp){
+                 console.log('createSurveyTempTable  '+ resp);
+            });
+
+            databaseService.createSurveyQuestionExpiryTable().then(function(resp){
+                 console.log('createSurveyQuestionTable  '+ resp);
+            });
+
+          });
+       }
+ });
 
   //openOnlineResource
   $scope.openOnlineResource = function() {

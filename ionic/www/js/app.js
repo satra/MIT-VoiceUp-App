@@ -5,20 +5,11 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','eligiblityDataManager',
+angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','surveyDataManager','eligiblityDataManager',
 'profileDataManager','consentDataManager','apiDataManagerService','homeController','eligibility','eligibile','signUp','passcode','consent',
-'updateProfile','customDirectives','ionicResearchKit', 'checklist-model','base64','learnModule','eventResume', 'passcodehandler','angular-dialgauge', 'ngCordova'])
-
+'updateProfile','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventResume', 'passcodehandler','ngCordova'])
 .run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state) {
-
   $ionicPlatform.ready(function() {
-
-    if ($rootScope.activeUser) {
-      $rootScope.lastState = $ionicHistory.currentStateName() ;
-       if ($ionicHistory.currentStateName()) {
-        $state.transitionTo('onResumehandler');
-       }
-    }
 
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -26,18 +17,10 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
     }
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
-
-            StatusBar.styleDefault();
+      StatusBar.styleDefault();
     }
   });
 
-//on resume handler
-//  document.addEventListener("resume", function() {
-//    if ($rootScope.activeUser) {
-//      $rootScope.lastState = $ionicHistory.currentStateName() ;
-//      $state.transitionTo('onResumehandler');
-//    }
-//  }, false);
 
 $ionicPlatform.registerBackButtonAction(function (event) {
                  event.preventDefault();
@@ -89,6 +72,11 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     url: '/beginConsent',
     templateUrl: 'templates/consent.html',
     controller: 'consentCtrl'
+  })
+
+  .state('DocumentCtrl', {
+    url: '/documentCtrl',
+    controller: 'DocumentCtrl'
   })
 
   .state('loadSignUp', {
@@ -166,8 +154,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
 
   // if none of the above states are matched, use this as the fallback
   // $urlRouterProvider.otherwise('/tab/Activities');
-   $urlRouterProvider.otherwise('home');
-
+  $urlRouterProvider.otherwise('home');
 })
 
 .config(function($ionicConfigProvider) {
