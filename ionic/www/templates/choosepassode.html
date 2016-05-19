@@ -11,8 +11,8 @@
 
             <label class=" item-input item-stacked-label" style="margin-top: 20px;">
                 <span style="font-size:20px;font-weight:bold;" class="font35">{{passcodeLabel}}</span>
-                <input class="CirclePasscode txtcenter"  style="line-height: 90%;" placeholder="OOOO" type="password" pattern="[0-9]*"  name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4" ng-hide="managePasscode" focus-me>
-                <input class="CirclePasscode txtcenter" style="line-height: 90%;" placeholder="OOOO" type="password"  pattern="[0-9]*" inputmode="numeric"  name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()" maxlength="4" ng-hide="managePasscodeConfirm" focus-me>
+                <input class="CirclePasscode txtcenter"  style="line-height: 90%;" placeholder="OOOO" type="password" autofocus="true"  pattern="[0-9]*"  name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4" ng-hide="managePasscode" >
+                <input class="CirclePasscode txtcenter" style="line-height: 90%;" placeholder="OOOO" type="password" autofocus="true"  pattern="[0-9]*" inputmode="numeric"  name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()" maxlength="4" ng-hide="managePasscodeConfirm" >
             </label>
         </div>
     </ion-content>
