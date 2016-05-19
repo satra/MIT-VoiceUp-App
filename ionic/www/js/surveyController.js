@@ -32,8 +32,6 @@ document.addEventListener("resume", function() {
         var emailDiv = angular.element(document.querySelectorAll('.passcode-dropdown'));
         var email = emailDiv.prop('selectedOptions')[0].value ;
         if (email && passcode) {
-          console.log(email);
-          console.log(passcode);
           //get IP like email ids
           profileDataManager.logInViaPasscode(email,passcode).then(function(res){
                        if (res) {
@@ -99,20 +97,25 @@ surveyDataManager.getSurveyListForToday().then(function(response){
             items.push(surveyMainList[i]);
             }
        }
-
        var formattedDate = today.getDate()+'-'+today.getMonth()+'-'+today.getFullYear() ;
        if (items) {
-
          profileDataManager.getUserIDByEmail($rootScope.emailId).then(function (userId){
            $scope.userId = userId ;
          });
-
          // now check any entries for today in surveytmp table
          surveyDataManager.checkSurveyExistsInTempTableForToday(formattedDate).then(function(res){
-           $scope.list= items ;
+
+         $scope.list= items ;// add survey to html modal
 
          if (!res) {
-               $ionicLoading.show();
+              $ionicLoading.show();
+              // if survey question doesn't exists clear the table for the user
+              surveyDataManager.clearExistingTaskListFromTempTable($scope.userId)
+              .then(function(res){
+                    console.log('expiry entry from controller '+res);
+               });
+
+              // then loop through the survey and update history and temp table
               for (var k = 0; k < items.length; k++) {
                 for (var M = 0; M < items[k].tasks.length; M++) {
                        var questionId = items[k].tasks[M] ;
@@ -155,7 +158,6 @@ surveyDataManager.getSurveyListForToday().then(function(response){
                           $ionicLoading.hide();
                         }
                  });
-
            }
         });
       }

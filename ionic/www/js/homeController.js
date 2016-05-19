@@ -1,7 +1,7 @@
 angular.module('homeController',[])
 //=======Home screen controller======================
 .controller('HomeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,
-  apiDataManagerService,profileDataManager,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
+  apiDataManagerService,profileDataManager,$cordovaEmailComposer, eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
  //get IP like email ids
  $scope.$on('$ionicView.enter', function() {
      // Code you want executed every time view is opened
@@ -25,22 +25,22 @@ angular.module('homeController',[])
                  console.log('createAppContentTable  '+ resp);
             });
 
-            databaseService.createSurveysTable(surveyJson).then(function(resp){
-                 console.log('createSurveysTable  '+ resp);
-            });
-
             databaseService.createTasksTable(tasksJson).then(function(resp){
                  console.log('createTasksTable  '+ resp);
             });
 
-            databaseService.createSurveyTempTable().then(function(resp){
-                 console.log('createSurveyTempTable  '+ resp);
-            });
+        databaseService.createSurveyTempTable().then(function(resp){
+             console.log('createSurveyTempTable  '+ resp);
+        });
+
+
+  databaseService.createSurveysTable(surveyJson).then(function(resp){
+       console.log('createSurveysTable  '+ resp);
+  });
 
             databaseService.createSurveyQuestionExpiryTable().then(function(resp){
                  console.log('createSurveyQuestionTable  '+ resp);
             });
-
           });
        }
  });
@@ -69,6 +69,33 @@ $scope.joinStudy = function () {
 $scope.GoBack = function () {
   $scope.modal.remove();
 };
+
+$scope.sendConsentDoc = function (){
+  console.log('send consent doc ');
+  var email = {
+     to: 'teste@example.com',
+     cc: 'teste@example.com',
+     bcc: ['john@doe.com', 'jane@doe.com'],
+  /*   attachments: [
+       'file://img/logo.png',
+       'res://icon.png',
+       'base64:icon.png//iVBORw0KGgoAAAANSUhEUg...',
+       'file://README.pdf'
+     ],
+    */ subject: 'Mail subject',
+     body: 'How are you? Nice greetings from Leipzig',
+     isHtml: true
+  };
+
+ // $cordovaEmailComposer.open(email).then(null, function () {
+ //   // user cancelled email
+ //  });
+
+ cordova.plugins.email.open(email, function (sent) {
+     console.log('email ' + (sent ? 'sent' : 'cancelled'));
+ }, this);
+
+}
 
 //==================================Select email view ==========
      $scope.openSignInChooseEmail = function() {

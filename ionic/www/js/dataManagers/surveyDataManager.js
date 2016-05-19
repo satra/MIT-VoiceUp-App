@@ -57,7 +57,21 @@ angular.module('surveyDataManager', [])
      return deferred.promise;
    },
 
-   addSurveyToUserForToday : function(userId,surveyId,questionId,creationDate){
+   clearExistingTaskListFromTempTable : function(userId){
+     var deferred = $q.defer();
+     var db = databaseService.getConnectionObject();
+     var query = "DELETE FROM SurveyTemp WHERE userId = ? " ;
+     var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                      .then(function(res) {
+                          return res ;
+                      }, function (err) {
+                         console.error(err);
+                  });
+    deferred.resolve(deleteData);
+    return deferred.promise;
+  },
+
+  addSurveyToUserForToday : function(userId,surveyId,questionId,creationDate){
      var deferred = $q.defer();
      var db = databaseService.getConnectionObject();
      var insert =  $cordovaSQLite.execute(db, 'INSERT INTO SurveyTemp (userId,surveyId, questionId, isSkipped, creationDate) VALUES (?,?,?,?,?)', [userId,surveyId,questionId,'NONE',creationDate])
