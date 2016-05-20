@@ -12,15 +12,16 @@ eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData){
     var optionList = '';
     angular.forEach($scope.eligiblityData, function(value, key){
         var id =  value.id;
-        var question = value.question;
+        var question = value.title;
+        var trueText = value['true-text'];
+        var falseText = value['false-text'];
         var normalImage = 'irk-btn-round-outline';//value.normal-state-image;
         var selectedImage = 'irk-btn-round';//value.selected-state-image ;
 
         optionList = optionList + '<btc-image-choice-question-step id="'+id+'" title="'+question+'" optional="false" >'+
-                       '<btc-image-choice value="'+value.option1+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+value.option1+'" >'+
+                       '<btc-image-choice value="'+trueText+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+trueText+'" >'+
                        '</btc-image-choice>'+
-
-                        '<btc-image-choice value="'+value.option2+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+value.option2+'">'+
+                        '<btc-image-choice value="'+falseText+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+falseText+'">'+
                        '</btc-image-choice>'+
                       '</btc-image-choice-question-step>'+
                       '<div class="irk-spacer"></div>';
@@ -45,7 +46,7 @@ $scope.compareEligiblity = function() {
   var check = true ;
   angular.forEach($scope.eligiblityData, function(value, key){
         var questionID = value.id;
-        var answerexpected = value.answer;
+        var answerexpected = value.expected_answer;
        // Visit non-inherited enumerable keys
        Object.keys($scope.results).forEach(function(key) {
          if(key == questionID && check){

@@ -164,27 +164,16 @@
     "version": "0.1.1"
   },
 
-   "eligibility": [{
-     "id": "q1",
-     "question": "Are you 18 or older ?",
-     "option1":"YES",
-     "option2":"NO",
-     "answer":"YES"
-    },
-    {
-     "id": "q2",
-     "question": "Do you live in the United States of America?",
-     "option1":"YES",
-     "option2":"NO",
-     "answer":"YES"
-    },
-    {
-     "id": "q3",
-     "question": "Are you comfortable reading and writing on your iPhone in English ?",
-     "option1":"YES",
-     "option2":"NO",
-     "answer":"NO"
-     }
+   "eligibility": [
+     {
+        "expected_answer": "Yes",
+        "false-text": "No",
+        "id": "e2",
+        "main_type": "review-questions",
+        "title": "Are you 18 years or older as of today?",
+        "true-text": "Yes",
+        "type": "boolean"
+      }
    ],
 
    "profile": {
