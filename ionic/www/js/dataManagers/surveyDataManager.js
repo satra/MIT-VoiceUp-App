@@ -111,7 +111,7 @@ angular.module('surveyDataManager', [])
   getUnansweredQuestionsLessThanToDate : function  (userId,todayDate){
     var deferred = $q.defer();
     var db = databaseService.getConnectionObject();
-    var insert =  $cordovaSQLite.execute(db, "SELECT questionId FROM SurveyQuestionExpiry WHERE creationDate < '"+todayDate+"' AND expiryDate < '"+todayDate+"' AND userId = '"+userId+"' ")
+    var insert =  $cordovaSQLite.execute(db, "SELECT questionId FROM SurveyQuestionExpiry WHERE creationDate < '"+todayDate+"' AND expiryDate >= '"+todayDate+"' AND userId = '"+userId+"' ")
                      .then(function(res) {
                          console.log(res);
                          return res ;
