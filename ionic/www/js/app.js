@@ -126,7 +126,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     views: {
       'tab-dashboard': {
        templateUrl: 'templates/tab-activetasks.html',
-       controller: 'ActiveTasksCtrl'
+       controller: 'LearnCtrl'
       }
     }
   })
