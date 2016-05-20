@@ -12,7 +12,6 @@ angular.module('surveyDataManager', [])
                  consent = JSON.parse(res.rows.item(i).surveyJson);
                 }
                 return consent;
-                //resolve here
                 deferred.resolve(consent);
             }, function (err) {
           });
@@ -65,7 +64,6 @@ angular.module('surveyDataManager', [])
                       .then(function(res) {
                           return res ;
                       }, function (err) {
-                         console.error(err);
                   });
     deferred.resolve(deleteData);
     return deferred.promise;
@@ -78,7 +76,6 @@ angular.module('surveyDataManager', [])
                       .then(function(res) {
                           return res.insertId ;
                       }, function (err) {
-                          console.error(err);
                   });
     deferred.resolve(insert);
     return deferred.promise;
@@ -91,7 +88,6 @@ angular.module('surveyDataManager', [])
                      .then(function(res) {
                          return res.insertId ;
                      }, function (err) {
-                         console.error(err);
                  });
    deferred.resolve(insert);
    return deferred.promise;
@@ -103,7 +99,6 @@ angular.module('surveyDataManager', [])
                       .then(function(res) {
                           return res ;
                       }, function (err) {
-                        console.error(err);
                   });
     deferred.resolve(insert);
     return deferred.promise;
@@ -113,10 +108,8 @@ angular.module('surveyDataManager', [])
     var db = databaseService.getConnectionObject();
     var insert =  $cordovaSQLite.execute(db, "SELECT questionId FROM SurveyQuestionExpiry WHERE creationDate < '"+todayDate+"' AND expiryDate >= '"+todayDate+"' AND userId = '"+userId+"' ")
                      .then(function(res) {
-                         console.log(res);
                          return res ;
                      }, function (err) {
-                       console.error(err);
                  });
    deferred.resolve(insert);
    return deferred.promise;
@@ -130,7 +123,6 @@ angular.module('surveyDataManager', [])
                       .then(function(res) {
                           return res.insertId ;
                       }, function (err) {
-                         console.error(err);
                   });
     deferred.resolve(insert);
     return deferred.promise;
@@ -149,11 +141,9 @@ angular.module('surveyDataManager', [])
                                            .then(function(res) {
                                                  return res;
                                              }, function (err) {
-                                                console.error(err);
                                });
                           }
                       }, function (err) {
-                         console.error(err);
                    });
      deferred.resolve(update);
      return deferred.promise;
@@ -166,11 +156,9 @@ angular.module('surveyDataManager', [])
                       .then(function(res) {
                             return res;
                         }, function (err) {
-                           console.error(err);
                     });
       deferred.resolve(deleteData);
       return deferred.promise;
    }
-
   }
 });

@@ -40,20 +40,6 @@ $scope.closeModal = function() {
     }
 }
 
- // Cleanup the modal when we're done with it!
- $scope.$on('$destroy', function() {
-   //$scope.modal.remove();
-   console.log('destroy modal hit');
- });
-
- // Execute action on hide modal
- $scope.$on('modal.hidden', function() {
-    $state.transitionTo('loadSignUp');
- });
-
-  // Execute action on remove modal
-  $scope.$on('modal.removed', function() {
-
-  });
+ 
 
 });
