@@ -37,10 +37,10 @@ angular.module('surveyDataManager', [])
     return deferred.promise;
     },
 
-    checkSurveyExistsInTempTableForToday : function(date){
+    checkSurveyExistsInTempTableForToday : function(date,userId){
       var deferred = $q.defer();
       var db = databaseService.getConnectionObject();
-      var query = "SELECT * FROM SurveyTemp WHERE creationDate = '"+date+"'";
+      var query = "SELECT * FROM SurveyTemp WHERE creationDate = '"+date+"' AND userId = '"+userId+"' ";
       var tempData =  $cordovaSQLite.execute(db, query).then(function(res) {
               if (res.rows.length > 0 ) {
                 return res.rows;

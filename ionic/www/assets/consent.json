@@ -301,7 +301,7 @@
       ]
     },
     {
-      "date": "0 5 20 * *",
+      "date": "0 5 19 * *",
       "title": "Mental Health Survey 3",
             "id" : "3",
       "skippable": [

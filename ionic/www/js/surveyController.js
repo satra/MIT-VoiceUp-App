@@ -101,65 +101,63 @@ surveyDataManager.getSurveyListForToday().then(function(response){
        if (items) {
          profileDataManager.getUserIDByEmail($rootScope.emailId).then(function (userId){
            $scope.userId = userId ;
-         });
-         // now check any entries for today in surveytmp table
-         surveyDataManager.checkSurveyExistsInTempTableForToday(formattedDate).then(function(res){
-
-         $scope.list= items ;// add survey to html modal
-
-         if (!res) {
-              $ionicLoading.show();
-              // if survey question doesn't exists clear the table for the user
-              surveyDataManager.clearExistingTaskListFromTempTable($scope.userId)
-              .then(function(res){
-                    console.log('expiry entry from controller '+res);
-               });
-
-              // then loop through the survey and update history and temp table
-              for (var k = 0; k < items.length; k++) {
-                for (var M = 0; M < items[k].tasks.length; M++) {
-                       var questionId = items[k].tasks[M] ;
-                       var surveyId = items[k].id ;
-                       var creationDate = formattedDate ;
-
-                       //get question expiry for the Id
-                       if ($scope.taskList[questionId].timelimit) {
-                       // time limit exists add entry into expiry table
-                       expiryDays = today.getDate() + 2 ;
-                       var expiryDate = expiryDays +'-'+today.getMonth()+'-'+today.getFullYear() ;
-
-                       surveyDataManager.addThisSurveyToExpiry($scope.userId,surveyId,questionId,creationDate,expiryDate)
-                       .then(function(res){
-                             console.log('expiry entry from controller '+res);
-                           });
-                       }
-                       // make an entry into temp table
-                       surveyDataManager.addSurveyToUserForToday($scope.userId,surveyId,questionId,creationDate)
-                       .then(function(res){
-                           console.log('log from controller '+res);
-                       });
-
-                      }
-                 }
-
-            // pull from expiry table and put it in temp table where questions expiry still exists
-            surveyDataManager.getUnansweredQuestionsLessThanToDate($scope.userId,formattedDate).then(function(resp){
-               console.log('control under fetching un answered questions ');
-                         if (resp.rows.length >0 ) {
-                           // insert unanswered questions into temp table
-                          for (var i = 0; i < resp.rows.length; i++) {
-                          surveyDataManager.addSurveyToUserForToday($scope.userId,'',resp.rows[i].questionId,formattedDate)
-                            .then(function(res){
-                                console.log('log from un answered controller '+res);
-                             });
-                          }
-                          $ionicLoading.hide();
-                        }else{
-                          $ionicLoading.hide();
-                        }
+           $scope.list= items ;// add survey to html modal
+           // now check any entries for today in surveytmp table
+           surveyDataManager.checkSurveyExistsInTempTableForToday(formattedDate,userId).then(function(res){
+           if (!res) {
+                $ionicLoading.show();
+                // if survey question doesn't exists clear the table for the user
+                surveyDataManager.clearExistingTaskListFromTempTable($scope.userId)
+                .then(function(res){
+                      console.log('expiry entry from controller '+res);
                  });
-           }
-        });
+
+                // then loop through the survey and update history and temp table
+                for (var k = 0; k < items.length; k++) {
+                  for (var M = 0; M < items[k].tasks.length; M++) {
+                         var questionId = items[k].tasks[M] ;
+                         var surveyId = items[k].id ;
+                         var creationDate = formattedDate ;
+
+                         //get question expiry for the Id
+                         if ($scope.taskList[questionId].timelimit) {
+                         // time limit exists add entry into expiry table
+                         expiryDays = today.getDate() + 2 ;
+                         var expiryDate = expiryDays +'-'+today.getMonth()+'-'+today.getFullYear() ;
+
+                         surveyDataManager.addThisSurveyToExpiry($scope.userId,surveyId,questionId,creationDate,expiryDate)
+                         .then(function(res){
+                               console.log('expiry entry from controller '+res);
+                             });
+                         }
+                         // make an entry into temp table
+                         surveyDataManager.addSurveyToUserForToday($scope.userId,surveyId,questionId,creationDate)
+                         .then(function(res){
+                             console.log('log from controller '+res);
+                         });
+
+                        }
+                   }
+
+              // pull from expiry table and put it in temp table where questions expiry still exists
+              surveyDataManager.getUnansweredQuestionsLessThanToDate($scope.userId,formattedDate).then(function(resp){
+                 console.log('control under fetching un answered questions ');
+                           if (resp.rows.length >0 ) {
+                             // insert unanswered questions into temp table
+                            for (var i = 0; i < resp.rows.length; i++) {
+                            surveyDataManager.addSurveyToUserForToday($scope.userId,'',resp.rows[i].questionId,formattedDate)
+                              .then(function(res){
+                                  console.log('log from un answered controller '+res);
+                               });
+                            }
+                            $ionicLoading.hide();
+                          }else{
+                            $ionicLoading.hide();
+                          }
+                   });
+                }
+            });
+         });
       }
   });
 

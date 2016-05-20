@@ -13,7 +13,7 @@ angular.module('apiDataManagerService', [])
       }
      return URL;
     },
-    createGradleUser: function(postData){
+    createGlobalUser: function(postData){
      var deferred = $q.defer();
      var URL = this.getURL('user');
      var stringToken = '';
@@ -54,7 +54,7 @@ angular.module('apiDataManagerService', [])
          return deferred.promise;
        },
 
-     signInGradleUser :  function(headerData){
+     signInGlobalUser :  function(headerData){
       var deferred = $q.defer();
       var URL = base_url+'user/authentication';
       var signIn =    $http({    method:'GET',

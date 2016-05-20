@@ -157,13 +157,15 @@ if (formValid) {
                dateFormatted +=today.getDay();
                var login = gradleArray[0].firstName+gradleArray[1].lastName+dateFormatted ;
                gradleArray.push({'login':login});
-                 apiDataManagerService.createGradleUser(gradleArray).then(function(res){
+                 apiDataManagerService.createGlobalUser(gradleArray).then(function(res){
                       if (res.status == 200) {
                       var resultData = res.data ;
                            profileDataManager.createNewUser(dataCache,$scope.emailId,resultData.authToken['token']).then(function(insertId){
-                            $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
-                            $rootScope.activeUser =  $scope.emailId ;
-                            $scope.launchpinScreen();
+                             if (insertId) {
+                               $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
+                               $rootScope.activeUser =  $scope.emailId ;
+                               $scope.launchpinScreen();
+                             }
                           });
                       }
                    });
@@ -242,24 +244,19 @@ $scope.backtohome = function(){
             //check is both are equal
             if($scope.passcode == confirm_passcode){
                 var email = $scope.emailId ;
-                console.log('insert passcode allow '+ email);
                 if (email) {
                   profileDataManager.getUserIDByEmail(email).then(function(res){
-
                          profileDataManager.addPasscodeToUserID(res,$scope.passcode,email).then(function(res){
-                                    console.log(res);
                                     $scope.OpenVerification();
                                   });
                     });
                 }
             }else {
-              console.log('not equal clear div and run loop ');
               //reset div
               $scope.confirm_passcode = '';
               $compile(confirm_passcode_div)($scope);
               $scope.callAlertDailog("Passcode should match with confirm Passcode ");
               $scope.confirmLoop = $scope.confirmLoop +1;
-              console.log($scope.confirmLoop);
                if($scope.confirmLoop >= 3){
                  $scope.passcodeLabel = "Enter Passcode";
                  $scope.managePasscode = false ;
