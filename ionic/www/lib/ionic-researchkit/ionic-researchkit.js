@@ -139,6 +139,12 @@ angular.module('ionicResearchKit',[])
         }
     };
 
+    service.addConsentBody = function(content) {
+        if (pdfDefinition) {
+            pdfContent.push({ text: content, style: 'paragraph' });
+        }
+    };
+
     service.addParticipantName = function(formdata) {
         pdfName = formdata.participantGivenName + ' ' + formdata.participantFamilyName;
         pdfTitle = formdata.participantTitle;
@@ -1225,6 +1231,7 @@ angular.module('ionicResearchKit',[])
                     consentImageClass = 'irk-consent-07';
                     break;
                 case 'custom':
+
                     consentTitle = attr.title;
                     consentText = attr.text;
                     consentImageClass = (attr.image?attr.image:'irk-consent-custom');
@@ -1245,7 +1252,7 @@ angular.module('ionicResearchKit',[])
                         '<h2>'+consentTitle+'</h2>'+
                         '<p>'+attr.summary+'</p>'+
                         '</div>'+
-                        '<a class="button button-clear button-positive irk-button-learn-more" ng-click="$parent.showLearnMore()">'+consentText+'</a>'+
+                        (attr.showLearnMore && attr.showLearnMore=='false'?'':'<a class="button button-clear button-positive irk-button-learn-more" ng-click="$parent.showLearnMore()">'+consentText+'</a>')+
                         '<div class="irk-learn-more-content" ng-transclude>'+
                         '</div>'+
                         '<div class="irk-spacer"></div>'+
@@ -1409,6 +1416,15 @@ angular.module('ionicResearchKit',[])
 
                         var container = angular.element(document.querySelector('.irk-consent-review-derived-content'));
                         container.append(scope.reviewContent);
+                    }
+                    else if (reviewType == 'review' && attrs.hasHtmlContent && attrs.hasHtmlContent == 'true')
+                    {
+                        //Add the consent title to the consent document (PDF)
+                        irkConsentDocument.addConsentTitle(attrs.title);
+
+                        //Add the consent section to the consent document (PDF)
+                        var consentContent = angular.element(document.querySelector('.irk-consent-review-content'));
+                        irkConsentDocument.addConsentBody(consentContent.text());
                     }
                 }
             });
@@ -1700,10 +1716,11 @@ angular.module('ionicResearchKit',[])
 .directive('irkAudioTask', function() {
     return {
         restrict: 'E',
-        controller: ['$scope', '$element', '$attrs', '$interval', '$cordovaMedia', function($scope, $element, $attrs, $interval, $cordovaMedia) {
+        controller: ['$scope', '$element', '$attrs', '$interval', '$cordovaMedia', '$ionicPopup', function($scope, $element, $attrs, $interval, $cordovaMedia, $ionicPopup) {
 
             $scope.activeStepID;
             $scope.audioSample;
+            $scope.audioDisabled;
             $scope.audioActive;
             $scope.audioActivity;
             $scope.audioTimer = ' ';
@@ -1718,6 +1735,12 @@ angular.module('ionicResearchKit',[])
                     $scope.audioSample = null;
                     if (!$attrs.autoRecord || $attrs.autoRecord=="true") $scope.recordAudio();
                 } else {
+                    $scope.queueAudio();
+                }
+            }
+
+            $scope.queueAudio = function() {
+                if ($scope.$parent.formData[$scope.activeStepID].fileURL) {
                     $scope.audioSample = $cordovaMedia.newMedia($scope.$parent.formData[$scope.activeStepID].fileURL);
                 }
             }
@@ -1731,18 +1754,6 @@ angular.module('ionicResearchKit',[])
                 //$scope.$parent.formData[$scope.activeStepID].contentType = "audio/m4a";
 
                 $scope.audioSample = $cordovaMedia.newMedia(audioFileName);
-
-                /*
-                // Get amplitude every 250 ms
-                mediaTimer = $interval(function() {
-                    audioSample.getRecordLevels(function(amp) {
-                        console.log(JSON.stringify(amp));
-                    },
-                    function (e) {
-                        console.log("Error getting amp=" + e);
-                    });
-                }, 250);
-                */
 
                 // Record audio
                 $scope.progress = $scope.duration;
@@ -1763,6 +1774,52 @@ angular.module('ionicResearchKit',[])
                         if (!$attrs.autoComplete || $attrs.autoComplete=="true") $scope.$parent.doStepNext();
                     }
                 }, 1000, $scope.duration);
+
+                /*
+                $scope.audioSample = new Media(audioFileName,
+                // success callback
+                function() {
+                    console.log("recordAudio():Audio Success");
+
+                    // Record audio
+                    $scope.progress = $scope.duration;
+                    $scope.updateTimer();
+                    $scope.audioSample.startRecord();
+                    $scope.audioActive = true;
+                    $scope.audioActivity = "Recording";
+                    console.log('Audio recording started');
+
+                    // Show timer
+                    $scope.$parent.currentCountdown = $interval(function() {
+                        $scope.progress--;
+                        $scope.updateTimer();
+
+                        if ($scope.progress==0) {
+                            $scope.audioSample.stopRecord();
+                            $scope.audioActive = false;
+                            console.log('Audio recording stopped');
+                            if (!$attrs.autoComplete || $attrs.autoComplete=="true") $scope.$parent.doStepNext();
+                        }
+                    }, 1000, $scope.duration);
+
+                },
+                // error callback
+                function(err) {
+                    console.log("recordAudio():Audio Error: "+ err.code);
+                    $scope.killAudio();
+                    $scope.audioDisabled = true;
+                    $scope.$parent.formData[$scope.activeStepID] = {};
+
+                    var audioPopup = $ionicPopup.alert({
+                        title: 'Audio Recording Disabled',
+                        template: 'Please go to your Settings and allow the app access to the Microphone.'
+                    });
+
+                    audioPopup.then(function(res) {
+                        console.log("recordAudio():Audio Error Alerted");
+                    });
+                });
+                */
             }
 
             $scope.playAudio = function() {
@@ -1770,6 +1827,7 @@ angular.module('ionicResearchKit',[])
                     // Play audio
                     $scope.progress = 0;
                     $scope.updateTimer();
+                    $scope.audioSample.setVolume(1.0);
                     $scope.audioSample.play();
                     $scope.audioActive = true;
                     $scope.audioActivity = "Playing";
@@ -1793,6 +1851,25 @@ angular.module('ionicResearchKit',[])
                 var seconds = $scope.progress - minutes * 60;
                 $scope.audioTimer = minutes + ':' + (seconds<10?'0':'') + seconds;
             }
+
+            $scope.killAudio = function() {
+                if ($scope.audioSample) {
+                    $scope.audioSample.stopRecord();
+                    $scope.audioSample.stop();
+                    $scope.audioSample.release();
+                    $scope.audioActive = false;
+                    $scope.audioSample = null;
+                    console.log('Audio task aborted');
+                }
+            }
+
+            document.addEventListener("pause", $scope.killAudio, false);
+            document.addEventListener("resume", $scope.queueAudio, false);
+            $scope.$on('$destroy', function () {
+                document.removeEventListener("pause", $scope.killAudio);
+                document.removeEventListener("resume", $scope.queueAudio);
+            });
+
         }],
         template: function(elem, attr) {
             return  '<div class="irk-centered">'+
@@ -1805,7 +1882,7 @@ angular.module('ionicResearchKit',[])
                     '<h4 class="dark">{{audioTimer}}</h4>'+
                     '</div>'+
                     '<div class="irk-audio-button-container" ng-hide="audioActive">'+
-                    '<button class="button button-outline button-positive irk-audio-button irk-button-audio-record icon ion-android-microphone" ng-click="recordAudio()"></button>'+
+                    '<button class="button button-outline button-positive irk-audio-button irk-button-audio-record icon ion-android-microphone" ng-click="recordAudio()" ng-disabled="audioDisabled"></button>'+
                     '<button class="button button-outline button-positive irk-audio-button irk-button-audio-play icon ion-play" ng-click="playAudio()" ng-disabled="!audioSample"></button>'+
                     '</div>'+
                     '</div>'+
@@ -1831,11 +1908,7 @@ angular.module('ionicResearchKit',[])
 
                 // Stop and release any audio resources on slide change
                 if (stepType!='IRK-AUDIO-TASK' && scope.audioSample) {
-                    scope.audioSample.stopRecord();
-                    scope.audioSample.stop();
-                    scope.audioSample.release();
-                    scope.audioSample = null;
-                    console.log('Audio task aborted');
+                    scope.killAudio()
                 }
             });
         }

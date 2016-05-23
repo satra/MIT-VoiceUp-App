@@ -11,22 +11,37 @@ angular.module('starter.services', [])
 			  var task = '';
 		    angular.forEach($consent_array, function(value, key){
 
-            		    var mainType = '';
+            		    var mainType = '';  var title = '';
                         var type  = value.type;
                         if(type){
                           var mainType = value.type;
 	                       if(mainType!='consent-review'){
-                             task = task +'<irk-task><irk-visual-consent-step id="'+value.id+'" type="'+value.type+'" text="Learn more" summary="'+value.summary+'" title="'+value.title+'"  >'+value.data+'</irk-visual-consent-step></irk-task>';
+														  if (value.title) {
+																title = value.title ;
+	 													  }
+														 if (value.data) {
+	                              task = task +'<irk-task><irk-visual-consent-step id="'+value.id+'" type="'+value.type+'" text="Learn more" summary="'+value.summary+'" title="'+title+'"  >'+value.data+'</irk-visual-consent-step></irk-task>';
+   													 }else {
+                               task = task +'<irk-task><irk-visual-consent-step id="'+value.id+'" type="'+value.type+'" text="Learn more" show-Learn-More="false" summary="'+value.summary+'" title="'+title+'"  ></irk-visual-consent-step></irk-task>';
+														 }
                    	       }
                         }else {
                        	   angular.forEach(value, function(value, key){
 		                           var 	main_typeNext = value.main_type;
 					                  if(main_typeNext!='consent-review'){
-			                           task = task +'<irk-task><irk-visual-consent-step id="'+value.id+'" type="'+value.type+'" text="Learn more" summary="'+value.summary+'" title="'+value.title+'">'+value.data+'</irk-visual-consent-step></irk-task>';
-			                          }
+																	if (value.title) {
+																		title = value.title ;
+																	}
+																 if (value.data) {
+																		task = task +'<irk-task><irk-visual-consent-step id="'+value.id+'" type="'+value.type+'" text="Learn more" summary="'+value.summary+'" title="'+title+'"  >'+value.data+'</irk-visual-consent-step></irk-task>';
+																 }else {
+																	 task = task +'<irk-task><irk-visual-consent-step id="'+value.id+'" type="'+value.type+'" text="Learn more" show-Learn-More="false" summary="'+value.summary+'" title="'+title+'" ></irk-visual-consent-step></irk-task>';
+																 }
+
+															  }
 	                          });
                         };
-			  })
+			  });
 
 		    //check if review enabled
 		    if($enable_review== "True"){
@@ -37,6 +52,7 @@ angular.module('starter.services', [])
                         if(!type){
                        	   angular.forEach(value, function(value, key){
 		                           var 	main_typeNext = value.main_type;
+															 type = value.main_type;
                                    var tagData = '';
                                     if(main_typeNext=='consent-review'){
              	                                var reviewTag = '';
@@ -68,38 +84,16 @@ angular.module('starter.services', [])
 						                         	    }
 													}
 
-			       task = task +'<irk-task><irk-'+main_typeNext+'-step '+reviewTag+'">'+subTag+'</irk-'+main_typeNext+'-step></irk-task>';
+			       task = task +'<irk-task><irk-'+main_typeNext+'-step '+reviewTag+' ">'+subTag+'</irk-'+main_typeNext+'-step></irk-task>';
 
 			                          }
 	                          });
                         };
-			    })
+			      })
 		    }
-
 			return task;
 		},
 
-		parseReviewConsent:function($consent_array){
-			var task = "";
-			angular.forEach($consent_array, function(value, key){
-            		    var mainType = '';
-                        var type  = value.type;
-                        if(type){
-                          var mainType = value.type;
-	                       if(mainType=='consent-review'){
-                             task = task +'<irk-task><irk-consent-review-step id="'+value.id+'" type="'+value.type+'" text="Learn more" summary="'+value.summary+'" title="'+value.title+'"  >'+value.data+'</irk-consent-review-step></irk-task>';
-                   	       }
-                        }else {
-                       	   angular.forEach(value, function(value, key){
-		                           var 	main_typeNext = value.main_type;
-					                  if(main_typeNext=='consent-review'){
-			                           task = task +'<irk-task><irk-consent-review-step id="'+value.id+'" type="'+value.type+'" text="Learn more" summary="'+value.summary+'" title="'+value.title+'">'+value.data+'</irk-consent-review-step></irk-task>';
-			                          }
-	                          });
-                        };
-			  })
-			return task;
-		},
 		getSurveyMainList:function(){
 			  return $http.get("assets/consent.json").then(function(response) {
 					   return response.data;
