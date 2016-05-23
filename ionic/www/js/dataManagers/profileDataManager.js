@@ -222,6 +222,22 @@ getUserSettingsJson : function(emailId){
                      });
                  deferred.resolve(insert);
                  return deferred.promise;
-      }
+      },
+      checkUserExistsByEmailOnly:function(email){
+                     var deferred = $q.defer();
+                     var db = databaseService.getConnectionObject();
+                     //chek the email ID exists
+                     var query = "SELECT userId FROM User WHERE emailId ='"+email.trim()+"' ";
+                     var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
+                            if(res.rows.length > 0){
+                              return res.rows.item(0).userId ;
+                            }else {
+                              return false ;
+                            }
+                           }, function (err) {
+                         });
+                     deferred.resolve(insert);
+                     return deferred.promise;
+          }
     }
 });

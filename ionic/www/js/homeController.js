@@ -2,12 +2,7 @@ angular.module('homeController',[])
 //=======Home screen controller======================
 .controller('HomeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,
   apiDataManagerService,profileDataManager,$cordovaEmailComposer, eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
- //get IP like email ids
- $scope.$on('$ionicView.enter', function() {
-     // Code you want executed every time view is opened
-     console.log('Opened!')
-     //ionic.Platform.exitApp();
-  });
+
 
  databaseService.checkDatabaseExists().then(function(res){
 
@@ -21,7 +16,7 @@ angular.module('homeController',[])
             var tasksJson =  JSON.stringify(response.tasks);
             var completeJson = JSON.stringify(response);
 
-            databaseService.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
+          databaseService.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
                  console.log('createAppContentTable  '+ resp);
             });
 
@@ -29,18 +24,19 @@ angular.module('homeController',[])
                  console.log('createTasksTable  '+ resp);
             });
 
-        databaseService.createSurveyTempTable().then(function(resp){
-             console.log('createSurveyTempTable  '+ resp);
-        });
+            databaseService.createSurveyTempTable().then(function(resp){
+                 console.log('createSurveyTempTable  '+ resp);
+            });
 
 
-  databaseService.createSurveysTable(surveyJson).then(function(resp){
-       console.log('createSurveysTable  '+ resp);
-  });
+              databaseService.createSurveysTable(surveyJson).then(function(resp){
+                   console.log('createSurveysTable  '+ resp);
+              });
 
             databaseService.createSurveyQuestionExpiryTable().then(function(resp){
                  console.log('createSurveyQuestionTable  '+ resp);
             });
+
           });
        }
  });
@@ -91,9 +87,18 @@ $scope.sendConsentDoc = function (){
  //   // user cancelled email
  //  });
 
- cordova.plugins.email.open(email, function (sent) {
-     console.log('email ' + (sent ? 'sent' : 'cancelled'));
- }, this);
+ $cordovaEmailComposer.isAvailable().then(function() {
+    // is available
+    $cordovaEmailComposer.open(email).then(null, function () {
+      console.log('email ');
+    });
+
+  }, function () {
+    // not available
+    console.log('email not available' );
+
+  });
+
 
 }
 
@@ -225,26 +230,42 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
     }
 
     if (formValid) {
+
         var password  = angular.element(document.querySelector('#password')).prop('value');
         var email  = angular.element(document.querySelector('#email')).prop('value');
         if (email && password ) {
           var beforeEncode = email.trim()+':'+password.trim();
           var encoded = 'Basic '+ $base64.encode(unescape(encodeURIComponent(beforeEncode)));
-          apiDataManagerService.signInGradleUser(encoded).then(function(res){
-              if (res.status == 200) {
-                      var token = res.data.authToken['token'] ;
-                      var email = res.data.user['email'] ;
-                       profileDataManager.updateUserAuthToken(email,token).then(function(insertId){
-                       $rootScope.emailId = email ; // save it to access in update profile
-                       $scope.modal.remove();
-                       if (statePassed == 'signin') {  // if the user coming from sign in page
-                        $scope.transition('tab.Activities');
-                      }else if (statePassed == 'passcode') { // if the user coming from forgot passcode
-                       $scope.emailId = email ;
-                       $scope.launchpinScreen();
-                      }
-                  });
-               }
+          apiDataManagerService.signInGlobalUser(encoded).then(function(res){
+               if (res.status == 200) {
+                        var token = res.data.authToken['token'] ;
+                        var email = res.data.user['email'] ;
+                        // check if the email id exists locally else launch the set pin screen
+                      profileDataManager.checkUserExistsByEmailOnly(email).then(function(userExistsId){
+                        $scope.emailId = email ;
+                          if (userExistsId) {
+                                  profileDataManager.updateUserAuthToken(email,token).then(function(insertId){
+                                    $rootScope.emailId = email ; // save it to access in update profile
+                                    $scope.modal.remove();
+                                    if (statePassed == 'signin') {  // if the user coming from sign in page
+                                     $scope.transition('tab.Activities');
+                                    }else if (statePassed == 'passcode') { // if the user coming from forgot passcode
+                                    $scope.emailId = email ;
+                                    $scope.launchpinScreen();
+                                   }
+                                });
+                          }else {
+                            // valid user doesn't exists locally so get the profile data and set the pin
+                            var profileJson = ''; //  fetch this once grider intigrated
+                            profileDataManager.createNewUser(profileJson,$scope.emailId,token).then(function(insertId){
+                                  if (insertId) {
+                                    // ask to reset the pin
+                                    $scope.launchpinScreen();
+                                  }
+                              });
+                          }
+                      });
+                 }
            });
          } // validate
 
