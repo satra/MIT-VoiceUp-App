@@ -23,22 +23,6 @@ angular.module('customDirectives',[])
     }
 })
 
-.directive('focusMe', function ($timeout) {
-  return {
-    link: function (scope, element, attrs) {
-      if (attrs.focusMeDisable === "true") {
-        return;
-      }
-      $timeout(function () {
-        element[0].focus();
-        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-          cordova.plugins.Keyboard.show(); //open keyboard manually
-        }
-      }, 350);
-    }
-  }
-})
-
 //======================================================================================
 // Usage: <btc-image-choice value="choice" text="Your choice." normal-state-image="" selected-state-image="" type="image" />
 // =====================================================================================
@@ -78,4 +62,24 @@ angular.module('customDirectives',[])
             });
         }
     }
+})
+
+//======================================================================================
+// Usage: focus-me
+//===========================================
+
+.directive('focusMe', function ($timeout) {
+  return {
+    link: function (scope, element, attrs) {
+      if (attrs.focusMeDisable === "true") {
+        return;
+      }
+      $timeout(function () {
+        element[0].focus();
+        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+          cordova.plugins.Keyboard.show(); //open keyboard manually
+        }
+      }, 350);
+    }
+  }
 });

@@ -164,33 +164,16 @@
     "version": "0.1.1"
   },
 
-   "eligibility": [{
-     "id": "q1",
-     "question": "Are you 18 or older ?",
-     "option1":"YES",
-     "option2":"NO",
-     "answer":"YES",
-     "normal-state-image": "ion-happy-outline",
-     "selected-state-image": "ion-happy"
-    },
-    {
-     "id": "q2",
-     "question": "Do you live in the United States of America?",
-     "option1":"YES",
-     "option2":"NO",
-     "answer":"YES",
-     "normal-state-image": "ion-happy-outline",
-     "selected-state-image": "ion-happy"
-    },
-    {
-     "id": "q3",
-     "question": "Are you comfortable reading and writing on your iPhone in English ?",
-     "option1":"YES",
-     "option2":"NO",
-     "answer":"NO",
-     "normal-state-image": "ion-happy-outline",
-     "selected-state-image": "ion-happy"
-     }
+   "eligibility": [
+     {
+        "expected_answer": "Yes",
+        "false-text": "No",
+        "id": "e2",
+        "main_type": "review-questions",
+        "title": "Are you 18 years or older as of today?",
+        "true-text": "Yes",
+        "type": "boolean"
+      }
    ],
 
    "profile": {
@@ -318,7 +301,7 @@
       ]
     },
     {
-      "date": "0 5 13 * *",
+      "date": "0 5 19 * *",
       "title": "Mental Health Survey 3",
             "id" : "3",
       "skippable": [
@@ -343,7 +326,7 @@
       ]
     },
     {
-      "date": "0 5 13 * *",
+      "date": "0 5 17 * *",
       "title": "Mental Health Survey 4",
       "id" : "5",
       "skippable": [
@@ -370,7 +353,7 @@
       ]
     },
    {
-      "date": "0 5 14 * *",
+      "date": "0 5 17 * *",
       "title": "Mental Health Survey 5",
       "id" : "9",
       "skippable": [
@@ -397,7 +380,7 @@
       ]
     },
   {
-      "date": "0 5 14 * *",
+      "date": "0 5 20 * *",
       "title": "Mental Health Survey 6",
       "id" : "11",
       "skippable": [
@@ -424,7 +407,7 @@
       ]
     },
   {
-      "date": "0 5 15 * *",
+      "date": "0 5 19 * *",
       "title": "Mental Health Survey 7",
       "id" : "10",
       "skippable": [
@@ -442,7 +425,6 @@
         "PHQ8_5",
         "PHQ8_6",
         "PHQ8_7",
-        "PHQ8_8",
         "PHQ8_8"
       ],
       "tasks": [
@@ -460,7 +442,6 @@
         "PHQ8_5",
         "PHQ8_6",
         "PHQ8_7",
-        "PHQ8_8",
         "PHQ8_8"
       ]
     }

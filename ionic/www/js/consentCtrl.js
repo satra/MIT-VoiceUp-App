@@ -8,52 +8,38 @@ angular.module('consent',[])
 
     var taskListData =  userService.parseConsent($scope.consent_array,$scope.enable_review);
     var taskList =   '<ion-modal-view class="irk-modal">'+
-      '<irk-ordered-tasks>'+
-       taskListData +
-      '</irk-ordered-tasks>'+
-      '</ion-modal-view>';
+    '<irk-ordered-tasks>'+
+    taskListData +
+    '</irk-ordered-tasks>'+
+    '</ion-modal-view>';
     var dynamicContent = angular.element(document.querySelector('#orderTasks'));
     dynamicContent.append(taskList);
     $compile(dynamicContent)($scope);
+
    });
 
 
 $scope.closeModal = function() {
   if (irkResults.getResults().canceled) {
      $ionicHistory.clearCache().then(function(){
-        $state.transitionTo('home');
-        });
-    }else if (irkResults.getResults()) { // launch sign up
-      var childresult = irkResults.getResults().childResults ;
+          $state.transitionTo('home');
+          });
+     }else if (irkResults.getResults()) { // launch sign up
+          var childresult = irkResults.getResults().childResults ;
           childresult.every(function(value, key){
           if (value.type == "IRK-CONSENT-REVIEW-STEP") {
-             if (value.answer) {
-               $state.transitionTo('loadSignUp');
-             }else {
-               $state.transitionTo('home');
-             }
-             return false;
+          if (value.answer) {
+          $state.transitionTo('loadSignUp');
+          }else {
+          $state.transitionTo('home');
+          }
+          return false;
           }
           return true ;
        });
     }
 }
 
- // Cleanup the modal when we're done with it!
- $scope.$on('$destroy', function() {
-   //$scope.modal.remove();
-   console.log('destroy modal hit');
- });
-
- // Execute action on hide modal
- $scope.$on('modal.hidden', function() {
-    console.log('hidden modal hit');
-    $state.transitionTo('loadSignUp');
- });
-
-  // Execute action on remove modal
-  $scope.$on('modal.removed', function() {
-
-  });
+ 
 
 });
