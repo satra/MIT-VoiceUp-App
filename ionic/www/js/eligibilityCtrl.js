@@ -109,24 +109,8 @@ $scope.beginConsent = function() {
     });
 };
 
-
-  $scope.closeModal = function() {
+$scope.closeModal = function() {
      $scope.modal.remove();
-   };
-
-   // Cleanup the modal when we're done with it!
-   $scope.$on('$destroy', function() {
-    // $scope.modal.remove();
-   });
-
-   // Execute action on hide modal
-   $scope.$on('modal.hidden', function() {
-
-   });
-
-   // Execute action on remove modal
-   $scope.$on('modal.removed', function() {
-
-   });
+ };
 
 });

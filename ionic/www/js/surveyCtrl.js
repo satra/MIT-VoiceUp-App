@@ -1,6 +1,6 @@
-angular.module('surveyController',[])
+angular.module('surveyCtrl',[])
 // ==== Dummy contorller need to be removed later before production  ========
-.controller('SurveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
+.controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
   pinModalService,userService,surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,$q) {
 
 //on resume handler===================================================================
@@ -8,14 +8,14 @@ $scope.hideImageDiv = true;
 document.addEventListener("resume", function() {
     if ($rootScope.activeUser) {
      // get email list
-     var griderArray = new Array() ;
+     var emailArray = new Array() ;
      for (var i = 0; i < response.length; i++) {
-       griderArray.push({'emailId':response.item(i).emailId});
+       emailArray.push({'emailId':response.item(i).emailId});
        if (response.item(i).emailId == $rootScope.activeUser) {
-          $scope.selectedEmail = griderArray[i];
+          $scope.selectedEmail = emailArray[i];
        }
     }
-     $scope.emails = griderArray;
+     $scope.emails = emailArray;
      pinModalService.init('templates/pinScreen.html', $scope)
          .then(function(pin) {
           pin.show();
@@ -244,7 +244,7 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
                                            });
          $scope.modal = $scope.learnmore;
          $scope.learnmore.show();
-}
+};
 
 $scope.closeModal = function() {
     $scope.modal.remove();
@@ -275,20 +275,7 @@ $scope.closeModal = function() {
     }
   };
 
-  // Cleanup the modal when we're done with it!
-  $scope.$on('$destroy', function() {
-    //$scope.modal.remove();
-  });
 
-  // Execute action on hide modal
-  $scope.$on('modal.hidden', function() {
-    // Execute action
-  });
-
-  // Execute action on remove modal
-  $scope.$on('modal.removed', function() {
-    // Execute action
-   });
    $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
       var type = stepData.type;
       var customDiv = '';

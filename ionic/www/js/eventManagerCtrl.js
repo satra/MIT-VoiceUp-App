@@ -3,13 +3,12 @@ angular.module('eventManagerCtrl',[])
 .controller('eventManagerCtrl', function($scope,$rootScope,$state,$ionicPopup,$ionicHistory,$compile,profileDataManager,passcodehandler,$ionicModal) {
 
   if ($rootScope.activeUser) {
-    var griderArray = new Array() ;
-
-        profileDataManager.getEmailList().then(function(response){
+    var emailArray = new Array() ;
+    profileDataManager.getEmailList().then(function(response){
           for (var i = 0; i < response.length; i++) {
-            griderArray.push({'emailId':response.item(i).emailId.trim()});
+            emailArray.push({'emailId':response.item(i).emailId.trim()});
           }
-          $scope.emails = griderArray;
+          $scope.emails = emailArray;
       });
 
     $scope.selectedEmail = $rootScope.activeUser;
