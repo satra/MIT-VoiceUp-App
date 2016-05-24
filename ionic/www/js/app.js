@@ -6,8 +6,8 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyCtrl','databaseManager','surveyDataManager','eligiblityDataManager',
-'profileDataManager','consentDataManager','dataStoreManager','homeController','eligibility','signUp','consent',
-'updateProfile','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova'])
+'profileDataManager','consentDataManager','dataStoreManager','homeCtrl','eligibility','signUp','consent',
+'updateProfileCtrl','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova'])
 .run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state) {
   $ionicPlatform.ready(function() {
 
@@ -45,7 +45,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
   .state('home', {
     url: '/home',
     templateUrl: 'templates/home.html',
-    controller: 'HomeCtrl'
+    controller: 'homeCtrl'
    // controller: 'SurveyCtrl'
   })
 
@@ -130,7 +130,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     views: {
       'tab-profile': {
           templateUrl: 'templates/tab-profile-update.html',
-          controller: 'updateProfileController'
+          controller: 'updateProfileCtrl'
       }
     }
   })

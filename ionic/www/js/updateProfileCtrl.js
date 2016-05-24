@@ -1,6 +1,6 @@
-angular.module('updateProfile',[])
+angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
-.controller('updateProfileController', function($scope,$rootScope,$ionicHistory,$state, $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseManager,$state) {
+.controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state, $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseManager,$state) {
 
 
       var email = $rootScope.emailId ;
@@ -279,23 +279,19 @@ angular.module('updateProfile',[])
       }
 
     if (formValid) {
-      console.log(dataCache);
           $scope.emailId = emailId ;
           profileDataManager.updateUserByEmailId(dataCache,$scope.emailId).then(function(res){
             if(res){
                $scope.successAlertMsg('Profile Data Updated');
             }
-           console.log(res);
-           console.log('All Done ');
           });
        }
-     }
-
-      $scope.beginSignUp = function(){
+    }
+  $scope.beginSignUp = function(){
         $ionicHistory.clearCache().then(function(){
             $state.transitionTo('loadSignUp');
         });
-      }
+}
 
       //===================================================passcode handler ============================
       $scope.changePasscode = function(){
@@ -327,12 +323,10 @@ angular.module('updateProfile',[])
              console.log(email+ ' ' +passcode);
              profileDataManager.getUserIDByEmail(email.trim()).then(function(userId){
                    profileDataManager.checkPasscodeExistsForUserID(userId.trim(),passcode.trim()).then(function(res){
-                              console.log('user exists and valid '+ res );
                               if (res) {
                                 $scope.passcodeLabel = "Enter New Passcode";
                                 $scope.managePasscodeNew = false;
                                 $scope.managePasscode = true ;
-
                               }else{
                                 //clear div
                                 var passcode = angular.element(document.querySelector('#passcode'));
@@ -346,7 +340,6 @@ angular.module('updateProfile',[])
             $scope.callAlertDailog("Passcode length should be max 4.");
            }
        }
-
 //enter new passcode if size ? then launch to connfirm new passcode
 $scope.checkNewPasscodeDigits = function(){
      var passcode = angular.element(document.querySelector('#new_passcode')).prop('value') ;
@@ -385,10 +378,8 @@ $scope.checkNewPasscodeDigits = function(){
                  //clear div for confirm password
                  $scope.confirm_passcode = '';
                  $compile(confirm_passcode_div)($scope);
-
                  $scope.callAlertDailog("Passcode should match with confirm");
                  $scope.confirmLoop = $scope.confirmLoop +1;
-                 console.log($scope.confirmLoop);
                   if($scope.confirmLoop >= 3){
                     $scope.passcodeLabel = "Enter New Passcode";
                     $scope.confirmLoop = 0;
@@ -423,5 +414,4 @@ $scope.checkNewPasscodeDigits = function(){
           template: message
          });
      }
-
 });

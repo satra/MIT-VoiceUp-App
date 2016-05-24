@@ -1,6 +1,6 @@
-angular.module('homeController',[])
+angular.module('homeCtrl',[])
 //=======Home screen controller======================
-.controller('HomeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
+.controller('homeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
   dataStoreManager,profileDataManager,$cordovaEmailComposer, eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
 
  databaseManager.checkDatabaseExists().then(function(res){
@@ -25,7 +25,6 @@ angular.module('homeController',[])
             databaseManager.createSurveyTempTable().then(function(resp){
                  console.log('createSurveyTempTable  '+ resp);
             });
-
 
               databaseManager.createSurveysTable(surveyJson).then(function(resp){
                    console.log('createSurveysTable  '+ resp);
@@ -196,39 +195,9 @@ $scope.sendConsentDoc = function (){
 
 //====================================================Sign in for both forgot passcode and sign in screen ========
 $scope.signInSubmit = function (statePassed) { // recive the state to determine the UI Input and the call is coming from
-    var keepGoing = true; var formValid = true;
-    // validate input fields
-    var inputValue = angular.element(document.getElementById("signIn").querySelectorAll(".item-input"));
-    for (var i = 0; i < inputValue.length; i++) {
-          var inputTag = angular.element(inputValue[i].querySelector('input'));
-          var value = inputTag.prop('value');
-          var placeholder = inputTag.prop('placeholder');
-          if(keepGoing){
-            switch (placeholder.toLowerCase()) {
-             case 'email':
-                       if(value ==''){
-                         formValid = false; keepGoing = false;
-                         $scope.callAlertDailog('Please enter your '+placeholder);
-                       }else {
-                         //is email valid
-                         if(inputTag.hasClass('ng-invalid-email') || inputTag.hasClass('ng-invalid')){
-                           formValid = false ; keepGoing = false;
-                           $scope.callAlertDailog('Email '+value+' is invalid.');
-                          }
-                       }
-                   break;
-              case 'password':  if(value ==''){
-                                formValid = false; keepGoing = false;
-                                $scope.callAlertDailog('Please enter your '+placeholder);
-                                }
-                                break ;
-               default: break ;
-                 }
-          }
-    }
-
+    var formValid = false;
+    formValid = $scope.validateSignInForm();
     if (formValid) {
-
         var password  = angular.element(document.querySelector('#password')).prop('value');
         var email  = angular.element(document.querySelector('#email')).prop('value');
         if (email && password ) {
@@ -268,7 +237,42 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
          } // validate
 
       } // form valid
-} // submit
+}; // submit
+
+// =====================validate sign in form ============
+$scope.validateSignInForm = function (){
+  var keepGoing = true; var formValid = true;
+  // validate input fields
+  var inputValue = angular.element(document.getElementById("signIn").querySelectorAll(".item-input"));
+  for (var i = 0; i < inputValue.length; i++) {
+        var inputTag = angular.element(inputValue[i].querySelector('input'));
+        var value = inputTag.prop('value');
+        var placeholder = inputTag.prop('placeholder');
+        if(keepGoing){
+          switch (placeholder.toLowerCase()) {
+           case 'email':
+                     if(value ==''){
+                       formValid = false; keepGoing = false;
+                       $scope.callAlertDailog('Please enter your '+placeholder);
+                     }else {
+                       //is email valid
+                       if(inputTag.hasClass('ng-invalid-email') || inputTag.hasClass('ng-invalid')){
+                         formValid = false ; keepGoing = false;
+                         $scope.callAlertDailog('Email '+value+' is invalid.');
+                        }
+                     }
+                 break;
+            case 'password':  if(value ==''){
+                              formValid = false; keepGoing = false;
+                              $scope.callAlertDailog('Please enter your '+placeholder);
+                              }
+                              break ;
+             default: break ;
+               }
+        }
+  }
+  return formValid ;
+};
 
 //on forgot passcode launch pin screen and reset the passcode
 $scope.launchpinScreen = function(){
@@ -284,7 +288,7 @@ $scope.launchpinScreen = function(){
          $scope.emailId = $rootScope.emailId ;
          $scope.modal.show();
       });
-  }
+  };
 
 //===================================================passcode handler ============================
   $scope.checkConfirmPasscodeDigits = function(){
@@ -324,7 +328,7 @@ $scope.launchpinScreen = function(){
           }else if(confirm_passcode.length > 4) {
           $scope.callAlertDailog("Passcode length should be max 4.");
          }
-  }
+  };
 
   $scope.checkPasscodeDigits = function(){
        var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
@@ -336,7 +340,7 @@ $scope.launchpinScreen = function(){
        }else if(passcode.length > 4) {
         $scope.callAlertDailog("Passcode length should be max 4.");
        }
-   }
+   };
 
 //==================forgot password login via email ================
 $scope.forgotPassword = function (){
@@ -370,7 +374,7 @@ $scope.forgotPassword = function (){
         }
       ]
     });
- }
+ };
 
 //skip sign in from home->signIn->signIn->skip
 $scope.skipSignIn = function (){
@@ -378,7 +382,7 @@ $scope.skipSignIn = function (){
      $scope.modal.remove();
      $state.transitionTo('eligiblityTest');
    });
- }
+ };
 
 //error handler dailog
 $scope.callAlertDailog =  function (message){
@@ -386,14 +390,13 @@ $scope.callAlertDailog =  function (message){
          title: 'Error',
          template: message
         });
-  }
+  };
 
 //on done clear states and travel to next screen
 $scope.transition =  function (state){
      $ionicHistory.clearCache().then(function(){
-     console.log('inside transitionTo ....'+ state);
      $state.transitionTo(state);
      });
-  }
+  };
 
 });
