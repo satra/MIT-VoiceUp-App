@@ -44,9 +44,7 @@ angular.module('updateProfile',[])
 
      $scope.userSettings = function() {
       // get the settings from database
-      console.log($rootScope.emailId);
       profileDataManager.getUserSettingsJson($rootScope.emailId).then(function(response){
-        console.log('settings screen' + response);
           if (response) {
              if (response!='') {
                for (var i = 0; i < response.length; i++) {
@@ -74,7 +72,6 @@ angular.module('updateProfile',[])
      $scope.toggleNotification = function(){
       if ($scope.notification == false) {
           $scope.notification = true;
-          console.log('inside first if ');
         }else {
           $scope.notification = false;
           $scope.daily =false ;
