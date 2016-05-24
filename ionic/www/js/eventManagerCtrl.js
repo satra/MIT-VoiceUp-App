@@ -1,6 +1,6 @@
-angular.module('eventResume',[])
+angular.module('eventManagerCtrl',[])
 //=======Home screen controller======================
-.controller('onEventResumeCtrl', function($scope,$rootScope,$state,$ionicPopup,$ionicHistory,$compile,profileDataManager,passcodehandler,$ionicModal) {
+.controller('eventManagerCtrl', function($scope,$rootScope,$state,$ionicPopup,$ionicHistory,$compile,profileDataManager,passcodehandler,$ionicModal) {
 
   if ($rootScope.activeUser) {
     var griderArray = new Array() ;

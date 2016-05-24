@@ -6,8 +6,8 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseManager','surveyDataManager','eligiblityDataManager',
-'profileDataManager','consentDataManager','dataStoreManager','homeController','eligibility','eligibile','signUp','consent',
-'updateProfile','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventResume', 'passcodehandler','ngCordova'])
+'profileDataManager','consentDataManager','dataStoreManager','homeController','eligibility','signUp','consent',
+'updateProfile','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova'])
 .run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state) {
   $ionicPlatform.ready(function() {
 
@@ -55,12 +55,6 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     controller: 'eligibilityCtrl'
   })
 
-  .state('eligibleUser', {
-   templateUrl: 'templates/eligiblity-yes.html',
-    url: '/eligibleUser',
-    controller: 'eligibileCtrl'
-  })
-
   .state('not-eligibleUser', {
    templateUrl: 'templates/not-eligible.html',
     url: '/not-eligibleUser',
@@ -98,7 +92,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
 
     .state('onResumehandler', {
       url: '/onresumehandler',
-      controller: 'onEventResumeCtrl'
+      controller: 'eventManagerCtrl'
     })
 
 // setup an abstract state for the tabs directive

@@ -61,7 +61,13 @@ $scope.compareEligiblity = function() {
 // if all set load sign up page
 if(check){
    $ionicHistory.clearCache().then(function(){
-      $state.go('eligibleUser');
+        $ionicModal.fromTemplateUrl('templates/eligiblity-yes.html', {
+          scope: $scope,
+          animation: 'slide-in-up'
+        }).then(function(modal) {
+          $scope.modal = modal;
+          $scope.modal.show();
+        });
    });
  }
 else{
@@ -88,6 +94,21 @@ else{
   $scope.sectionBack = function() {
     $state.transitionTo('home', null, {'reload':false});
   };
+
+  $scope.goHome = function() {
+    $ionicHistory.clearCache().then(function(){
+    $scope.modal.remove();
+    $state.transitionTo('home');
+  });
+};
+
+$scope.beginConsent = function() {
+    $ionicHistory.clearCache().then(function(){
+    $scope.modal.remove();
+    $state.transitionTo('beginConsent');
+    });
+};
+
 
   $scope.closeModal = function() {
      $scope.modal.remove();
