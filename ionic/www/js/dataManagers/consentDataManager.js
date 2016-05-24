@@ -1,5 +1,5 @@
 angular.module('consentDataManager', [])
-.factory('consentDataManager', function($http,$cordovaSQLite,userService,$q,databaseManager) {
+.factory('consentDataManager', function($http,$cordovaSQLite,$q,databaseManager) {
   //open connection
   return {
        getAllConsentScreens: function(){

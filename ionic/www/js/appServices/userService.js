@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+angular.module('userService', [])
 .factory('userService', function($http,$cordovaSQLite) {
 	return {
 		getConfigJson:function(){
@@ -6,11 +6,9 @@ angular.module('starter.services', [])
 					   return response.data;
 			  });
 		},
-
 	  parseConsent: function($consent_array,$enable_review){
 			  var task = '';
 		    angular.forEach($consent_array, function(value, key){
-
             		    var mainType = '';  var title = '';
                         var type  = value.type;
                         if(type){

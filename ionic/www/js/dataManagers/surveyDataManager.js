@@ -1,5 +1,5 @@
 angular.module('surveyDataManager', [])
-.factory('surveyDataManager', function($http,$cordovaSQLite,userService,$q,databaseManager) {
+.factory('surveyDataManager', function($http,$cordovaSQLite,$q,databaseManager) {
   return {
     //====================================Read =======================
   getSurveyListForToday : function(){

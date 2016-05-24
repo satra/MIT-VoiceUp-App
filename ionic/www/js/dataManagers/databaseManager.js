@@ -1,5 +1,5 @@
 angular.module('databaseManager', [])
-.factory('databaseManager', function($http,$cordovaSQLite,userService,$q) {
+.factory('databaseManager', function($http,$cordovaSQLite,$q) {
   //open connection
   return {
     getConnectionObject : function(){

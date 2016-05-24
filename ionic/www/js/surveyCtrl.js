@@ -1,7 +1,7 @@
 angular.module('surveyCtrl',[])
 // ==== Dummy contorller need to be removed later before production  ========
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
-  pinModalService,userService,surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,$q) {
+  pinModalService,surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,$q) {
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
