@@ -1,6 +1,6 @@
 angular.module('eligibility',[])
 //=======Home screen controller======================
-.controller('eligibilityCtrl', function($scope,$stateParams,$ionicHistory,$compile,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,eligiblityDataManager,consentDataManager,irkResults,$state,$location,$window) {
+.controller('eligibilityCtrl', function($scope,$stateParams,$ionicHistory,$compile,$cordovaSQLite,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,eligiblityDataManager,consentDataManager,irkResults,$state,$location,$window) {
 //========================select eligiblity test view
 
 eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData){
@@ -18,12 +18,12 @@ eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData){
         var normalImage = 'irk-btn-round-outline';//value.normal-state-image;
         var selectedImage = 'irk-btn-round';//value.selected-state-image ;
 
-        optionList = optionList + '<btc-image-choice-question-step id="'+id+'" title="'+question+'" optional="false" >'+
-                       '<btc-image-choice value="'+trueText+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+trueText+'" >'+
-                       '</btc-image-choice>'+
-                        '<btc-image-choice value="'+falseText+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+falseText+'">'+
-                       '</btc-image-choice>'+
-                      '</btc-image-choice-question-step>'+
+        optionList = optionList + '<custom-image-choice-question-step id="'+id+'" title="'+question+'" optional="false" >'+
+                       '<custom-image-choice value="'+trueText+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+trueText+'" >'+
+                       '</custom-image-choice>'+
+                        '<custom-image-choice value="'+falseText+'" normal-state-image="'+normalImage+'" selected-state-image="'+selectedImage+'" optiontext="'+falseText+'">'+
+                       '</custom-image-choice>'+
+                      '</custom-image-choice-question-step>'+
                       '<div class="irk-spacer"></div>';
          });
 
@@ -87,51 +87,6 @@ else{
 // ==== on click of back from sign in screen ========
   $scope.sectionBack = function() {
     $state.transitionTo('home', null, {'reload':false});
-  };
-
-
- $scope.ChoosePassode = function() {
-    $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal.remove();
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
-
-  $scope.OpenVerification = function() {
-    $ionicModal.fromTemplateUrl('templates/verification.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal.remove();
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
-
-   $scope.OpenPermisssions = function() {
-    $ionicModal.fromTemplateUrl('templates/locationservice.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal.remove();
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
-  };
-
-  $scope.AllDone = function() {
-    $ionicModal.fromTemplateUrl('templates/alldone.html', {
-      scope: $scope,
-      animation: 'slide-in-up'
-    }).then(function(modal) {
-      $scope.modal.remove();
-      $scope.modal = modal;
-      $scope.modal.show();
-    });
   };
 
   $scope.closeModal = function() {

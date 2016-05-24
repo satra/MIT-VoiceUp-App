@@ -1,5 +1,5 @@
-angular.module('databaseService', [])
-.factory('databaseService', function($http,$cordovaSQLite,userService,$q) {
+angular.module('databaseManager', [])
+.factory('databaseManager', function($http,$cordovaSQLite,userService,$q) {
   //open connection
   return {
     getConnectionObject : function(){
@@ -9,10 +9,9 @@ angular.module('databaseService', [])
         var deferred = $q.defer();
         var query = "SELECT * FROM AppContent";
         var db = this.getConnectionObject();
-      //  var query = "DROP TABLE Surveys";
+        //var query = "DROP TABLE SurveyTemp";
         var  dataReturn =  $cordovaSQLite.execute(db, query)
         .then(function(res) {
-
         dataReturn = res.rows;
         return dataReturn ;
         }, function (err) {

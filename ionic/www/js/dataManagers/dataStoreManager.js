@@ -1,21 +1,10 @@
-angular.module('apiDataManagerService', [])
-.factory('apiDataManagerService', function($http,$q,$ionicPopup,$ionicLoading) {
-  var base_url = 'http://23.89.199.27:8180/api/v1/';
+angular.module('dataStoreManager', [])
+.factory('dataStoreManager', function($http,base_url,$q,$ionicPopup,$ionicLoading) {
   //open connection
   return {
-    getURL: function(type){
-      var URL = null ;
-      switch (type) {
-        case 'user':
-          URL = 'http://23.89.199.27:8180/api/v1/user?';
-          break;
-        default:
-      }
-     return URL;
-    },
+
     createGlobalUser: function(postData){
      var deferred = $q.defer();
-     var URL = this.getURL('user');
      var stringToken = '';
      angular.forEach(postData, function(value, key){
            if(value.firstName){
@@ -35,7 +24,7 @@ angular.module('apiDataManagerService', [])
         });
 
       var signUp =    $http({   method:'POST',
-                                url: URL+stringToken,
+                                url: base_url+'user?'+stringToken,
                                 })
                       .success(function(data) {
                                 return data ;

@@ -28,31 +28,3 @@ angular.module('passcodehandler', [])
     init: init
   }
 })
-
-.controller('DocumentCtrl', function(irkConsentDocument,
-   $scope, $cordovaInAppBrowser,$ionicModal) {
-
-     $ionicModal.fromTemplateUrl('templates/consent_demo.html', {
-       scope: $scope,
-       animation: 'slide-in-up'
-     }).then(function(modal) {
-       $scope.modal = modal;
-       $scope.modal.show();
-     });
-
-     $scope.closeModal = function() {
-       $scope.consentDocument = irkConsentDocument.getDocument();
-       if ($scope.consentDocument) {
-       $scope.consentDocument.getDataUrl(function(dataURL) {
-       console.log(dataURL);
-       window.open(dataURL, '_blank', 'location=yes,closebuttoncaption=Close,enableViewportScale=yes');
-       $scope.dataURL = dataURL;
-       $scope.viewPDF();
-           });
-        }
-     }
-
-    $scope.viewPDF = function($cordovaInAppBrowser) {
-    window.open($scope.dataURL, '_blank', 'location=no');
-    }
- });

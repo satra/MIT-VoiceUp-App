@@ -1,10 +1,10 @@
 angular.module('consentDataManager', [])
-.factory('consentDataManager', function($http,$cordovaSQLite,userService,$q,databaseService) {
+.factory('consentDataManager', function($http,$cordovaSQLite,userService,$q,databaseManager) {
   //open connection
   return {
        getAllConsentScreens: function(){
                 var deferred = $q.defer();
-                var db = databaseService.getConnectionObject();
+                var db = databaseManager.getConnectionObject();
                 var query = "SELECT consent FROM AppContent";
                 var consent =  $cordovaSQLite.execute(db, query).then(function(res) {
                         var len = res.rows.length;

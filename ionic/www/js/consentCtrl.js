@@ -1,6 +1,7 @@
 angular.module('consent',[])
 //=======Home screen controller======================
-.controller('consentCtrl', function($scope,$stateParams,$ionicHistory,$cordovaSQLite,$controller,$ionicModal,$http,$compile,$ionicLoading,userService,databaseService,consentDataManager,irkResults,$state,$location,$window) {
+.controller('consentCtrl', function($scope,$stateParams,$ionicHistory,$cordovaSQLite,$controller,
+  $ionicModal,$http,$compile,$ionicLoading,userService,databaseManager,consentDataManager,irkResults,$state,$location,$window) {
 
     consentDataManager.getAllConsentScreens().then(function(response){
     $scope.enable_review = response.enable_review;
@@ -40,6 +41,6 @@ $scope.closeModal = function() {
     }
 }
 
- 
+
 
 });

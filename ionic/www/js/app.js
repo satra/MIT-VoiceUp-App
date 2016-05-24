@@ -5,8 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseService','surveyDataManager','eligiblityDataManager',
-'profileDataManager','consentDataManager','apiDataManagerService','homeController','eligibility','eligibile','signUp','passcode','consent',
+angular.module('starter', ['ionic', 'starter.controllers','starter.services','surveyController','databaseManager','surveyDataManager','eligiblityDataManager',
+'profileDataManager','consentDataManager','dataStoreManager','homeController','eligibility','eligibile','signUp','consent',
 'updateProfile','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventResume', 'passcodehandler','ngCordova'])
 .run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state) {
   $ionicPlatform.ready(function() {
@@ -25,7 +25,6 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services','su
 $ionicPlatform.registerBackButtonAction(function (event) {
                  event.preventDefault();
    }, 100);
-
 })
 
 .config(function($stateProvider, $httpProvider,$urlRouterProvider) {
@@ -156,6 +155,8 @@ $ionicPlatform.registerBackButtonAction(function (event) {
   // $urlRouterProvider.otherwise('/tab/Activities');
   $urlRouterProvider.otherwise('home');
 })
+
+.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
 
 .config(function($ionicConfigProvider) {
   $ionicConfigProvider.tabs.style('standard');

@@ -1,11 +1,9 @@
 angular.module('homeController',[])
 //=======Home screen controller======================
-.controller('HomeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseService,
-  apiDataManagerService,profileDataManager,$cordovaEmailComposer, eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
+.controller('HomeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
+  dataStoreManager,profileDataManager,$cordovaEmailComposer, eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
 
-
- databaseService.checkDatabaseExists().then(function(res){
-
+ databaseManager.checkDatabaseExists().then(function(res){
        if (res == 5 ) {
             //call a method and read from local json and create schema
              userService.getConfigJson().then(function(response){
@@ -16,24 +14,24 @@ angular.module('homeController',[])
             var tasksJson =  JSON.stringify(response.tasks);
             var completeJson = JSON.stringify(response);
 
-          databaseService.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
+          databaseManager.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
                  console.log('createAppContentTable  '+ resp);
             });
 
-            databaseService.createTasksTable(tasksJson).then(function(resp){
+            databaseManager.createTasksTable(tasksJson).then(function(resp){
                  console.log('createTasksTable  '+ resp);
             });
 
-            databaseService.createSurveyTempTable().then(function(resp){
+            databaseManager.createSurveyTempTable().then(function(resp){
                  console.log('createSurveyTempTable  '+ resp);
             });
 
 
-              databaseService.createSurveysTable(surveyJson).then(function(resp){
+              databaseManager.createSurveysTable(surveyJson).then(function(resp){
                    console.log('createSurveysTable  '+ resp);
               });
 
-            databaseService.createSurveyQuestionExpiryTable().then(function(resp){
+            databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
                  console.log('createSurveyQuestionTable  '+ resp);
             });
 
@@ -236,7 +234,7 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
         if (email && password ) {
           var beforeEncode = email.trim()+':'+password.trim();
           var encoded = 'Basic '+ $base64.encode(unescape(encodeURIComponent(beforeEncode)));
-          apiDataManagerService.signInGlobalUser(encoded).then(function(res){
+          dataStoreManager.signInGlobalUser(encoded).then(function(res){
                if (res.status == 200) {
                         var token = res.data.authToken['token'] ;
                         var email = res.data.user['email'] ;
@@ -356,7 +354,7 @@ $scope.forgotPassword = function (){
           var emailId = angular.element(document.querySelector('#email_recover')).prop('value') ;
           if (emailId.length != 0) {
               // process the request
-              apiDataManagerService.userForgotPassword(emailId).then(function(res){
+              dataStoreManager.userForgotPassword(emailId).then(function(res){
                   if (res.status == 200) {
                          $scope.callAlertDailog(res.message);
                        }else if (res.status == 400){

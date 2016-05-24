@@ -1,14 +1,12 @@
 angular.module('updateProfile',[])
 //=======Home screen controller======================
-.controller('updateProfileController', function($scope,$rootScope,$ionicHistory,$state, $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseService,$state) {
+.controller('updateProfileController', function($scope,$rootScope,$ionicHistory,$state, $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseManager,$state) {
 
 
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
 //=============================get user fields saved locally ===============================
-      console.log('update profile controller email ID passed to get the profile json '+email);
       profileDataManager.getUserUpdateProfile(email).then(function(response){
-        console.log(response);
           if (response) {
             var items = response;
             $scope.profileFields = response;
@@ -125,7 +123,7 @@ angular.module('updateProfile',[])
         });
       }
 
-    $scope.OpenVerification = function() {
+    $scope.openVerification = function() {
         $scope.permission.remove();
       };
 

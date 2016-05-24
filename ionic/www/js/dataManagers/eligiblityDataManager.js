@@ -1,11 +1,11 @@
 angular.module('eligiblityDataManager', [])
-.factory('eligiblityDataManager', function($http,$cordovaSQLite,databaseService,$q) {
+.factory('eligiblityDataManager', function($http,$cordovaSQLite,databaseManager,$q) {
   //open connection
   return {
        getEligibilityQuestions: function(){
                 var deferred = $q.defer();
                 var eligiblity = null;
-                var db = databaseService.getConnectionObject();
+                var db = databaseManager.getConnectionObject();
                 var query = "SELECT eligibility FROM AppContent";
                 var eligiblity =  $cordovaSQLite.execute(db, query).then(function(res) {
                         var len = res.rows.length;

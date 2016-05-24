@@ -91,23 +91,7 @@ angular.module('starter.services', [])
                         };
 			      })
 		    }
-			return task;
-		},
-
-		getSurveyMainList:function(){
-			  return $http.get("assets/consent.json").then(function(response) {
-					   return response.data;
-			  });
-		},
-		getUserProfileFields:function(){
-		      return $http.get("assets/consent.json").then(function(response) {
-					   return response.data;
-			  });
-		},
-		getEmailList : function (){
-			 return $http.get("assets/consent.json").then(function(response) {
-					   return response.data;
-			  });
-		}
+			 return task;
+		 }
   }
 });

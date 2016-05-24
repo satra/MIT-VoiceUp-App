@@ -1,7 +1,7 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
 .controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
-  ,profileDataManager,databaseService,apiDataManagerService,$state) {
+  ,profileDataManager,databaseManager,dataStoreManager,$state) {
 
       profileDataManager.getUserProfileFields().then(function(response){
 
@@ -157,7 +157,7 @@ if (formValid) {
                dateFormatted +=today.getDay();
                var login = gradleArray[0].firstName+gradleArray[1].lastName+dateFormatted ;
                gradleArray.push({'login':login});
-                 apiDataManagerService.createGlobalUser(gradleArray).then(function(res){
+                 dataStoreManager.createGlobalUser(gradleArray).then(function(res){
                       if (res.status == 200) {
                       var resultData = res.data ;
                            profileDataManager.createNewUser(dataCache,$scope.emailId,resultData.authToken['token']).then(function(insertId){
@@ -247,7 +247,7 @@ $scope.backtohome = function(){
                 if (email) {
                   profileDataManager.getUserIDByEmail(email).then(function(res){
                          profileDataManager.addPasscodeToUserID(res,$scope.passcode,email).then(function(res){
-                                    $scope.OpenVerification();
+                                    $scope.openVerification();
                                   });
                     });
                 }
@@ -275,7 +275,7 @@ $scope.backtohome = function(){
 
 
 //========================All set go to next screen ===========================
-    $scope.OpenVerification = function() {
+    $scope.openVerification = function() {
       $ionicModal.fromTemplateUrl('templates/verification.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -286,7 +286,7 @@ $scope.backtohome = function(){
        });
      };
 
-     $scope.OpenPermisssions = function() {
+     $scope.openPermisssions = function() {
       $ionicModal.fromTemplateUrl('templates/locationservice.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -297,7 +297,7 @@ $scope.backtohome = function(){
         });
       };
 
-      $scope.AllDone = function() {
+      $scope.allDone = function() {
         $ionicModal.fromTemplateUrl('templates/alldone.html', {
           scope: $scope,
           animation: 'slide-in-up'

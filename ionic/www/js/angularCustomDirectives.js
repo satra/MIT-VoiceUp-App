@@ -3,7 +3,7 @@ angular.module('customDirectives',[])
 //======================================================================================
 // Usage: <btc-image-choice-question-step value="choice" text="Your choice." normal-state-image="" selected-state-image="" type="image" />
 // =====================================================================================
-.directive('btcImageChoiceQuestionStep', function() {
+.directive('customImageChoiceQuestionStep', function() {
     return {
         restrict: 'E',
         transclude: true,
@@ -26,7 +26,7 @@ angular.module('customDirectives',[])
 //======================================================================================
 // Usage: <btc-image-choice value="choice" text="Your choice." normal-state-image="" selected-state-image="" type="image" />
 // =====================================================================================
-.directive('btcImageChoice', function() {
+.directive('customImageChoice', function() {
     return {
         restrict: 'E',
         require: '^?btcImageChoiceQuestionStep',
