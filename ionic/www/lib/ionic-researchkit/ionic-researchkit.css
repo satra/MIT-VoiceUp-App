@@ -1,0 +1,317 @@
+.platform-android .bar .title {
+  padding-left: 15px;  
+}
+
+.irk-centered-container {
+  display: table !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.irk-centered-content {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.irk-offcentered-container {
+  display: table !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin-top: -50px !important;
+}
+
+.irk-offcentered-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.irk-centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.irk-spacer {
+  height: 15px;
+}
+
+.irk-image-spacer {
+  height: 25px;
+}
+
+.irk-text-centered {
+  text-align: center;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.irk-text-left {
+  text-align: left;
+}
+
+.irk-modal {
+  width: 100% !important;
+  height: 100%;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.irk-slider {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.irk-slider-slide {
+  padding-top: 80px;
+  color: #000;
+  background-color: #fff;
+  text-align: center;
+}
+
+.irk-bottom-bar {
+  background-image: none !important;
+  display: block;
+  height: 85px;
+}
+
+.irk-bottom-bar-consent-agree {
+  height: 44px !important;
+}
+
+.irk-bottom-bar-consent {
+  height: 60px !important;
+  padding-bottom: 18px !important;
+}
+
+.irk-bottom-button {
+  margin-top: 0px !important;
+  margin-bottom: 5px !important;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90% !important;
+  font-size: 17px !important;
+}
+
+.irk-button-learn-more {
+  font-size: 12px;
+  line-height: 12px;
+  width: 75%;
+}
+
+.irk-button-instruction {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.irk-item-content {
+  text-align: left;
+  font-weight: bold;
+}
+
+.irk-item-content p {
+  font-weight: normal;
+}
+
+.irk-input {
+  text-align: center;
+}
+
+.irk-input-label {
+  color: #aaa;
+  z-index: 100;
+  text-align: left;
+}
+
+.irk-item-select select {
+  direction: ltr;
+  width: 100% !important;
+  z-index: 50;
+}
+
+.irk-form-step {
+  text-align: left;
+}
+
+.irk-form-divider {
+  font-weight: 400;
+  font-size: 14px;
+  text-transform: uppercase;
+  border: 0;
+  background: none;
+  margin-top: 15px;
+}
+
+.irk-form-input-label {
+  font-weight: 500;
+}
+
+button.irk-icon-large:before {
+  font-size: 50px !important;
+}
+
+button.irk-image:before {
+  background-size: contain !important;
+}
+
+.irk-step-image {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 180px;
+  width: auto;
+  border: 0;
+}
+
+.irk-consent-none {
+  background-image: none;
+  height: 100px;
+}
+
+.irk-consent-custom {
+  background-image: none;
+}
+
+.irk-consent-01 {
+  background-image: url(resources/consent_01.gif);
+}
+
+.irk-consent-02 {
+  background-image: url(resources/consent_02.gif);
+}
+
+.irk-consent-03 {
+  background-image: url(resources/consent_03.gif);
+}
+
+.irk-consent-04 {
+  background-image: url(resources/consent_04.gif);
+}
+
+.irk-consent-05 {
+  background-image: url(resources/consent_05.gif);
+}
+
+.irk-consent-06 {
+  background-image: url(resources/consent_06.gif);
+}
+
+.irk-consent-07 {
+  background-image: url(resources/consent_07.gif);
+}
+
+.irk-learn-more-content {
+  display: none;
+}
+
+.irk-popup .popup {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.irk-signature-canvas {
+  width: 95%;
+  height: 180px;
+  border-bottom: 1px solid #ccc;
+}
+
+.irk-countdown {
+  width: 150px; 
+  height: 150px; 
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+.irk-timer-progress-wrapper {
+  position: relative;
+  margin: 20px auto;
+  font-size: 21px;
+}
+
+.irk-timer-progress {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 9em;
+  font-size: 1em;
+  text-align: center;
+  font-weight: 100;
+}
+
+.irk-completion-icon {
+  font-size: 150px;
+}
+
+.irk-hand-tapping {
+  background-image: url(resources/handtapping.gif);
+}
+
+.irk-phone-tapping {
+  background-image: url(resources/phonetapping.png);
+}
+
+.irk-progress {
+  visibility: hidden;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+}
+
+.irk-progress::-webkit-progress-bar {
+  background-color: #eeeeee;
+}
+
+.irk-progress::-webkit-progress-value {
+  background-color: #387ef5;
+}
+
+.irk-progress-started {
+  visibility: visible;
+}
+
+.irk-tap-container {
+  position: absolute; 
+  bottom: 0px; 
+  width: 100%;
+  height: 100%;
+}
+
+.irk-tap-button-container {
+  position: absolute; 
+  bottom: 30px; 
+  width: 100%;
+}
+
+.irk-tap-button {
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  margin: 10px;
+}
+
+.irk-voice {
+  background-image: url(resources/phonewaves.png);
+}
+
+.irk-voice-recording {
+  background-image: url(resources/phonesoundwaves.png);
+}
+
+.irk-audio-button-container {
+  position: absolute; 
+  bottom: 150px; 
+  width: 100%;
+}
+
+.irk-audio-button {
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+  margin: 10px;
+}
+
+.irk-spinner-audio-task svg {
+  width: 100px;
+  height: 100px;
+}

@@ -1,0 +1,1354 @@
+{
+   "version": "0.1.0",
+   "URL": "https://dl.dropbox.com/s/aemu9hsn4brc9ga/new_spec_160413.json",
+   "consent_screens":  {
+    "enable_review": "True",
+    "sections": [{
+        "data": "<p>You are invited to participate in a research study to understand variations in symptoms of depression conducted by Satrajit Ghosh, Ph.D., from the McGovern Institute for Brain Research at the Massachusetts Institute of Technology (MIT). This study is designed for persons over 18 years old with or without depression. Your participation in this study is entirely voluntary.</p> <p>To be in a research study you must give your informed consent. The purpose of this form is to help you decide if you want to participate in this study. Please read the information carefully. If you decide to take part in this research study, you will be given a copy of this signed and dated consent form. If you decide to participate, you are free to withdraw your consent, and to discontinue participation at any time.</p> <p>You should read the information below, and ask questions about anything you do not understand, before deciding whether or not to participate.</p>",
+        "id": "c1",
+        "main_type": "visual-consent",
+        "summary": "Study of Speech and Cognitive Disorders through Mobile Applications",
+        "title": "Participation and withdrawal 1",
+        "type": "overview"
+      },
+      [{
+        "data": "<p>Your participation in this research is completely VOLUNTARY. If you choose to participate you may subsequently withdraw from the study at any time without penalty or consequences of any kind. If you choose not to participate, that will not affect your relationship with M.I.T. or your right to health care or other services to which you are otherwise entitled.</p>",
+        "id": "c2.1",
+        "main_type": "visual-consent",
+        "summary": "",
+        "title": "Participation and withdrawal",
+        "type": "custom"
+      }, {
+        "data": "<p>People with depression can have very different and more or less severe symptoms. This affects quality of life and makes managing treatment difficult. We would like to understand symptom variations related to depression over time and how these variations relate to variations in your voice. You do not need to have any disorder to participate, but if you do, you are equally encouraged to join.</p> <p>New technologies allow people to record and track their health and symptoms in real time. This study will monitor individual\u2019s health and symptoms using questionnaires and sensors via a mobile phone application and wearable devices if available. </p> <p>Your study data will include your responses to surveys and the measurements from the phone itself when you perform an activity. Your data will be added to the data of other study participants and analyzed by the study team. Also, if you choose to, your study data (without your contact information) can be made available to other qualified researchers for this and future research. You will have a unique account that you can use to review your own data for yourself or sharing with others. </p> <p>We anticipate this study will last about one year, however the app can remain on your phone for multiple years, and you can keep using it to track your symptoms and review your data. </p>",
+        "id": "c2.2",
+        "main_type": "visual-consent",
+        "summary": "To understand variations in symptoms of depression",
+        "title": "Purpose of the study",
+        "type": "custom"
+      }],
+      [{
+        "data": "<p>If you volunteer to participate in this study you will need to download the free study application on your mobile device, register an account and confirm your agreement to participate in this study. Then, periodically we will ask you to answer questions and/or perform activities on your mobile phone. Your study data will include your responses to surveys and activities and some measurements from the phone itself. </p> <p><b>Register to the study:</b> You will follow the prompts on the app to register an account and confirm your agreement to participate in this study. There will be an electronic consent process explaining the risks and benefits of using the app. Registration will include entering your name, email address and other general information about yourself to verify your eligibility. You can cancel the registration process at any time. </p>",
+        "id": "c3.1",
+        "main_type": "visual-consent",
+        "summary": "Registering",
+        "type": "data-gathering"
+      }, {
+        "data": "<p>We will periodically ask you to answer questions about yourself, your medical history, and your current health and symptoms to track changes. You may skip any questions that you do not wish to answer blank. </p>",
+        "id": "c3.2",
+        "main_type": "visual-consent",
+        "summary": "Answer questions about yourself",
+        "type": "study-survey"
+      }, {
+        "data": "<p>We will ask you to perform specific tasks daily while holding or using your mobile phone and record sensor data directly from your phone. Examples are:</p> <p>- to record variations in your voice by reading sentences or words into the microphone of your phone.</p> <p>- to hold your phone, walk a few steps forward then a few steps backward to assess your posture and stability.</p> <p>- to tap on the phone screen in a specific way to test your reaction time and dexterity. </p>",
+        "id": "c3.3",
+        "main_type": "visual-consent",
+        "summary": "Perform active tasks such as speaking or walking",
+        "type": "study-tasks"
+      }, {
+        "data": "<p>Our expectation is that you will take a daily survey that requires less than 5 minutes.  However, you may participate more than once per day or less frequently.  Every two weeks a self-report survey on depression will be presented. You will also have the option of filling out additional self-report surveys that help us better understand your mental state. These additional surveys will be optional.</p> <p>We will send notices on your phone asking you to complete these activities and surveys. You may choose to act at your convenience, (either then or later) and you may choose to participate in all or only in some parts of the study. You can adjust the app settings to turn on and off sending data at any time. </p> <p>Occasionally we may re-contact you to ask for your feedback about using the app, about the kind of questions included in the study and to participate in future studies.</p>",
+        "id": "c3.4",
+        "main_type": "visual-consent",
+        "summary": "The typical daily survey will require less than 5 minutes",
+        "type": "time-commitment"
+      }],
+      [{
+        "data": "<p>There are risks, discomforts, and inconveniences associated with any research study. These deserve careful thought.</p> <p>- This is not a treatment study and we do not expect any medical side effects from participating.</p> <p>- Some survey questions may make you feel uncomfortable. Know that the information you provide is entirely up to you and you are free to skip questions that you do not want to answer.</p> <p>- Other people may glimpse the study notifications and/or reminders on your phone and realize you are enrolled in this study. This can make some people feel self-conscious.</p> <p>- Be safe \u2013 just as you would not text while driving, do not fulfill study tasks activities while driving. Wait until you are in a safe place to perform study-related activities!</p> <p>- We take great care to protect your information, however there is a slight risk of loss of privacy. This is a low risk because we separate your personal information (information that can directly identify you, such as your name or phone number) from the research data to respect your privacy. However, even with removal of this information, experts in re-identification may be able to reverse our processes and/or attempt to re-identify an individual given enough cross-reference information about him or her.</p> <p>- Accidental public disclosure may occur due to unintended data breaches including hacking or other activities outside of the procedures authorized by the study. In such a case, your data may be misused or used for unauthorized purposes.</p> <p>- Data collected in this study will count against your existing mobile data plan. You may configure the application to only use WiFi connections to limit the impact this data collection has on your data plan.</p> <p>- Participation in this study may involve risks that are not known at this time. You will be told about any new information that might change your decision to be in this study.</p> <p>- There will be questions associated with depression including if you may be suicidal. The investigators will not provide clinical care but you will be provided a list of resources.</p> <p>The treatment or procedure may involve risks that are currently unforeseeable.</p> <p>At the beginning of the survey, the application will remind you to go to a quiet, distraction-free location where you will be able to speak out loud. It is best to complete the surveys in a room without any other people. This will limit any noises or distractions and will also provide you with the most privacy and comfort when responding to survey questions with touchscreen or audio/video recordings.</p> <p><b>Incidental Findings</b></p> <p>The tests performed in this study are for specific research purposes and are not optimized to find medical abnormalities.  The investigators for this project may not be trained to perform medical diagnosis.  The analyses performed in this study are for specific research purposes and are not optimized to find medical abnormalities. However, the investigator may notice a finding that seems abnormal, such as vocal tremor or positive symptoms for bipolar, which might be detected during the study or during retrospective review of the data.  If this occurs, the investigator will contact you and inform you of the finding.  The decision as to whether to proceed with further examination of treatment lies solely with you and your physician.</p>",
+        "id": "c4.1",
+        "main_type": "visual-consent",
+        "summary": "A description of potential risks and discomforts associated with this study",
+        "title": "Potential risks and discomforts",
+        "type": "custom"
+      }, {
+        "data": "<p>The tests performed in this study are for specific research purposes and are not optimized to find medical abnormalities.  The investigators for this project may not be trained to perform medical diagnosis.  The analyses performed in this study are for specific research purposes and are not optimized to find medical abnormalities. However, the investigator may notice a finding that seems abnormal, such as vocal tremor or positive symptoms for bipolar, which might be detected during the study or during retrospective review of the data.  If this occurs, the investigator will contact you and inform you of the finding.  The decision as to whether to proceed with further examination of treatment lies solely with you and your physician.</p>",
+        "id": "c4.2",
+        "main_type": "visual-consent",
+        "summary": "You will be notified of incidental findings that are observed during the course of the study",
+        "title": "Incidental Findings",
+        "type": "custom"
+      }],
+      [{
+        "data": "<p>We will return the insights learned from analysis of the study data through the study website, blogs and/or research publications, but these insights may not be of direct benefit to you. We cannot, and thus we do not, guarantee or promise that you will personally receive any direct benefits from this study. However you will be able to track your health and export your data at will to share with your medical doctor and anyone you choose.</p>",
+        "id": "c5.1",
+        "main_type": "visual-consent",
+        "summary": "A description of anticipated benefits to subjects from this study",
+        "title": "Anticipated benefits to subjects",
+        "type": "custom"
+      }, {
+        "data": "<p>The goal of this study is to create knowledge, which can benefit us as a society. The benefits are primarily the creation of insights to help current and future patients and their families to better detect, understand and manage their health.</p>",
+        "id": "c5.2",
+        "main_type": "visual-consent",
+        "summary": "A description of anticipated benefits to society from this study",
+        "title": "Anticipated benefits to society",
+        "type": "custom"
+      }, {
+        "data": "",
+        "id": "c5.3",
+        "main_type": "visual-consent",
+        "summary": "<p>You will receive no payment for participating.</p>",
+        "title": "Payment for participation",
+        "type": "custom"
+      }, {
+        "data": "",
+        "id": "c5.4",
+        "main_type": "visual-consent",
+        "summary": "<p>There is no financial obligation to you for participating in this research study other than to your mobile data plan if applicable.</p>",
+        "title": "Financial obligation",
+        "type": "custom"
+      }, {
+        "data": "",
+        "id": "c5.5",
+        "main_type": "visual-consent",
+        "summary": "<p>Since no medical treatments are provided during this study there are no alternative therapies. The only alternative is to not participate.</p>",
+        "title": "Alternatives",
+        "type": "custom"
+      }], {
+        "data": "<p>The only people who will know that you are a research subject are members of the research team.  No information about you, or provided by you during the research will be disclosed to others without your written permission, except: if necessary to protect your rights or welfare, or if required by law.</p> <p>When the results of the research are published or discussed in conferences, no information will be included that would reveal your identity.  If photographs, videos, or audio-tape recordings of you will be used for educational purposes, your identity will be protected or disguised.</p> <p>Audio recordings made during the testing procedure will be coded numerically. The recordings will only be accessible to the experimenters for research purposes.  If any data are shared with investigators outside the team, they will be stripped of any Health Insurance Portability and Accountability Act (HIPAA) identifiers. </p> <p>We will archive the mobile data for a duration of at least 3 years following the end of data analysis.  Beyond that it will depend on the availability of funds and data backup resources.</p> <h2>NEW FINDINGS</h2> <p>During the course of the study, you will be informed of any significant new findings (either good or bad), such as changes in the risks or benefits resulting from participation in the research or new alternatives to participation that might cause you to change your mind about continuing in the study.  If new information is provided to you, your consent to continue participating in this study will be re-obtained.</p>",
+        "id": "c6",
+        "main_type": "visual-consent",
+        "summary": "How your information will be retained and disclosed",
+        "type": "privacy"
+      },
+      [{
+        "data": "<p>If you have any questions about the research, please feel free to contact:</p> <p>- Satrajit Ghosh, Ph.D. 617-324-3544 MIT Building 46-4033f, 43 Vassar St., Cambridge, MA 02139</p> <p>- Thomas F. Quatieri, Ph.D. 781-981-8994 MIT Lincoln Laboratory, 244 Wood St, Lexington, MA 02421</p>",
+        "id": "c7.1",
+        "main_type": "visual-consent",
+        "summary": "How to contact investigators",
+        "title": "Identification of investigators",
+        "type": "custom"
+      }, {
+        "data": "<p>You are not waiving any legal claims, rights or remedies because of your participation in this research study.  If you feel you have been treated unfairly, or you have questions regarding your rights as a research subject, you may contact the Chairman of the Committee on the Use of Humans as Experimental Subjects, M.I.T., Room E25-143B, 77 Massachusetts Ave, Cambridge, MA 02139, phone 1-617-253 6787.</p>",
+        "id": "c7.2",
+        "main_type": "visual-consent",
+        "summary": "Your rights as research subjects",
+        "title": "Rights of research subjects",
+        "type": "custom"
+      }],
+
+
+      [{
+        "data": "<p>If you have any questions about the research, please feel free to contact:</p> <p>- Satrajit Ghosh, Ph.D. 617-324-3544 MIT Building 46-4033f, 43 Vassar St., Cambridge, MA 02139</p> <p>- Thomas F. Quatieri, Ph.D. 781-981-8994 MIT Lincoln Laboratory, 244 Wood St, Lexington, MA 02421</p>",
+        "id": "c81",
+        "main_type": "consent-review",
+        "summary": "How to contact investigators",
+        "title": "Identification of investigators",
+        "type": "review"
+      }],
+
+      [{
+        "consent-name": {
+          "family-name": "",
+          "given-name": "",
+          "id": "s1",
+          "requires-name": "true",
+          "title": "Participant"
+        },
+        "id": "c91",
+        "main_type": "consent-review",
+        "text":"",
+        "signature-page-content": "<p>I have read (or someone has read to me) the information provided above.  I have been given an opportunity to ask questions and all of my questions have been answered to my satisfaction.  A copy of a version of this form is available on voicesurvey.mit.edu.</p>",
+        "signature-page-title": "Consent",
+        "type": "name"
+      }, {
+        "consent-signature": {
+          "id": "s1",
+          "requires-signature-image": "true",
+          "signature-date-format": "",
+          "signatureDate": "",
+          "signatureImage": ""
+        },
+        "id": "c92",
+        "main_type": "consent-review",
+        "type": "signature"
+      }]
+    ],
+    "version": "0.1.1"
+  },
+
+   "eligibility": [
+     {
+        "expected_answer": "Yes",
+        "false-text": "No",
+        "id": "e2",
+        "main_type": "review-questions",
+        "title": "Are you 18 years or older as of today?",
+        "true-text": "Yes",
+        "type": "boolean"
+      }
+   ],
+
+   "profile": {
+    "default": "profile_1",
+    "profiles": {
+      "profile_1": {
+        "items": [
+          {
+            "title": "Profile Info"
+          },
+          {
+            "id": "firstName",
+            "placeholder": "John",
+            "text": "First Name",
+            "type": "text"
+          },
+          {
+            "id": "lastName",
+            "placeholder": "Smith",
+            "text": "Last Name",
+            "type": "text"
+          },
+          {
+            "id": "email",
+            "placeholder": "john@example.com",
+            "text": "Email",
+            "type": "email"
+          },
+          {
+            "id": "password",
+            "placeholder": "*",
+            "text": "Password",
+            "type": "password"
+          },
+          {
+            "id": "password_confirm",
+            "placeholder": "*",
+            "text": "Confirm Password",
+            "type": "password"
+          },
+          {
+            "id": "dateofbirth",
+            "placeholder": "1971-01-01",
+            "text": "Date of birth",
+            "type": "date"
+          },
+          {
+            "choices": [
+              "Undisclosed",
+              "Male",
+              "Female",
+              "Other"
+            ],
+            "id": "gender",
+            "placeholder": "Undisclosed",
+            "text": "Gender",
+            "type": "radio"
+          },
+          {
+            "id": "weight",
+            "placeholder": 120,
+            "text": "Weight (lbs)",
+            "type": "number"
+          },
+          {
+            "id": "Height",
+            "placeholder": 60,
+            "text": "Height (inches)",
+            "type": "number"
+          }
+        ],
+        "text": "Enter profile settings here",
+        "title": "Profile Settings"
+      }
+    }
+  },
+  "surveys": [{
+      "date": "0 5 12 * *",
+      "title": "Mental Health Survey",
+      "id" : "1",
+      "skippable": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_55",
+        "MIT_5",
+        "PCL_C_3",
+        "OCD_ADAA_6"
+      ],
+      "tasks": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_55",
+        "MIT_5",
+        "PCL_C_3",
+        "OCD_ADAA_6"
+      ]
+    },
+   {
+      "date": "0 5 12 * *",
+      "title": "Mental Health Survey 2",
+      "id" : "2",
+
+      "skippable": [
+        "SAGE_1",
+        "SAGE_2",
+        "QIDS_10",
+        "PCL_C_18"
+      ],
+      "tasks": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_49",
+        "MIT_24",
+        "QIDS_10",
+        "PCL_C_18"
+      ]
+    },
+    {
+      "date": "0 5 19 * *",
+      "title": "Mental Health Survey 3",
+            "id" : "3",
+      "skippable": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_53",
+        "PCL_C_3",
+        "QIDS_6"
+      ],
+      "tasks": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_53",
+        "PCL_C_3",
+        "QIDS_6"
+      ]
+    },
+    {
+      "date": "0 5 17 * *",
+      "title": "Mental Health Survey 4",
+      "id" : "5",
+      "skippable": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_47",
+        "MIT_28",
+        "OCD_ADAA_10",
+        "QIDS_16"
+      ],
+      "tasks": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_47",
+        "MIT_28",
+        "OCD_ADAA_10",
+        "QIDS_16"
+      ]
+    },
+   {
+      "date": "0 5 17 * *",
+      "title": "Mental Health Survey 5",
+      "id" : "9",
+      "skippable": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_55",
+        "MIT_10",
+        "OCD_ADAA_13",
+        "PCL_C_11"
+      ],
+      "tasks": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_55",
+        "MIT_10",
+        "OCD_ADAA_13",
+        "PCL_C_11"
+      ]
+    },
+  {
+      "date": "0 5 20 * *",
+      "title": "Mental Health Survey 6",
+      "id" : "11",
+      "skippable": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_95",
+        "MIT_9",
+        "PCL_C_5",
+        "QIDS_13"
+      ],
+      "tasks": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_95",
+        "MIT_9",
+        "PCL_C_5",
+        "QIDS_13"
+      ]
+    },
+  {
+      "date": "0 5 19 * *",
+      "title": "Mental Health Survey 7",
+      "id" : "10",
+      "skippable": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_5",
+        "MIT_3",
+        "PHQ8_1",
+        "PHQ8_2",
+        "PHQ8_3",
+        "PHQ8_4",
+        "PHQ8_5",
+        "PHQ8_6",
+        "PHQ8_7",
+        "PHQ8_8"
+      ],
+      "tasks": [
+        "SAGE_1",
+        "SAGE_2",
+        "SAGE_3",
+        "SAGE_4",
+        "SAGE_5",
+        "EmoSentence_5",
+        "MIT_3",
+        "PHQ8_1",
+        "PHQ8_2",
+        "PHQ8_3",
+        "PHQ8_4",
+        "PHQ8_5",
+        "PHQ8_6",
+        "PHQ8_7",
+        "PHQ8_8"
+      ]
+    }
+  ],
+  "tasks": {
+    "EmoSentence_47": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 3,
+          "text": "If only I could go back",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "EmoSentence_49": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 3,
+          "text": "My best friend moved away",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "EmoSentence_5": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 2,
+          "text": "Can you hear me?",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "EmoSentence_53": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 3,
+          "text": "My brother is very sick",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "EmoSentence_55": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 4,
+          "text": "I didn't mean to hurt your feelings",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "EmoSentence_95": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 4,
+          "text": "I don't like the looks of that house",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "MIT_10": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 8,
+          "text": "Answer: Say the phrase 'good morning?' as if you were asking a friend about their morning.",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "MIT_24": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 8,
+          "text": "Answer: How do you feel about tomorrow? Excited? Bored? Nervous? Anything in particular causing those feelings?",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "MIT_28": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 5,
+          "text": "Answer: Did anything go wrong today? If so, what?",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "MIT_3": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 5,
+          "text": "Answer: What do you like most/least about you voice?",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "MIT_5": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 4,
+          "text": "Answer: Say the letters of the alphabet.",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "MIT_8": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 10,
+          "text": "Answer: Read this phrase (it's OK if you mess up - keep recording!): 'Pad kid poured curd pulled cold.'",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "MIT_9": {
+      "steps": [
+        {
+          "footer-attach": "true",
+          "image": "irk-voice-recording",
+          "text": "Take a breath and read the text on the following page",
+          "title": "Record voice",
+          "type": "irk-instruction-step"
+        },
+        {
+          "duration": 7,
+          "text": "Answer: Say the phrase 'good morning' as if you were greeting a friend.",
+          "type": "irk-audio-task"
+        }
+      ]
+    },
+    "OCD_ADAA_10": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Yes",
+              "value": 1
+            },
+            {
+              "text": " No",
+              "value": 2
+            }
+          ],
+          "id":"i1",
+          "text": "Select only one",
+          "title": "Are you troubled by the following? Do you wash yourself or things around you excessively?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "OCD_ADAA_13": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Yes",
+              "value": 1
+            },
+            {
+              "text": " No",
+              "value": 2
+            }
+
+          ],
+          "id":"i2",
+          "text": "Select only one",
+          "title": "Are you troubled by the following? Do you keep many useless things because you feel that you can't throw them away?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "OCD_ADAA_6": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Yes",
+              "value": 1
+            },
+            {
+              "text": " No",
+              "value": 2
+            }
+          ],
+          "id":"i3",
+          "text": "Select only one",
+          "title": "Are you troubled by the following? Are you always afraid you will lose something of importance?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "PCL_C_11": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " A little bit",
+              "value": 2
+            },
+            {
+              "text": " Moderately",
+              "value": 3
+            },
+            {
+              "text": " Quite a bit",
+              "value": 4
+            },
+            {
+              "text": " Extremely",
+              "value": 5
+            }
+          ],
+          "id":"i4",
+          "text": "Select only one",
+          "title": "Indicate how much you have been bothered by that problem in the last month: Loss of interest in things that you used to enjoy?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "PCL_C_18": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " A little bit",
+              "value": 2
+            },
+            {
+              "text": " Moderately",
+              "value": 3
+            },
+            {
+              "text": " Quite a bit",
+              "value": 4
+            },
+            {
+              "text": " Extremely",
+              "value": 5
+            }
+          ],
+          "id":"i5",
+          "text": "Select only one",
+          "title": "Indicate how much you have been bothered by that problem in the last month: Being \u201csuper alert\u201d or watchful on guard?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "PCL_C_3": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " A little bit",
+              "value": 2
+            },
+            {
+              "text": " Moderately",
+              "value": 3
+            },
+            {
+              "text": " Quite a bit",
+              "value": 4
+            },
+            {
+              "text": " Extremely",
+              "value": 5
+            }
+          ],
+          "id":"i6",
+          "text": "Select only one",
+          "title": "Indicate how much you have been bothered by that problem in the last month: Suddenly acting or feeling as if a stressful experience were happening again (as if you were reliving it)?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "PCL_C_5": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " A little bit",
+              "value": 2
+            },
+            {
+              "text": " Moderately",
+              "value": 3
+            },
+            {
+              "text": " Quite a bit",
+              "value": 4
+            },
+            {
+              "text": " Extremely",
+              "value": 5
+            }
+          ],
+          "id":"i7",
+          "text": "Select only one",
+          "title": "Indicate how much you have been bothered by that problem in the last month: Having physical reactions (e.g., heart pounding, trouble breathing, or sweating) when something reminded you of a stressful experience from the past?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "PHQ8_1": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " Several days",
+              "value": 2
+            },
+            {
+              "text": " More than half the days",
+              "value": 3
+            },
+            {
+              "text": " Nearly every day",
+              "value": 4
+            }
+          ],
+          "id":"i8",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Little interest or pleasure in doing things",
+          "type": "irk-text-choice-question-step"
+        }
+      ],
+      "timelimit": "7-0"
+    },
+    "PHQ8_2": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " Several days",
+              "value": 2
+            },
+            {
+              "text": " More than half the days",
+              "value": 3
+            },
+            {
+              "text": " Nearly every day",
+              "value": 4
+            }
+          ],
+          "id":"i9",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Feeling down, depressed, or hopeless",
+          "type": "irk-text-choice-question-step"
+        }
+      ],
+      "timelimit": "7-0"
+    },
+    "PHQ8_3": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " Several days",
+              "value": 2
+            },
+            {
+              "text": " More than half the days",
+              "value": 3
+            },
+            {
+              "text": " Nearly every day",
+              "value": 4
+            }
+          ],
+          "id":"i10",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Trouble falling or staying asleep, or sleeping too much",
+          "type": "irk-text-choice-question-step"
+        }
+      ],
+      "timelimit": "7-0"
+    },
+    "PHQ8_4": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " Several days",
+              "value": 2
+            },
+            {
+              "text": " More than half the days",
+              "value": 3
+            },
+            {
+              "text": " Nearly every day",
+              "value": 4
+            }
+          ],
+          "id":"i11",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Feeling tired or having little energy",
+          "type": "irk-text-choice-question-step"
+        }
+      ],
+      "timelimit": "7-0"
+    },
+    "PHQ8_5": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " Several days",
+              "value": 2
+            },
+            {
+              "text": " More than half the days",
+              "value": 3
+            },
+            {
+              "text": " Nearly every day",
+              "value": 4
+            }
+          ],
+          "id":"i12",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Poor appetite or overeating",
+          "type": "irk-text-choice-question-step"
+        }
+      ],
+      "timelimit": "7-0"
+    },
+    "PHQ8_6": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " Several days",
+              "value": 2
+            },
+            {
+              "text": " More than half the days",
+              "value": 3
+            },
+            {
+              "text": " Nearly every day",
+              "value": 4
+            }
+          ],
+          "id":"i13",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Feeling bad about yourself - or that you are a failure or have let yourself or your family down",
+          "type": "irk-text-choice-question-step"
+        }
+      ],
+      "timelimit": "7-0"
+    },
+    "PHQ8_7": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " Several days",
+              "value": 2
+            },
+            {
+              "text": " More than half the days",
+              "value": 3
+            },
+            {
+              "text": " Nearly every day",
+              "value": 4
+            }
+          ],
+          "id":"i14",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Trouble concentrating on things, such as reading the newspaper or watching television",
+          "type": "irk-text-choice-question-step"
+        }
+      ],
+      "timelimit": "7-0"
+    },
+    "PHQ8_8": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " Several days",
+              "value": 2
+            },
+            {
+              "text": " More than half the days",
+              "value": 3
+            },
+            {
+              "text": " Nearly every day",
+              "value": 4
+            }
+          ],
+          "id":"i15",
+          "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Thoughts that you would be better off dead or of hurting yourself in some way ",
+          "type": "irk-text-choice-question-step"
+        }
+      ],
+      "timelimit": "7-0"
+    },
+    "QIDS_10": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "There is no change in my usual capacity to concentrate or make decisions. ",
+              "value": 1
+            },
+            {
+              "text": " I occasionally feel indecisive or find that my attention wanders. ",
+              "value": 2
+            },
+            {
+              "text": " Most of the time, I struggle to focus my attention or to make decisions. ",
+              "value": 3
+            },
+            {
+              "text": " I cannot concentrate well enough to read or cannot make even minor decisions.",
+              "value": 4
+            }
+          ],
+          "id":"i16",
+          "text": "Select only one",
+          "title": "During the past seven days, ... Concentration/Decision Making",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "QIDS_13": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "There is no change from usual in a how interested I am in other people or activities.",
+              "value": 1
+            },
+            {
+              "text": " I notice that I am less interested in people or activities. ",
+              "value": 2
+            },
+            {
+              "text": " I find I have interest in only one or two of my formerly pursued activities. ",
+              "value": 3
+            },
+            {
+              "text": " I have virtually no interest in formerly pursued activities.",
+              "value": 4
+            }
+          ],
+          "id":"i17",
+          "text": "Select only one",
+          "title": "During the past seven days, ... General Interest",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "QIDS_16": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "I do not feel restless. ",
+              "value": 1
+            },
+            {
+              "text": " I'm often fidgety, wringing my hands, or need to shift how I am sitting. ",
+              "value": 2
+            },
+            {
+              "text": " I have impulses to move about and am quite restless. ",
+              "value": 3
+            },
+            {
+              "text": " At times, I am unable to stay seated and need to pace around.",
+              "value": 4
+            }
+          ],
+          "id":"i18",
+          "text": "Select only one",
+          "title": "During the past seven days, ... Feeling Restless",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "QIDS_6": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "There is no change in my usual appetite. ",
+              "value": 1
+            },
+            {
+              "text": " I eat somewhat less often or lesser amounts of food than usual. ",
+              "value": 2
+            },
+            {
+              "text": " I eat much less than usual and only with personal effort. ",
+              "value": 3
+            },
+            {
+              "text": " I rarely eat within a 24-hour period, and only with extreme personal effort or when others persuade me to eat.",
+              "value": 4
+            }
+          ],
+          "id":"i19",
+          "text": "Select only one",
+          "title": "During the past seven days, ... Decreased Appetite:",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "SAGE_1": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Perfectly crisp concentration",
+              "value": 1
+            },
+            {
+              "text": " No issues with concentration",
+              "value": 2
+            },
+            {
+              "text": " Occasional difficulties with concentration",
+              "value": 3
+            },
+            {
+              "text": " Difficulties with concentration",
+              "value": 4
+            },
+            {
+              "text": " No concentration",
+              "value": 5
+            }
+          ],
+          "id":"i20",
+          "text": "Select only one",
+          "title": "How is your concentration today?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "SAGE_2": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Ready to take on the world",
+              "value": 1
+            },
+            {
+              "text": " Filled with energy through the day",
+              "value": 2
+            },
+            {
+              "text": " Energy to make it through the day",
+              "value": 3
+            },
+            {
+              "text": " Energy to do basic functions",
+              "value": 4
+            },
+            {
+              "text": " No energy",
+              "value": 5
+            }
+          ],
+          "id":"i21",
+          "text": "Select only one",
+          "title": "How is your energy today?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "SAGE_3": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "The best I have felt",
+              "value": 1
+            },
+            {
+              "text": " Better than usual",
+              "value": 2
+            },
+            {
+              "text": " Normal ",
+              "value": 3
+            },
+            {
+              "text": " Down",
+              "value": 4
+            },
+            {
+              "text": " Extremely down",
+              "value": 5
+            }
+          ],
+          "id":"i22",
+          "text": "Select only one",
+          "title": "How is your mood today?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "SAGE_4": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Eliminated all deficit",
+              "value": 1
+            },
+            {
+              "text": " Made up some deficit",
+              "value": 2
+            },
+            {
+              "text": " Almost enough",
+              "value": 3
+            },
+            {
+              "text": " Barely enough",
+              "value": 4
+            },
+            {
+              "text": " No real sleep",
+              "value": 5
+            }
+          ],
+            "id":"i24",
+          "text": "Select only one",
+          "title": "How did you sleep?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    },
+    "SAGE_5": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Activities that make you breathe hard and sweat",
+              "value": 1
+            },
+            {
+              "text": " Walking",
+              "value": 2
+            },
+            {
+              "text": " Standing",
+              "value": 3
+            },
+            {
+              "text": " Sitting",
+              "value": 4
+            },
+            {
+              "text": " Lying down",
+              "value": 5
+              }
+          ],
+         "id":"i25",
+          "text": "Select only one",
+          "title": "How much did you move today?",
+          "type": "irk-text-choice-question-step"
+        }
+      ]
+    }
+  },
+  "emailList":[{"name": "hell.hanush82@boston-tech.com"},{"name": "nandagopal1291@gmail.com"},{"name": "louis.ranon@gmail.com"}],
+  "version": "0.1.0"
+}

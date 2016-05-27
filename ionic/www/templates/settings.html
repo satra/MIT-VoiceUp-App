@@ -1,0 +1,87 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="settingsBack()"><i class="icon ion-ios-arrow-thin-left icon-font-button"></i></button>
+    </div>
+    <h1 class="title">Settings</h1>
+  </ion-header-bar>
+
+<ion-content>
+  <div class="list">
+
+        <li class="item item-toggle IRK-FONT2 ">
+        Leave Study
+             <label class="toggle toggle "  >
+                 <input type="checkbox"  type="submit" >
+                 <div class="track">
+                     <div class="handle"></div>
+                 </div>
+             </label>
+         </li>
+        <li class="item item-toggle IRK-FONT2 ">
+              Pause Study
+             <label class="toggle toggle "  >
+                 <input type="checkbox"  type="submit" >
+                 <div class="track">
+                     <div class="handle"></div>
+                 </div>
+             </label>
+         </li>
+    <li class="item item-toggle IRK-FONT2 ">
+         Notifications
+         <label class="toggle toggle "  >
+             <input type="checkbox" ng-model="notification" ng-change="toggleNotification()" type="submit" >
+             <div class="track">
+                 <div class="handle"></div>
+             </div>
+         </label>
+     </li>
+
+     <li class="item item-toggle IRK-FONT2">
+         Daily Push Notification
+         <label class="toggle toggle" >
+             <input type="checkbox" ng-model="daily" ng-change="toggleDailyNotification()" type="submit">
+             <div class="track">
+                 <div class="handle"></div>
+             </div>
+         </label>
+     </li>
+
+     <li class="item item-toggle IRK-FONT2">
+         weekly Push Notification
+         <label class="toggle toggle">
+             <input type="checkbox" ng-model="week" ng-change="toggleBiweekNotification()" type="submit">
+             <div class="track">
+                 <div class="handle"></div>
+             </div>
+         </label>
+     </li>
+
+     <a href="javascript:void(0)" class="item item-icon-right IRK-FONT2" > Auto-Lock
+        <div class="icon font-settings"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
+
+   <!--call the function in ng-click next to anchor tag-->
+     <a href="javascript:void(0)"  class="item IRK-FONT2" >Download Data</a>
+
+     <a href="javascript:void(0)" ng-click="viewPermissions()"class="item item-icon-right IRK-FONT2">  View Permissions
+     <div class="icon font-settings" > <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
+
+
+     <a href="javascript:void(0)"  class="item IRK-FONT2" >Review Consent</a>
+
+   <a href="javascript:void(0)"  class="item item-icon-right IRK-FONT2" > Privacy Policy
+      <div class="icon font-settings"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
+
+
+      <a href="javascript:void(0)"  class="item item-icon-right IRK-FONT2" > Copyrights Information
+         <div class="icon font-settings"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
+
+
+     <a href="javascript:void(0)" ng-click="changePasscode()" class="item item-icon-right IRK-FONT2">  Change Passcode
+     <div class="icon font-settings" > <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
+
+
+
+  </ion-content>
+
+</ion-modal-view >
