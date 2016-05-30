@@ -95,6 +95,80 @@ angular.module('dataStoreManager', [])
                                   });
         deferred.resolve(forgotPassword);
         return deferred.promise;
-        }
+      },
+      createUserFolderInServer:function (parentId){
+        var deferred = $q.defer();
+        var URL = base_url+'folder?parentType=user&parentId='+parentId;
+        console.log('create folder '+URL);
+        var createFolder =    $http({ method:'GET',
+                                      url: URL,
+                                  })
+                        .success(function(res) {
+                                  return res;
+                                  })
+                        .error(function(error) {
+                                  $ionicLoading.hide();
+                                  if (error) {
+                                    $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: error.message
+                                    });
+                                  }
+                            });
+           deferred.resolve(createFolder);
+           return deferred.promise;
+      },
+      // createUserFileInserver(girderToken,folderId,fileName,fileSize)
+      createUserFileInServer:function (girderToken,folderId,fileName,fileSize){
+        var deferred = $q.defer();
+        var URL = base_url+'file?parentType=folder&parentId='+folderId+'&name='+fileName+'&size='+fileSize+'&mimeType=application/text';
+        console.log(URL);
+        var createFolder =    $http({ method:'POST',
+                                      url: URL,
+                                      headers: {
+                                     'girder-token': girderToken
+                                      }
+                                  })
+                        .success(function(res) {
+                                  return res;
+                                  })
+                        .error(function(error) {
+                                  $ionicLoading.hide();
+                                  if (error) {
+                                    $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: error.message
+                                    });
+                                  }
+                            });
+           deferred.resolve(createFolder);
+           return deferred.promise;
+      },
+      createUserChunkForFileInServer : function (girderToken,fileId,chunk){
+        var deferred = $q.defer();
+        //offset	=0&uploadId=57483f532f6f7954f951d8a3&chunk=gggggtyhgt ddsfds
+        var URL = base_url+'/file/chunk?offset=0&uploadId='+fileId+'&chunk='+chunk ;
+        var createFolder =    $http({ method:'POST',
+                                      url: URL,
+                                      headers: {
+                                     'girder-token': girderToken
+                                      }
+                                  })
+                        .success(function(res) {
+                                  return res;
+                                  })
+                        .error(function(error) {
+                                  $ionicLoading.hide();
+                                  if (error) {
+                                    $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: error.message
+                                    });
+                                  }
+                            });
+           deferred.resolve(createFolder);
+           return deferred.promise;
+      }
+
     }
 });

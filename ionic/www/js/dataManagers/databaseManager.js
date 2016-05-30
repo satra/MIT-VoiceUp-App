@@ -9,19 +9,19 @@ angular.module('databaseManager', [])
         var deferred = $q.defer();
         var query = "SELECT * FROM AppContent";
         var db = this.getConnectionObject();
-        //var query = "DROP TABLE SurveyTemp";
+      //  var query = "DROP TABLE User";
         var  dataReturn =  $cordovaSQLite.execute(db, query)
         .then(function(res) {
         dataReturn = res.rows;
         return dataReturn ;
         }, function (err) {
-          if(err.code == 5){
-                 dataReturn = err.code;
-                 return dataReturn ;
-          }else {
-                   dataReturn = err;
-                   deferred.reject(err);
-          }
+            if(err.code == 5){
+                   dataReturn = err.code;
+                   return dataReturn ;
+            }else {
+                     dataReturn = err;
+                     deferred.reject(err);
+            }
       });
       deferred.resolve(dataReturn);
       return deferred.promise;

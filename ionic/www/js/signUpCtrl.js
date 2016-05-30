@@ -3,6 +3,8 @@ angular.module('signUp',[])
 .controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
   ,profileDataManager,databaseManager,dataStoreManager,$state) {
 
+      console.log($rootScope.consentResult);
+
       profileDataManager.getUserProfileFields().then(function(response){
 
       var userProfile = response;
@@ -159,14 +161,60 @@ if (formValid) {
                gradleArray.push({'login':login});
                  dataStoreManager.createGlobalUser(gradleArray).then(function(res){
                       if (res.status == 200) {
-                      var resultData = res.data ;
-                           profileDataManager.createNewUser(dataCache,$scope.emailId,resultData.authToken['token']).then(function(insertId){
-                             if (insertId) {
-                               $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
-                               $rootScope.activeUser =  $scope.emailId ;
-                               $scope.launchpinScreen();
-                             }
-                          });
+                          var resultData = res.data ;
+                          var userId = resultData._id;
+                          var girderToken = resultData.authToken['token'];
+                          $scope.girderToken = girderToken ;
+                          console.log(dataCache.length);
+                        // create a user folder and put the json in the server
+                        dataStoreManager.createUserFolderInServer(resultData._id).then(function(folderInfo){
+                              if (folderInfo.status==200) {
+                                var folderDetails = folderInfo.data ;
+                                var folderId = folderDetails[0]._id ;
+
+                      // create consent file and upload the result
+                                var consentResult = $rootScope.consentResult;
+                                var consentFileName = 'consent';
+                                var consentFileSize = JSON.stringify(consentResult).length;
+                                var consentChunk = JSON.stringify(consentResult);
+                                dataStoreManager.createUserFileInServer(girderToken,folderId,consentFileName,consentFileSize).then(function(consentFileInfo){
+                                         if (consentFileInfo.status==200) {
+                                           var fileDetails = consentFileInfo.data ;
+                                           var fileId = fileDetails[0]._id ;
+                                           dataStoreManager.createUserChunkForFileInServer(girderToken,fileId,consentChunk).then(function(consentUploadInfo){
+                                              console.log('consent chunk added fine '+chunk);
+                                            });
+                                         }
+                                });
+
+                         // create profile file and upload the data
+                                var fileName = 'profile';
+                                var fileSize = JSON.stringify(dataCache).length;
+                                var chunk = JSON.stringify(dataCache);
+                                dataStoreManager.createUserFileInServer(girderToken,folderId,fileName,fileSize).then(function(fileInfo){
+                                         if (fileInfo.status==200) {
+                                           var fileDetails = fileInfo.data ;
+                                           var fileId = fileDetails[0]._id ;
+                                           var chunk = JSON.stringify(dataCache);
+                                           dataStoreManager.createUserChunkForFileInServer(girderToken,fileId,chunk).then(function(chunkInfo){
+                                              if (chunkInfo.status==200) {
+                                                var chunkDetails = chunkInfo.data ;
+                                                  console.log('chunk details added fine '+chunkDetails);
+                                                  profileDataManager.createNewUser(dataCache,$scope.emailId,resultData._id,folderId).then(function(insertId){
+                                                     if (insertId) {
+                                                       // update IRK consent result locally
+                                                       $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
+                                                       $rootScope.activeUser =  $scope.emailId ;
+                                                       $scope.launchpinScreen();
+                                                     }
+                                                 });
+                                               }
+                                            });
+                                         }
+                                });
+
+                              }
+                         });
                       }
                    });
              }
@@ -244,11 +292,12 @@ $scope.backtohome = function(){
             //check is both are equal
             if($scope.passcode == confirm_passcode){
                 var email = $scope.emailId ;
+                var girderToken = $scope.girderToken;
                 if (email) {
                   profileDataManager.getUserIDByEmail(email).then(function(res){
-                         profileDataManager.addPasscodeToUserID(res,$scope.passcode,email).then(function(res){
+                         profileDataManager.addPasscodeToUserID(res,$scope.passcode,email,girderToken).then(function(res){
                                     $scope.openVerification();
-                                  });
+                              });
                     });
                 }
             }else {

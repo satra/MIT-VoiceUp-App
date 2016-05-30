@@ -6,7 +6,7 @@ angular.module('profileDataManager', [])
    checkUserExistsByEmail : function(emailId){
             var deferred = $q.defer();
             var db = databaseManager.getConnectionObject();
-            var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, createdDate TEXT, emailId TEXT,profileJson TEXT,settingsJson TEXT,updatedDate TEXT, userId TEXT,globalId TEXT)');
+            var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, createdDate TEXT, emailId TEXT,profileJson TEXT,folderId TEXT,settingsJson TEXT,updatedDate TEXT, userId TEXT,globalId TEXT)');
             var query = "SELECT userId FROM User WHERE emailId ='"+emailId+"'";
             var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
                    if(res.rows.length > 0){
@@ -20,13 +20,13 @@ angular.module('profileDataManager', [])
             return deferred.promise;
          },
 
-    createNewUser : function(profile,emailId,authToken){
+    createNewUser : function(profile,emailId,authToken,folderId){
           var deferred = $q.defer();
           var profileJson = JSON.stringify(profile);
           var randomNumber=Math.ceil(Math.random()*100);
           var db = databaseManager.getConnectionObject();
-          var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, createdDate TEXT, emailId TEXT,profileJson TEXT, settingsJson TEXT,updatedDate TEXT, userId TEXT,globalId TEXT)');
-          var insert =  $cordovaSQLite.execute(db, 'INSERT INTO User (createdDate, emailId, profileJson, updatedDate, userId,globalId) VALUES (?,?,?,?,?,?)', [new Date(),emailId.trim(),profileJson,new Date(),randomNumber,authToken])
+          var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, createdDate TEXT, emailId TEXT,profileJson TEXT,folderId TEXT, settingsJson TEXT,updatedDate TEXT, userId TEXT,globalId TEXT)');
+          var insert =  $cordovaSQLite.execute(db, 'INSERT INTO User (createdDate, emailId, profileJson,folderId, updatedDate, userId,globalId) VALUES (?,?,?,?,?,?,?)', [new Date(),emailId.trim(),profileJson,folderId,new Date(),randomNumber,authToken])
                            .then(function(res) {
                                return res.insertId ;
                            }, function (err) {
@@ -35,11 +35,11 @@ angular.module('profileDataManager', [])
           return deferred.promise;
        },
 
-    addPasscodeToUserID : function (userId,passcode,email){
+    addPasscodeToUserID : function (userId,passcode,email,girderToken){
              var deferred = $q.defer();
              var db = databaseManager.getConnectionObject();
              var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Session(id INTEGER PRIMARY KEY AUTOINCREMENT, passcode TEXT, token TEXT,userId TEXT,emailId TEXT)');
-             var insert =  $cordovaSQLite.execute(db, 'INSERT INTO Session (passcode, token, userId,emailId) VALUES (?,?,?,?)', [passcode,'',userId,email.trim()])
+             var insert =  $cordovaSQLite.execute(db, 'INSERT INTO Session (passcode, token, userId,emailId) VALUES (?,?,?,?)', [passcode,girderToken,userId,email.trim()])
                               .then(function(res) {
                                   return res.insertId ;
                               }, function (err) {
