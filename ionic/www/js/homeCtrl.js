@@ -209,49 +209,50 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                         var token = resultData.authToken['token'] ;
                         var email = resultData.user['email'] ;
                         var parentId = resultData.user['_id'];
+                        $scope.emailId = email ;
+                        $rootScope.emailId = email ;
                         // check if the email id exists locally else launch the set pin screen
                       profileDataManager.checkUserExistsByEmailOnly(email).then(function(userExistsId){
                         $scope.emailId = email ;
                           if (userExistsId) {
                                   profileDataManager.updateUserAuthToken(email,token).then(function(insertId){
-                                    $rootScope.emailId = email ; // save it to access in update profile
                                     $scope.modal.remove();
                                     if (statePassed == 'signin') {  // if the user coming from sign in page
                                      $scope.transition('tab.Activities');
                                     }else if (statePassed == 'passcode') { // if the user coming from forgot passcode
-                                    $scope.emailId = email ;
                                     $scope.launchpinScreen();
                                    }
                                 });
                           }else {
                             // valid user doesn't exists locally so get the profile data and set the pin
-                            dataStoreManager.getRemoteFolderId(parentId).then(function(folderDetails){
-                                if (folderDetails) {
-                                  var folderId = folderDetails._id;
-                                  dataStoreManager.getItemListByFolderId(folderId).then(function(ItemList){
-                                      if (ItemList) {
-                                       for (var i = 0; i < ItemList.length; i++) {
-                                         var itemName = ItemList[i].name;
-                                         var item_id = ItemList[i]._id;
-                                          if (itemName == 'profile') {
-                                            dataStoreManager.downloadItemById(item_id).then(function(userProfile){
-                                                if (userProfile) {
-                                                  var profileJson = userProfile; //  fetch this once girder intigrated
-                                                  profileDataManager.createNewUser(profileJson,$scope.emailId,token).then(function(insertId){
-                                                        if (insertId) {
-                                                          // ask to reset the pin
-                                                          $scope.launchpinScreen();
-                                                        }
-                                                    });
-                                                }
-                                              });
+                               dataStoreManager.getRemoteFolderId(parentId).then(function(folder){
+                                   if (folder) {
+                                     var folderDetails = folder.data;
+                                     var folderId = folderDetails[0]._id;
+                                     dataStoreManager.getItemListByFolderId(folderId).then(function(Item){
+                                         if (Item) {
+                                          var ItemList = Item.data;
+                                          for (var i = 0; i < ItemList.length; i++) {
+                                            var itemName = ItemList[i].name;
+                                            var item_id = ItemList[i]._id;
+                                             if (itemName == 'profile') {
+                                               dataStoreManager.downloadItemById(item_id).then(function(userProfile){
+                                                   if (userProfile) {
+                                                     var profileJson = userProfile.data; //  fetch this once girder intigrated
+                                                     profileDataManager.createNewUser(profileJson,$scope.emailId,token,folderId).then(function(insertId){
+                                                           if (insertId) {
+                                                             // ask to reset the pin
+                                                             $scope.launchpinScreen();
+                                                           }
+                                                       });
+                                                   }
+                                                 });
+                                              }
                                            }
-                                        }
-                                      }
-                                  });
-                                }
-                            });
-
+                                         }
+                                     });
+                                   }
+                                 });
                           }
                       });
                  }
