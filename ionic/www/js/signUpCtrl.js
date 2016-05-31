@@ -180,7 +180,7 @@ if (formValid) {
                                 dataStoreManager.createUserFileInServer(girderToken,folderId,consentFileName,consentFileSize).then(function(consentFileInfo){
                                          if (consentFileInfo.status==200) {
                                            var fileDetails = consentFileInfo.data ;
-                                           var fileId = fileDetails[0]._id ;
+                                           var fileId = fileDetails._id ;
                                            dataStoreManager.createUserChunkForFileInServer(girderToken,fileId,consentChunk).then(function(consentUploadInfo){
                                               console.log('consent chunk added fine '+chunk);
                                             });
@@ -194,7 +194,7 @@ if (formValid) {
                                 dataStoreManager.createUserFileInServer(girderToken,folderId,fileName,fileSize).then(function(fileInfo){
                                          if (fileInfo.status==200) {
                                            var fileDetails = fileInfo.data ;
-                                           var fileId = fileDetails[0]._id ;
+                                           var fileId = fileDetails._id ;
                                            var chunk = JSON.stringify(dataCache);
                                            dataStoreManager.createUserChunkForFileInServer(girderToken,fileId,chunk).then(function(chunkInfo){
                                               if (chunkInfo.status==200) {
