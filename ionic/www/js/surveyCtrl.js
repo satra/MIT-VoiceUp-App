@@ -269,9 +269,10 @@ $scope.closeModal = function() {
         }
      }
       //result entry into the result table
-      surveyDataManager.addSurveyResultToDb($scope.userId,childresult).then(function(response){
+      surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
         $ionicLoading.hide();
       });
+      
     }
   };
 

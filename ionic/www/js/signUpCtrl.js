@@ -1,7 +1,7 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
 .controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
-  ,profileDataManager,databaseManager,dataStoreManager,$state) {
+  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state) {
 
       console.log($rootScope.consentResult);
 
@@ -165,7 +165,6 @@ if (formValid) {
                           var userId = resultData._id;
                           var girderToken = resultData.authToken['token'];
                           $scope.girderToken = girderToken ;
-                          console.log(dataCache.length);
                         // create a user folder and put the json in the server
                         dataStoreManager.createUserFolderInServer(resultData._id).then(function(folderInfo){
                               if (folderInfo.status==200) {
@@ -179,11 +178,13 @@ if (formValid) {
                                 var consentChunk = JSON.stringify(consentResult);
                                 dataStoreManager.createUserFileInServer(girderToken,folderId,consentFileName,consentFileSize).then(function(consentFileInfo){
                                          if (consentFileInfo.status==200) {
+                                           //result entry into the result table
                                            var fileDetails = consentFileInfo.data ;
                                            var fileId = fileDetails._id ;
-                                           dataStoreManager.createUserChunkForFileInServer(girderToken,fileId,consentChunk).then(function(consentUploadInfo){
-                                              console.log('consent chunk added fine '+chunk);
-                                            });
+                                          // create consent locally
+                                             dataStoreManager.createUserChunkForFileInServer(girderToken,fileId,consentChunk).then(function(consentUploadInfo){
+                                                 console.log('consent chunk added fine '+chunk);
+                                              });
                                          }
                                 });
 
@@ -199,13 +200,15 @@ if (formValid) {
                                            dataStoreManager.createUserChunkForFileInServer(girderToken,fileId,chunk).then(function(chunkInfo){
                                               if (chunkInfo.status==200) {
                                                 var chunkDetails = chunkInfo.data ;
-                                                  console.log('chunk details added fine '+chunkDetails);
                                                   profileDataManager.createNewUser(dataCache,$scope.emailId,resultData._id,folderId).then(function(insertId){
                                                      if (insertId) {
-                                                       // update IRK consent result locally
-                                                       $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
-                                                       $rootScope.activeUser =  $scope.emailId ;
-                                                       $scope.launchpinScreen();
+                                                       // add consent locally 
+                                                       surveyDataManager.addResultToDb(insertId,consentResult,'consent').then(function(response){
+                                                         // update IRK consent result locally
+                                                         $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
+                                                         $rootScope.activeUser =  $scope.emailId ;
+                                                         $scope.launchpinScreen();
+                                                        });
                                                      }
                                                  });
                                                }

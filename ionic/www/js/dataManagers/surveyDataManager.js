@@ -80,12 +80,12 @@ angular.module('surveyDataManager', [])
    return deferred.promise;
  },
 
- addSurveyResultToDb : function  (userId,childresult){
+ addResultToDb : function  (userId,childresult,resultType){
      var deferred = $q.defer();
      var resultJson = JSON.stringify(childresult);
      var db = databaseManager.getConnectionObject();
-     $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS SurveyResult(id INTEGER PRIMARY KEY AUTOINCREMENT, userId TEXT, resultJson TEXT,creationDate DATETIME DEFAULT CURRENT_TIMESTAMP)');
-     var insert =  $cordovaSQLite.execute(db, 'INSERT INTO SurveyResult (userId, resultJson,creationDate) VALUES (?,?,?)', [userId,resultJson,new Date()])
+     $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS SurveyResult(id INTEGER PRIMARY KEY AUTOINCREMENT, userId TEXT,resultType TEXT, resultJson TEXT,creationDate DATETIME DEFAULT CURRENT_TIMESTAMP)');
+     var insert =  $cordovaSQLite.execute(db, 'INSERT INTO SurveyResult (userId, resultType,resultJson,creationDate) VALUES (?,?,?,?)', [userId,resultType,resultJson,new Date()])
                       .then(function(res) {
                           return res.insertId ;
                       }, function (err) {
