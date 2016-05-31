@@ -241,6 +241,7 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                                      var profileJson = userProfile.data; //  fetch this once girder intigrated
                                                      profileDataManager.createNewUser(profileJson,$scope.emailId,token,folderId).then(function(insertId){
                                                            if (insertId) {
+                                                             $scope.modal.remove();
                                                              // ask to reset the pin
                                                              $scope.launchpinScreen();
                                                            }
