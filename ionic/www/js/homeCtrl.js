@@ -14,7 +14,7 @@ angular.module('homeCtrl',[])
             var tasksJson =  JSON.stringify(response.tasks);
             var completeJson = JSON.stringify(response);
 
-          databaseManager.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
+            databaseManager.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
                  console.log('createAppContentTable  '+ resp);
             });
 
@@ -26,9 +26,9 @@ angular.module('homeCtrl',[])
                  console.log('createSurveyTempTable  '+ resp);
             });
 
-              databaseManager.createSurveysTable(surveyJson).then(function(resp){
+            databaseManager.createSurveysTable(surveyJson).then(function(resp){
                    console.log('createSurveysTable  '+ resp);
-              });
+            });
 
             databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
                  console.log('createSurveyQuestionTable  '+ resp);
@@ -205,8 +205,10 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
           var encoded = 'Basic '+ $base64.encode(unescape(encodeURIComponent(beforeEncode)));
           dataStoreManager.signInGlobalUser(encoded).then(function(res){
                if (res.status == 200) {
-                        var token = res.data.authToken['token'] ;
-                        var email = res.data.user['email'] ;
+                        var resultData = res.data ;
+                        var token = resultData.authToken['token'] ;
+                        var email = resultData.user['email'] ;
+                        var parentId = resultData.user['_id'];
                         // check if the email id exists locally else launch the set pin screen
                       profileDataManager.checkUserExistsByEmailOnly(email).then(function(userExistsId){
                         $scope.emailId = email ;
@@ -223,13 +225,33 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                 });
                           }else {
                             // valid user doesn't exists locally so get the profile data and set the pin
-                            var profileJson = ''; //  fetch this once grider intigrated
-                            profileDataManager.createNewUser(profileJson,$scope.emailId,token).then(function(insertId){
-                                  if (insertId) {
-                                    // ask to reset the pin
-                                    $scope.launchpinScreen();
-                                  }
-                              });
+                            dataStoreManager.getRemoteFolderId(parentId).then(function(folderDetails){
+                                if (folderDetails) {
+                                  var folderId = folderDetails._id;
+                                  dataStoreManager.getItemListByFolderId(folderId).then(function(ItemList){
+                                      if (ItemList) {
+                                       for (var i = 0; i < ItemList.length; i++) {
+                                         var itemName = ItemList[i].name;
+                                         var item_id = ItemList[i]._id;
+                                          if (itemName == 'profile') {
+                                            dataStoreManager.downloadItemById(item_id).then(function(userProfile){
+                                                if (userProfile) {
+                                                  var profileJson = userProfile; //  fetch this once girder intigrated
+                                                  profileDataManager.createNewUser(profileJson,$scope.emailId,token).then(function(insertId){
+                                                        if (insertId) {
+                                                          // ask to reset the pin
+                                                          $scope.launchpinScreen();
+                                                        }
+                                                    });
+                                                }
+                                              });
+                                           }
+                                        }
+                                      }
+                                  });
+                                }
+                            });
+
                           }
                       });
                  }

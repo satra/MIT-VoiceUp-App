@@ -168,6 +168,66 @@ angular.module('dataStoreManager', [])
                             });
            deferred.resolve(createFolder);
            return deferred.promise;
+      },
+      getRemoteFolderId : function (parentId){
+        var deferred = $q.defer();
+        var URL = base_url+'/folder/?parentType=user&parentId='+parentId ;
+        var getFolder =    $http({ method:'GET',
+                                      url: URL,
+                                  })
+                        .success(function(res) {
+                                  return res;
+                                  })
+                        .error(function(error) {
+                                  if (error) {
+                                    $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: error.message
+                                    });
+                                  }
+                            });
+           deferred.resolve(getFolder);
+           return deferred.promise;
+      },
+      getItemListByFolderId : function (folderId){
+        var deferred = $q.defer();
+        var URL = base_url+'/item?folderId='+folderId ;
+        var getItemList =    $http({ method:'GET',
+                                      url: URL,
+                                  })
+                        .success(function(res) {
+                                  return res;
+                                  })
+                        .error(function(error) {
+                                  if (error) {
+                                    $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: error.message
+                                    });
+                                  }
+                            });
+           deferred.resolve(getItemList);
+           return deferred.promise;
+      },
+      downloadItemById : function (item_id){
+        var deferred = $q.defer();
+        var URL = base_url+'/item/'+item_id+'/download' ;
+        var getItem =    $http({ method:'GET',
+                                      url: URL,
+                                  })
+                        .success(function(res) {
+                                  return res;
+                                  })
+                        .error(function(error) {
+                                  if (error) {
+                                    $ionicPopup.alert({
+                                    title: 'Error',
+                                    template: error.message
+                                    });
+                                  }
+                            });
+           deferred.resolve(getItem);
+           return deferred.promise;
       }
 
     }
