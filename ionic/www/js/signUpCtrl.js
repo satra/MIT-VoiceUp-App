@@ -217,7 +217,7 @@ $scope.uploadProfileData = function (girderToken,folderId,dataCache){
             var fileCreateId = fileCreateDetails._id ;
             var chunk = JSON.stringify(dataCache);
             // upload chunks into the file
-            var chunkInfo = dataStoreManager.createUserChunkForFileInServer(girderToken,fileCreateId,chunk).then(function(chunkInfo){
+            var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,chunk).then(function(chunkInfo){
              if (chunkInfo.status==200) {
              var chunkDetails = chunkInfo.data ;
                 }
