@@ -169,11 +169,8 @@ if (formValid) {
                                 var folderId = folderDetails[0]._id ;
                             // create consent file and upload the result
                                 var consentResult = $rootScope.consentResult;
-                                var consentFileSize = JSON.stringify(consentResult).length;
-                                var consentChunk = JSON.stringify(consentResult);
                                 profileDataManager.createNewUser(dataCache,$scope.emailId,girderToken,folderId).then(function(insertId){
                                    if (insertId) {
-                                     // add consent locally
                                      surveyDataManager.addResultToDb(insertId,consentResult,'consent').then(function(response){
                                        $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
                                        $rootScope.activeUser =  $scope.emailId ;
@@ -181,12 +178,12 @@ if (formValid) {
                                       });
                                    }
                                });
-// ======================================create a profile item ,create profile_json file and upload chunk for user folder
-                        $scope.uploadProfileData(girderToken,folderId,dataCache);
-
-                              }
+// ===========create a profile item ,create profile_json file and upload chunk for user folder
+                               $scope.uploadProfileData(girderToken,folderId,dataCache);
+// ===========create a profile item ,create profile_json file and upload chunk for user folder
+                               $scope.uploadConsentData(girderToken,folderId,consentResult);
+                            }
                          });
-
                       }
                    });
              }
@@ -206,25 +203,25 @@ $scope.uploadProfileData = function (girderToken,folderId,dataCache){
           var itemName = 'profile';
           var deferred = $q.defer();
           var createProfileItem = uploadDataService.createItemForFolder(girderToken,folderId,itemName).then(function(createProfileItem){
-            if (createProfileItem.status==200) {
-            var itemCreateDetails = createProfileItem.data ;
-            var itemCreateId = itemCreateDetails._id ;
-            var fileSize = JSON.stringify(dataCache).length;
-            var fileName = 'profile_json';
-            var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
-            if (createFileForItem.status==200) {
-            var fileCreateDetails = createFileForItem.data ;
-            var fileCreateId = fileCreateDetails._id ;
-            var chunk = JSON.stringify(dataCache);
-            // upload chunks into the file
-            var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,chunk).then(function(chunkInfo){
-             if (chunkInfo.status==200) {
-             var chunkDetails = chunkInfo.data ;
-                }
-               });
-               }
-             });
-            }
+              if (createProfileItem.status==200) {
+              var itemCreateDetails = createProfileItem.data ;
+              var itemCreateId = itemCreateDetails._id ;
+              var fileSize = JSON.stringify(dataCache).length;
+              var fileName = 'profile_json';
+                var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
+                  if (createFileForItem.status==200) {
+                      var fileCreateDetails = createFileForItem.data ;
+                      var fileCreateId = fileCreateDetails._id ;
+                      var chunk = JSON.stringify(dataCache);
+                      // upload chunks into the file
+                      var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,chunk).then(function(chunkInfo){
+                       if (chunkInfo.status==200) {
+                       var chunkDetails = chunkInfo.data ;
+                       }
+                       });
+                     }
+                 });
+              }
            });
            deferred.resolve(createProfileItem);
           }
@@ -233,15 +230,47 @@ $scope.uploadProfileData = function (girderToken,folderId,dataCache){
         }
   };
 
-    $scope.callAlertDailog =  function (message){
+//=== upload consent json for the file ===========================================
+$scope.uploadConsentData = function (girderToken,folderId,consentData){
+        try {
+          var itemName = 'consent';
+          var deferred = $q.defer();
+          var createProfileItem = uploadDataService.createItemForFolder(girderToken,folderId,itemName).then(function(createProfileItem){
+              if (createProfileItem.status==200) {
+              var itemCreateDetails = createProfileItem.data ;
+              var itemCreateId = itemCreateDetails._id ;
+              var fileSize = JSON.stringify(consentData).length;
+              var fileName = 'consent_json';
+                var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
+                  if (createFileForItem.status==200) {
+                      var fileCreateDetails = createFileForItem.data ;
+                      var fileCreateId = fileCreateDetails._id ;
+                      var chunk = JSON.stringify(consentData);
+                      // upload chunks into the file
+                      var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,chunk).then(function(chunkInfo){
+                       if (chunkInfo.status==200) {
+                       var chunkDetails = chunkInfo.data ;
+                       }
+                       });
+                     }
+                 });
+              }
+           });
+           deferred.resolve(createProfileItem);
+          }
+        catch(err) {
+          console.log('error'+err);
+        }
+  };
+
+$scope.callAlertDailog =  function (message){
          $ionicPopup.alert({
           title: 'Sign Up Validation',
           template: message
          });
     }
 
-
-    $scope.skipSignUp = function(){
+$scope.skipSignUp = function(){
       $ionicHistory.clearCache().then(function(){
         $state.transitionTo('tab.Activities');
       });
