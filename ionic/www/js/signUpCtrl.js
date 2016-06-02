@@ -1,12 +1,9 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
 .controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
-  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state) {
-
-      console.log($rootScope.consentResult);
+  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state,userService,uploadDataService) {
 
       profileDataManager.getUserProfileFields().then(function(response){
-
       var userProfile = response;
       var thisUser = userProfile.profiles[userProfile.default];
       var items = thisUser.items;
@@ -170,54 +167,26 @@ if (formValid) {
                               if (folderInfo.status==200) {
                                 var folderDetails = folderInfo.data ;
                                 var folderId = folderDetails[0]._id ;
-
-                      // create consent file and upload the result
+                            // create consent file and upload the result
                                 var consentResult = $rootScope.consentResult;
-                                var consentFileName = 'consent';
                                 var consentFileSize = JSON.stringify(consentResult).length;
                                 var consentChunk = JSON.stringify(consentResult);
-                                dataStoreManager.createUserFileInServer(girderToken,folderId,consentFileName,consentFileSize).then(function(consentFileInfo){
-                                         if (consentFileInfo.status==200) {
-                                           //result entry into the result table
-                                           var fileDetails = consentFileInfo.data ;
-                                           var fileId = fileDetails._id ;
-                                          // create consent locally
-                                             dataStoreManager.createUserChunkForFileInServer(girderToken,fileId,consentChunk).then(function(consentUploadInfo){
-                                                 console.log('consent chunk added fine '+chunk);
-                                              });
-                                         }
-                                });
-
-                         // create profile file and upload the data
-                                var fileName = 'profile';
-                                var fileSize = JSON.stringify(dataCache).length;
-                                var chunk = JSON.stringify(dataCache);
-                                dataStoreManager.createUserFileInServer(girderToken,folderId,fileName,fileSize).then(function(fileInfo){
-                                         if (fileInfo.status==200) {
-                                           var fileDetails = fileInfo.data ;
-                                           var fileId = fileDetails._id ;
-                                           var chunk = JSON.stringify(dataCache);
-                                           dataStoreManager.createUserChunkForFileInServer(girderToken,fileId,chunk).then(function(chunkInfo){
-                                              if (chunkInfo.status==200) {
-                                                var chunkDetails = chunkInfo.data ;
-                                                  profileDataManager.createNewUser(dataCache,$scope.emailId,resultData._id,folderId).then(function(insertId){
-                                                     if (insertId) {
-                                                       // add consent locally 
-                                                       surveyDataManager.addResultToDb(insertId,consentResult,'consent').then(function(response){
-                                                         // update IRK consent result locally
-                                                         $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
-                                                         $rootScope.activeUser =  $scope.emailId ;
-                                                         $scope.launchpinScreen();
-                                                        });
-                                                     }
-                                                 });
-                                               }
-                                            });
-                                         }
-                                });
+                                profileDataManager.createNewUser(dataCache,$scope.emailId,girderToken,folderId).then(function(insertId){
+                                   if (insertId) {
+                                     // add consent locally
+                                     surveyDataManager.addResultToDb(insertId,consentResult,'consent').then(function(response){
+                                       $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
+                                       $rootScope.activeUser =  $scope.emailId ;
+                                       $scope.launchpinScreen();
+                                      });
+                                   }
+                               });
+// ======================================create a profile item ,create profile_json file and upload chunk for user folder
+                        $scope.uploadProfileData(girderToken,folderId,dataCache);
 
                               }
                          });
+
                       }
                    });
              }
@@ -227,11 +196,42 @@ if (formValid) {
           $scope.callAlertDailog('Password should match with confirm password');
           }
        }else {
-         console.log(dataCache);
           // redefine the array make sure to clear the array
          dataCache = [];
        }
     }
+
+$scope.uploadProfileData = function (girderToken,folderId,dataCache){
+        try {
+          var itemName = 'profile';
+          var deferred = $q.defer();
+          var createProfileItem = uploadDataService.createItemForFolder(girderToken,folderId,itemName).then(function(createProfileItem){
+            if (createProfileItem.status==200) {
+            var itemCreateDetails = createProfileItem.data ;
+            var itemCreateId = itemCreateDetails._id ;
+            var fileSize = JSON.stringify(dataCache).length;
+            var fileName = 'profile_json';
+            var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
+            if (createFileForItem.status==200) {
+            var fileCreateDetails = createFileForItem.data ;
+            var fileCreateId = fileCreateDetails._id ;
+            var chunk = JSON.stringify(dataCache);
+            // upload chunks into the file
+            var chunkInfo = dataStoreManager.createUserChunkForFileInServer(girderToken,fileCreateId,chunk).then(function(chunkInfo){
+             if (chunkInfo.status==200) {
+             var chunkDetails = chunkInfo.data ;
+                }
+               });
+               }
+             });
+            }
+           });
+           deferred.resolve(createProfileItem);
+          }
+        catch(err) {
+          console.log('error'+err);
+        }
+  };
 
     $scope.callAlertDailog =  function (message){
          $ionicPopup.alert({

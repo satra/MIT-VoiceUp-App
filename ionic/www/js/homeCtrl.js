@@ -6,7 +6,7 @@ angular.module('homeCtrl',[])
  databaseManager.checkDatabaseExists().then(function(res){
        if (res == 5 ) {
             //call a method and read from local json and create schema
-             userService.getConfigJson().then(function(response){
+            userService.getConfigJson().then(function(response){
             var eligibility = JSON.stringify(response.eligibility);
             var profile = JSON.stringify(response.profile);
             var consent_screens = JSON.stringify(response.consent_screens);
@@ -236,24 +236,36 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                             var itemName = ItemList[i].name;
                                             var item_id = ItemList[i]._id;
                                              if (itemName == 'profile') {
-                                               dataStoreManager.downloadItemById(item_id).then(function(userProfile){
-                                                   if (userProfile) {
-                                                     var profileJson = userProfile.data; //  fetch this once girder intigrated
-                                                     profileDataManager.createNewUser(profileJson,$scope.emailId,token,folderId).then(function(insertId){
-                                                           if (insertId) {
-                                                             $scope.modal.remove();
-                                                             // ask to reset the pin
-                                                             $scope.launchpinScreen();
-                                                           }
-                                                       });
+                                               //get file list in an item
+                                               dataStoreManager.downloadFilesListForItem(item_id).then(function(files){
+                                                   if (files) {
+                                                     var filesList = files.data;
+                                                     var fileId = filesList[0]._id;
+                                                     for (var j = 0; j < filesList.length; j++) {
+                                                       var fileName = filesList[j].name;
+                                                       var file_id = filesList[j]._id;
+                                                       if (fileName == 'profile_json') {
+                                                         dataStoreManager.downloadFileById(file_id).then(function(userProfile){
+                                                            var profileJson = userProfile.data; //  fetch this once girder intigrated
+                                                            profileDataManager.createNewUser(profileJson,$scope.emailId,token,folderId).then(function(insertId){
+                                                                  if (insertId) {
+                                                                    $scope.modal.remove();
+                                                                    // ask to reset the pin
+                                                                    $scope.launchpinScreen();
+                                                                  }
+                                                              });
+                                                         });
+                                                       }
+                                                     }
                                                    }
                                                  });
                                               }
                                            }
                                          }
                                      });
+
                                    }
-                                 });
+                             });
                           }
                       });
                  }
