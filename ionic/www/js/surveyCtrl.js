@@ -7,20 +7,23 @@ angular.module('surveyCtrl',[])
 $scope.hideImageDiv = true;
 document.addEventListener("resume", function() {
     if ($rootScope.activeUser) {
-     // get email list
-     var emailArray = new Array() ;
-     for (var i = 0; i < response.length; i++) {
+       profileDataManager.getEmailList().then(function(response){
+       var emailArray = new Array() ;
+       for (var i = 0; i < response.length; i++) {
        emailArray.push({'emailId':response.item(i).emailId});
        if (response.item(i).emailId == $rootScope.activeUser) {
           $scope.selectedEmail = emailArray[i];
-       }
-    }
-     $scope.emails = emailArray;
+          }
+        }
+       $scope.emails = emailArray;
+     });
+
      pinModalService.init('templates/pinScreen.html', $scope)
          .then(function(pin) {
           pin.show();
         });
      }
+
   }, false);
 
 
@@ -272,7 +275,7 @@ $scope.closeModal = function() {
       surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
         $ionicLoading.hide();
       });
-      
+
     }
   };
 

@@ -248,9 +248,9 @@ $scope.uploadConsentData = function (girderToken,folderId,consentData){
                       var chunk = JSON.stringify(consentData);
                       // upload chunks into the file
                       var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,chunk).then(function(chunkInfo){
-                       if (chunkInfo.status==200) {
-                       var chunkDetails = chunkInfo.data ;
-                       }
+                         if (chunkInfo.status==200) {
+                         var chunkDetails = chunkInfo.data ;
+                         }
                        });
                      }
                  });
