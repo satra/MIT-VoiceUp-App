@@ -162,12 +162,11 @@ if (formValid) {
                           var userId = resultData._id;
                           var girderToken = resultData.authToken['token'];
                           $scope.girderToken = girderToken ;
-                        // create a user folder and put the json in the server
-                        dataStoreManager.createUserFolderInServer(resultData._id).then(function(folderInfo){
+                          var folderName = 'user';
+                        dataStoreManager.createUserFolderInServer(girderToken,resultData._id,folderName).then(function(folderInfo){
                               if (folderInfo.status==200) {
                                 var folderDetails = folderInfo.data ;
                                 var folderId = folderDetails[0]._id ;
-                            // create consent file and upload the result
                                 var consentResult = $rootScope.consentResult;
                                 profileDataManager.createNewUser(dataCache,$scope.emailId,girderToken,folderId).then(function(insertId){
                                    if (insertId) {
@@ -178,10 +177,11 @@ if (formValid) {
                                       });
                                    }
                                });
-// ===========create a profile item ,create profile_json file and upload chunk for user folder
-                               $scope.uploadProfileData(girderToken,folderId,dataCache);
-// ===========create a profile item ,create profile_json file and upload chunk for user folder
+                               // ===========create a profile item , create profile_json file and upload chunk for user folder
+                               $scope.uploadProfileData(girderToken,folderId,dataCache).then(function(){
+                               // ===========create a profile item ,create profile_json file and upload chunk for user folder
                                $scope.uploadConsentData(girderToken,folderId,consentResult);
+                               });
                             }
                          });
                       }
@@ -198,6 +198,7 @@ if (formValid) {
        }
     }
 
+//=== upload profile json for the file ===========================================
 $scope.uploadProfileData = function (girderToken,folderId,dataCache){
         try {
           var itemName = 'profile';

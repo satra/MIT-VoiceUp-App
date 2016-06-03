@@ -96,12 +96,14 @@ angular.module('dataStoreManager', [])
         deferred.resolve(forgotPassword);
         return deferred.promise;
       },
-      createUserFolderInServer:function (parentId){
+      createUserFolderInServer:function (girderToken,parentId,folderName){
         var deferred = $q.defer();
-        var URL = base_url+'folder?parentType=user&parentId='+parentId;
-        console.log('create folder '+URL);
-        var createFolder =    $http({ method:'GET',
+        var URL = base_url+'folder?parentType=user&parentId='+parentId+'&name='+folderName+'&public=false';
+        var createFolder =    $http({ method:'POST',
                                       url: URL,
+                                      headers: {
+                                     'girder-token': girderToken
+                                      }
                                   })
                         .success(function(res) {
                                   return res;
