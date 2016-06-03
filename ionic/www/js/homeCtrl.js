@@ -248,6 +248,7 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                                          dataStoreManager.downloadFileById(file_id).then(function(userProfile){
                                                             var profileJson = userProfile.data; //  fetch this once girder intigrated
                                                             profileDataManager.createNewUser(profileJson,$scope.emailId,token,folderId).then(function(insertId){
+                                                            profileDataManager.createNewUser(profileJson,$scope.emailId,parentId,folderId).then(function(insertId){
                                                                   if (insertId) {
                                                                     $scope.modal.remove();
                                                                     // ask to reset the pin

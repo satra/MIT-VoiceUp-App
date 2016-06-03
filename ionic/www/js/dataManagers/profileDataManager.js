@@ -19,16 +19,15 @@ angular.module('profileDataManager', [])
             deferred.resolve(insert);
             return deferred.promise;
          },
-
-    createNewUser : function(profile,emailId,authToken,folderId){
+    createNewUser : function(profile,emailId,userId,folderId){
           var deferred = $q.defer();
           var profileJson = JSON.stringify(profile);
           var randomNumber=Math.ceil(Math.random()*100);
           var db = databaseManager.getConnectionObject();
           var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS User(id INTEGER PRIMARY KEY AUTOINCREMENT, createdDate TEXT, emailId TEXT,profileJson TEXT,folderId TEXT, settingsJson TEXT,updatedDate TEXT, userId TEXT,globalId TEXT)');
-          var insert =  $cordovaSQLite.execute(db, 'INSERT INTO User (createdDate, emailId, profileJson,folderId, updatedDate, userId,globalId) VALUES (?,?,?,?,?,?,?)', [new Date(),emailId.trim(),profileJson,folderId,new Date(),randomNumber,authToken])
+          var insert =  $cordovaSQLite.execute(db, 'INSERT INTO User (createdDate, emailId, profileJson,folderId, updatedDate, userId,globalId) VALUES (?,?,?,?,?,?,?)', [new Date(),emailId.trim(),profileJson,folderId,new Date(),randomNumber,userId])
                            .then(function(res) {
-                               return res.insertId ;
+                               return randomNumber ;
                            }, function (err) {
                        });
           deferred.resolve(insert);
@@ -211,7 +210,7 @@ checkUserExistsByEmailAndPasscode:function(email,passcode){
       updateUserAuthToken:function(emailId,token){
           var deferred = $q.defer();
           var db = databaseManager.getConnectionObject();
-          var query = "UPDATE User SET gardleId = '"+token+"' WHERE emailId = ?";
+          var query = "UPDATE Session SET token = '"+token+"' WHERE emailId = ?";
           var update =  $cordovaSQLite.execute(db, query , [emailId] )
                            .then(function(res) {
                                return res.rowsAffected ;

@@ -149,7 +149,7 @@ if (formValid) {
           profileDataManager.checkUserExistsByEmail(emailId).then(function(res){
             if(res){ //user email id already exits
               $scope.callAlertDailog('User already exists ');
-            }else { // insert this user to db
+             }else { // insert this user to db
                var today = new Date() ;
                var dateFormatted = today.getFullYear();
                dateFormatted += today.getMonth();
@@ -168,9 +168,9 @@ if (formValid) {
                                 var folderDetails = folderInfo.data ;
                                 var folderId = folderDetails[0]._id ;
                                 var consentResult = $rootScope.consentResult;
-                                profileDataManager.createNewUser(dataCache,$scope.emailId,girderToken,folderId).then(function(insertId){
-                                   if (insertId) {
-                                     surveyDataManager.addResultToDb(insertId,consentResult,'consent').then(function(response){
+                                profileDataManager.createNewUser(dataCache,$scope.emailId,userId,folderId).then(function(localUserId){
+                                   if (localUserId) {
+                                     surveyDataManager.addResultToDb(localUserId,consentResult,'consent').then(function(response){
                                        $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
                                        $rootScope.activeUser =  $scope.emailId ;
                                        $scope.launchpinScreen();
@@ -178,10 +178,9 @@ if (formValid) {
                                    }
                                });
                                // ===========create a profile item , create profile_json file and upload chunk for user folder
-                               $scope.uploadProfileData(girderToken,folderId,dataCache).then(function(){
+                               $scope.uploadProfileData(girderToken,folderId,dataCache);
                                // ===========create a profile item ,create profile_json file and upload chunk for user folder
                                $scope.uploadConsentData(girderToken,folderId,consentResult);
-                               });
                             }
                          });
                       }
@@ -196,7 +195,7 @@ if (formValid) {
           // redefine the array make sure to clear the array
          dataCache = [];
        }
-    }
+  }
 
 //=== upload profile json for the file ===========================================
 $scope.uploadProfileData = function (girderToken,folderId,dataCache){
