@@ -65,7 +65,23 @@ angular.module('profileDataManager', [])
                deferred.resolve(profile);
                return deferred.promise;
           },
-
+          getAuthTokenForUser:function(emailId){
+            var deferred = $q.defer();
+            var db = databaseManager.getConnectionObject();
+           if (emailId) {
+             var query = "SELECT token FROM Session WHERE emailId ='"+emailId.trim()+"'";
+             var token =  $cordovaSQLite.execute(db, query).then(function(res) {
+                       var len = res.rows.length;
+                       for (var i=0; i<len; i++){
+                        token = res.rows.item(i);
+                       }
+                       return token;
+                   }, function (err) {
+                 });
+              }
+              deferred.resolve(token);
+              return deferred.promise;
+          },
    getUserUpdateProfile : function(emailId){
            var deferred = $q.defer();
            var db = databaseManager.getConnectionObject();

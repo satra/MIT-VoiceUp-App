@@ -1,10 +1,19 @@
 angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
-.controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state, $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseManager,$state) {
-
+.controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
+   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,
+   $ionicLoading,profileDataManager,databaseManager,$state,dataStoreManager) {
 
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
+
+      // get girder-token from local db for the user logout and further WS calls
+      profileDataManager.getAuthTokenForUser(email).then(function(response){
+        if (response) {
+          $scope.authToken = response.token;
+        }
+      });
+
 //=============================get user fields saved locally ===============================
       profileDataManager.getUserUpdateProfile(email).then(function(response){
           if (response) {
@@ -68,6 +77,31 @@ angular.module('updateProfileCtrl',[])
      $scope.settingsBack = function (){
        $scope.modal.remove();
      }
+
+     $scope.logOut = function(){
+       //userLogout
+       var logoutToken = $scope.authToken;
+       if (logoutToken) {
+         var confirmPopup = $ionicPopup.confirm({
+                             title: 'Leave Study Confirm',
+                             template: 'Are you sure you want to Leave Study?'
+                           });
+                           confirmPopup.then(function(res) {
+                             if(res) {
+                               dataStoreManager.userLogout(logoutToken).then(function(res){
+                                    if (res.status == 200) {
+                                      $scope.modal.remove();
+                                      $ionicHistory.clearCache().then(function(){
+                                          $state.transitionTo('home');
+                                      });
+                                    }
+                                 });
+                             } else {
+                                $scope.logout = false ;
+                             }
+           });
+       }
+    }
 
      $scope.toggleNotification = function(){
       if ($scope.notification == false) {

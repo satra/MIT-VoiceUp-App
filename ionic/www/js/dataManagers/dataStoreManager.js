@@ -295,6 +295,30 @@ angular.module('dataStoreManager', [])
                            });
           deferred.resolve(createFolder);
           return deferred.promise;
+     },
+       userLogout : function (girderToken){
+       var deferred = $q.defer();
+       var URL = base_url+'/user/authentication/' ;
+       var createFolder =    $http({ method:'DELETE',
+                                     url: URL,
+                                     headers: {
+                                    'girder-token': girderToken
+                                     }
+                                 })
+                       .success(function(res) {
+                                 return res;
+                                 })
+                       .error(function(error) {
+                                 $ionicLoading.hide();
+                                 if (error) {
+                                   $ionicPopup.alert({
+                                   title: 'Error',
+                                   template: error.message
+                                   });
+                                 }
+                           });
+          deferred.resolve(createFolder);
+          return deferred.promise;
      }
   }
 })
