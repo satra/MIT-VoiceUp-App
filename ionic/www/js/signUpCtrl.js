@@ -28,7 +28,7 @@ angular.module('signUp',[])
       var password_confirm = null;
       var emailId = null;
       var dataCache = [];
-      var gradleArray = new Array();
+      var girderArray = new Array();
  //get the data by id
 
 //iterate the form and validate the form
@@ -53,7 +53,7 @@ angular.module('signUp',[])
             }else {
               obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
               dataCache.push(obj);
-              gradleArray.push({'firstName':value});
+              girderArray.push({'firstName':value});
             }
            break;
        case 'lastname':
@@ -63,7 +63,7 @@ angular.module('signUp',[])
              }else {
                obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                dataCache.push(obj);
-               gradleArray.push({'lastName':value});
+               girderArray.push({'lastName':value});
              }
            break;
        case 'email':
@@ -79,7 +79,7 @@ angular.module('signUp',[])
                  emailId = value;
                  obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                  dataCache.push(obj);
-                 gradleArray.push({'email':value});
+                 girderArray.push({'email':value});
                }
              }
            break;
@@ -93,7 +93,7 @@ angular.module('signUp',[])
                      formValid = false ; keepGoing = false;
                      $scope.callAlertDailog('Password must be at least 6 characters.');
                    }else {
-                     gradleArray.push({'password':value});
+                     girderArray.push({'password':value});
                    }
              }
            break;
@@ -154,9 +154,9 @@ if (formValid) {
                var dateFormatted = today.getFullYear();
                dateFormatted += today.getMonth();
                dateFormatted +=today.getDay();
-               var login = gradleArray[0].firstName+gradleArray[1].lastName+dateFormatted ;
-               gradleArray.push({'login':login});
-                 dataStoreManager.createGlobalUser(gradleArray).then(function(res){
+               var login = girderArray[0].firstName+girderArray[1].lastName+dateFormatted ;
+               girderArray.push({'login':login});
+                 dataStoreManager.createGlobalUser(girderArray).then(function(res){
                       if (res.status == 200) {
                           var resultData = res.data ;
                           var userId = resultData._id;
@@ -166,7 +166,7 @@ if (formValid) {
                         dataStoreManager.createUserFolderInServer(girderToken,resultData._id,folderName).then(function(folderInfo){
                               if (folderInfo.status==200) {
                                 var folderDetails = folderInfo.data ;
-                                var folderId = folderDetails[0]._id ;
+                                var folderId = folderDetails._id ;
                                 var consentResult = $rootScope.consentResult;
                                 profileDataManager.createNewUser(dataCache,$scope.emailId,userId,folderId).then(function(localUserId){
                                    if (localUserId) {
