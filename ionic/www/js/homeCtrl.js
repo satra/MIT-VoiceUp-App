@@ -64,19 +64,15 @@ $scope.GoBack = function () {
 };
 
 $scope.sendConsentDoc = function (){
-  console.log('send consent doc ');
   var email = {
-     to: 'teste@example.com',
-     cc: 'teste@example.com',
-     bcc: ['john@doe.com', 'jane@doe.com'],
-  /*   attachments: [
-       'file://img/logo.png',
-       'res://icon.png',
-       'base64:icon.png//iVBORw0KGgoAAAANSUhEUg...',
-       'file://README.pdf'
+    // to: 'teste@example.com',
+    // cc: 'teste@example.com',
+    // bcc: ['john@doe.com', 'jane@doe.com'],
+     attachments: [
+       'file://assets/consent_mobile_20150528.pdf'
      ],
-    */ subject: 'Mail subject',
-     body: 'How are you? Nice greetings from Leipzig',
+     subject: 'Consent doc',
+    // body: 'How are you? Nice greetings from Leipzig',
      isHtml: true
   };
 
@@ -247,7 +243,6 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                                        if (fileName == 'profile_json') {
                                                          dataStoreManager.downloadFileById(file_id).then(function(userProfile){
                                                             var profileJson = userProfile.data; //  fetch this once girder intigrated
-                                                            profileDataManager.createNewUser(profileJson,$scope.emailId,token,folderId).then(function(insertId){
                                                             profileDataManager.createNewUser(profileJson,$scope.emailId,parentId,folderId).then(function(insertId){
                                                                   if (insertId) {
                                                                     $scope.modal.remove();
