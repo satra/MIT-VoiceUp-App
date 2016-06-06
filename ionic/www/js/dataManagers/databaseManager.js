@@ -9,7 +9,7 @@ angular.module('databaseManager', [])
         var deferred = $q.defer();
         var query = "SELECT * FROM AppContent";
         var db = this.getConnectionObject();
-      //  var query = "DROP TABLE User";
+        // var query = "DROP TABLE Survey";
         var  dataReturn =  $cordovaSQLite.execute(db, query)
         .then(function(res) {
         dataReturn = res.rows;
@@ -37,22 +37,22 @@ angular.module('databaseManager', [])
       deferred.resolve(dataReturn);
       return deferred.promise;
      },
-     createSurveysTable : function(surveyJson){
+       createSurveysTable : function(date,title,id,skippable,tasks){
+         var deferred = $q.defer();
+         var db = this.getConnectionObject();
+         $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Surveys (id INTEGER PRIMARY KEY AUTOINCREMENT,date TEXT,title TEXT,surveyId TEXT,skippable TEXT,tasks TEXT)');
+         var  dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO Surveys (date,title,surveyId,skippable,tasks) VALUES (?,?,?,?,?)', [date,title,id,skippable,tasks])
+         .then(function(res) {
+             return res.insertId;
+         });
+         deferred.resolve(dataReturn);
+         return deferred.promise;
+       },
+     createTasksTable : function(taskId,steps){
        var deferred = $q.defer();
        var db = this.getConnectionObject();
-       $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Surveys(id INTEGER PRIMARY KEY AUTOINCREMENT,surveyJson)');
-       var  dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO Surveys (surveyJson) VALUES (?)', [surveyJson])
-       .then(function(res) {
-           return res.insertId;
-       });
-       deferred.resolve(dataReturn);
-       return deferred.promise;
-     },
-     createTasksTable : function(tasksJson){
-       var deferred = $q.defer();
-       var db = this.getConnectionObject();
-       $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,tasksJson)');
-       var  dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO Tasks (tasksJson) VALUES (?)', [tasksJson])
+       $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,taskId TEXT,steps TEXT)');
+       var  dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO Tasks (taskId,steps) VALUES (?,?)', [taskId,steps])
        .then(function(res) {
            return res.insertId;
        });

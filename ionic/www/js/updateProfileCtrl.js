@@ -11,6 +11,7 @@ angular.module('updateProfileCtrl',[])
       profileDataManager.getAuthTokenForUser(email).then(function(response){
         if (response) {
           $scope.authToken = response.token;
+          $scope.userId = response.userId;
         }
       });
 
@@ -101,6 +102,17 @@ angular.module('updateProfileCtrl',[])
                              }
            });
        }
+    }
+
+    $scope.emailConsent = function (){
+      var userId = $scope.userId;
+      // get consent data saved locally
+      profileDataManager.getUserConsentJson(userId).then(function(res){
+           if (res) {
+             //pdfMake.createPdf(res.docDefinition).open();
+             pdfMake.createPdf(res.docDefinition).download();
+           }
+        });
     }
 
      $scope.toggleNotification = function(){

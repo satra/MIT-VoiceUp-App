@@ -59,24 +59,47 @@ databaseManager.checkDatabaseExists().then(function(res){
             var eligibility = JSON.stringify(response.eligibility);
             var profile = JSON.stringify(response.profile);
             var consent_screens = JSON.stringify(response.consent_screens);
-            var surveyJson =  JSON.stringify(response.surveys);
-            var tasksJson =  JSON.stringify(response.tasks);
             var completeJson = JSON.stringify(response);
-
+            var surveyJson =  response.surveys;
+            var tasksJson =  response.tasks;
+            var today = new Date() ;
             databaseManager.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
-                 console.log('createAppContentTable  '+ resp);
+             console.log('Create app table');
             });
 
-            databaseManager.createTasksTable(tasksJson).then(function(resp){
-                 console.log('createTasksTable  '+ resp);
-            });
+          //==============create survey table==========
+          for (var i = 0; i < surveyJson.length; i++) {
+               var date = surveyJson[i].date;
+               var title = surveyJson[i].title;
+               var id = surveyJson[i].id;
+               var skippable = JSON.stringify(surveyJson[i].skippable);
+               var tasks = JSON.stringify(surveyJson[i].tasks) ;
+               var dateArray =date.split(" ");
+               var min = dateArray[0];
+               var month = dateArray[1];
+               var day = dateArray[2];
+               //var month = dateArray[3];
+               if(month == "*"){
+                 month = today.getMonth();
+               }
+               if(day == "*"){
+                day = today.getDate();
+               }
+               var customDate = day+'-'+month+'-'+today.getFullYear() ;
+               databaseManager.createSurveysTable(customDate,title,id,skippable,tasks).then(function(respw){
+                console.log('insert survey '+respw);
+               });
+          }
+
+    //==============create Tasks table==========
+            for (var task in tasksJson) {
+                        databaseManager.createTasksTable(task,JSON.stringify(tasksJson[task].steps)).then(function(resp){
+                              console.log('createTasksTable  '+ resp);
+                         });
+            }
 
             databaseManager.createSurveyTempTable().then(function(resp){
                  console.log('createSurveyTempTable  '+ resp);
-            });
-
-            databaseManager.createSurveysTable(surveyJson).then(function(resp){
-                   console.log('createSurveysTable  '+ resp);
             });
 
             databaseManager.createSurveyQuestionExpiryTable().then(function(resp){

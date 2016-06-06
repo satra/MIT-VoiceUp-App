@@ -69,7 +69,7 @@ angular.module('profileDataManager', [])
             var deferred = $q.defer();
             var db = databaseManager.getConnectionObject();
            if (emailId) {
-             var query = "SELECT token FROM Session WHERE emailId ='"+emailId.trim()+"'";
+             var query = "SELECT token,userId FROM Session WHERE emailId ='"+emailId.trim()+"'";
              var token =  $cordovaSQLite.execute(db, query).then(function(res) {
                        var len = res.rows.length;
                        for (var i=0; i<len; i++){
@@ -130,6 +130,23 @@ getUserSettingsJson : function(emailId){
              });
          deferred.resolve(insert);
          return deferred.promise;
+      },
+      getUserConsentJson : function(userId){
+              var deferred = $q.defer();
+              var db = databaseManager.getConnectionObject();
+              if (userId) {
+               var query = "SELECT resultJson FROM Results WHERE resultType ='consent' AND userId ='"+userId.trim()+"' ";
+               var resultJson =  $cordovaSQLite.execute(db, query).then(function(res) {
+                         var len = res.rows.length;
+                         for (var i=0; i<len; i++){
+                          resultJson = JSON.parse(res.rows.item(i).resultJson);
+                         }
+                         return resultJson;
+                     }, function (err) {
+                   });
+                }
+                deferred.resolve(resultJson);
+                return deferred.promise;
       },
 logInViaPasscode :  function(emailId,passcode){
      var deferred = $q.defer();

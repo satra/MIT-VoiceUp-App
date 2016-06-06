@@ -1,7 +1,7 @@
 angular.module('consent',[])
 //=======Home screen controller======================
 .controller('consentCtrl', function($scope,$stateParams,$ionicHistory,$cordovaSQLite,$controller,
-  $ionicModal,$http,$compile,$ionicLoading,userService,$rootScope,databaseManager,consentDataManager,irkResults,$state,$location,$window) {
+  $ionicModal,$http,$compile,$ionicLoading,userService,$rootScope,databaseManager,consentDataManager,irkResults,irkConsentDocument,$state,$location,$window) {
 
     consentDataManager.getAllConsentScreens().then(function(response){
     $scope.enable_review = response.enable_review;
@@ -30,7 +30,7 @@ $scope.closeModal = function() {
           childresult.every(function(value, key){
           if (value.type == "IRK-CONSENT-REVIEW-STEP") {
           if (value.answer) {
-            $rootScope.consentResult = irkResults.getResults();
+          $rootScope.consentResult = irkConsentDocument.getDocument();
           $state.transitionTo('loadSignUp');
           }else {
           $state.transitionTo('home');
