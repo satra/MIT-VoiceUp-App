@@ -20,7 +20,8 @@ document.addEventListener("resume", function() {
 
      pinModalService.init('templates/pinScreen.html', $scope)
          .then(function(pin) {
-          pin.show();
+           $scope.modal = pin;
+           $scope.modal.show();
         });
      }
 
@@ -96,6 +97,7 @@ surveyDataManager.getSurveyListForToday().then(function(response){
     var list = '';
     var items = [];
     var today = new Date() ;
+
     for (var i = 0; i < surveyMainList.length; i++) {
             var title = surveyMainList[i].title;
             var id = surveyMainList[i].id;
@@ -118,6 +120,7 @@ surveyDataManager.getSurveyListForToday().then(function(response){
             items.push(surveyMainList[i]);
             }
        }
+
        var formattedDate = today.getDate()+'-'+today.getMonth()+'-'+today.getFullYear() ;
        if (items) {
          profileDataManager.getUserIDByEmail($rootScope.emailId).then(function (userId){
