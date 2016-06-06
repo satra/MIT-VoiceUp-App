@@ -26,6 +26,21 @@ document.addEventListener("resume", function() {
 
   }, false);
 
+  // ==== Close the existing modal and open Sign in html in new modal======== make these as common function
+  $scope.openSignIn = function() {
+    $ionicHistory.clearCache().then(function(){
+        $scope.pin.remove();
+        $state.transitionTo('signIn');
+    });
+  };
+
+  // ==== Close the existing modal and open Sign in html in new modal========
+  $scope.showEligibilityTestView = function() {
+    $ionicHistory.clearCache().then(function(){
+        $scope.pin.remove();
+        $state.transitionTo('eligiblityTest');
+    });
+  };
 
 //sign in via email and passcode on change of passcode call this function
   $scope.loginViaPasscode = function (){
@@ -67,6 +82,9 @@ document.addEventListener("resume", function() {
     }
 //============== resume handler finished ============================================
 
+
+
+//============survey manager ========================================================
 surveyDataManager.getTaskListJson().then(function(response){
     $scope.taskList = response ;
 });
@@ -104,7 +122,7 @@ surveyDataManager.getSurveyListForToday().then(function(response){
        if (items) {
          profileDataManager.getUserIDByEmail($rootScope.emailId).then(function (userId){
            $scope.userId = userId ;
-           $scope.list= items ;// add survey to html modal
+           $scope.list= items ; // add survey to html modal
            // now check any entries for today in surveytmp table
            surveyDataManager.checkSurveyExistsInTempTableForToday(formattedDate,userId).then(function(res){
            if (!res) {

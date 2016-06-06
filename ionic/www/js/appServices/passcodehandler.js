@@ -18,7 +18,6 @@ angular.module('passcodehandler', [])
        $scope.modal.hide();
      };
      $scope.$on('$destroy', function() {
-       $scope.modal.remove();
      });
 
     return promise;

@@ -78,8 +78,8 @@ angular.module('updateProfileCtrl',[])
        $scope.modal.remove();
      }
 
+ //====================userLogout
      $scope.logOut = function(){
-       //userLogout
        var logoutToken = $scope.authToken;
        if (logoutToken) {
          var confirmPopup = $ionicPopup.confirm({
