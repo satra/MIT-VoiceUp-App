@@ -1,8 +1,8 @@
 angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
 .controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
-   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,
-   $ionicLoading,profileDataManager,databaseManager,$state,dataStoreManager) {
+   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$cordovaEmailComposer,
+   $ionicLoading,profileDataManager,databaseManager,$state,dataStoreManager,$cordovaFileTransfer) {
 
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
@@ -109,8 +109,33 @@ angular.module('updateProfileCtrl',[])
       // get consent data saved locally
       profileDataManager.getUserConsentJson(userId).then(function(res){
            if (res) {
-             //pdfMake.createPdf(res.docDefinition).open();
-             pdfMake.createPdf(res.docDefinition).download();
+            //pdfMake.createPdf(res.docDefinition).download("consentdoc");
+            var data;
+            pdfMake.createPdf(res.docDefinition).getDataUrl(function(dataURL) {
+              var email = {
+                     attachments: [
+                       dataURL
+                     ],
+                     subject: 'Consent doc',
+                     isHtml: true
+                  };
+
+              $cordovaEmailComposer.isAvailable().then(function() {
+                    $cordovaEmailComposer.open(email).then(null, function () {
+                      console.log('email ');
+                    });
+              }, function () {
+                    console.log('email not available' );
+                  });
+            });
+
+            // pdfMake.createPdf(res.docDefinition).getBase64(function(encodedString) {
+            //   console.log(encodedString);
+            // });
+
+            // pdfMake.createPdf(res.docDefinition).getBuffer(function(result) {
+            //  });
+
            }
         });
     }
