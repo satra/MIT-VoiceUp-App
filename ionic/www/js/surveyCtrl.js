@@ -1,7 +1,7 @@
 angular.module('surveyCtrl',[])
 // ==== Dummy contorller need to be removed later before production  ========
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
-  pinModalService,surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,$q) {
+ surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,$q) {
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
@@ -18,12 +18,14 @@ document.addEventListener("resume", function() {
        $scope.emails = emailArray;
      });
 
-     pinModalService.init('templates/pinScreen.html', $scope)
-         .then(function(pin) {
-           $scope.modal = pin;
-           $scope.modal.show();
-        });
-     }
+    $ionicModal.fromTemplateUrl('templates/pinScreen.html', {
+              scope: $scope,
+              animation: 'slide-in-up'
+            }).then(function(modal) {
+              $scope.pin = modal;
+              $scope.pin.show();
+      });
+   }
 
   }, false);
 
