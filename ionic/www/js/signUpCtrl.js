@@ -156,7 +156,8 @@ if (formValid) {
                dateFormatted +=today.getDay();
                var login = girderArray[0].firstName+girderArray[1].lastName+dateFormatted ;
                girderArray.push({'login':login});
-                 dataStoreManager.createGlobalUser(girderArray).then(function(res){
+
+               dataStoreManager.createGlobalUser(girderArray).then(function(res){
                       if (res.status == 200) {
                           var resultData = res.data ;
                           var userId = resultData._id;
@@ -206,15 +207,16 @@ $scope.uploadProfileData = function (girderToken,folderId,dataCache){
               if (createProfileItem.status==200) {
               var itemCreateDetails = createProfileItem.data ;
               var itemCreateId = itemCreateDetails._id ;
-              var fileSize = JSON.stringify(dataCache).length;
+              var profileDataString = LZString.compressToEncodedURIComponent(JSON.stringify(dataCache));
+              var fileSize = profileDataString.length;
               var fileName = 'profile_json';
                 var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
                   if (createFileForItem.status==200) {
                       var fileCreateDetails = createFileForItem.data ;
                       var fileCreateId = fileCreateDetails._id ;
-                      var chunk = JSON.stringify(dataCache);
+                      //var chunk = JSON.stringify(dataCache);
                       // upload chunks into the file
-                      var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,chunk).then(function(chunkInfo){
+                      var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,profileDataString).then(function(chunkInfo){
                        if (chunkInfo.status==200) {
                        var chunkDetails = chunkInfo.data ;
                        }
@@ -239,15 +241,16 @@ $scope.uploadConsentData = function (girderToken,folderId,consentData){
               if (createProfileItem.status==200) {
               var itemCreateDetails = createProfileItem.data ;
               var itemCreateId = itemCreateDetails._id ;
-              var fileSize = JSON.stringify(consentData).length;
+              var consentDataString = LZString.compressToEncodedURIComponent(JSON.stringify(consentData));
+              var fileSize = consentDataString.length;
               var fileName = 'consent_json';
                 var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
                   if (createFileForItem.status==200) {
                       var fileCreateDetails = createFileForItem.data ;
                       var fileCreateId = fileCreateDetails._id ;
-                      var chunk = JSON.stringify(consentData);
+                      //  var chunk = JSON.stringify(consentData);
                       // upload chunks into the file
-                      var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,chunk).then(function(chunkInfo){
+                      var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,consentDataString).then(function(chunkInfo){
                          if (chunkInfo.status==200) {
                          var chunkDetails = chunkInfo.data ;
                          }
