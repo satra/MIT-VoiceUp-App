@@ -251,7 +251,7 @@
     }
   },
   "surveys": [{
-      "date": "0 5 12 * *",
+      "date": "0 7 6 * *",
       "title": "Mental Health Survey",
       "id" : "1",
       "skippable": [
@@ -278,7 +278,7 @@
       ]
     },
    {
-      "date": "0 5 12 * *",
+      "date": "0 6 6 * *",
       "title": "Mental Health Survey 2",
       "id" : "2",
 
@@ -353,7 +353,7 @@
       ]
     },
    {
-      "date": "0 5 17 * *",
+      "date": "0 6 17 * *",
       "title": "Mental Health Survey 5",
       "id" : "9",
       "skippable": [
@@ -407,7 +407,7 @@
       ]
     },
   {
-      "date": "0 5 19 * *",
+      "date": "0 6 8 * *",
       "title": "Mental Health Survey 7",
       "id" : "10",
       "skippable": [

@@ -9,7 +9,7 @@ angular.module('databaseManager', [])
         var deferred = $q.defer();
         var query = "SELECT * FROM AppContent";
         var db = this.getConnectionObject();
-        // var query = "DROP TABLE Survey";
+      //  var query = "DROP TABLE SurveyQuestionExpiry";
         var  dataReturn =  $cordovaSQLite.execute(db, query)
         .then(function(res) {
         dataReturn = res.rows;
@@ -48,11 +48,11 @@ angular.module('databaseManager', [])
          deferred.resolve(dataReturn);
          return deferred.promise;
        },
-     createTasksTable : function(taskId,steps){
+     createTasksTable : function(taskId,steps,timeLimit){
        var deferred = $q.defer();
        var db = this.getConnectionObject();
-       $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,taskId TEXT,steps TEXT)');
-       var  dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO Tasks (taskId,steps) VALUES (?,?)', [taskId,steps])
+       $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Tasks (id INTEGER PRIMARY KEY AUTOINCREMENT,taskId TEXT,steps TEXT,timeLimit TEXT)');
+       var  dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO Tasks (taskId,steps,timeLimit) VALUES (?,?,?)', [taskId,steps,timeLimit])
        .then(function(res) {
            return res.insertId;
        });
@@ -62,14 +62,14 @@ angular.module('databaseManager', [])
      createSurveyTempTable : function(){
        var deferred = $q.defer();
        var db = this.getConnectionObject();
-       var  dataReturn = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS SurveyTemp (id INTEGER PRIMARY KEY AUTOINCREMENT,userId TEXT,surveyId TEXT,questionId TEXT,isSkipped TEXT,creationDate TEXT)');
+       var  dataReturn = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS SurveyTemp (id INTEGER PRIMARY KEY AUTOINCREMENT,userId TEXT,surveyId TEXT,questionId TEXT,isSkipped TEXT,creationDate TEXT,skippable TEXT)');
        deferred.resolve(dataReturn);
        return deferred.promise;
      },
      createSurveyQuestionExpiryTable : function(){
        var deferred = $q.defer();
        var db = this.getConnectionObject();
-       var  dataReturn = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS SurveyQuestionExpiry (id INTEGER PRIMARY KEY AUTOINCREMENT,userId TEXT,surveyId TEXT,questionId TEXT,creationDate DATETIME,expiryDate DATETIME)');
+       var  dataReturn = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS SurveyQuestionExpiry (id INTEGER PRIMARY KEY AUTOINCREMENT,userId TEXT,surveyId TEXT,questionId TEXT,creationDate DATETIME,expiryDate DATETIME,skippable TEXT)');
        deferred.resolve(dataReturn);
        return deferred.promise;
      }

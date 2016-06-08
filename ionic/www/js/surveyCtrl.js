@@ -1,7 +1,7 @@
 angular.module('surveyCtrl',[])
 // ==== Dummy contorller need to be removed later before production  ========
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
- surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,$q) {
+ surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,$q,uploadDataService) {
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
@@ -87,49 +87,16 @@ document.addEventListener("resume", function() {
 
 
 
-//============survey manager ========================================================
-surveyDataManager.getTaskListJson().then(function(response){
-    $scope.taskList = response ;
-});
-
-
 surveyDataManager.getSurveyListForToday().then(function(response){
-    $scope.surveyList = response;
+    $scope.list = response;
     var surveyMainList = response;
-    var list = '';
-    var items = [];
     var today = new Date() ;
-
-    for (var i = 0; i < surveyMainList.length; i++) {
-            var title = surveyMainList[i].title;
-            var id = surveyMainList[i].id;
-            var date = surveyMainList[i].date;
-            var dateArray =date.split(" ");
-            var min = dateArray[0];
-            var month = dateArray[1];
-            var day = dateArray[2];
-            //var month = dateArray[3];
-            if(month == "*"){
-              month = today.getMonth();
-            }
-            else {
-              month = month-1;
-            }
-            if(day == "*"){
-             day = today.getDate();
-            }
-            if(today.getMonth() == month && today.getDate() == day){
-            items.push(surveyMainList[i]);
-            }
-       }
-
-       var formattedDate = today.getDate()+'-'+today.getMonth()+'-'+today.getFullYear() ;
-       if (items) {
+    var creationDate = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
+    if (surveyMainList) {
          profileDataManager.getUserIDByEmail($rootScope.emailId).then(function (userId){
            $scope.userId = userId ;
-           $scope.list= items ; // add survey to html modal
            // now check any entries for today in surveytmp table
-           surveyDataManager.checkSurveyExistsInTempTableForToday(formattedDate,userId).then(function(res){
+           surveyDataManager.checkSurveyExistsInTempTableForToday(creationDate,userId).then(function(res){
            if (!res) {
                 $ionicLoading.show();
                 // if survey question doesn't exists clear the table for the user
@@ -138,40 +105,51 @@ surveyDataManager.getSurveyListForToday().then(function(response){
                       console.log('expiry entry from controller '+res);
                  });
 
+                var promises = [];
                 // then loop through the survey and update history and temp table
-                for (var k = 0; k < items.length; k++) {
-                  for (var M = 0; M < items[k].tasks.length; M++) {
-                         var questionId = items[k].tasks[M] ;
-                         var surveyId = items[k].id ;
-                         var creationDate = formattedDate ;
-
-                         //get question expiry for the Id
-                         if ($scope.taskList[questionId].timelimit) {
-                         // time limit exists add entry into expiry table
-                         expiryDays = today.getDate() + 2 ;
-                         var expiryDate = expiryDays +'-'+today.getMonth()+'-'+today.getFullYear() ;
-
-                         surveyDataManager.addThisSurveyToExpiry($scope.userId,surveyId,questionId,creationDate,expiryDate)
-                         .then(function(res){
-                               console.log('expiry entry from controller '+res);
-                             });
-                         }
-                         // make an entry into temp table
-                         surveyDataManager.addSurveyToUserForToday($scope.userId,surveyId,questionId,creationDate)
-                         .then(function(res){
-                             console.log('log from controller '+res);
-                         });
-
+                for (var k = 0; k < surveyMainList.length; k++) {
+                    var taskList = JSON.parse(surveyMainList[k].tasks) ;
+                    var skippableList = JSON.parse(surveyMainList[k].skippable) ;
+                    var surveyId = surveyMainList[k].id ;
+                    for (var M = 0; M < taskList.length; M++) {
+                    var questionId = taskList[M] ;
+                    var skippable = false ;
+                    for (var L = 0; L < skippableList.length; L++) {
+                        if (questionId == skippableList[L]) {
+                          skippable = true ;
                         }
-                   }
+                     }
+                     promises.push(surveyDataManager.addSurveyToUserForToday($scope.userId,surveyId,questionId,creationDate,skippable));
+                    }
+                }
+            // resolve all the promises
+            $q.all(promises).then(function(res){
+               for (var i = 0; i < res.length; i++) {
+                  surveyDataManager.getSurveyTempRowByInsertId(res[i]).then(function(row){
+                      if (row) {
+                        var questionId  = row.questionId ;
+                        surveyDataManager.getQuestionExpiry(questionId).then(function(limitExists){
+                             if (limitExists) {
+                                   expiryDays = today.getDate() + 2 ;
+                                   var expiryDate = expiryDays +'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
+                                   surveyDataManager.addThisSurveyToExpiry($scope.userId,row.surveyId,row.questionId,creationDate,expiryDate,row.skippable)
+                                   .then(function(resp){
+                                      console.log('expiry entry from controller '+resp);
+                                   });
+                             }
+                        });
+                      }
+                  });
+                }
+            });
 
-              // pull from expiry table and put it in temp table where questions expiry still exists
-              surveyDataManager.getUnansweredQuestionsLessThanToDate($scope.userId,formattedDate).then(function(resp){
+        // pull from expiry table and put it in temp table where questions expiry still exists
+        surveyDataManager.getUnansweredQuestionsLessThanToDate($scope.userId,creationDate).then(function(resp){
                  console.log('control under fetching un answered questions ');
                            if (resp.rows.length >0 ) {
                              // insert unanswered questions into temp table
                             for (var i = 0; i < resp.rows.length; i++) {
-                            surveyDataManager.addSurveyToUserForToday($scope.userId,'',resp.rows[i].questionId,formattedDate)
+                            surveyDataManager.addSurveyToUserForToday($scope.userId,'',resp.rows[i].questionId,creationDate,resp.rows[i].skippable)
                               .then(function(res){
                                   console.log('log from un answered controller '+res);
                                });
@@ -181,7 +159,8 @@ surveyDataManager.getSurveyListForToday().then(function(response){
                             $ionicLoading.hide();
                           }
                    });
-                }
+
+               }
             });
          });
       }
@@ -189,77 +168,72 @@ surveyDataManager.getSurveyListForToday().then(function(response){
 
 $scope.launchSurvey = function (idSelected){
       $scope.cancelSteps = false ;
-      var deferred = $q.defer();
       // get the survey attached for this user
       var today = new Date() ;
-      var formattedDate = today.getDate()+'-'+today.getMonth()+'-'+today.getFullYear();
-
+      var formattedDate = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
       surveyDataManager.getTaskListByUserId($scope.userId,formattedDate).then(function(response){
-       $scope.tasks = response.rows ;
-        if ($scope.tasks) {
-         var surveyHtml = ''; var onlySkippedQuestionHtml = '';
-         //is skippable may needed future to make a screen skippable
-         var surveys = $scope.surveyList;
-         var taskList = $scope.taskList;
-         for (var i = 0; i < surveys.length; i++) {
-               var id = surveys[i].id;
-               if(id == idSelected){ // get the selected survey data
-               var skippable = surveys[i].skippable;
-               var tasksneeded  = $scope.tasks; // get the list of tasks
-               var isSkippedQuestions = false ;
-               for (var k = 0; k < tasksneeded.length; k++) {
+        var tasks = response.rows;
+        if (tasks) {
+         var surveyHtml = ''; var isSkippedQuestions ='';
+         var onlySkippedQuestionHtml = '';
+         var promises = []; // an array of promises
+         for (var i = 0; i < tasks.length; i++) {
+               var questionId = tasks[i].questionId;
+               var isSkipped = tasks[i].isSkipped;
+               //have a check to find out skipped questions
+               if (isSkipped === "YES") {
+                  isSkippedQuestions = true ;
+               }
+          promises.push(surveyDataManager.getTaskListByquestionId(questionId));
+      }
 
-                     var taskselected = tasksneeded[k].questionId ;
-
-                     //find out skippable true or false
-                     var disableSkip = false ;
-                     for (var L = 0; L < skippable.length; L++) {
-                     if (taskselected == skippable[L]) {
-                     disableSkip = true ;
-                       }
-                     }
-
-                     //have a check to find out skipped questions
-                     if (tasksneeded[k].isSkipped === "YES") {
-                        var isSkippedQuestions = true ;
-                     }
-
-                      var questionId = tasksneeded[k].questionId;
-                      var steps = taskList[tasksneeded[k].questionId].steps;
-
-                      for (var j = 0; j < steps.length; j++) {
-                       var type = steps[j].type;
-                       surveyHtml += $scope.activitiesDivGenerator(questionId,steps[j],disableSkip);
-                       // compose skipped html as well
-                        if (tasksneeded[k].isSkipped === "YES") {
-                             console.log(questionId+' '+ tasksneeded[k].isSkipped );
-                        onlySkippedQuestionHtml += $scope.activitiesDivGenerator(questionId,steps[j],disableSkip);
-                           }
-                        }
-                 }
-
-                 if (isSkippedQuestions) {
-                   var confirmPopup = $ionicPopup.confirm({
-                     title: 'Only Skipped Question',
-                     template: 'Want to display only skipped question ?. '
-                   });
-                   confirmPopup.then(function(res) {
-                     if(res) {
-                      $scope.showTasksForSlectedSurvey(onlySkippedQuestionHtml);
-                     } else {
-                      $scope.showTasksForSlectedSurvey(surveyHtml);
-                     }
-                   });
-                  }else {
-                   $scope.showTasksForSlectedSurvey(surveyHtml);
-                 }
-             }
+      $q.all(promises).then(function(stepsData){
+        for (var T = 0; T < stepsData.length; T++) {
+          var steps = JSON.parse(stepsData[T]);
+          var questionId = tasks[T].questionId ;
+          var disableSkip = tasks[T].skippable ;
+          console.log(disableSkip);
+          for (var k = 0; k < steps.length; k++) {
+          surveyHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
+          // compose skipped html as well
+          if (tasks[T].isSkipped === "YES") {
+           onlySkippedQuestionHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
           }
         }
+      }
+
+    if (surveyHtml || onlySkippedQuestionHtml) {
+                if (isSkippedQuestions) {
+                           var confirmPopup = $ionicPopup.confirm({
+                             title: 'Only Skipped Question',
+                             template: 'Want to display only skipped question ?. '
+                           });
+                           confirmPopup.then(function(res) {
+                            if(res) {
+                             $scope.showTasksForSlectedSurvey(onlySkippedQuestionHtml);
+                            } else {
+                             $scope.showTasksForSlectedSurvey(surveyHtml);
+                            }
+                         });
+                       }else {
+                            $scope.showTasksForSlectedSurvey(surveyHtml);
+                       }
+         }
+      });
+     }
    });
 };
 
 $scope.showTasksForSlectedSurvey = function(surveyHtml){
+
+  profileDataManager.getFolderIDByEmail($rootScope.emailId).then(function (folderId){
+    $scope.folderId = folderId ;
+  });
+
+  profileDataManager.getAuthTokenForUser($rootScope.emailId).then(function (authToken){
+    $scope.authToken = authToken.token ;
+  });
+
   $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                              '<irk-ordered-tasks>'+
                                              surveyHtml +
@@ -268,8 +242,8 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
                                              scope: $scope,
                                              animation: 'slide-in-up'
                                            });
-         $scope.modal = $scope.learnmore;
-         $scope.learnmore.show();
+  $scope.modal = $scope.learnmore;
+  $scope.learnmore.show();
 };
 
 $scope.closeModal = function() {
@@ -279,31 +253,84 @@ $scope.closeModal = function() {
       $ionicLoading.hide();
     }else{
      var childresult = irkResults.getResults().childResults ;
+
      for (var i = 0; i < childresult.length; i++) {
        var questionId = childresult[i].id ;
        var answer = childresult[i].answer ;
        var isSkipped = '';
        if (answer) {
        isSkipped = "NO";
-             // if answered a question clear form history table so it is answered and no need to add for upcoming survey
-             surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
-           });
-        }else{
-          isSkipped = "YES";
-           surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
-           });
+       // if answered a question clear form history table so it is answered and no need to add for upcoming survey
+       surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
+       });
+      }else{
+       isSkipped = "YES";
+       surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
+       });
+      }
+    }
+    //log result to server
+    var folderId = $scope.folderId ;
+    var girderToken = $scope.authToken ;
+    var timeStamp = new Date();
+    var itemName = 'results'+timeStamp;
+    var fileName = 'results_json_'+timeStamp;
+    //result entry into the result table
+    surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
+    //upload results
+    $scope.uploadServerData(girderToken,folderId,JSON.stringify(childresult),itemName,fileName);
+      for (var i = 0; i < childresult.length; i++) {
+        var questionId = childresult[i].id ;
+        var type = childresult[i].type;
+        if (type=="IRK-AUDIO-TASK") {
+         var fileURL = childresult[i].fileURL;
+         var contentType = childresult[i].contentType;
+         if (fileURL) {
+          // upload to server
+          data =  LZString.compressToEncodedURIComponent(fileURL);
+          var itemName = fileURL+timeStamp;
+          var fileName = fileURL+timeStamp;
+          $scope.uploadServerData(girderToken,folderId,fileURL,itemName,fileName);
+         }
         }
-     }
-      //result entry into the result table
-      surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
+      }
         $ionicLoading.hide();
-      });
-
+     });
     }
   };
 
+  //=== upload consent json for the file ===========================================
+  $scope.uploadServerData = function (girderToken,folderId,uploadData,itemName,fileName){
+          try {
+            var deferred = $q.defer();
+            var createItem = uploadDataService.createItemForFolder(girderToken,folderId,itemName).then(function(createItem){
+                if (createItem.status==200) {
+                var itemCreateDetails = createItem.data ;
+                var itemCreateId = itemCreateDetails._id ;
+                var dataString = LZString.compressToEncodedURIComponent(uploadData);
+                var fileSize = dataString.length;
+                  var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
+                    if (createFileForItem.status==200) {
+                        var fileCreateDetails = createFileForItem.data ;
+                        var fileCreateId = fileCreateDetails._id ;
+                        var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
+                           if (chunkInfo.status==200) {
+                           var chunkDetails = chunkInfo.data ;
+                           console.log(itemName+' upload info '+chunkDetails);
+                           }
+                         });
+                       }
+                   });
+                }
+             });
+             deferred.resolve(createItem);
+            }
+          catch(err) {
+            console.log('error'+err);
+          }
+};
 
-   $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
+$scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
       var type = stepData.type;
       var customDiv = '';
    //2============================ generate div using switch looking type ====

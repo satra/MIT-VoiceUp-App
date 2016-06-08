@@ -80,7 +80,7 @@ databaseManager.checkDatabaseExists().then(function(res){
                var day = dateArray[2];
                //var month = dateArray[3];
                if(month == "*"){
-                 month = today.getMonth();
+                 month = today.getMonth()+1;
                }
                if(day == "*"){
                 day = today.getDate();
@@ -93,9 +93,13 @@ databaseManager.checkDatabaseExists().then(function(res){
 
     //==============create Tasks table==========
             for (var task in tasksJson) {
-                        databaseManager.createTasksTable(task,JSON.stringify(tasksJson[task].steps)).then(function(resp){
-                              console.log('createTasksTable  '+ resp);
-                         });
+              var timeLimit = tasksJson[task].timelimit ;
+              if (timeLimit === undefined || timeLimit === null) {
+              timeLimit = '';
+              }
+              databaseManager.createTasksTable(task,JSON.stringify(tasksJson[task].steps),timeLimit).then(function(resp){
+              console.log('createTasksTable  '+ resp);
+              });
             }
 
             databaseManager.createSurveyTempTable().then(function(resp){

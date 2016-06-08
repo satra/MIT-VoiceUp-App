@@ -110,7 +110,6 @@ angular.module('updateProfileCtrl',[])
       profileDataManager.getUserConsentJson(userId).then(function(res){
            if (res) {
             //pdfMake.createPdf(res.docDefinition).download("consentdoc");
-            var data;
             pdfMake.createPdf(res.docDefinition).getDataUrl(function(dataURL) {
               var email = {
                      attachments: [
@@ -119,12 +118,11 @@ angular.module('updateProfileCtrl',[])
                      subject: 'Consent doc',
                      isHtml: true
                   };
-
-              $cordovaEmailComposer.isAvailable().then(function() {
+            $cordovaEmailComposer.isAvailable().then(function() {
                     $cordovaEmailComposer.open(email).then(null, function () {
                       console.log('email ');
                     });
-              }, function () {
+            }, function () {
                     console.log('email not available' );
                   });
             });
@@ -135,8 +133,7 @@ angular.module('updateProfileCtrl',[])
 
             // pdfMake.createPdf(res.docDefinition).getBuffer(function(result) {
             //  });
-
-           }
+             }
         });
     }
 

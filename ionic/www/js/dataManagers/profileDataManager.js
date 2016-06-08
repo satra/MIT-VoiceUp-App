@@ -131,6 +131,21 @@ getUserSettingsJson : function(emailId){
          deferred.resolve(insert);
          return deferred.promise;
       },
+      getFolderIDByEmail : function(emailId){
+        var deferred = $q.defer();
+        var db = databaseManager.getConnectionObject();
+        var query = "SELECT folderId FROM User WHERE emailId ='"+emailId.trim()+"'";
+        var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
+               if(res.rows.length > 0){
+                 return res.rows.item(0).folderId ;
+               }else {
+                 return null ;
+                 }
+              }, function (err) {
+            });
+        deferred.resolve(insert);
+        return deferred.promise;
+      },
       getUserConsentJson : function(userId){
               var deferred = $q.defer();
               var db = databaseManager.getConnectionObject();
