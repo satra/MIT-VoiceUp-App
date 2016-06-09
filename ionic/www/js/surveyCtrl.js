@@ -1,7 +1,7 @@
 angular.module('surveyCtrl',[])
 // ==== Dummy contorller need to be removed later before production  ========
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
- surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,$q,uploadDataService) {
+ surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,dataStoreManager,$q,uploadDataService) {
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
@@ -178,8 +178,8 @@ $scope.launchSurvey = function (idSelected){
          var onlySkippedQuestionHtml = '';
          var promises = []; // an array of promises
          for (var i = 0; i < tasks.length; i++) {
-               var questionId = tasks[i].questionId;
-               var isSkipped = tasks[i].isSkipped;
+               var questionId = tasks.item(i).questionId;
+               var isSkipped = tasks.item(i).isSkipped;
                //have a check to find out skipped questions
                if (isSkipped === "YES") {
                   isSkippedQuestions = true ;
@@ -190,13 +190,13 @@ $scope.launchSurvey = function (idSelected){
       $q.all(promises).then(function(stepsData){
         for (var T = 0; T < stepsData.length; T++) {
           var steps = JSON.parse(stepsData[T]);
-          var questionId = tasks[T].questionId ;
-          var disableSkip = tasks[T].skippable ;
+          var questionId = tasks.item(T).questionId ;
+          var disableSkip = tasks.item(T).skippable ;
           console.log(disableSkip);
           for (var k = 0; k < steps.length; k++) {
           surveyHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
           // compose skipped html as well
-          if (tasks[T].isSkipped === "YES") {
+          if (tasks.item(T).isSkipped === "YES") {
            onlySkippedQuestionHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
           }
         }
@@ -269,16 +269,19 @@ $scope.closeModal = function() {
        });
       }
     }
-    //log result to server
-    var folderId = $scope.folderId ;
-    var girderToken = $scope.authToken ;
-    var timeStamp = new Date();
-    var itemName = 'results'+timeStamp;
-    var fileName = 'results_json_'+timeStamp;
+    // //log result to server
+    // var folderId = $scope.folderId ;
+    // var girderToken = $scope.authToken ;
+    // var timeStamp = new Date();
+    // var itemName = 'results'+timeStamp;
+    // var fileName = 'results_json_'+timeStamp;
     //result entry into the result table
     surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
     //upload results
-    $scope.uploadServerData(girderToken,folderId,JSON.stringify(childresult),itemName,fileName);
+    var timeStamp = new Date();
+    var itemName = 'results_item_'+timeStamp;
+    var fileName = 'results_json_'+timeStamp;
+    $scope.uploadServerData($scope.authToken,$scope.folderId,JSON.stringify(childresult),itemName,fileName);
       for (var i = 0; i < childresult.length; i++) {
         var questionId = childresult[i].id ;
         var type = childresult[i].type;
@@ -288,9 +291,9 @@ $scope.closeModal = function() {
          if (fileURL) {
           // upload to server
           data =  LZString.compressToEncodedURIComponent(fileURL);
-          var itemName = fileURL+timeStamp;
-          var fileName = fileURL+timeStamp;
-          $scope.uploadServerData(girderToken,folderId,fileURL,itemName,fileName);
+          var itemName = fileURL;
+          var fileName = fileURL;
+          $scope.uploadServerData($scope.authToken,$scope.folderId,data,itemName,fileName);
          }
         }
       }

@@ -214,18 +214,20 @@ $scope.uploadProfileData = function (girderToken,folderId,dataCache){
                   if (createFileForItem.status==200) {
                       var fileCreateDetails = createFileForItem.data ;
                       var fileCreateId = fileCreateDetails._id ;
+                        var profileDataString = LZString.compressToEncodedURIComponent(JSON.stringify(dataCache));
                       //var chunk = JSON.stringify(dataCache);
                       // upload chunks into the file
                       var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,profileDataString).then(function(chunkInfo){
                        if (chunkInfo.status==200) {
                        var chunkDetails = chunkInfo.data ;
+                        deferred.resolve(createProfileItem);
                        }
                        });
                      }
                  });
               }
            });
-           deferred.resolve(createProfileItem);
+
           }
         catch(err) {
           console.log('error'+err);
@@ -241,13 +243,14 @@ $scope.uploadConsentData = function (girderToken,folderId,consentData){
               if (createProfileItem.status==200) {
               var itemCreateDetails = createProfileItem.data ;
               var itemCreateId = itemCreateDetails._id ;
-              var consentDataString = LZString.compressToEncodedURIComponent(JSON.stringify(consentData));
+              var consentDataString = LZString.compressToEncodedURIComponent(JSON.stringify(consentData.docDefinition));
               var fileSize = consentDataString.length;
               var fileName = 'consent_json';
                 var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
                   if (createFileForItem.status==200) {
                       var fileCreateDetails = createFileForItem.data ;
                       var fileCreateId = fileCreateDetails._id ;
+                      var consentDataString = LZString.compressToEncodedURIComponent(JSON.stringify(consentData.docDefinition));
                       //  var chunk = JSON.stringify(consentData);
                       // upload chunks into the file
                       var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,consentDataString).then(function(chunkInfo){

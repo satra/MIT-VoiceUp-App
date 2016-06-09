@@ -145,11 +145,14 @@ angular.module('dataStoreManager', [])
            deferred.resolve(createFolder);
            return deferred.promise;
       },
-      getRemoteFolderId : function (parentId){
+      getRemoteFolderId : function (parentId,girderToken){
         var deferred = $q.defer();
-        var URL = base_url+'/folder/?parentType=user&parentId='+parentId ;
+        var URL = base_url+'folder/?parentType=user&text=user&parentId='+parentId ;
         var getFolder =    $http({ method:'GET',
                                       url: URL,
+                                      headers: {
+                                     'girder-token': girderToken
+                                      }
                                   })
                         .success(function(res) {
                                   return res;
@@ -165,11 +168,14 @@ angular.module('dataStoreManager', [])
            deferred.resolve(getFolder);
            return deferred.promise;
       },
-      getItemListByFolderId : function (folderId){
+      getItemListByFolderId : function (folderId,girderToken){
         var deferred = $q.defer();
         var URL = base_url+'/item?folderId='+folderId ;
         var getItemList =    $http({ method:'GET',
                                       url: URL,
+                                      headers: {
+                                     'girder-token': girderToken
+                                      }
                                   })
                         .success(function(res) {
                                   return res;
@@ -185,11 +191,14 @@ angular.module('dataStoreManager', [])
            deferred.resolve(getItemList);
            return deferred.promise;
       },
-      downloadFilesListForItem : function (itemId){
+      downloadFilesListForItem : function (itemId,girderToken){
         var deferred = $q.defer();
         var URL = base_url+'/item/'+itemId+'/files' ;
         var getItemList =    $http({ method:'GET',
                                       url: URL,
+                                      headers: {
+                                     'girder-token': girderToken
+                                      }
                                   })
                         .success(function(res) {
                                   return res;
@@ -206,11 +215,14 @@ angular.module('dataStoreManager', [])
            return deferred.promise;
       },
 
-      downloadFileById : function (file_id){
+      downloadFileById : function (file_id,girderToken){
         var deferred = $q.defer();
         var URL = base_url+'/file/'+file_id+'/download' ;
         var getItem =    $http({ method:'GET',
                                       url: URL,
+                                      headers: {
+                                     'girder-token': girderToken
+                                      }
                                   })
                         .success(function(res) {
                                   return res;

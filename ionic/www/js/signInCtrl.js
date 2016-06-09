@@ -6,10 +6,12 @@ angular.module('signInCtrl',[])
 //==================================Select email view ==========
 profileDataManager.getEmailList().then(function(response){
        var griderArray = new Array() ;
-       for (var i = 0; i < response.length; i++) {
-         griderArray.push({'emailId':response.item(i).emailId});
+       if (response) {
+         for (var i = 0; i < response.length; i++) {
+           griderArray.push({'emailId':response.item(i).emailId});
+         }
        }
-       $scope.emails = griderArray;
+        $scope.emails = griderArray;
     });
 
     $ionicModal.fromTemplateUrl('templates/signin-choose-email.html', {
@@ -129,6 +131,7 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                         var parentId = resultData.user['_id'];
                         $scope.emailId = email ;
                         $rootScope.emailId = email ;
+                        $scope.authToken = token;
                         // check if the email id exists locally else launch the set pin screen
                       profileDataManager.checkUserExistsByEmailOnly(email).then(function(userExistsId){
                         $scope.emailId = email ;
@@ -143,30 +146,31 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                 });
                           }else {
                             // valid user doesn't exists locally so get the profile data and set the pin
-                               dataStoreManager.getRemoteFolderId(parentId).then(function(folder){
+                               dataStoreManager.getRemoteFolderId(parentId,$scope.authToken).then(function(folder){
                                    if (folder) {
                                      var folderDetails = folder.data;
                                      var folderId = folderDetails[0]._id;
-                                     dataStoreManager.getItemListByFolderId(folderId).then(function(Item){
+                                     dataStoreManager.getItemListByFolderId(folderId,$scope.authToken).then(function(Item){
                                          if (Item) {
                                           var ItemList = Item.data;
+                                          console.log('Total item list for user folder '+ItemList);
                                           for (var i = 0; i < ItemList.length; i++) {
                                             var itemName = ItemList[i].name;
                                             var item_id = ItemList[i]._id;
                                              if (itemName == 'profile') {
                                                //get file list in an item
-                                               dataStoreManager.downloadFilesListForItem(item_id).then(function(files){
+                                               dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken).then(function(files){
                                                    if (files) {
+                                                     console.log('profile item file list '+files.data);
                                                      var filesList = files.data;
                                                      var fileId = filesList[0]._id;
                                                      for (var j = 0; j < filesList.length; j++) {
                                                        var fileName = filesList[j].name;
                                                        var file_id = filesList[j]._id;
                                                        if (fileName == 'profile_json') {
-                                                         dataStoreManager.downloadFileById(file_id).then(function(userProfile){
-                                                            var profileJson = userProfile.data; //  fetch this once girder intigrated
-
-                                                            profileDataManager.createNewUser(profileJson,$scope.emailId,parentId,folderId).then(function(insertId){
+                                                         dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(userProfile){
+                                                            var profileJson = LZString.decompressFromEncodedURIComponent(userProfile.data); //  fetch this once girder intigrated
+                                                            profileDataManager.createNewUser(JSON.parse(profileJson),$scope.emailId,parentId,folderId).then(function(insertId){
                                                                   if (insertId) {
                                                                     $scope.modal.remove();
                                                                     // ask to reset the pin
@@ -255,7 +259,7 @@ $scope.launchpinScreen = function(){
               var email = $scope.emailId ;
               if (email) {
                 profileDataManager.getUserIDByEmail(email).then(function(res){
-                       profileDataManager.addPasscodeToUserID(res,$scope.passcode,email).then(function(res){
+                       profileDataManager.addPasscodeToUserID(res,$scope.passcode,email,$scope.authToken).then(function(res){
                             $scope.modal.remove();
                             $scope.transition('tab.Activities');
                           });
