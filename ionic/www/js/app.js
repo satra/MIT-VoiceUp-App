@@ -6,8 +6,8 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','userService','signInCtrl','surveyCtrl','databaseManager','surveyDataManager','eligiblityDataManager',
-'profileDataManager','consentDataManager','dataStoreManager','homeCtrl','eligibility','signUp','consent',
-'updateProfileCtrl','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova'])
+'profileDataManager','consentDataManager','dataStoreManager','homeCtrl','dashboard','eligibility','signUp','consent',
+'updateProfileCtrl','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova','chart.js','flexcalendar','pascalprecht.translate'])
 .run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state) {
   $ionicPlatform.ready(function() {
 
@@ -124,7 +124,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     views: {
       'tab-dashboard': {
        templateUrl: 'templates/tab-activetasks.html',
-       controller: 'LearnCtrl'
+       controller: 'dashboardCtrl'
       }
     }
   })

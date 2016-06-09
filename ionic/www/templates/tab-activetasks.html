@@ -1,14 +1,10 @@
 <ion-view view-title="Active Tasks">
   <ion-content>
-  	<div class="card list">
+    <flex-calendar options1="options" events1="events"></flex-calendar> <br>
+    <canvas id="line" class="chart chart-line" data="data" labels="labels" legend="true" series="series" ></canvas>
+    <canvas id="line" class="chart chart-line" data="data1" labels="labels1" legend="true" series="series1"chart-colours="colours" ></canvas>
+    <canvas id="bar" class="chart chart-bar" data="data2" labels="labels2" legend="true" series="series2" ></canvas>
+    <canvas id="radar" class="chart chart-radar" data="data3" labels="labels3" legend="true" series="series3" ></canvas>
 
-  		<div class="item item-text-wrap">
-testing audio 
-        <button class="button button-block button-outline button-positive" ng-click="openModalVoiceActiveTask()">
-        Audio Task
-        </button>
-	    </div>
-
-	</div>
   </ion-content>
 </ion-view>
