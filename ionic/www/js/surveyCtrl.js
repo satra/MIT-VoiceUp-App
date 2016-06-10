@@ -271,12 +271,12 @@ $scope.closeModal = function() {
     //result entry into the result table
     surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
     //get item list by folderId
-    dataStoreManager.getItemListByFolderId($scope.folderId,girderToken).then(function(itemList){
+    dataStoreManager.getItemListByFolderId($scope.folderId,$scope.authToken).then(function(itemList){
       if (itemList.status==200) {
         var itemListDetails = itemList.data ;
         for (var i = 0; i < itemListDetails.length; i++) {
-          var itemName = itemList[i].name;
-          var item_id = itemList[i]._id;
+          var itemName = itemListDetails[i].name;
+          var item_id = itemListDetails[i]._id;
            if (itemName == 'results') {
                var today = new Date();
                var fileName = 'results_json_'+today;
@@ -285,7 +285,7 @@ $scope.closeModal = function() {
         }
       }
      });
-    $ionicLoading.hide();
+    //$ionicLoading.hide();
 
   /*    for (var i = 0; i < childresult.length; i++) {
         var questionId = childresult[i].id ;
@@ -320,7 +320,6 @@ $scope.closeModal = function() {
                         var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
                            if (chunkInfo.status==200) {
                            var chunkDetails = chunkInfo.data ;
-                           console.log(itemName+' upload info '+chunkDetails);
                            }
                          });
                        }
