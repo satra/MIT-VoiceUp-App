@@ -1,7 +1,7 @@
 angular.module('signInCtrl',[])
 //=======Home screen controller======================
 .controller('signInCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
-  dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
+  dataStoreManager,profileDataManager,surveyDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window,$q) {
 
 //==================================Select email view ==========
 profileDataManager.getEmailList().then(function(response){
@@ -153,7 +153,7 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                      dataStoreManager.getItemListByFolderId(folderId,$scope.authToken).then(function(Item){
                                          if (Item) {
                                           var ItemList = Item.data;
-                                          console.log('Total item list for user folder '+ItemList);
+                                          var promises = [];
                                           for (var i = 0; i < ItemList.length; i++) {
                                             var itemName = ItemList[i].name;
                                             var item_id = ItemList[i]._id;
@@ -161,7 +161,6 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                                //get file list in an item
                                                dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken).then(function(files){
                                                    if (files) {
-                                                     console.log('profile item file list '+files.data);
                                                      var filesList = files.data;
                                                      var fileId = filesList[0]._id;
                                                      for (var j = 0; j < filesList.length; j++) {
@@ -172,9 +171,28 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                                             var profileJson = LZString.decompressFromEncodedURIComponent(userProfile.data); //  fetch this once girder intigrated
                                                             profileDataManager.createNewUser(JSON.parse(profileJson),$scope.emailId,parentId,folderId).then(function(insertId){
                                                                   if (insertId) {
-                                                                    $scope.modal.remove();
-                                                                    // ask to reset the pin
-                                                                    $scope.launchpinScreen();
+                                                                    $scope.userId = insertId ;
+                                                                    $q.all(promises).then(function(res){
+                                                                       for (var i = 0; i < res.length; i++) {
+                                                                         var filesList = res[i].data ;
+                                                                         if (filesList) {
+                                                                                var fileName = filesList[i].name;
+                                                                                var file_id = filesList[i]._id;
+                                                                                if (fileName == 'consent_json') {
+                                                                                  dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(file){
+                                                                                     var fileJson = LZString.decompressFromEncodedURIComponent(file.data); //  fetch this once girder intigrated
+                                                                                       surveyDataManager.addResultToDb($scope.userId,JSON.parse(fileJson),'consent').then(function(response){
+                                                                                      });
+                                                                                  });
+                                                                              }
+                                                                            }
+                                                                       }
+                                                                    }).finally(function(){
+                                                                      $scope.modal.remove();
+                                                                      // ask to reset the pin
+                                                                      $scope.launchpinScreen();
+                                                                      }
+                                                                    );
                                                                   }
                                                               });
                                                          });
@@ -183,7 +201,12 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                                    }
                                                  });
                                               }
+
+                                            else  if (itemName == 'consent') {
+                                              promises.push(dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken));
+                                               }
                                            }
+
                                          }
                                      });
 
