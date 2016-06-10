@@ -119,10 +119,12 @@ angular.module('updateProfileCtrl',[])
       profileDataManager.getUserConsentJson(userId).then(function(res){
            if (res) {
             //pdfMake.createPdf(res.docDefinition).download("consentdoc");
-            pdfMake.createPdf(res).getDataUrl(function(dataURL) {
+            pdfMake.createPdf(res).getBase64(function(dataURL) {
+            //var file =   new Blob([dataURL]);
+
               var email = {
                      attachments: [
-                       dataURL
+                       "base64:consent.pdf//"+dataURL
                      ],
                      subject: 'Consent doc',
                      isHtml: true
