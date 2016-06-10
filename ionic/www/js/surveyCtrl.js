@@ -281,29 +281,22 @@ $scope.closeModal = function() {
                var today = new Date();
                var fileName = 'results_json_'+today;
                $scope.uploadResults($scope.authToken,item_id,JSON.stringify(childresult),fileName);
-           }
+               for (var k = 0; k < childresult.length; k++) {
+                     var type = childresult[k].type;
+                     if (type=="IRK-AUDIO-TASK") {
+                      var fileURL = childresult[k].fileURL;
+                      var contentType = childresult[k].contentType;
+                      if (fileURL) {
+                       var fileName = fileURL;
+                       $scope.uploadResults($scope.authToken,item_id,fileURL,fileName);
+                      }
+                     }
+                   }
+             }
         }
       }
+       });
      });
-    //$ionicLoading.hide();
-
-  /*    for (var i = 0; i < childresult.length; i++) {
-        var questionId = childresult[i].id ;
-        var type = childresult[i].type;
-        if (type=="IRK-AUDIO-TASK") {
-         var fileURL = childresult[i].fileURL;
-         var contentType = childresult[i].contentType;
-         if (fileURL) {
-          // upload to server
-          data =  LZString.compressToEncodedURIComponent(fileURL);
-          var fileName = fileURL;
-          $scope.uploadServerData($scope.authToken,$scope.folderId,data,fileName);
-         }
-        }
-      }
-      */
-     });
-
     }
   };
 
