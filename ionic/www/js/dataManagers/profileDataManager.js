@@ -48,7 +48,7 @@ angular.module('profileDataManager', [])
     },
 
 //==================================================Read============================================
-       getUserProfileFields: function(){
+    getUserProfileFields: function(){
                 var deferred = $q.defer();
                 var db = databaseManager.getConnectionObject();
                 var query = "SELECT profile FROM AppContent";
@@ -65,6 +65,24 @@ angular.module('profileDataManager', [])
                deferred.resolve(profile);
                return deferred.promise;
           },
+    getAppJSON: function(){
+                   var deferred = $q.defer();
+                   var db = databaseManager.getConnectionObject();
+                   var query = "SELECT completeJson FROM AppContent";
+                   var appjson =  $cordovaSQLite.execute(db, query).then(function(res) {
+                           var len = res.rows.length;
+                           for (var i=0; i<len; i++){
+                              appjson = JSON.parse(res.rows.item(i).completeJson);
+                             }
+                             return appjson;
+                             //resolve here
+                             deferred.resolve(appjson);
+                         }, function (err) {
+                       });
+                  deferred.resolve(appjson);
+                  return deferred.promise;
+          },
+
           getAuthTokenForUser:function(emailId){
             var deferred = $q.defer();
             var db = databaseManager.getConnectionObject();
@@ -292,7 +310,31 @@ checkUserExistsByEmailAndPasscode:function(email,passcode){
                           });
              deferred.resolve(update);
              return deferred.promise;
-       }
-      //============================= delete
+       },
+
+//============================= delete ======================================
+   removeUser : function (userId){
+              var deferred = $q.defer();
+              var db = databaseManager.getConnectionObject();
+              var query = "DELETE FROM User WHERE userId = ? " ;
+              var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                               .then(function(res) {
+                                deferred.resolve(res);
+                               }, function (err) {
+                           });
+              return deferred.promise;
+    },
+    removeUserSession : function (userId){
+      var deferred = $q.defer();
+      var db = databaseManager.getConnectionObject();
+      var query = "DELETE FROM Session WHERE userId = ? " ;
+      var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                       .then(function(res) {
+                        deferred.resolve(res);
+                       }, function (err) {
+                   });
+      return deferred.promise;
+    }
+
    }
 });

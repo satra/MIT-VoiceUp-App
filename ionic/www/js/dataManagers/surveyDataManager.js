@@ -211,6 +211,40 @@ getQuestionExpiry : function  (questionId){
                     });
       deferred.resolve(deleteData);
       return deferred.promise;
+   },
+
+  removeUserSurveyResults :  function (userId){
+       var deferred = $q.defer();
+       var db = databaseManager.getConnectionObject();
+       var query = "DELETE FROM Results WHERE userId = ? " ;
+       var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                        .then(function(res) {
+                         deferred.resolve(res);
+                        }, function (err) {
+                    });
+       return deferred.promise;
+     },
+     removeUserSurveyFromTempTable :  function (userId){
+      var deferred = $q.defer();
+      var db = databaseManager.getConnectionObject();
+      var query = "DELETE FROM SurveyTemp WHERE userId = ? " ;
+      var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                       .then(function(res) {
+                        deferred.resolve(res);
+                       }, function (err) {
+                   });
+      return deferred.promise;
+    },
+    removeUserSurveyQuestionExpiry :  function (userId){
+     var deferred = $q.defer();
+     var db = databaseManager.getConnectionObject();
+     var query = "DELETE FROM SurveyQuestionExpiry WHERE userId = ? " ;
+     var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                      .then(function(res) {
+                       deferred.resolve(res);
+                      }, function (err) {
+                  });
+     return deferred.promise;
    }
   }
 });
