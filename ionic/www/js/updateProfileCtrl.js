@@ -2,11 +2,9 @@ angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
 .controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
    $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$cordovaEmailComposer,
-   $ionicLoading,profileDataManager,databaseManager,$state,dataStoreManager,$cordovaFileTransfer) {
-
+   $ionicLoading,profileDataManager,databaseManager,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer) {
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
-
       // get girder-token from local db for the user logout and further WS calls
       profileDataManager.getAuthTokenForUser(email).then(function(response){
         if (response) {
@@ -23,7 +21,6 @@ angular.module('updateProfileCtrl',[])
             $scope.updateDiv = '';
             if ($scope.profileFields!='') {
             $scope.items = items ;
-            // usage example:
             for (var i = 0; i < items.length; i++) {
                 if(items[i].type != 'password'){
                   if (items[i].id != '') {  // should be removed later after testing
@@ -90,16 +87,26 @@ angular.module('updateProfileCtrl',[])
                            confirmPopup.then(function(res) {
                              if(res) {
                                dataStoreManager.userLogout(logoutToken).then(function(res){
-                                    if (res.status == 200) {
-                                      $scope.modal.remove();
-                                      $ionicHistory.clearCache().then(function(){
-                                          $state.transitionTo('home');
-                                      });
-                                    }
+                                if (res.status == 200) {
+                                 var promiseA = profileDataManager.removeUser($scope.userId);
+                                 var promiseB = profileDataManager.removeUserSession($scope.userId);
+                                 var promiseC = surveyDataManager.removeUserSurveyResults($scope.userId);
+                                 var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.userId);
+                                 var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.userId);
+                                 $q.all([promiseA, promiseB, promiseC,promiseD,promiseE])
+                                     .then(function(promiseResult) {
+                                     console.log(promiseResult[0], promiseResult[1], promiseResult[2],promiseResult[3],
+                                                 promiseResult[4] );
+                                 $scope.modal.remove();
+                                 $ionicHistory.clearCache().then(function(){
+                                 $state.transitionTo('home');
                                  });
-                             } else {
-                                $scope.logout = false ;
-                             }
+                               });
+                              }
+                           });
+                        } else {
+                          $scope.logout = false ;
+                      }
            });
        }
     }
@@ -110,7 +117,7 @@ angular.module('updateProfileCtrl',[])
       profileDataManager.getUserConsentJson(userId).then(function(res){
            if (res) {
             //pdfMake.createPdf(res.docDefinition).download("consentdoc");
-            pdfMake.createPdf(res.docDefinition).getDataUrl(function(dataURL) {
+            pdfMake.createPdf(res).getDataUrl(function(dataURL) {
               var email = {
                      attachments: [
                        dataURL
