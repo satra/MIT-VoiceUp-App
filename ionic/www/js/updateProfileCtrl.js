@@ -97,10 +97,12 @@ angular.module('updateProfileCtrl',[])
                                      .then(function(promiseResult) {
                                      console.log(promiseResult[0], promiseResult[1], promiseResult[2],promiseResult[3],
                                                  promiseResult[4] );
-                                 $scope.modal.remove();
-                                 $ionicHistory.clearCache().then(function(){
-                                 $state.transitionTo('home');
-                                 });
+
+                               });
+
+                               $scope.modal.remove();
+                               $ionicHistory.clearCache().then(function(){
+                               $state.transitionTo('home');
                                });
                               }
                            });

@@ -1,7 +1,7 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
 .controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
-  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state,userService,uploadDataService) {
+  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state,userService) {
 
       profileDataManager.getUserProfileFields().then(function(response){
       var userProfile = response;
@@ -29,11 +29,9 @@ angular.module('signUp',[])
       var emailId = null;
       var dataCache = [];
       var girderArray = new Array();
- //get the data by id
 
-//iterate the form and validate the form
-
- for (var i = 0; i < steps.length; i++) {
+ //iterate the form and validate the form
+  for (var i = 0; i < steps.length; i++) {
   var lableId = steps[i].id;
   var spanTag = angular.element(document.querySelectorAll('.item-input')[i].querySelector('span'));
   var text = spanTag[0].textContent ;
@@ -42,60 +40,59 @@ angular.module('signUp',[])
      var type = inputValue.prop('type');
      var placeholder = inputValue.prop('placeholder');
      var value = inputValue.prop('value') ;
-
      switch (lableId.toLowerCase()) {
       case 'firstname':
-            if(value ==''){
-              formValid = false;
-              keepGoing = false;
-              //clear the array
-              $scope.callAlertDailog('Please enter your '+lableId);
-            }else {
-              obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-              dataCache.push(obj);
-              girderArray.push({'firstName':value});
-            }
+              if(value ==''){
+                formValid = false;
+                keepGoing = false;
+                //clear the array
+                $scope.callAlertDailog('Please enter your '+lableId);
+              }else {
+                obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                dataCache.push(obj);
+                girderArray.push({'firstName':value});
+              }
            break;
        case 'lastname':
-             if(value ==''){
-                 formValid = false ; keepGoing = false;
-                 $scope.callAlertDailog('Please enter your '+lableId);
-             }else {
-               obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-               dataCache.push(obj);
-               girderArray.push({'lastName':value});
-             }
-           break;
-       case 'email':
-             if(value ==''){
-                 formValid = false ; keepGoing = false;
-                 $scope.callAlertDailog('Please enter your '+lableId);
-             }else {
-               //is email valid
-               if(inputValue.hasClass('ng-invalid-email') || inputValue.hasClass('ng-invalid')){
-                 formValid = false ; keepGoing = false;
-                 $scope.callAlertDailog('Email '+value+' is invalid.');
+               if(value ==''){
+                   formValid = false ; keepGoing = false;
+                   $scope.callAlertDailog('Please enter your '+lableId);
                }else {
-                 emailId = value;
                  obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                  dataCache.push(obj);
-                 girderArray.push({'email':value});
+                 girderArray.push({'lastName':value});
                }
-             }
+           break;
+       case 'email':
+               if(value ==''){
+                   formValid = false ; keepGoing = false;
+                   $scope.callAlertDailog('Please enter your '+lableId);
+               }else {
+                 //is email valid
+                 if(inputValue.hasClass('ng-invalid-email') || inputValue.hasClass('ng-invalid')){
+                   formValid = false ; keepGoing = false;
+                   $scope.callAlertDailog('Email '+value+' is invalid.');
+                 }else {
+                   emailId = value;
+                   obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                   dataCache.push(obj);
+                   girderArray.push({'email':value});
+                 }
+               }
            break;
        case 'password':
              password = value ;
-             if(password ==''){
-                 formValid = false ; keepGoing = false;
-                 $scope.callAlertDailog('Please enter your '+lableId);
-             }else {
-                   if(password.length < 6){
-                     formValid = false ; keepGoing = false;
-                     $scope.callAlertDailog('Password must be at least 6 characters.');
-                   }else {
-                     girderArray.push({'password':value});
-                   }
-             }
+               if(password ==''){
+                   formValid = false ; keepGoing = false;
+                   $scope.callAlertDailog('Please enter your '+lableId);
+               }else {
+                     if(password.length < 6){
+                       formValid = false ; keepGoing = false;
+                       $scope.callAlertDailog('Password must be at least 6 characters.');
+                     }else {
+                       girderArray.push({'password':value});
+                     }
+               }
            break;
        case 'password_confirm':
                password_confirm = value ;
@@ -117,25 +114,25 @@ angular.module('signUp',[])
                         var placeholder = select.prop('placeholder');
                         var choices = new Array();
                         for (var k = 0; k < options.length; k++) {
-                            choices.push(options[k].value);
+                        choices.push(options[k].value);
                         }
-                   obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": 'radio',"value":value,"choices":choices};
-                   dataCache.push(obj);
+                       obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": 'radio',"value":value,"choices":choices};
+                       dataCache.push(obj);
         break;
 
         case 'dateofbirth':
-                     obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                     dataCache.push(obj);
+                       obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                       dataCache.push(obj);
           break;
 
         case 'weight':
-                      obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                      dataCache.push(obj);
+                        obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                        dataCache.push(obj);
            break;
 
         case 'height':
-                       obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
-                       dataCache.push(obj);
+                         obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
+                         dataCache.push(obj);
          break;
        default: break ;
        }
@@ -147,7 +144,7 @@ if (formValid) {
         if(password == password_confirm){
           $scope.emailId = emailId ;
           profileDataManager.checkUserExistsByEmail(emailId).then(function(res){
-            if(res){ //user email id already exits
+             if(res){ //user email id already exits
               $scope.callAlertDailog('User already exists ');
              }else { // insert this user to db
                var today = new Date() ;
@@ -164,26 +161,33 @@ if (formValid) {
                           var girderToken = resultData.authToken['token'];
                           $scope.girderToken = girderToken ;
                           var folderName = 'user';
-                        dataStoreManager.createUserFolderInServer(girderToken,resultData._id,folderName).then(function(folderInfo){
-                              if (folderInfo.status==200) {
-                                var folderDetails = folderInfo.data ;
-                                var folderId = folderDetails._id ;
-                                var consentResult = $rootScope.consentResult;
-                                profileDataManager.createNewUser(dataCache,$scope.emailId,userId,folderId).then(function(localUserId){
-                                   if (localUserId) {
-                                     surveyDataManager.addResultToDb(localUserId,consentResult,'consent').then(function(response){
-                                       $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
-                                       $rootScope.activeUser =  $scope.emailId ;
-                                       $scope.launchpinScreen();
-                                      });
-                                   }
+                          profileDataManager.getAppJSON().then(function(appJson){
+                               console.log(appJson);
+                              if (appJson) {
+                                dataStoreManager.createUserFolderInServer(girderToken,resultData._id,folderName).then(function(folderInfo){
+                                   if (folderInfo.status==200) {
+                                     var folderDetails = folderInfo.data ;
+                                     var folderId = folderDetails._id ;
+                                     var consentResult = $rootScope.consentResult;
+                                     profileDataManager.createNewUser(dataCache,$scope.emailId,userId,folderId).then(function(localUserId){
+                                        if (localUserId) {
+                                            surveyDataManager.addResultToDb(localUserId,consentResult.docDefinition,'consent').then(function(response){
+                                            $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
+                                            $rootScope.activeUser =  $scope.emailId ;
+                                            $scope.launchpinScreen();
+                                           });
+                                        }
+                                    });
+                                    // ===========create a profile item , create profile_json file and upload chunk for user folder
+                                    $scope.uploadServerData(girderToken,folderId,JSON.stringify(dataCache),'profile','profile_json');
+                                    $scope.uploadServerData(girderToken,folderId,JSON.stringify(consentResult.docDefinition),'consent','consent_json');
+                                    $scope.uploadServerData(girderToken,folderId,JSON.stringify(appJson),'app','app_json');
+                                    $scope.createFolderItem(girderToken,folderId,'results');
+                                    $scope.createFolderItem(girderToken,folderId,'settings');
+                                  }
                                });
-                               // ===========create a profile item , create profile_json file and upload chunk for user folder
-                               $scope.uploadProfileData(girderToken,folderId,dataCache);
-                               // ===========create a profile item ,create profile_json file and upload chunk for user folder
-                               $scope.uploadConsentData(girderToken,folderId,consentResult);
-                            }
-                         });
+                              }
+                        });
                       }
                    });
              }
@@ -198,71 +202,47 @@ if (formValid) {
        }
   }
 
+//=================create an item for the folder
+$scope.createFolderItem = function (girderToken,folderId,itemName){
+            try {
+              var deferred = $q.defer();
+              var createFolderItem = dataStoreManager.createItemForFolder(girderToken,folderId,itemName).then(function(createItem){
+                  if (createItem.status==200) {
+                  }
+                  deferred.resolve(createFolderItem);
+                });
+              }
+              catch(err) {
+                console.log('error'+err);
+              }
+  }
+
 //=== upload profile json for the file ===========================================
-$scope.uploadProfileData = function (girderToken,folderId,dataCache){
+$scope.uploadServerData = function (girderToken,folderId,uploadData,itemName,fileName){
         try {
-          var itemName = 'profile';
           var deferred = $q.defer();
-          var createProfileItem = uploadDataService.createItemForFolder(girderToken,folderId,itemName).then(function(createProfileItem){
-              if (createProfileItem.status==200) {
-              var itemCreateDetails = createProfileItem.data ;
+          var createDataItem = dataStoreManager.createItemForFolder(girderToken,folderId,itemName).then(function(createDataItem){
+              if (createDataItem.status==200) {
+              var itemCreateDetails = createDataItem.data ;
               var itemCreateId = itemCreateDetails._id ;
-              var profileDataString = LZString.compressToEncodedURIComponent(JSON.stringify(dataCache));
-              var fileSize = profileDataString.length;
-              var fileName = 'profile_json';
-                var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
+              var dataString = LZString.compressToEncodedURIComponent(uploadData);
+              var fileSize = dataString.length;
+              var fileName = fileName;
+              var createFileForItem = dataStoreManager.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
                   if (createFileForItem.status==200) {
-                      var fileCreateDetails = createFileForItem.data ;
-                      var fileCreateId = fileCreateDetails._id ;
-                        var profileDataString = LZString.compressToEncodedURIComponent(JSON.stringify(dataCache));
-                      //var chunk = JSON.stringify(dataCache);
-                      // upload chunks into the file
-                      var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,profileDataString).then(function(chunkInfo){
+                       var fileCreateDetails = createFileForItem.data ;
+                       var fileCreateId = fileCreateDetails._id ;
+                       var dataString = LZString.compressToEncodedURIComponent(uploadData);
+                       var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
                        if (chunkInfo.status==200) {
                        var chunkDetails = chunkInfo.data ;
-                        deferred.resolve(createProfileItem);
+                        deferred.resolve(createDataItem);
                        }
                        });
                      }
                  });
               }
            });
-
-          }
-        catch(err) {
-          console.log('error'+err);
-        }
-  };
-
-//=== upload consent json for the file ===========================================
-$scope.uploadConsentData = function (girderToken,folderId,consentData){
-        try {
-          var itemName = 'consent';
-          var deferred = $q.defer();
-          var createProfileItem = uploadDataService.createItemForFolder(girderToken,folderId,itemName).then(function(createProfileItem){
-              if (createProfileItem.status==200) {
-              var itemCreateDetails = createProfileItem.data ;
-              var itemCreateId = itemCreateDetails._id ;
-              var consentDataString = LZString.compressToEncodedURIComponent(JSON.stringify(consentData.docDefinition));
-              var fileSize = consentDataString.length;
-              var fileName = 'consent_json';
-                var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
-                  if (createFileForItem.status==200) {
-                      var fileCreateDetails = createFileForItem.data ;
-                      var fileCreateId = fileCreateDetails._id ;
-                      var consentDataString = LZString.compressToEncodedURIComponent(JSON.stringify(consentData.docDefinition));
-                      //  var chunk = JSON.stringify(consentData);
-                      // upload chunks into the file
-                      var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,consentDataString).then(function(chunkInfo){
-                         if (chunkInfo.status==200) {
-                         var chunkDetails = chunkInfo.data ;
-                         }
-                       });
-                     }
-                 });
-              }
-           });
-           deferred.resolve(createProfileItem);
           }
         catch(err) {
           console.log('error'+err);

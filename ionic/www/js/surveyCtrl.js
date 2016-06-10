@@ -1,7 +1,7 @@
 angular.module('surveyCtrl',[])
 // ==== Dummy contorller need to be removed later before production  ========
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
- surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,dataStoreManager,$q,uploadDataService) {
+ surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,dataStoreManager,$q) {
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
@@ -250,10 +250,9 @@ $scope.closeModal = function() {
     $scope.modal.remove();
     $ionicLoading.show();
     if (irkResults.getResults().canceled) {
-      $ionicLoading.hide();
+    $ionicLoading.hide();
     }else{
      var childresult = irkResults.getResults().childResults ;
-
      for (var i = 0; i < childresult.length; i++) {
        var questionId = childresult[i].id ;
        var answer = childresult[i].answer ;
@@ -269,20 +268,26 @@ $scope.closeModal = function() {
        });
       }
     }
-    // //log result to server
-    // var folderId = $scope.folderId ;
-    // var girderToken = $scope.authToken ;
-    // var timeStamp = new Date();
-    // var itemName = 'results'+timeStamp;
-    // var fileName = 'results_json_'+timeStamp;
     //result entry into the result table
     surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
-    //upload results
-    var timeStamp = new Date();
-    var itemName = 'results_item_'+timeStamp;
-    var fileName = 'results_json_'+timeStamp;
-    $scope.uploadServerData($scope.authToken,$scope.folderId,JSON.stringify(childresult),itemName,fileName);
-      for (var i = 0; i < childresult.length; i++) {
+    //get item list by folderId
+    dataStoreManager.getItemListByFolderId($scope.folderId,girderToken).then(function(itemList){
+      if (itemList.status==200) {
+        var itemListDetails = itemList.data ;
+        for (var i = 0; i < itemListDetails.length; i++) {
+          var itemName = itemList[i].name;
+          var item_id = itemList[i]._id;
+           if (itemName == 'results') {
+               var today = new Date();
+               var fileName = 'results_json_'+today;
+               $scope.uploadResults($scope.authToken,item_id,JSON.stringify(childresult),fileName);
+           }
+        }
+      }
+     });
+    $ionicLoading.hide();
+
+  /*    for (var i = 0; i < childresult.length; i++) {
         var questionId = childresult[i].id ;
         var type = childresult[i].type;
         if (type=="IRK-AUDIO-TASK") {
@@ -291,30 +296,26 @@ $scope.closeModal = function() {
          if (fileURL) {
           // upload to server
           data =  LZString.compressToEncodedURIComponent(fileURL);
-          var itemName = fileURL;
           var fileName = fileURL;
-          $scope.uploadServerData($scope.authToken,$scope.folderId,data,itemName,fileName);
+          $scope.uploadServerData($scope.authToken,$scope.folderId,data,fileName);
          }
         }
       }
-        $ionicLoading.hide();
+      */
      });
+
     }
   };
 
   //=== upload consent json for the file ===========================================
-  $scope.uploadServerData = function (girderToken,folderId,uploadData,itemName,fileName){
+  $scope.uploadResults = function (girderToken,itemId,uploadData,fileName){
           try {
-            var deferred = $q.defer();
-            var createItem = uploadDataService.createItemForFolder(girderToken,folderId,itemName).then(function(createItem){
-                if (createItem.status==200) {
-                var itemCreateDetails = createItem.data ;
-                var itemCreateId = itemCreateDetails._id ;
-                var dataString = LZString.compressToEncodedURIComponent(uploadData);
-                var fileSize = dataString.length;
-                  var createFileForItem = uploadDataService.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
-                    if (createFileForItem.status==200) {
-                        var fileCreateDetails = createFileForItem.data ;
+                  var deferred = $q.defer();
+                  var dataString = LZString.compressToEncodedURIComponent(uploadData);
+                  var fileSize = dataString.length;
+                  dataStoreManager.createFileForItem(girderToken,itemId,fileName,fileSize).then(function(fileCreateInfo){
+                  if (fileCreateInfo.status==200) {
+                        var fileCreateDetails = fileCreateInfo.data ;
                         var fileCreateId = fileCreateDetails._id ;
                         var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
                            if (chunkInfo.status==200) {
@@ -323,10 +324,7 @@ $scope.closeModal = function() {
                            }
                          });
                        }
-                   });
-                }
-             });
-             deferred.resolve(createItem);
+                  });
             }
           catch(err) {
             console.log('error'+err);
