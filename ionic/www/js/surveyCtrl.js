@@ -18,6 +18,9 @@ document.addEventListener("resume", function() {
        $scope.emails = emailArray;
      });
 
+    if ($scope.pin) {
+      $scope.pin.remove();
+    }
     $ionicModal.fromTemplateUrl('templates/pinScreen.html', {
               scope: $scope,
               animation: 'slide-in-up'
@@ -25,6 +28,7 @@ document.addEventListener("resume", function() {
               $scope.pin = modal;
               $scope.pin.show();
       });
+
    }
 
   }, false);
@@ -56,10 +60,11 @@ document.addEventListener("resume", function() {
           //get IP like email ids
           profileDataManager.logInViaPasscode(email,passcode).then(function(res){
                        if (res) {
+                          $scope.clearPinDiv();
                           // All set go to next page
                           $ionicHistory.clearCache().then(function(){
                           $rootScope.emailId = email ; // save it to access in update profile
-                          $scope.pin.remove();
+                          $scope.pin.hide();
                           $rootScope.activeUser = email;
                           });
                        }else {
