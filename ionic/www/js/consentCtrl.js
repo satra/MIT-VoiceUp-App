@@ -31,9 +31,13 @@ $scope.closeModal = function() {
           if (value.type == "IRK-CONSENT-REVIEW-STEP") {
           if (value.answer) {
           $rootScope.consentResult = irkConsentDocument.getDocument();
-          $state.transitionTo('loadSignUp');
+          $ionicHistory.clearCache().then(function(){
+               $state.transitionTo('loadSignUp');
+            });
           }else {
-          $state.transitionTo('home');
+            $ionicHistory.clearCache().then(function(){
+                $state.transitionTo('home');
+              });
           }
           return false;
           }

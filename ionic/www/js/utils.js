@@ -130,12 +130,12 @@ function generateProfileDiv(obj){
 
            case 'text' : div += '<label class="item item-input IRK-FONT2" type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                 '<input type="text" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style="" ></label>';
+                                 '<input type="text" id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style="" ></label>';
                          break;
 
            case 'email':  div += '<label class="item item-input IRK-FONT2" type="email" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                 '<input type="email"  placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
+                                 '<input type="email"  id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style=""></label>';
                          break;
 
            case 'password':
@@ -146,12 +146,12 @@ function generateProfileDiv(obj){
                            }
                            div += '<label class="item item-input IRK-FONT2" type="password" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+label+'</span>'+
-                                 '<input type="password" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
+                                 '<input type="password" id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style=""></label>';
                          break;
 
            case 'date': div += '<label class="item item-input IRK-FONT2" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                 '<input type="date" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
+                                 '<input type="date" id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style=""></label>';
                          break;
 
           case 'radio':  var optionDiv = '';
@@ -161,7 +161,7 @@ function generateProfileDiv(obj){
 
                         div += '<label class="item item-input item-select IRK-FONT2" type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                 '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                '<select type="radio" placeholder="'+obj.placeholder+'" ng-required="false">'+
+                                '<select id="'+obj.id +'_'+obj.id+'"  type="radio" placeholder="'+obj.placeholder+'" ng-required="false">'+
                                  optionDiv+
                                 '</select>  </label>';
                         break;
@@ -172,7 +172,7 @@ function generateProfileDiv(obj){
 
                 div += '<label class="item item-input IRK-FONT2" type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+label+'</span>'+
-                                 '<input type="number"  string-to-number placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
+                                 '<input type="number" id="'+obj.id +'_'+obj.id+'" string-to-number placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style=""></label>';
                          break;
 
            default :  break ;

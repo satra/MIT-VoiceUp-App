@@ -20,7 +20,6 @@ profileDataManager.getEmailList().then(function(response){
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
-      $scope.setPasscodeFocus = true ;
       $scope.hidePasscodeDiv = true ;
       $scope.hideImageDiv = false ;
     });
@@ -47,7 +46,6 @@ profileDataManager.getEmailList().then(function(response){
        $scope.hideImageDiv = true ;
        var passcode_div = angular.element(document.querySelector('#passcode'));
        $scope.passcodeDiv = '';
-       $scope.setPasscodeFocus = true ;
        passcode_div.val('');
   };
 

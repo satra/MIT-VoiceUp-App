@@ -5,13 +5,20 @@ angular.module('updateProfileCtrl',[])
    $ionicLoading,profileDataManager,databaseManager,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer) {
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
-      // get girder-token from local db for the user logout and further WS calls
-      profileDataManager.getAuthTokenForUser(email).then(function(response){
-        if (response) {
-          $scope.authToken = response.token;
-          $scope.userId = response.userId;
-        }
-      });
+
+      if ($rootScope.emailId ) {
+        $scope.userSettings =  true;
+        // get girder-token from local db for the user logout and further WS calls
+        profileDataManager.getAuthTokenForUser(email).then(function(response){
+          if (response) {
+            $scope.authToken = response.token;
+            $scope.userId = response.userId;
+          }
+        });
+
+      }else {
+        $scope.userSettings = false;
+      }
 
 //=============================get user fields saved locally ===============================
       profileDataManager.getUserUpdateProfile(email).then(function(response){
@@ -100,8 +107,9 @@ angular.module('updateProfileCtrl',[])
 
                                });
 
-                               $scope.modal.remove();
                                $ionicHistory.clearCache().then(function(){
+                               $rootScope.emailId = null;
+                               $scope.modal.remove();
                                $state.transitionTo('home');
                                });
                               }
@@ -118,10 +126,7 @@ angular.module('updateProfileCtrl',[])
       // get consent data saved locally
       profileDataManager.getUserConsentJson(userId).then(function(res){
            if (res) {
-            //pdfMake.createPdf(res.docDefinition).download("consentdoc");
             pdfMake.createPdf(res).getBase64(function(dataURL) {
-            //var file =   new Blob([dataURL]);
-
               var email = {
                      attachments: [
                        "base64:consent.pdf//"+dataURL
@@ -138,12 +143,6 @@ angular.module('updateProfileCtrl',[])
                   });
             });
 
-            // pdfMake.createPdf(res.docDefinition).getBase64(function(encodedString) {
-            //   console.log(encodedString);
-            // });
-
-            // pdfMake.createPdf(res.docDefinition).getBuffer(function(result) {
-            //  });
              }
         });
     }
@@ -407,6 +406,7 @@ angular.module('updateProfileCtrl',[])
                                 $scope.managePasscodeNew = false;
                                 $scope.managePasscode = true ;
                               }else{
+                              //  cordova.plugins.Keyboard.close();
                                 //clear div
                                 var passcode = angular.element(document.querySelector('#passcode'));
                                 $scope.passcode = '';
@@ -447,7 +447,7 @@ $scope.checkNewPasscodeDigits = function(){
                      profileDataManager.getUserIDByEmail(email).then(function(res){
                             profileDataManager.updatePasscodeToUserID(res.trim(),$scope.passcode).then(function(res){
                                          if (res) {
-                                           $scope.callAlertDailog("Passcode updated.");
+                                           $scope.successAlertMsg("Passcode updated.");
                                            $scope.closePasscodeModal();
                                          }
                                      });

@@ -275,11 +275,31 @@ $scope.skipSignUp = function(){
        });
     }
 
+
 //=====sign up cancel ====================================
 $scope.backtohome = function(){
-          $ionicHistory.clearCache().then(function(){
-            $state.transitionTo('home');
-          });
+
+  var steps = angular.element(document.querySelectorAll('input'));
+  for (var i = 0; i < steps.length; i++) {
+  var lableId = steps[i].id;
+  $scope.labelId = "";
+  // var divId = angular.element(document.querySelector('#'+lableId));
+  // divId.prop('value','');
+  }
+   $ionicHistory.clearCache().then(function(){
+      $state.go('home', {cache: false});
+   });
+}
+
+$scope.clearDiv= function(){
+  var steps = angular.element(document.querySelectorAll('input'));
+  for (var i = 0; i < steps.length; i++) {
+  var lableId = steps[i].id;
+  if (lableId) {
+    var divId = angular.element(document.querySelector('#'+lableId));
+    divId.prop('value','');
+   }
+  }
 }
 
 //=================================================== forgot passcode handler ============================
