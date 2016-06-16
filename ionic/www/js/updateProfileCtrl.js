@@ -415,6 +415,7 @@ angular.module('updateProfileCtrl',[])
                                 //clear div
                                 var passcode = angular.element(document.querySelector('#passcode'));
                                 $scope.passcode = '';
+                                passcode.val('');
                                 // $compile(passcode)($scope);
                                 $scope.callAlertDailog("Passcode doesn't match with the existing passcode.");
                               }
@@ -462,6 +463,7 @@ $scope.checkNewPasscodeDigits = function(){
                  //clear div for confirm password
                  $scope.confirm_passcode = '';
                 // $compile(confirm_passcode_div)($scope);
+                 confirm_passcode_div.val('');
                  $scope.callAlertDailog("Passcode should match with confirm");
                  $scope.confirmLoop = $scope.confirmLoop +1;
                   if($scope.confirmLoop >= 3){
