@@ -365,6 +365,7 @@ $scope.clearSignUpDiv = function(){
          if(passcode.length == 4){
            $scope.passcode = passcode ;
            $scope.managePasscode = true ;
+           document.activeElement.blur(); // remove the keypad
            $scope.passcodeLabel = "Confirm Passcode";
            $scope.managePasscodeConfirm = false ;
          }else if(passcode.length > 4) {
@@ -401,6 +402,7 @@ $scope.clearSignUpDiv = function(){
               $scope.callAlertDailog("Passcode should match with confirm Passcode ");
               $scope.confirmLoop = $scope.confirmLoop +1;
                if($scope.confirmLoop >= 3){
+                 document.activeElement.blur(); // remove the keypad
                  $scope.passcodeLabel = "Enter Passcode";
                  $scope.managePasscode = false ;
                  $scope.managePasscodeConfirm = true ;
