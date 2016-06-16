@@ -5,9 +5,7 @@ angular.module('updateProfileCtrl',[])
    $ionicLoading,profileDataManager,databaseManager,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window) {
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
-
       if ($rootScope.emailId ) {
-        $scope.userSettings =  true;
         // get girder-token from local db for the user logout and further WS calls
         profileDataManager.getAuthTokenForUser(email).then(function(response){
           if (response) {
@@ -15,11 +13,7 @@ angular.module('updateProfileCtrl',[])
             $scope.userId = response.userId;
           }
         });
-
-      }else {
-        $scope.userSettings = false;
       }
-
 //=============================get user fields saved locally ===============================
       profileDataManager.getUserUpdateProfile(email).then(function(response){
           if (response) {
@@ -39,6 +33,10 @@ angular.module('updateProfileCtrl',[])
 
             $scope.pM = 'Edit';
             $scope.isDisabled = true;
+            $scope.settings=true ;
+            if (!$rootScope.emailId) {
+                $scope.settings=false ;
+            }
 
             var updateProfile = angular.element(document.querySelector('#updateProfile'));
             updateProfile.append($scope.updateDiv);
@@ -82,7 +80,7 @@ angular.module('updateProfileCtrl',[])
      $scope.settingsBack = function (){
        $scope.modal.remove();
      }
-     
+
      $scope.backtotab = function () {
        $scope.modal.remove();
        $ionicHistory.clearCache().then(function(){

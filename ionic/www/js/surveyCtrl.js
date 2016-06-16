@@ -99,7 +99,7 @@ surveyDataManager.getSurveyListForToday().then(function(response){
     var surveyMainList = response;
     var today = new Date() ;
     var creationDate = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
-    if (surveyMainList) {
+    if (surveyMainList && $rootScope.emailId) {
          profileDataManager.getUserIDByEmail($rootScope.emailId).then(function (userId){
            $scope.userId = userId ;
            // now check any entries for today in surveytmp table
