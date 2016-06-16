@@ -37,7 +37,7 @@ angular.module('updateProfileCtrl',[])
               }
             }
 
-            $scope.profileMode = 'Edit';
+            $scope.pM = 'Edit';
             $scope.isDisabled = true;
 
             var updateProfile = angular.element(document.querySelector('#updateProfile'));
@@ -82,10 +82,11 @@ angular.module('updateProfileCtrl',[])
      $scope.settingsBack = function (){
        $scope.modal.remove();
      }
+     
      $scope.backtotab = function () {
        $scope.modal.remove();
-    $ionicHistory.clearCache().then(function(){
-           $state.transitionTo('tab');
+       $ionicHistory.clearCache().then(function(){
+          // $state.transitionTo('tab');
        });
      };
 
@@ -284,12 +285,12 @@ angular.module('updateProfileCtrl',[])
 
 
      $scope.switchProfileModeOnOff = function(){
-           if ($scope.profileMode == 'Save') {
+           if ($scope.pM == 'Save') {
               $scope.updateProfile();
-              $scope.profileMode = 'Edit';
+              $scope.pM = 'Edit';
               $scope.isDisabled = true;
             }else {
-              $scope.profileMode = 'Save';
+              $scope.pM = 'Save';
               $scope.isDisabled = false;
             }
      }
