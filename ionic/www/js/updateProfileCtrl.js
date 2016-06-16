@@ -200,12 +200,27 @@ angular.module('updateProfileCtrl',[])
         }).then(function(modal) {
           $scope.permission = modal;
           $scope.permission.show();
+          $scope.accelerationLabel="Allow";
+          $scope.geoLabel = "Allow";
+          $scope.microPhoneLabel = "Allow";
         });
       }
 
+    $scope.allowAccelerometer = function(){
+       $scope.accelerationLabel="Granted";
+     }
+
+    $scope.allowGeoLocation = function(){
+        $scope.geoLabel="Granted";
+    }
+
+    $scope.allowMicroPhone = function(){
+         $scope.microPhoneLabel="Granted";
+    }
+
     $scope.openVerification = function() {
         $scope.permission.remove();
-      };
+    };
 
      $scope.closeModal = function() {
        $scope.modal.remove();

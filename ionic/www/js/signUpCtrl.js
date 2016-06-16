@@ -439,8 +439,23 @@ $scope.clearSignUpDiv = function(){
         $scope.modal.remove();
         $scope.modal = modal;
         $scope.modal.show();
+        $scope.accelerationLabel="Allow";
+        $scope.geoLabel = "Allow";
+        $scope.microPhoneLabel = "Allow";
         });
       };
+
+      $scope.allowAccelerometer = function(){
+         $scope.accelerationLabel="Granted";
+       }
+
+      $scope.allowGeoLocation = function(){
+          $scope.geoLabel="Granted";
+      }
+
+      $scope.allowMicroPhone = function(){
+           $scope.microPhoneLabel="Granted";
+      }
 
       $scope.allDone = function() {
         $ionicModal.fromTemplateUrl('templates/alldone.html', {
