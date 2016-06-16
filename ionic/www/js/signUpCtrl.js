@@ -143,6 +143,8 @@ if (formValid) {
         //check password equal to confirm password
         if(password == password_confirm){
           $scope.emailId = emailId ;
+          //clear the sign up form
+          $scope.clearSignUpDiv();
           profileDataManager.checkUserExistsByEmail(emailId).then(function(res){
              if(res){ //user email id already exits
               $scope.callAlertDailog('User already exists ');
@@ -162,7 +164,7 @@ if (formValid) {
                           $scope.girderToken = girderToken ;
                           var folderName = 'user';
                           profileDataManager.getAppJSON().then(function(appJson){
-                               console.log(appJson);
+
                               if (appJson) {
                                 dataStoreManager.createUserFolderInServer(girderToken,resultData._id,folderName).then(function(folderInfo){
                                    if (folderInfo.status==200) {
@@ -339,27 +341,19 @@ $scope.skipSignUp = function(){
 
 //=====sign up cancel ====================================
 $scope.backtohome = function(){
+   $scope.clearSignUpDiv();
+   $ionicHistory.clearCache().then(function(){
+      $state.go('home', {cache: false});
+   });
+}
 
+$scope.clearSignUpDiv = function(){
   var steps = angular.element(document.querySelectorAll('input'));
   for (var i = 0; i < steps.length; i++) {
   var lableId = steps[i].id;
   $scope.labelId = "";
   // var divId = angular.element(document.querySelector('#'+lableId));
   // divId.prop('value','');
-  }
-   $ionicHistory.clearCache().then(function(){
-      $state.go('home', {cache: false});
-   });
-}
-
-$scope.clearDiv= function(){
-  var steps = angular.element(document.querySelectorAll('input'));
-  for (var i = 0; i < steps.length; i++) {
-  var lableId = steps[i].id;
-  if (lableId) {
-    var divId = angular.element(document.querySelector('#'+lableId));
-    divId.prop('value','');
-   }
   }
 }
 
