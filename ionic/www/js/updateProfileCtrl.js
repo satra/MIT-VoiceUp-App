@@ -403,10 +403,11 @@ angular.module('updateProfileCtrl',[])
             //check current passcode is valid
              $scope.passcode = passcode ;
              var email = $scope.emailId ;
-             console.log(email+ ' ' +passcode);
+
              profileDataManager.getUserIDByEmail(email.trim()).then(function(userId){
                    profileDataManager.checkPasscodeExistsForUserID(userId.trim(),passcode.trim()).then(function(res){
                               if (res) {
+                                document.activeElement.blur(); // remove the keypad
                                 $scope.passcodeLabel = "Enter New Passcode";
                                 $scope.managePasscodeNew = false;
                                 $scope.managePasscode = true ;
@@ -432,6 +433,7 @@ $scope.checkNewPasscodeDigits = function(){
       //check current passcode is valid
        $scope.passcode = passcode.trim() ;
        var email = $scope.emailId ;
+       document.activeElement.blur(); // remove the keypad
        $scope.passcodeLabel = "Confirm Passcode";
        $scope.managePasscode = true ;
        $scope.managePasscodeNew = true;
@@ -467,6 +469,7 @@ $scope.checkNewPasscodeDigits = function(){
                  $scope.callAlertDailog("Passcode should match with confirm");
                  $scope.confirmLoop = $scope.confirmLoop +1;
                   if($scope.confirmLoop >= 3){
+                    document.activeElement.blur(); // remove the keypad
                     $scope.passcodeLabel = "Enter New Passcode";
                     $scope.confirmLoop = 0;
                     $scope.managePasscode = true ;
