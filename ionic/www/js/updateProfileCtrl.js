@@ -486,6 +486,7 @@ $scope.checkNewPasscodeDigits = function(){
        }
 
      $scope.callAlertDailog =  function (message){
+          document.activeElement.blur(); // remove the keypad
           $ionicPopup.alert({
            title: 'Data Invalid',
            template: message

@@ -313,6 +313,7 @@ $scope.uploadProfileData = function (girderToken,folderId,uploadData){
       };
 
 $scope.callAlertDailog =  function (message){
+         document.activeElement.blur(); // remove the keypad
          $ionicPopup.alert({
           title: 'Sign Up Validation',
           template: message

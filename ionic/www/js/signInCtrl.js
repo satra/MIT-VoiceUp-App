@@ -68,8 +68,8 @@ profileDataManager.getEmailList().then(function(response){
                           $state.transitionTo('tab.Activities');
                           });
                        }else {
-                         $scope.resetInput();
-                         $scope.callAlertDailog('Invalid passcode!!!');
+                           $scope.resetInput();
+                           $scope.callAlertDailog('Invalid passcode!!!');
                         }
                     });
            }
@@ -366,6 +366,7 @@ $scope.skipSignIn = function (){
 
 //error handler dailog
 $scope.callAlertDailog =  function (message){
+        document.activeElement.blur(); // remove the keypad
         $ionicPopup.alert({
          title: 'Error',
          template: message
