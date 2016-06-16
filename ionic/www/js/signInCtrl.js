@@ -339,11 +339,12 @@ $scope.forgotPassword = function (){
           if (emailId.length != 0) {
               // process the request
               dataStoreManager.userForgotPassword(emailId).then(function(res){
+                  $ionicLoading.hide();
+                   var data = res.data;
                   if (res.status == 200) {
-                         $scope.callAlertDailog(res.message);
+                         $scope.callAlertDailog(data.message);
                        }else if (res.status == 400){
-                         e.preventDefault();
-                         $scope.callAlertDailog(res.message);
+                         $scope.callAlertDailog(data.message);
                        }
                   return $scope ;
                  });

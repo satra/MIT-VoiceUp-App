@@ -79,19 +79,7 @@ angular.module('dataStoreManager', [])
                                   }).then(function successCallback(data) {
                                     return data ;
                                   }, function errorCallback(error) {
-                                       console.log('error');
-                                       if (!error.data) {
-                                        message = 'Server error'
-                                       }
-                                       else {
-                                          var message = error.data.message ;
-                                        }
-                                        $ionicLoading.hide();
-                                        $ionicPopup.alert({
-                                        title: 'Error',
-                                        template: message
-                                        });
-                                  return error ;
+                                        return error ;
                                   });
         deferred.resolve(forgotPassword);
         return deferred.promise;
