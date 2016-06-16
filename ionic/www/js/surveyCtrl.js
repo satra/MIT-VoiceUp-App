@@ -5,6 +5,7 @@ angular.module('surveyCtrl',[])
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
+/*
 document.addEventListener("resume", function() {
     if ($rootScope.activeUser) {
        profileDataManager.getEmailList().then(function(response){
@@ -32,7 +33,7 @@ document.addEventListener("resume", function() {
    }
 
   }, false);
-
+*/
   // ==== Close the existing modal and open Sign in html in new modal======== make these as common function
   $scope.openSignIn = function() {
     $ionicHistory.clearCache().then(function(){
