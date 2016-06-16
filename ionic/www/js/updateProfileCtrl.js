@@ -2,7 +2,7 @@ angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
 .controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
    $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$cordovaEmailComposer,
-   $ionicLoading,profileDataManager,databaseManager,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer) {
+   $ionicLoading,profileDataManager,databaseManager,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window) {
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
 
@@ -82,6 +82,12 @@ angular.module('updateProfileCtrl',[])
      $scope.settingsBack = function (){
        $scope.modal.remove();
      }
+     $scope.backtotab = function () {
+       $scope.modal.remove();
+    $ionicHistory.clearCache().then(function(){
+           $state.transitionTo('tab');
+       });
+     };
 
  //====================userLogout
      $scope.logOut = function(){
