@@ -1,3 +1,4 @@
+
 angular.module('surveyCtrl',[])
 // ==== Dummy contorller need to be removed later before production  ========
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
@@ -263,17 +264,34 @@ $scope.closeModal = function() {
      for (var i = 0; i < childresult.length; i++) {
        var questionId = childresult[i].id ;
        var answer = childresult[i].answer ;
+       var type = childresult[i].type;
        var isSkipped = '';
        if (answer) {
        isSkipped = "NO";
-       // if answered a question clear form history table so it is answered and no need to add for upcoming survey
-       surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
-       });
-      }else{
-       isSkipped = "YES";
-       surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
-       });
-      }
+             // if answered a question clear form history table so it is answered and no need to add for upcoming survey
+             surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
+
+             });
+       }else if (type=="IRK-AUDIO-TASK"){
+          var fileURL = childresult[i].fileURL;
+          if (fileURL) {
+            isSkipped = "NO";
+          }else {
+            isSkipped = "YES";
+          }
+            // if answered a question clear form history table so it is answered and no need to add for upcoming survey
+            surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
+
+            });
+       }
+       else{
+         isSkipped = "YES";
+             // if answered a question clear form history table so it is answered and no need to add for upcoming survey
+             surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
+
+             });
+        }
+
     }
     //result entry into the result table
     surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
