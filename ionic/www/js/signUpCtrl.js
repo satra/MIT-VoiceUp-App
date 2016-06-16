@@ -179,9 +179,9 @@ if (formValid) {
                                         }
                                     });
                                     // ===========create a profile item , create profile_json file and upload chunk for user folder
-                                    $scope.uploadServerData(girderToken,folderId,JSON.stringify(dataCache),'profile','profile_json');
-                                    $scope.uploadServerData(girderToken,folderId,JSON.stringify(consentResult.docDefinition),'consent','consent_json');
-                                    $scope.uploadServerData(girderToken,folderId,JSON.stringify(appJson),'app','app_json');
+                                    $scope.uploadProfileData(girderToken,folderId,JSON.stringify(dataCache));
+                                    $scope.uploadConsentData(girderToken,folderId,JSON.stringify(consentResult.docDefinition));
+                                    $scope.uploadAppData(girderToken,folderId,JSON.stringify(appJson));
                                     $scope.createFolderItem(girderToken,folderId,'results');
                                     $scope.createFolderItem(girderToken,folderId,'settings');
                                   }
@@ -218,17 +218,16 @@ $scope.createFolderItem = function (girderToken,folderId,itemName){
   }
 
 //=== upload profile json for the file ===========================================
-$scope.uploadServerData = function (girderToken,folderId,uploadData,itemName,fileName){
+$scope.uploadProfileData = function (girderToken,folderId,uploadData){
         try {
           var deferred = $q.defer();
-          var createDataItem = dataStoreManager.createItemForFolder(girderToken,folderId,itemName).then(function(createDataItem){
+          var createDataItem = dataStoreManager.createItemForFolder(girderToken,folderId,"profile").then(function(createDataItem){
               if (createDataItem.status==200) {
               var itemCreateDetails = createDataItem.data ;
               var itemCreateId = itemCreateDetails._id ;
               var dataString = LZString.compressToEncodedURIComponent(uploadData);
               var fileSize = dataString.length;
-              var fileName = fileName;
-              var createFileForItem = dataStoreManager.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
+              var createFileForItem = dataStoreManager.createFileForItem(girderToken,itemCreateId,"profile_json",fileSize).then(function(createFileForItem){
                   if (createFileForItem.status==200) {
                        var fileCreateDetails = createFileForItem.data ;
                        var fileCreateId = fileCreateDetails._id ;
@@ -248,6 +247,68 @@ $scope.uploadServerData = function (girderToken,folderId,uploadData,itemName,fil
           console.log('error'+err);
         }
   };
+
+  //=== upload consent json for the file ===========================================
+  $scope.uploadConsentData = function (girderToken,folderId,uploadData){
+          try {
+            var deferred = $q.defer();
+            var createDataItem = dataStoreManager.createItemForFolder(girderToken,folderId,"consent").then(function(createDataItem){
+                if (createDataItem.status==200) {
+                var itemCreateDetails = createDataItem.data ;
+                var itemCreateId = itemCreateDetails._id ;
+                var dataString = LZString.compressToEncodedURIComponent(uploadData);
+                var fileSize = dataString.length;
+                var createFileForItem = dataStoreManager.createFileForItem(girderToken,itemCreateId,"consent_json",fileSize).then(function(createFileForItem){
+                    if (createFileForItem.status==200) {
+                         var fileCreateDetails = createFileForItem.data ;
+                         var fileCreateId = fileCreateDetails._id ;
+                         var dataString = LZString.compressToEncodedURIComponent(uploadData);
+                         var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
+                         if (chunkInfo.status==200) {
+                         var chunkDetails = chunkInfo.data ;
+                          deferred.resolve(createDataItem);
+                         }
+                         });
+                       }
+                   });
+                }
+             });
+            }
+          catch(err) {
+            console.log('error'+err);
+          }
+    };
+
+    //=== upload app json for the file ===========================================
+    $scope.uploadAppData = function (girderToken,folderId,uploadData){
+            try {
+              var deferred = $q.defer();
+              var createDataItem = dataStoreManager.createItemForFolder(girderToken,folderId,"app").then(function(createDataItem){
+                  if (createDataItem.status==200) {
+                  var itemCreateDetails = createDataItem.data ;
+                  var itemCreateId = itemCreateDetails._id ;
+                  var dataString = LZString.compressToEncodedURIComponent(uploadData);
+                  var fileSize = dataString.length;
+                  var createFileForItem = dataStoreManager.createFileForItem(girderToken,itemCreateId,"app_json",fileSize).then(function(createFileForItem){
+                      if (createFileForItem.status==200) {
+                           var fileCreateDetails = createFileForItem.data ;
+                           var fileCreateId = fileCreateDetails._id ;
+                           var dataString = LZString.compressToEncodedURIComponent(uploadData);
+                           var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
+                           if (chunkInfo.status==200) {
+                           var chunkDetails = chunkInfo.data ;
+                            deferred.resolve(createDataItem);
+                           }
+                           });
+                         }
+                     });
+                  }
+               });
+              }
+            catch(err) {
+              console.log('error'+err);
+            }
+      };
 
 $scope.callAlertDailog =  function (message){
          $ionicPopup.alert({
