@@ -178,9 +178,10 @@ $scope.launchSurvey = function (idSelected){
       // get the survey attached for this user
       var today = new Date() ;
       var formattedDate = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear();
-      surveyDataManager.getTaskListByUserId($scope.userId,formattedDate).then(function(response){
-        var tasks = response.rows;
-        if (tasks) {
+      if ($scope.userId) {
+       surveyDataManager.getTaskListByUserId($scope.userId,formattedDate).then(function(response){
+         var tasks = response.rows;
+         if (tasks) {
          var surveyHtml = ''; var isSkippedQuestions ='';
          var onlySkippedQuestionHtml = '';
          var promises = []; // an array of promises
@@ -230,6 +231,12 @@ $scope.launchSurvey = function (idSelected){
       });
      }
    });
+ }else {
+   $ionicPopup.alert({
+    title: 'Info',
+    template: "Please Sign In/Sign Up to view the survey."
+   });
+ }
 };
 
 $scope.showTasksForSlectedSurvey = function(surveyHtml){
