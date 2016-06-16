@@ -201,6 +201,7 @@ $scope.launchSurvey = function (idSelected){
           console.log(disableSkip);
           for (var k = 0; k < steps.length; k++) {
           surveyHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
+
           // compose skipped html as well
           if (tasks.item(T).isSkipped === "YES") {
            onlySkippedQuestionHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
@@ -419,7 +420,7 @@ $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
                     break;
 
               case 'irk-audio-task':
-                    customDiv = '<irk-task optional="'+disableSkip+'" > <irk-audio-task auto-record="false" auto-complete="false"  optional="'+disableSkip+'" id="'+customId+'_audio" duration="'+stepData.duration+'" text= "'+stepData.text+'"/></irk-task>';
+                    customDiv = '<irk-task optional="'+disableSkip+'" > <irk-audio-task auto-record="false" auto-complete="false"  optional="'+disableSkip+'" id="'+customId+'" duration="'+stepData.duration+'" text= "'+stepData.text+'"/></irk-task>';
               break;
 
           }
