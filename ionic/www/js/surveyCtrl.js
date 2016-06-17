@@ -93,8 +93,6 @@ document.addEventListener("resume", function() {
     }
 //============== resume handler finished ============================================
 
-
-
 surveyDataManager.getSurveyListForToday().then(function(response){
     $scope.list = response;
     var surveyMainList = response;
@@ -154,10 +152,10 @@ surveyDataManager.getSurveyListForToday().then(function(response){
         // pull from expiry table and put it in temp table where questions expiry still exists
         surveyDataManager.getUnansweredQuestionsLessThanToDate($scope.userId,creationDate).then(function(resp){
                  console.log('control under fetching un answered questions ');
-                           if (resp.rows.length >0 ) {
+                           if (resp.length >0 ) {
                              // insert unanswered questions into temp table
-                            for (var i = 0; i < resp.rows.length; i++) {
-                            surveyDataManager.addSurveyToUserForToday($scope.userId,'',resp.rows[i].questionId,creationDate,resp.rows[i].skippable)
+                            for (var i = 0; i < resp.length; i++) {
+                            surveyDataManager.addSurveyToUserForToday($scope.userId,'',resp[i].questionId,creationDate,resp[i].skippable)
                               .then(function(res){
                                   console.log('log from un answered controller '+res);
                                });

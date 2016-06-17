@@ -122,7 +122,12 @@ getQuestionExpiry : function  (questionId){
     var db = databaseManager.getConnectionObject();
     var insert =  $cordovaSQLite.execute(db, "SELECT questionId,skippable FROM SurveyQuestionExpiry WHERE creationDate < '"+todayDate+"' AND expiryDate >= '"+todayDate+"' AND userId = '"+userId+"' ")
                      .then(function(res) {
-                         return res ;
+                          var len = res.rows.length;
+                          var itemsColl = [];
+                          for (var i=0; i<len; i++){
+                             itemsColl[i] = res.rows.item(i);
+                            }
+                           return itemsColl ;
                      }, function (err) {
                  });
    deferred.resolve(insert);
