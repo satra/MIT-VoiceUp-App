@@ -1,7 +1,7 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
 .controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
-  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state,userService) {
+  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state,userService,$window) {
 
       profileDataManager.getUserProfileFields().then(function(response){
       var userProfile = response;
@@ -440,18 +440,50 @@ $scope.clearSignUpDiv = function(){
         $scope.modal = modal;
         $scope.modal.show();
         $scope.accelerationLabel="Allow";
-        $scope.geoLabel = "Allow";
         $scope.microPhoneLabel = "Allow";
+        $scope.geoLabel = 'Allow';
+       //  $scope.allowGeoLocation();
+
+        // var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
+        // function onSuccess(position) {
+        //      $scope.geoLabel = 'Granted';
+        // };
+        // function onError(error) {
+        //      $scope.geoLabel = 'Allow';
+        // };
+
+        // var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
+        // function accelerometerSuccess(acceleration) {
+        //    $scope.accelerationLabel = 'Granted';
+        // };
+        // function accelerometerError() {
+        //    $scope.accelerationLabel = 'Allow';
+        // };
+
         });
       };
 
+      $scope.allowGeoLocation = function(){
+        $scope.geoLabel = 'Granted';
+        // cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
+        // $scope.geoLabel = 'Granted';
+        // }, function(error){
+        // $scope.geoLabel = 'Allow';
+        // });
+      }
+
       $scope.allowAccelerometer = function(){
          $scope.accelerationLabel="Granted";
+        //  var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
+        //  function accelerometerSuccess(acceleration) {
+        //     $scope.accelerationLabel = 'Granted';
+        //  };
+        //  function accelerometerError() {
+        //     $scope.accelerationLabel = 'Allow';
+        //  };
        }
 
-      $scope.allowGeoLocation = function(){
-          $scope.geoLabel="Granted";
-      }
+
 
       $scope.allowMicroPhone = function(){
            $scope.microPhoneLabel="Granted";

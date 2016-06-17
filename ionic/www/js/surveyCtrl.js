@@ -263,6 +263,10 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
 $scope.closeModal = function() {
     $scope.modal.remove();
     $ionicLoading.show();
+
+    $ionicHistory.clearCache().then(function(){
+    });
+
     if (irkResults.getResults().canceled) {
     $ionicLoading.hide();
     }else{
