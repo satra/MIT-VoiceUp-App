@@ -356,6 +356,9 @@ $scope.clearSignUpDiv = function(){
   // var divId = angular.element(document.querySelector('#'+lableId));
   // divId.prop('value','');
   }
+  var removeSignUpDiv = angular.element(document.querySelectorAll('#dynamicContent'));
+  steps.remove();
+
 }
 
 //=================================================== forgot passcode handler ============================
@@ -398,7 +401,8 @@ $scope.clearSignUpDiv = function(){
             }else {
               //reset div
               $scope.confirm_passcode = '';
-              $compile(confirm_passcode_div)($scope);
+            //  $compile(confirm_passcode_div)($scope);
+              confirm_passcode_div.val("");
               $scope.callAlertDailog("Passcode should match with confirm Passcode ");
               $scope.confirmLoop = $scope.confirmLoop +1;
                if($scope.confirmLoop >= 3){
@@ -410,7 +414,8 @@ $scope.clearSignUpDiv = function(){
                  //clear div
                  var passcode_div = angular.element(document.querySelector('#passcode'));
                  $scope.passcode = '';
-                 $compile(passcode_div)($scope);
+                // $compile(passcode_div)($scope);
+                 passcode_div.val("");
                }
             }
            }else if(confirm_passcode.length > 4) {
