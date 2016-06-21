@@ -42,7 +42,7 @@ angular.module('updateProfileCtrl',[])
             updateProfile.append($scope.updateDiv);
             $compile(updateProfile)($scope);
           }else {
-              $scope.updateDiv = '<button class="round1 irk-centered  marT5p marB20 irk.font IRK-FONT3 irk-font-helvetica padB2p " ng-click="beginSignUp()">Sign Up</button>';
+              $scope.updateDiv = '<div class="irk-centered  marT5p marB20 irk.font IRK-FONT3 irk-font-helvetica padB2p">User is not registered</div></br> <button class="round1 irk-centered  marB20 irk.font IRK-FONT3 irk-font-helvetica padB2p " ng-click="beginSignUp()">Sign Up</button>';
               var updateProfile = angular.element(document.querySelector('#updateProfile'));
               updateProfile.append($scope.updateDiv);
               $compile(updateProfile)($scope);
