@@ -327,17 +327,16 @@ $scope.skipSignUp = function(){
     }
 
     $scope.launchpinScreen = function(){
-       $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
-         scope: $scope,
-         animation: 'slide-in-up',
-         //backdropClickToClose: true,
-         //hardwareBackButtonClose: true,
-         //focusFirstInput: true
-       }).then(function(modal) {
-         $scope.modal = modal;
-         $scope.modal.show();
-       });
-    }
+      $ionicHistory.clearCache().then(function(){
+        $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
+          scope: $scope,
+          animation: 'slide-in-up',
+        }).then(function(modal) {
+          $scope.modal = modal;
+          $scope.modal.show();
+        });
+      });
+  }
 
 
 //=====sign up cancel ====================================
@@ -356,7 +355,7 @@ $scope.clearSignUpDiv = function(){
   // var divId = angular.element(document.querySelector('#'+lableId));
   // divId.prop('value','');
   }
-  var removeSignUpDiv = angular.element(document.querySelectorAll('#dynamicContent'));
+  var removeSignUpDiv = angular.element(document.querySelectorAll('#signUpDiv'));
   steps.remove();
 
 }
