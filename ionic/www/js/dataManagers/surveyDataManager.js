@@ -72,6 +72,19 @@ angular.module('surveyDataManager', [])
     deferred.resolve(insert);
     return deferred.promise;
   },
+  getTaskListBySurveyIDAndDate : function  (surveyId,todayDate){
+    var deferred = $q.defer();
+    var db = databaseManager.getConnectionObject();
+    var query = "SELECT tasks,skippable, FROM SurveyTemp WHERE creationDate = '"+todayDate+"' AND userId = '"+userId+"' ";
+    var insert =  $cordovaSQLite.execute(db,query)
+                     .then(function(res) {
+                         console.log(res);
+                         return res ;
+                     }, function (err) {
+                 });
+   deferred.resolve(insert);
+   return deferred.promise;
+ },
   getSurveyTempRowByInsertId :  function  (insertId){
     var deferred = $q.defer();
     var db = databaseManager.getConnectionObject();
@@ -101,6 +114,22 @@ getTaskListByquestionId : function  (questionId){
    deferred.resolve(insert);
    return deferred.promise;
  },
+
+ getTaskListForquestion : function  (questionId){
+     var deferred = $q.defer();
+     var db = databaseManager.getConnectionObject();
+     var query = "SELECT taskId,steps,timeLimit FROM Tasks WHERE taskId = '"+questionId+"' " ;
+     var insert =  $cordovaSQLite.execute(db, query)
+                      .then(function(res) {
+                        if(res.rows.length > 0){
+                          return res.rows.item(0) ;
+                        }
+                      }, function (err) {
+                  });
+    deferred.resolve(insert);
+    return deferred.promise;
+  },
+
 
 getQuestionExpiry : function  (questionId){
   var deferred = $q.defer();

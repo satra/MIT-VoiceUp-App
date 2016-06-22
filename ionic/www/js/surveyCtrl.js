@@ -32,9 +32,10 @@ document.addEventListener("resume", function() {
       });
 
    }
-
   }, false);
+
 */
+
   // ==== Close the existing modal and open Sign in html in new modal======== make these as common function
   $scope.openSignIn = function() {
     $ionicHistory.clearCache().then(function(){
@@ -231,15 +232,41 @@ $scope.launchSurvey = function (idSelected){
      }
    });
  }else {
-   $ionicPopup.alert({
-    title: 'Info',
-    template: "Please Sign In/Sign Up to view the survey."
-   });
- }
+       if ($scope.list) {
+             var surveyList = $scope.list;
+             for (var i = 0; i < surveyList.length; i++) {
+             var skippable = JSON.parse(surveyList[i].skippable);
+             var tasks = JSON.parse(surveyList[i].tasks);
+             var surveyId = surveyList[i].surveyId;
+                  if (surveyId == idSelected) {
+                  var promises = []; // an array of promises
+                  var surveyHtml = '';
+                  for (var j = 0; j < tasks.length; j++) {
+                    promises.push(surveyDataManager.getTaskListForquestion(tasks[j]));
+                  }
+
+                  $q.all(promises).then(function(data){
+                      for (var T = 0; T < data.length; T++) {
+                        var steps = JSON.parse(data[T].steps);
+                        var questionId = data[T].taskId;
+                        var disableSkip = false;
+                        for (var k = 0; k < steps.length; k++) {
+                        surveyHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
+                      }
+                    }
+                      if (surveyHtml) {
+                            $scope.showTasksForSlectedSurvey(surveyHtml);
+                      }
+                  });
+               }
+             }
+       }
+   }
 };
 
 $scope.showTasksForSlectedSurvey = function(surveyHtml){
-
+  console.log(surveyHtml);
+if($rootScope.emailId){
   profileDataManager.getFolderIDByEmail($rootScope.emailId).then(function (folderId){
     $scope.folderId = folderId ;
   });
@@ -247,7 +274,7 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
   profileDataManager.getAuthTokenForUser($rootScope.emailId).then(function (authToken){
     $scope.authToken = authToken.token ;
   });
-
+}
   $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                              '<irk-ordered-tasks>'+
                                              surveyHtml +
@@ -271,7 +298,8 @@ $scope.closeModal = function() {
     $ionicLoading.hide();
     }else{
      var childresult = irkResults.getResults().childResults ;
-     for (var i = 0; i < childresult.length; i++) {
+     if ($scope.userId) {
+       for (var i = 0; i < childresult.length; i++) {
        var questionId = childresult[i].id ;
        var answer = childresult[i].answer ;
        var type = childresult[i].type;
@@ -301,37 +329,43 @@ $scope.closeModal = function() {
 
              });
         }
-
-    }
-    //result entry into the result table
-    surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
-    //get item list by folderId
-    dataStoreManager.getItemListByFolderId($scope.folderId,$scope.authToken).then(function(itemList){
-      if (itemList.status==200) {
-        var itemListDetails = itemList.data ;
-        for (var i = 0; i < itemListDetails.length; i++) {
-          var itemName = itemListDetails[i].name;
-          var item_id = itemListDetails[i]._id;
-           if (itemName == 'results') {
-               var today = new Date();
-               var fileName = 'results_json_'+today;
-               $scope.uploadResults($scope.authToken,item_id,JSON.stringify(childresult),fileName);
-               for (var k = 0; k < childresult.length; k++) {
-                     var type = childresult[k].type;
-                     if (type=="IRK-AUDIO-TASK") {
-                      var fileURL = childresult[k].fileURL;
-                      var contentType = childresult[k].contentType;
-                      if (fileURL) {
-                       var fileName = fileURL;
-                       $scope.uploadResults($scope.authToken,item_id,fileURL,fileName);
+     }
+     //result entry into the result table
+     surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
+     //get item list by folderId
+     dataStoreManager.getItemListByFolderId($scope.folderId,$scope.authToken).then(function(itemList){
+       if (itemList.status==200) {
+         var itemListDetails = itemList.data ;
+         for (var i = 0; i < itemListDetails.length; i++) {
+           var itemName = itemListDetails[i].name;
+           var item_id = itemListDetails[i]._id;
+            if (itemName == 'results') {
+                var today = new Date();
+                var fileName = 'results_json_'+today;
+                $scope.uploadResults($scope.authToken,item_id,JSON.stringify(childresult),fileName);
+                for (var k = 0; k < childresult.length; k++) {
+                      var type = childresult[k].type;
+                      if (type=="IRK-AUDIO-TASK") {
+                       var fileURL = childresult[k].fileURL;
+                       var contentType = childresult[k].contentType;
+                       if (fileURL) {
+                        var fileName = fileURL;
+                        $scope.uploadResults($scope.authToken,item_id,fileURL,fileName);
+                       }
                       }
-                     }
-                   }
-             }
-        }
-      }
-       });
+                    }
+              }
+         }
+       }
+        });
+      });
+  }else {
+    surveyDataManager.addResultToDb('guest',childresult,'survey').then(function(response){
+       console.log(response);
+       $ionicLoading.hide();
      });
+  }
+
     }
   };
 
