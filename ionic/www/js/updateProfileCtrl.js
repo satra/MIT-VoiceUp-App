@@ -2,7 +2,7 @@ angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
 .controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
    $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$cordovaEmailComposer,
-   $ionicLoading,profileDataManager,databaseManager,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window) {
+   $ionicLoading,profileDataManager,databaseManager,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
       if ($rootScope.emailId ) {
@@ -193,18 +193,33 @@ angular.module('updateProfileCtrl',[])
         });
     }
 
-   $scope.viewPermissions = function(){
-        $ionicModal.fromTemplateUrl('templates/locationservice.html', {
-          scope: $scope,
-          animation: 'slide-in-up'
-        }).then(function(modal) {
-          $scope.permission = modal;
-          $scope.permission.show();
-          $scope.accelerationLabel="Allow";
-          $scope.geoLabel = "Allow";
-          $scope.microPhoneLabel = "Allow";
-        });
-      }
+    $scope.viewPermissions = function(){
+         $ionicModal.fromTemplateUrl('templates/locationservice.html', {
+           scope: $scope,
+           animation: 'slide-in-up'
+         }).then(function(modal) {
+           $scope.permission = modal;
+           $scope.permission.show();
+    $scope.microPhoneLabel="Allow";
+
+           var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
+          function onSuccess(position) {
+                $scope.geoLabel = 'Granted';
+           };
+           function onError(error) {
+                $scope.geoLabel = 'Allow';
+          };
+
+         });
+         var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
+         function accelerometerSuccess(acceleration) {
+            $scope.accelerationLabel = 'Granted';
+         };
+         function accelerometerError() {
+            $scope.accelerationLabel = 'Allow';
+        };
+       }
+
 
     $scope.allowAccelerometer = function(){
        $scope.accelerationLabel="Granted";

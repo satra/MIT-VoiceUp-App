@@ -1,7 +1,7 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
 .controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
-  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state,userService,$window) {
+  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state,userService,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
 
       profileDataManager.getUserProfileFields().then(function(response){
       var userProfile = response;
@@ -445,24 +445,24 @@ $scope.clearSignUpDiv = function(){
         $scope.modal.show();
         $scope.accelerationLabel="Allow";
         $scope.microPhoneLabel = "Allow";
-        $scope.geoLabel = 'Allow';
+        $scope.geoLabel = "Allow";
        //  $scope.allowGeoLocation();
 
-        // var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
-        // function onSuccess(position) {
-        //      $scope.geoLabel = 'Granted';
-        // };
-        // function onError(error) {
-        //      $scope.geoLabel = 'Allow';
-        // };
+         var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
+         function onSuccess(position) {
+             $scope.geoLabel = 'Granted';
+         };
+         function onError(error) {
 
-        // var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
-        // function accelerometerSuccess(acceleration) {
-        //    $scope.accelerationLabel = 'Granted';
-        // };
-        // function accelerometerError() {
-        //    $scope.accelerationLabel = 'Allow';
-        // };
+         };
+
+         var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
+         function accelerometerSuccess(acceleration) {
+           $scope.accelerationLabel = 'Granted';
+       };
+         function accelerometerError() {
+
+         };
 
         });
       };
@@ -474,10 +474,25 @@ $scope.clearSignUpDiv = function(){
         // }, function(error){
         // $scope.geoLabel = 'Allow';
         // });
+        var posOptions = {timeout: 10000, enableHighAccuracy: false};
+
+           $cordovaGeolocation
+           .getCurrentPosition(posOptions)
+
+           .then(function (position) {
+
+              var lat  = position.coords.latitude
+              var long = position.coords.longitude
+              $scope.geoLabel = 'Granted';
+              console.log(lat + '   ' + long)
+           }, function(err) {
+                    $scope.geoLabel = 'Allow';
+              console.log(err);
+      });
       }
 
       $scope.allowAccelerometer = function(){
-         $scope.accelerationLabel="Granted";
+  
         //  var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
         //  function accelerometerSuccess(acceleration) {
         //     $scope.accelerationLabel = 'Granted';
@@ -485,6 +500,20 @@ $scope.clearSignUpDiv = function(){
         //  function accelerometerError() {
         //     $scope.accelerationLabel = 'Allow';
         //  };
+        $scope.watch = $cordovaDeviceMotion.watchAcceleration($scope.options);
+        // Device motion initilaization
+        $scope.watch.then(null, function(error) {
+               $scope.accelerationLabel='Allow';
+              console.log($scope.accelerationLabel);
+          },
+          function(accelerometerSuccess) {
+          // Set current data
+               $scope.accelerationLabel='Granted';
+               console.log($scope.accelerationLabel);
+          // Detecta shake
+          $scope.detectShake(result);
+
+        });
        }
 
 
