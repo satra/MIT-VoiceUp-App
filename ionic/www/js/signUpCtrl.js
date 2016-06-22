@@ -160,36 +160,38 @@ if (formValid) {
                       if (res.status == 200) {
                           var resultData = res.data ;
                           var userId = resultData._id;
-                          var girderToken = resultData.authToken['token'];
-                          $scope.girderToken = girderToken ;
-                          var folderName = 'user';
-                          profileDataManager.getAppJSON().then(function(appJson){
-
-                              if (appJson) {
-                                dataStoreManager.createUserFolderInServer(girderToken,resultData._id,folderName).then(function(folderInfo){
-                                   if (folderInfo.status==200) {
-                                     var folderDetails = folderInfo.data ;
-                                     var folderId = folderDetails._id ;
-                                     var consentResult = $rootScope.consentResult;
-                                     profileDataManager.createNewUser(dataCache,$scope.emailId,userId,folderId).then(function(localUserId){
-                                        if (localUserId) {
-                                            surveyDataManager.addResultToDb(localUserId,consentResult.docDefinition,'consent').then(function(response){
-                                            $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
-                                            $rootScope.activeUser =  $scope.emailId ;
-                                            $scope.launchpinScreen();
-                                           });
-                                        }
-                                    });
-                                    // ===========create a profile item , create profile_json file and upload chunk for user folder
-                                    $scope.uploadProfileData(girderToken,folderId,JSON.stringify(dataCache));
-                                    $scope.uploadConsentData(girderToken,folderId,JSON.stringify(consentResult.docDefinition));
-                                    $scope.uploadAppData(girderToken,folderId,JSON.stringify(appJson));
-                                    $scope.createFolderItem(girderToken,folderId,'results');
-                                    $scope.createFolderItem(girderToken,folderId,'settings');
-                                  }
-                               });
-                              }
-                        });
+                          if (userId) {
+                            $scope.removeSignUpDiv();
+                            var girderToken = resultData.authToken['token'];
+                            $scope.girderToken = girderToken ;
+                            var folderName = 'user';
+                            profileDataManager.getAppJSON().then(function(appJson){
+                                if (appJson) {
+                                  dataStoreManager.createUserFolderInServer(girderToken,resultData._id,folderName).then(function(folderInfo){
+                                     if (folderInfo.status==200) {
+                                       var folderDetails = folderInfo.data ;
+                                       var folderId = folderDetails._id ;
+                                       var consentResult = $rootScope.consentResult;
+                                       profileDataManager.createNewUser(dataCache,$scope.emailId,userId,folderId).then(function(localUserId){
+                                          if (localUserId) {
+                                              surveyDataManager.addResultToDb(localUserId,consentResult.docDefinition,'consent').then(function(response){
+                                              $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
+                                              $rootScope.activeUser =  $scope.emailId ;
+                                              $scope.launchpinScreen();
+                                             });
+                                          }
+                                      });
+                                      // ===========create a profile item , create profile_json file and upload chunk for user folder
+                                      $scope.uploadProfileData(girderToken,folderId,JSON.stringify(dataCache));
+                                      $scope.uploadConsentData(girderToken,folderId,JSON.stringify(consentResult.docDefinition));
+                                      $scope.uploadAppData(girderToken,folderId,JSON.stringify(appJson));
+                                      $scope.createFolderItem(girderToken,folderId,'results');
+                                      $scope.createFolderItem(girderToken,folderId,'settings');
+                                    }
+                                 });
+                                }
+                              });
+                          }
                       }
                    });
              }
@@ -352,14 +354,15 @@ $scope.clearSignUpDiv = function(){
   for (var i = 0; i < steps.length; i++) {
   var lableId = steps[i].id;
   $scope.labelId = "";
-  // var divId = angular.element(document.querySelector('#'+lableId));
-  // divId.prop('value','');
   }
-  var removeSignUpDiv = angular.element(document.querySelectorAll('#signUpDiv'));
-  steps.remove();
-
 }
 
+$scope.removeSignUpDiv = function(){
+  angular.element(document.querySelectorAll('.item-input')).remove();
+  angular.element(document.querySelectorAll('#signUpDiv')).remove();
+  //var select = angular.element(document.querySelectorAll('.item-input')[i].querySelector('select'));
+//  removeSignUpDiv.remove();
+}
 //=================================================== forgot passcode handler ============================
 
     $scope.checkPasscodeDigits = function(){
