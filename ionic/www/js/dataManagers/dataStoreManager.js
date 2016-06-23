@@ -274,12 +274,14 @@ angular.module('dataStoreManager', [])
      },
      uploadChunkForFile : function (girderToken,fileId,chunk){
        var deferred = $q.defer();
-       var URL = base_url+'/file/chunk?offset=0&uploadId='+fileId+'&chunk='+chunk ;
+       var URL = base_url+'/file/chunk?offset=0&uploadId='+fileId+"&chunk="+chunk  ;
        var createFolder =    $http({ method:'POST',
                                      url: URL,
                                      headers: {
                                     'girder-token': girderToken
-                                     }
+                                    //'Content-Type': 'multipart/form-data'
+                                   },
+                                   data: {chunk}
                                  })
                        .success(function(res) {
                                  return res;
@@ -296,7 +298,34 @@ angular.module('dataStoreManager', [])
           deferred.resolve(createFolder);
           return deferred.promise;
      },
-       userLogout : function (girderToken){
+     uploadAudioFileChunk : function (girderToken,fileId,chunk){
+       var deferred = $q.defer();
+       var URL = base_url+'/file/chunk' ;
+       var createFolder =    $http({
+                                     method:'POST',
+                                     url: URL,
+                                     headers: {
+                                     'girder-token': girderToken,
+                                     'Content-Type':'application/x-www-form-urlencoded'
+                                     },
+                                     data: 'offset=0&uploadId='+fileId+'&chunk='+chunk
+                                 })
+                       .success(function(res) {
+                                 return res;
+                                 })
+                       .error(function(error) {
+                                 $ionicLoading.hide();
+                                 if (error) {
+                                   $ionicPopup.alert({
+                                   title: 'Error',
+                                   template: error.message
+                                   });
+                                 }
+                           });
+          deferred.resolve(createFolder);
+          return deferred.promise;
+     },
+     userLogout : function (girderToken){
        var deferred = $q.defer();
        var URL = base_url+'/user/authentication/' ;
        var createFolder =    $http({ method:'DELETE',

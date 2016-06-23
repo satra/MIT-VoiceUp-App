@@ -2,7 +2,7 @@
 angular.module('surveyCtrl',[])
 // ==== Dummy contorller need to be removed later before production  ========
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
- surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,dataStoreManager,$q) {
+ surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,dataStoreManager,$q,$cordovaFile) {
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
@@ -350,10 +350,18 @@ $scope.closeModal = function() {
                        var contentType = childresult[k].contentType;
                        if (fileURL) {
                         var fileName = fileURL;
-                        $scope.uploadResults($scope.authToken,item_id,fileURL,fileName);
+                        var itemId = item_id;
+                        var audioFileDirectory = (ionic.Platform.isAndroid() ? cordova.file.dataDirectory : cordova.file.documentsDirectory);
+                         $cordovaFile.readAsDataURL(audioFileDirectory,fileName).then(function (base64Data){
+                         $scope.uploadAudioData($scope.authToken,itemId,base64Data,fileName);
+                        },function(error){
+                            console.log(error);
+                         });
+
                        }
                       }
                     }
+
               }
          }
        }
@@ -368,6 +376,29 @@ $scope.closeModal = function() {
 
     }
   };
+
+  //=== upload consent json for the file ===========================================
+  $scope.uploadAudioData = function (girderToken,itemId,dataString,fileName){
+          try {
+                  var deferred = $q.defer();
+                  var dataString = LZString.compressToEncodedURIComponent(dataString);
+                  var fileSize = dataString.length;
+                  dataStoreManager.createFileForItem(girderToken,itemId,fileName,fileSize).then(function(fileCreateInfo){
+                     if (fileCreateInfo.status==200) {
+                        var fileCreateDetails = fileCreateInfo.data ;
+                        var fileCreateId = fileCreateDetails._id ;
+                        var chunkInfo = dataStoreManager.uploadAudioFileChunk(girderToken,fileCreateId,dataString).then(function(chunkInfo){
+                           if (chunkInfo.status==200) {
+                           var chunkDetails = chunkInfo.data ;
+                           }
+                         });
+                       }
+                  });
+            }
+          catch(err) {
+            console.log('error'+err);
+          }
+};
 
   //=== upload consent json for the file ===========================================
   $scope.uploadResults = function (girderToken,itemId,uploadData,fileName){
