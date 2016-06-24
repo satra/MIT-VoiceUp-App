@@ -336,6 +336,12 @@ $scope.closeModal = function() {
      dataStoreManager.getItemListByFolderId($scope.folderId,$scope.authToken).then(function(itemList){
        if (itemList.status==200) {
          var itemListDetails = itemList.data ;
+
+        // promise variables
+         var promises = [];
+         var deferred = $q.defer();
+         var itemname = [];
+
          for (var i = 0; i < itemListDetails.length; i++) {
            var itemName = itemListDetails[i].name;
            var item_id = itemListDetails[i]._id;
@@ -343,28 +349,61 @@ $scope.closeModal = function() {
                 var today = new Date();
                 var fileName = 'results_json_'+today;
                 $scope.uploadResults($scope.authToken,item_id,JSON.stringify(childresult),fileName);
+
                 for (var k = 0; k < childresult.length; k++) {
                       var type = childresult[k].type;
                       if (type=="IRK-AUDIO-TASK") {
                        var fileURL = childresult[k].fileURL;
                        var contentType = childresult[k].contentType;
                        if (fileURL) {
-                        var fileName = fileURL;
-                        var itemId = item_id;
+                        itemname.push(fileURL);
                         var audioFileDirectory = (ionic.Platform.isAndroid() ? cordova.file.dataDirectory : cordova.file.documentsDirectory);
-                         $cordovaFile.readAsDataURL(audioFileDirectory,fileName).then(function (base64Data){
-                         $scope.uploadAudioData($scope.authToken,itemId,base64Data,fileName);
-                        },function(error){
-                            console.log(error);
-                         });
-
+                        promises.push($cordovaFile.readAsDataURL(audioFileDirectory,fileURL));
                        }
                       }
-                    }
-
+                  }
               }
-         }
-       }
+            }
+
+   //Resolve all the promises once for loop is done
+   // create list of files(items) for the check upload
+            if (promises) {
+               var  baseDataArray = '';
+               $q.all(promises).then(function(baseDataArray){
+                var fileItemPromise = [];
+                for (var i = 0; i < baseDataArray.length; i++) {
+                  var dataString = LZString.compressToEncodedURIComponent(baseDataArray[i]);
+                  var fileSize = dataString.length;
+                  var fileName = itemname[i];
+                  fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,item_id,fileName,fileSize));
+                }
+
+            // upload the chunks for the files
+                $q.all(fileItemPromise).then(function(itemCreateInfo){
+                        var uploadChunk = [];
+                                for (var i = 0; i < itemCreateInfo.length; i++) {
+                                if (itemCreateInfo[i].status==200) {
+                                var fileCreateDetails = itemCreateInfo[i].data ;
+                                var fileCreateId = fileCreateDetails._id ;
+                                var dataString = LZString.compressToEncodedURIComponent(baseDataArray[i]);
+                                uploadChunk.push(dataStoreManager.uploadAudioFileChunk($scope.authToken,fileCreateId,dataString));
+                                  }
+                                }
+                         if (uploadChunk) {
+                           $q.all(uploadChunk).then(function(uploadChunkInfo){
+                               for (var L = 0; L < uploadChunkInfo.length; L++) {
+                                 if (uploadChunkInfo[L].status==200) {
+                                 var chunkDetails = uploadChunkInfo[L].data ;
+                                    }
+                                   }
+                               });
+                          }
+                  });
+              });
+            }
+
+
+          }
         });
       });
   }else {
@@ -377,29 +416,46 @@ $scope.closeModal = function() {
     }
   };
 
+  /*
+
   //=== upload consent json for the file ===========================================
   $scope.uploadAudioData = function (girderToken,itemId,dataString,fileName){
           try {
                   var deferred = $q.defer();
                   var dataString = LZString.compressToEncodedURIComponent(dataString);
                   var fileSize = dataString.length;
+                  var promises = [];
+                  promises.push(dataStoreManager.createFileForItem(girderToken,itemId,fileName,fileSize));
+
                   dataStoreManager.createFileForItem(girderToken,itemId,fileName,fileSize).then(function(fileCreateInfo){
                      if (fileCreateInfo.status==200) {
                         var fileCreateDetails = fileCreateInfo.data ;
                         var fileCreateId = fileCreateDetails._id ;
-                        var chunkInfo = dataStoreManager.uploadAudioFileChunk(girderToken,fileCreateId,dataString).then(function(chunkInfo){
+                        promises.push(dataStoreManager.uploadAudioFileChunk(girderToken,fileCreateId,dataString));
+
+
+                          var chunkInfo = dataStoreManager.uploadAudioFileChunk(girderToken,fileCreateId,dataString).then(function(chunkInfo){
                            if (chunkInfo.status==200) {
                            var chunkDetails = chunkInfo.data ;
                            }
-                         });
+                          });
+
+
                        }
                   });
+
+                // resolve all the promises
+                $q.all(promises).then(function(chunkInfo){
+                     for (var i = 0; i < chunkInfo.length; i++) {
+                       console.log(chunkInfo.data);
+                     }
+                   });
             }
           catch(err) {
             console.log('error'+err);
           }
 };
-
+*/
   //=== upload consent json for the file ===========================================
   $scope.uploadResults = function (girderToken,itemId,uploadData,fileName){
           try {
