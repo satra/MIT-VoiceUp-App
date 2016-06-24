@@ -96,6 +96,7 @@ document.addEventListener("resume", function() {
 
 surveyDataManager.getSurveyListForToday().then(function(response){
     $scope.list = response;
+    console.log($scope.list);
     var surveyMainList = response;
     var today = new Date() ;
     var creationDate = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
@@ -117,7 +118,7 @@ surveyDataManager.getSurveyListForToday().then(function(response){
                 for (var k = 0; k < surveyMainList.length; k++) {
                     var taskList = JSON.parse(surveyMainList[k].tasks) ;
                     var skippableList = JSON.parse(surveyMainList[k].skippable) ;
-                    var surveyId = surveyMainList[k].id ;
+                    var surveyId = surveyMainList[k].surveyId ;
                     for (var M = 0; M < taskList.length; M++) {
                     var questionId = taskList[M] ;
                     var skippable = false ;
@@ -152,9 +153,7 @@ surveyDataManager.getSurveyListForToday().then(function(response){
 
         // pull from expiry table and put it in temp table where questions expiry still exists
         surveyDataManager.getUnansweredQuestionsLessThanToDate($scope.userId,creationDate).then(function(resp){
-                 console.log('control under fetching un answered questions ');
-                           if (resp.length >0 ) {
-                             // insert unanswered questions into temp table
+                      if (resp) {
                             for (var i = 0; i < resp.length; i++) {
                             surveyDataManager.addSurveyToUserForToday($scope.userId,'',resp[i].questionId,creationDate,resp[i].skippable)
                               .then(function(res){
@@ -164,9 +163,8 @@ surveyDataManager.getSurveyListForToday().then(function(response){
                             $ionicLoading.hide();
                           }else{
                             $ionicLoading.hide();
-                          }
+                        }
                    });
-
                }
             });
          });
@@ -416,46 +414,6 @@ $scope.closeModal = function() {
     }
   };
 
-  /*
-
-  //=== upload consent json for the file ===========================================
-  $scope.uploadAudioData = function (girderToken,itemId,dataString,fileName){
-          try {
-                  var deferred = $q.defer();
-                  var dataString = LZString.compressToEncodedURIComponent(dataString);
-                  var fileSize = dataString.length;
-                  var promises = [];
-                  promises.push(dataStoreManager.createFileForItem(girderToken,itemId,fileName,fileSize));
-
-                  dataStoreManager.createFileForItem(girderToken,itemId,fileName,fileSize).then(function(fileCreateInfo){
-                     if (fileCreateInfo.status==200) {
-                        var fileCreateDetails = fileCreateInfo.data ;
-                        var fileCreateId = fileCreateDetails._id ;
-                        promises.push(dataStoreManager.uploadAudioFileChunk(girderToken,fileCreateId,dataString));
-
-
-                          var chunkInfo = dataStoreManager.uploadAudioFileChunk(girderToken,fileCreateId,dataString).then(function(chunkInfo){
-                           if (chunkInfo.status==200) {
-                           var chunkDetails = chunkInfo.data ;
-                           }
-                          });
-
-
-                       }
-                  });
-
-                // resolve all the promises
-                $q.all(promises).then(function(chunkInfo){
-                     for (var i = 0; i < chunkInfo.length; i++) {
-                       console.log(chunkInfo.data);
-                     }
-                   });
-            }
-          catch(err) {
-            console.log('error'+err);
-          }
-};
-*/
   //=== upload consent json for the file ===========================================
   $scope.uploadResults = function (girderToken,itemId,uploadData,fileName){
           try {

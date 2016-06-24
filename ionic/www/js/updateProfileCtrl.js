@@ -534,4 +534,19 @@ $scope.checkNewPasscodeDigits = function(){
           template: message
          });
      }
+
+     $scope.viewCopyrightInfo = function(){
+          $ionicModal.fromTemplateUrl('templates/copyRightInfo.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+          }).then(function(modal) {
+            $scope.permission = modal;
+            $scope.permission.show();
+        });
+    }
+
+    $scope.closeCopyRightInfo = function(){
+      $scope.permission.remove();
+    }
+
 });

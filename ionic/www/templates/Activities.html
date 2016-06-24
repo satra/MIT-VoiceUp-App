@@ -10,7 +10,7 @@
 <ion-content>
 <ion-list>
 
-<ion-item ng-repeat="item in list" ng-click=launchSurvey({{item.surveyId}}) class="item-thumbnail-left">
+<ion-item ng-repeat="item in list" ng-click=launchSurvey('{{item.surveyId}}') class="item-thumbnail-left">
 <h2>{{item.title}}</h2>
 <p>{{item.date}}</p>
 </ion-item>

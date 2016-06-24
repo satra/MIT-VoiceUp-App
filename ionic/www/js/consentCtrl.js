@@ -4,10 +4,10 @@ angular.module('consent',[])
   $ionicModal,$http,$compile,$ionicLoading,userService,$rootScope,databaseManager,consentDataManager,irkResults,irkConsentDocument,$state,$location,$window) {
 
     consentDataManager.getAllConsentScreens().then(function(response){
-    $scope.enable_review = response.enable_review;
+    $scope.enable_review = response.enable_review_questions;
     $scope.consent_array = response.sections;
-
     var taskListData =  userService.parseConsent($scope.consent_array,$scope.enable_review);
+
     var taskList =   '<ion-modal-view class="irk-modal">'+
     '<irk-ordered-tasks>'+
     taskListData +

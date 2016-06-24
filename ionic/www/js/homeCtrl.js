@@ -3,6 +3,17 @@ angular.module('homeCtrl',[])
 .controller('homeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
   dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
 
+
+/*    userService.getSeverJson().then(function(obj2){
+           //call a method and read from local json and create schema
+           userService.getLocalJson().then(function(obj1){
+             var delta = jsondiffpatch.diff(obj1,  obj2);
+             jsondiffpatch.patch(obj1, delta);
+             console.log(obj1);
+           });
+        });
+*/
+
 //   if (window.cordova) {
 //       if (cordova.platformId == "browser") {
 //           var exec = require("cordova/exec");
@@ -58,15 +69,82 @@ databaseManager.checkDatabaseExists().then(function(res){
 
             var eligibility = JSON.stringify(response.eligibility);
             var profile = JSON.stringify(response.profile);
-            var consent_screens = JSON.stringify(response.consent_screens);
+            var consent_screens = JSON.stringify(response.consent);
             var completeJson = JSON.stringify(response);
             var surveyJson =  response.surveys;
             var tasksJson =  response.tasks;
             var today = new Date() ;
-            databaseManager.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
-             console.log('Create app table');
+
+        databaseManager.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
+              for (var survey in surveyJson) {
+                if (surveyJson.hasOwnProperty(survey)) {
+                var obj = surveyJson[survey];
+                var date = '';
+                var title = survey;
+                var id = survey;
+                var skippable = '';
+                var tasks = '' ;
+                 for (var prop in obj) {
+                   switch (prop) {
+                     case "date": date = obj[prop];
+                         break;
+                     case "skippable": skippable = JSON.stringify(obj[prop]);
+                         break;
+                     case "tasks": tasks = JSON.stringify(obj[prop]);
+                         break;
+                     default:
+                   }
+                 if (date && title && id && tasks) {
+                     var dateArray =date.split(" ");
+                     var min = dateArray[0];
+                     var month = dateArray[1];
+                     var day = dateArray[2];
+                     //var month = dateArray[3];
+                     if(month == "*"){
+                       month = today.getMonth()+1;
+                     }
+                     if(day == "*"){
+                      day = today.getDate();
+                     }
+                     var customDate = day+'-'+month+'-'+today.getFullYear() ;
+                     databaseManager.createSurveysTable(customDate,title,id,skippable,tasks).then(function(respw){
+                      console.log('insert survey '+respw);
+                     });
+                   }
+                 }
+               }
+             }
+          for (var task in tasksJson) {
+               if (tasksJson.hasOwnProperty(task)) {
+               var timeLimit = tasksJson[task].timelimit ;
+               var steps = JSON.stringify(tasksJson[task].steps) ;
+               if (timeLimit === undefined || timeLimit === null) {
+               timeLimit = '';
+               }
+               databaseManager.createTasksTable(task,steps,timeLimit).then(function(resp){
+               console.log('createTasksTable  '+ resp);
+               });
+             }
+           }
+              databaseManager.createSurveyTempTable().then(function(resp){
+                  console.log('createSurveyTempTable  '+ resp);
+             });
+
+             databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
+                  console.log('createSurveyQuestionTable  '+ resp);
+             });
+
             });
 
+databaseManager.createSurveyTempTable().then(function(resp){
+    console.log('createSurveyTempTable  '+ resp);
+});
+
+databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
+    console.log('createSurveyQuestionTable  '+ resp);
+});
+
+/*
           //==============create survey table==========
           for (var i = 0; i < surveyJson.length; i++) {
                var date = surveyJson[i].date;
@@ -110,7 +188,9 @@ databaseManager.checkDatabaseExists().then(function(res){
                  console.log('createSurveyQuestionTable  '+ resp);
             });
 
-          });
+          */
+
+                    });
        }
  });
 
