@@ -274,14 +274,14 @@ angular.module('dataStoreManager', [])
      },
      uploadChunkForFile : function (girderToken,fileId,chunk){
        var deferred = $q.defer();
-       var URL = base_url+'/file/chunk?offset=0&uploadId='+fileId+"&chunk="+chunk  ;
+       var URL = base_url+'/file/chunk' ;
        var createFolder =    $http({ method:'POST',
                                      url: URL,
                                      headers: {
-                                    'girder-token': girderToken
-                                    //'Content-Type': 'multipart/form-data'
-                                   },
-                                   data: {chunk}
+                                     'girder-token': girderToken,
+                                     'Content-Type':'application/x-www-form-urlencoded'
+                                      },
+                                      data: 'offset=0&uploadId='+fileId+'&chunk='+chunk
                                  })
                        .success(function(res) {
                                  return res;
