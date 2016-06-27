@@ -27,7 +27,9 @@ $ionicPlatform.registerBackButtonAction(function (event) {
    }, 100);
 })
 
-.config(function($stateProvider, $httpProvider,$urlRouterProvider) {
+.config(function($stateProvider, $httpProvider,$urlRouterProvider,$ionicConfigProvider) {
+
+  $ionicConfigProvider.views.swipeBackEnabled(false);
 
   $httpProvider.defaults.useXDomain = true;
   $httpProvider.defaults.withCredentials = true;
