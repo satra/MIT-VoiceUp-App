@@ -16,7 +16,7 @@
       FEBRUARY: 'February',
       MARCH: 'March',
       APRIL: 'April',
-      MAI: 'May',
+      MAY: 'May',
       JUNE: 'June',
       JULY: 'July',
       AUGUST: 'August',
@@ -98,7 +98,7 @@
 
     var $translate = $filter('translate');
 
-    var MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAI', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+    var MONTHS = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
     var WEEKDAYS = ['SUNDAY' , 'MONDAY' , 'TUESDAY' , 'WEDNESDAY' , 'THURSDAY' , 'FRIDAY' , 'SATURDAY'];
 
     if($scope.options.mondayIsFirstDay)
