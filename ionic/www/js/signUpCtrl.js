@@ -17,6 +17,19 @@ angular.module('signUp',[])
       var dynamicContent = angular.element(document.querySelector('#dynamicContent'));
       dynamicContent.append($scope.profileDiv);
       $compile(dynamicContent)($scope);
+
+
+       var result = $rootScope.consentFullJson ;
+          for (var i = 0; i < result.length; i++) {
+            var type = result[i].type;
+              if (type == "IRK-CONSENT-REVIEW-STEP") {
+                 if (result[i].participantFamilyName) {
+                    $scope.firstName_firstName = result[i].participantGivenName;
+                    $scope.lastName_lastName  = result[i].participantFamilyName ;
+                 }
+            }
+       }
+
      });
 
      $scope.passcodeValidation= function(){

@@ -30,6 +30,7 @@ $scope.closeModal = function() {
           childresult.every(function(value, key){
           if (value.type == "IRK-CONSENT-REVIEW-STEP") {
           if (value.answer) {
+          $rootScope.consentFullJson = irkResults.getResults().childResults ;
           $rootScope.consentResult = irkConsentDocument.getDocument();
           $ionicHistory.clearCache().then(function(){
                $state.transitionTo('loadSignUp');
