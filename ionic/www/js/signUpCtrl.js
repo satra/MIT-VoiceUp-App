@@ -219,7 +219,7 @@ if (formValid) {
                                     }
                                  },function(error){
                                    console.log(error);
-                                   if (error.statusText) {
+                                   if (!error.statusText) {
                                       $scope.callAlertDailog("couldn't able to create user folder "+error.statusText);
                                    }
                                  });
@@ -230,7 +230,7 @@ if (formValid) {
                       }
                    },function(error){
                      console.log(error);
-                     if (error.statusText) {
+                     if (!error.statusText) {
                        $scope.callAlertDailog("couldn't able to create user "+error.statusText);
                      }
                  });

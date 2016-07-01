@@ -75,7 +75,7 @@ databaseManager.checkDatabaseExists().then(function(res){
             var tasksJson =  response.tasks;
             var today = new Date() ;
 
-        databaseManager.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
+         databaseManager.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
               for (var survey in surveyJson) {
                 if (surveyJson.hasOwnProperty(survey)) {
                 var obj = surveyJson[survey];
@@ -136,61 +136,18 @@ databaseManager.checkDatabaseExists().then(function(res){
 
             });
 
-databaseManager.createSurveyTempTable().then(function(resp){
-    console.log('createSurveyTempTable  '+ resp);
-});
+          databaseManager.createSurveyTempTable().then(function(resp){
+              console.log('createSurveyTempTable  '+ resp);
+          });
 
-databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
-    console.log('createSurveyQuestionTable  '+ resp);
-});
+          databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
+              console.log('createSurveyQuestionTable  '+ resp);
+          });
 
-/*
-          //==============create survey table==========
-          for (var i = 0; i < surveyJson.length; i++) {
-               var date = surveyJson[i].date;
-               var title = surveyJson[i].title;
-               var id = surveyJson[i].id;
-               var skippable = JSON.stringify(surveyJson[i].skippable);
-               var tasks = JSON.stringify(surveyJson[i].tasks) ;
-               var dateArray =date.split(" ");
-               var min = dateArray[0];
-               var month = dateArray[1];
-               var day = dateArray[2];
-               //var month = dateArray[3];
-               if(month == "*"){
-                 month = today.getMonth()+1;
-               }
-               if(day == "*"){
-                day = today.getDate();
-               }
-               var customDate = day+'-'+month+'-'+today.getFullYear() ;
-               databaseManager.createSurveysTable(customDate,title,id,skippable,tasks).then(function(respw){
-                console.log('insert survey '+respw);
-               });
-          }
-
-    //==============create Tasks table==========
-            for (var task in tasksJson) {
-              var timeLimit = tasksJson[task].timelimit ;
-              if (timeLimit === undefined || timeLimit === null) {
-              timeLimit = '';
-              }
-              databaseManager.createTasksTable(task,JSON.stringify(tasksJson[task].steps),timeLimit).then(function(resp){
-              console.log('createTasksTable  '+ resp);
-              });
-            }
-
-            databaseManager.createSurveyTempTable().then(function(resp){
-                 console.log('createSurveyTempTable  '+ resp);
+          databaseManager.createSyncServiceTable().then(function(resp){
+              console.log('createSynchTable  '+ resp);
             });
-
-            databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
-                 console.log('createSurveyQuestionTable  '+ resp);
-            });
-
-          */
-
-                    });
+         });
        }
  });
 
@@ -220,35 +177,26 @@ $scope.GoBack = function () {
 };
 
 $scope.sendConsentDoc = function (){
-  var email = {
-    // to: 'teste@example.com',
-    // cc: 'teste@example.com',
-    // bcc: ['john@doe.com', 'jane@doe.com'],
-     attachments: [
-       'file://assets/consent_mobile_20150528.pdf'
-     ],
-     subject: 'Consent doc',
-    // body: 'How are you? Nice greetings from Leipzig',
-     isHtml: true
-  };
 
- // $cordovaEmailComposer.open(email).then(null, function () {
- //   // user cancelled email
- //  });
-
- $cordovaEmailComposer.isAvailable().then(function() {
-    // is available
+  if (ionic.Platform.isAndroid()) {
+    pdfMake.createPdf(res).download();
+  }else {
+    var email = {
+       attachments: [
+         'file://assets/consent_mobile_20150528.pdf'
+       ],
+       subject: 'Consent doc',
+       isHtml: true
+    };
+    $cordovaEmailComposer.isAvailable().then(function() {
     $cordovaEmailComposer.open(email).then(null, function () {
       console.log('email ');
     });
-
   }, function () {
     // not available
     console.log('email not available' );
-
   });
-
-
+ }
 }
 
 //==================================Select email view ==========

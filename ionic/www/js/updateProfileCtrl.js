@@ -146,6 +146,9 @@ angular.module('updateProfileCtrl',[])
       // get consent data saved locally
       profileDataManager.getUserConsentJson(userId).then(function(res){
            if (res) {
+            if (ionic.Platform.isAndroid()) {
+              pdfMake.createPdf(res).download();
+            }else {
             pdfMake.createPdf(res).getBase64(function(dataURL) {
               var email = {
                      attachments: [
@@ -162,6 +165,7 @@ angular.module('updateProfileCtrl',[])
                     console.log('email not available' );
                   });
             });
+          }
 
              }
         });
