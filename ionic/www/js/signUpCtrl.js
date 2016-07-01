@@ -1,7 +1,7 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
 .controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
-  ,profileDataManager,databaseManager,dataStoreManager,surveyDataManager,$state,userService,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
+  ,profileDataManager,databaseManager,dataStoreManager,syncDataFactory,surveyDataManager,$state,userService,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
 
       profileDataManager.getUserProfileFields().then(function(response){
       var userProfile = response;
@@ -161,39 +161,79 @@ if (formValid) {
                           var resultData = res.data ;
                           var userId = resultData._id;
                           if (userId) {
-                            $scope.removeSignUpDiv();
                             var girderToken = resultData.authToken['token'];
                             $scope.girderToken = girderToken ;
                             var folderName = 'user';
                             profileDataManager.getAppJSON().then(function(appJson){
                                 if (appJson) {
+                                  var appJson = JSON.stringify(appJson) ;
+
                                   dataStoreManager.createUserFolderInServer(girderToken,resultData._id,folderName).then(function(folderInfo){
                                      if (folderInfo.status==200) {
                                        var folderDetails = folderInfo.data ;
                                        var folderId = folderDetails._id ;
                                        var consentResult = $rootScope.consentResult;
+                                       var profileJsonString = JSON.stringify(dataCache) ;
+                                       var docDefinition = JSON.stringify(consentResult.docDefinition);
+
                                        profileDataManager.createNewUser(dataCache,$scope.emailId,userId,folderId).then(function(localUserId){
                                           if (localUserId) {
                                               surveyDataManager.addResultToDb(localUserId,consentResult.docDefinition,'consent').then(function(response){
                                               $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
                                               $rootScope.activeUser =  $scope.emailId ;
+
+                                              $scope.removeSignUpDiv();
                                               $scope.launchpinScreen();
+
+                                             // failed to upload the profile data make an entry into sync table
+                                             syncDataFactory.addToSyncQueue(girderToken,localUserId,"profile",profileJsonString).then(function(profileUpload){
+                                                    if (profileUpload) {
+                                                      var itemName = "profile";
+                                                      var fileName = "profile_json";
+                                                      $scope.uploadProfileData(girderToken,folderId,profileJsonString,localUserId,itemName,fileName);
+                                                     }
+                                              });
+
+                                              syncDataFactory.addToSyncQueue(girderToken,localUserId,"consent",docDefinition).then(function(consentUpload){
+                                                      if (consentUpload) {
+                                                        var itemName = "consent";
+                                                        var fileName = "consent_json";
+                                                        $scope.uploadConsentData(girderToken,folderId,docDefinition,localUserId,itemName,fileName);
+                                                      }
+                                              });
+
+                                              syncDataFactory.addToSyncQueue(girderToken,localUserId,"app",appJson).then(function(consentUpload){
+                                                      if (consentUpload) {
+                                                        var itemName = "app";
+                                                        var fileName = "app_json";
+                                                        $scope.uploadAppData(girderToken,folderId,appJson,localUserId,itemName,fileName);
+                                                      }
+                                              });
+
+                                              $scope.createFolderItem(girderToken,folderId,'results');
+                                              $scope.createFolderItem(girderToken,folderId,'settings');
+
                                              });
                                           }
                                       });
-                                      // ===========create a profile item , create profile_json file and upload chunk for user folder
-                                      $scope.uploadProfileData(girderToken,folderId,JSON.stringify(dataCache));
-                                      $scope.uploadConsentData(girderToken,folderId,JSON.stringify(consentResult.docDefinition));
-                                      $scope.uploadAppData(girderToken,folderId,JSON.stringify(appJson));
-                                      $scope.createFolderItem(girderToken,folderId,'results');
-                                      $scope.createFolderItem(girderToken,folderId,'settings');
                                     }
+                                 },function(error){
+                                   console.log(error);
+                                   if (error.statusText) {
+                                      $scope.callAlertDailog("couldn't able to create user folder "+error.statusText);
+                                   }
                                  });
+
                                 }
                               });
                           }
                       }
-                   });
+                   },function(error){
+                     console.log(error);
+                     if (error.statusText) {
+                       $scope.callAlertDailog("couldn't able to create user "+error.statusText);
+                     }
+                 });
              }
           });
         }else {
@@ -206,113 +246,136 @@ if (formValid) {
        }
   }
 
+$scope.uploadProfileData = function(girderToken,folderId,profileJsonString,localUserId,itemName,fileName){
+    var createDataItem = syncDataFactory.createItemForFolder(girderToken,folderId,itemName).then(function(createDataItem){
+        if (createDataItem.status==200) {
+        var itemCreateDetails = createDataItem.data ;
+        var itemCreateId = itemCreateDetails._id ;
+        var dataString = LZString.compressToEncodedURIComponent(profileJsonString);
+        var fileSize = dataString.length;
+        var deferred = $q.defer();
+        var createFileForItem = syncDataFactory.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
+            if (createFileForItem.status==200) {
+                   var fileCreateDetails = createFileForItem.data ;
+                   var fileCreateId = fileCreateDetails._id ;
+                   var dataString = LZString.compressToEncodedURIComponent(profileJsonString);
+                   var deferred = $q.defer();
+                   var chunkInfo = syncDataFactory.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
+                     if (chunkInfo.status==200) {
+                     var chunkDetails = chunkInfo.data ;
+                     //clear the sync table for profile
+                     var deferred = $q.defer();
+                     syncDataFactory.removeProfileData(localUserId,itemName).then(function(syncItemRemove){
+                         if (syncItemRemove) {
+                           console.log("sync profile "+itemName+" removed ");
+                         }
+                      });
+                    }
+                 },function(eror){
+                    console.log(error);
+                  });
+               }
+           },function(eror){
+              console.log(error);
+            });
+        }
+      },function(eror){
+          console.log(error);
+       });
+}
+
 //=================create an item for the folder
 $scope.createFolderItem = function (girderToken,folderId,itemName){
-            try {
-              var deferred = $q.defer();
-              var createFolderItem = dataStoreManager.createItemForFolder(girderToken,folderId,itemName).then(function(createItem){
-                  if (createItem.status==200) {
-                  }
-                  deferred.resolve(createFolderItem);
-                });
-              }
-              catch(err) {
-                console.log('error'+err);
-              }
-  }
-
-//=== upload profile json for the file ===========================================
-$scope.uploadProfileData = function (girderToken,folderId,uploadData){
-        try {
-          var deferred = $q.defer();
-          var createDataItem = dataStoreManager.createItemForFolder(girderToken,folderId,"profile").then(function(createDataItem){
-              if (createDataItem.status==200) {
-              var itemCreateDetails = createDataItem.data ;
-              var itemCreateId = itemCreateDetails._id ;
-              var dataString = LZString.compressToEncodedURIComponent(uploadData);
-              var fileSize = dataString.length;
-              var createFileForItem = dataStoreManager.createFileForItem(girderToken,itemCreateId,"profile_json",fileSize).then(function(createFileForItem){
-                  if (createFileForItem.status==200) {
-                       var fileCreateDetails = createFileForItem.data ;
-                       var fileCreateId = fileCreateDetails._id ;
-                       var dataString = LZString.compressToEncodedURIComponent(uploadData);
-                       var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
-                       if (chunkInfo.status==200) {
-                       var chunkDetails = chunkInfo.data ;
-                        deferred.resolve(createDataItem);
-                       }
-                       });
-                     }
-                 });
-              }
-           });
-          }
-        catch(err) {
-          console.log('error'+err);
-        }
-  };
-
-  //=== upload consent json for the file ===========================================
-  $scope.uploadConsentData = function (girderToken,folderId,uploadData){
-          try {
-            var deferred = $q.defer();
-            var createDataItem = dataStoreManager.createItemForFolder(girderToken,folderId,"consent").then(function(createDataItem){
-                if (createDataItem.status==200) {
-                var itemCreateDetails = createDataItem.data ;
-                var itemCreateId = itemCreateDetails._id ;
-                var dataString = LZString.compressToEncodedURIComponent(uploadData);
-                var fileSize = dataString.length;
-                var createFileForItem = dataStoreManager.createFileForItem(girderToken,itemCreateId,"consent_json",fileSize).then(function(createFileForItem){
-                    if (createFileForItem.status==200) {
-                         var fileCreateDetails = createFileForItem.data ;
-                         var fileCreateId = fileCreateDetails._id ;
-                         var dataString = LZString.compressToEncodedURIComponent(uploadData);
-                         var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
-                         if (chunkInfo.status==200) {
-                         var chunkDetails = chunkInfo.data ;
-                          deferred.resolve(createDataItem);
-                         }
-                         });
-                       }
-                   });
+              try {
+                var deferred = $q.defer();
+                var createFolderItem = dataStoreManager.createItemForFolder(girderToken,folderId,itemName).then(function(createItem){
+                    if (createItem.status==200) {
+                    }
+                    deferred.resolve(createFolderItem);
+                  });
                 }
-             });
-            }
-          catch(err) {
-            console.log('error'+err);
-          }
-    };
+                catch(err) {
+                  console.log('error'+err);
+                }
+    }
 
-    //=== upload app json for the file ===========================================
-    $scope.uploadAppData = function (girderToken,folderId,uploadData){
-            try {
-              var deferred = $q.defer();
-              var createDataItem = dataStoreManager.createItemForFolder(girderToken,folderId,"app").then(function(createDataItem){
-                  if (createDataItem.status==200) {
-                  var itemCreateDetails = createDataItem.data ;
-                  var itemCreateId = itemCreateDetails._id ;
-                  var dataString = LZString.compressToEncodedURIComponent(uploadData);
-                  var fileSize = dataString.length;
-                  var createFileForItem = dataStoreManager.createFileForItem(girderToken,itemCreateId,"app_json",fileSize).then(function(createFileForItem){
-                      if (createFileForItem.status==200) {
-                           var fileCreateDetails = createFileForItem.data ;
-                           var fileCreateId = fileCreateDetails._id ;
-                           var dataString = LZString.compressToEncodedURIComponent(uploadData);
-                           var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
-                           if (chunkInfo.status==200) {
-                           var chunkDetails = chunkInfo.data ;
-                            deferred.resolve(createDataItem);
-                           }
-                           });
+//=== upload consent json for the file ===========================================
+$scope.uploadConsentData = function(girderToken,folderId,consentJsonString,localUserId,itemName,fileName){
+    var createDataItem = syncDataFactory.createItemForFolder(girderToken,folderId,itemName).then(function(createDataItem){
+        if (createDataItem.status==200) {
+        var itemCreateDetails = createDataItem.data ;
+        var itemCreateId = itemCreateDetails._id ;
+        var dataString = LZString.compressToEncodedURIComponent(consentJsonString);
+        var fileSize = dataString.length;
+        var deferred = $q.defer();
+        var createFileForItem = syncDataFactory.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
+            if (createFileForItem.status==200) {
+                   var fileCreateDetails = createFileForItem.data ;
+                   var fileCreateId = fileCreateDetails._id ;
+                   var dataString = LZString.compressToEncodedURIComponent(consentJsonString);
+                   var deferred = $q.defer();
+                   var chunkInfo = syncDataFactory.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
+                     if (chunkInfo.status==200) {
+                     var chunkDetails = chunkInfo.data ;
+                     //clear the sync table for profile
+                     var deferred = $q.defer();
+                     syncDataFactory.removeProfileData(localUserId,itemName).then(function(syncItemRemove){
+                         if (syncItemRemove) {
+                           console.log("sync profile "+itemName+" removed ");
                          }
-                     });
-                  }
-               });
-              }
-            catch(err) {
-              console.log('error'+err);
-            }
-      };
+                      });
+                    }
+                 },function(eror){
+                    console.log(error);
+                  });
+               }
+           },function(eror){
+              console.log(error);
+            });
+        }
+      },function(eror){
+          console.log(error);
+       });
+}
+
+//=== upload app json for the file ===========================================
+$scope.uploadAppData = function(girderToken,folderId,appJsonString,localUserId,itemName,fileName){
+    var createDataItem = syncDataFactory.createItemForFolder(girderToken,folderId,itemName).then(function(createDataItem){
+        if (createDataItem.status==200) {
+        var itemCreateDetails = createDataItem.data ;
+        var itemCreateId = itemCreateDetails._id ;
+        var dataString = LZString.compressToEncodedURIComponent(appJsonString);
+        var fileSize = dataString.length;
+        var deferred = $q.defer();
+        var createFileForItem = syncDataFactory.createFileForItem(girderToken,itemCreateId,fileName,fileSize).then(function(createFileForItem){
+            if (createFileForItem.status==200) {
+                   var fileCreateDetails = createFileForItem.data ;
+                   var fileCreateId = fileCreateDetails._id ;
+                   var dataString = LZString.compressToEncodedURIComponent(appJsonString);
+                   var deferred = $q.defer();
+                   var chunkInfo = syncDataFactory.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
+                     if (chunkInfo.status==200) {
+                     var chunkDetails = chunkInfo.data ;
+                     //clear the sync table for profile
+                     var deferred = $q.defer();
+                     syncDataFactory.removeProfileData(localUserId,itemName).then(function(syncItemRemove){
+                         if (syncItemRemove) {
+                           console.log("sync profile "+itemName+" removed ");
+                         }
+                      });
+                    }
+                 },function(eror){
+                    console.log(error);
+                  });
+               }
+           },function(eror){
+              console.log(error);
+            });
+        }
+      },function(eror){
+          console.log(error);
+       });
+}
 
 $scope.callAlertDailog =  function (message){
          document.activeElement.blur(); // remove the keypad
@@ -495,7 +558,7 @@ $scope.removeSignUpDiv = function(){
       }
 
       $scope.allowAccelerometer = function(){
-  
+
         //  var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
         //  function accelerometerSuccess(acceleration) {
         //     $scope.accelerationLabel = 'Granted';

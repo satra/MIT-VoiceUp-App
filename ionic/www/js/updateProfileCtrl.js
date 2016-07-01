@@ -118,12 +118,26 @@ angular.module('updateProfileCtrl',[])
                                $state.transitionTo('home');
                                });
                               }
+                           },function(error){
+                               $scope.checkErrorAsyncCall(error);
                            });
                         } else {
                           $scope.logout = false ;
                       }
            });
        }
+    }
+
+    $scope.checkErrorAsyncCall = function(error){
+      $ionicLoading.hide();
+      if(window.Connection) {
+              if(navigator.connection.type == Connection.NONE) {
+                  $ionicPopup.alert({
+                      title: "Internet Disconnected",
+                      template: "The Internet connection appears to be offline."
+                  });
+              }
+        }
     }
 
     $scope.emailConsent = function (){

@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers','userService','signInCtrl','surveyCtrl','databaseManager','surveyDataManager','eligiblityDataManager',
 'profileDataManager','consentDataManager','dataStoreManager','homeCtrl','dashboard','eligibility','signUp','consent',
-'updateProfileCtrl','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova','chart.js','flexcalendar','pascalprecht.translate'])
+'updateProfileCtrl','customDirectives','ionicResearchKit','syncDataService', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova','chart.js','flexcalendar','pascalprecht.translate'])
 .run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state) {
   $ionicPlatform.ready(function() {
 
@@ -157,7 +157,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
   $urlRouterProvider.otherwise('home');
 })
 
-.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
+.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
 
 .config(function($ionicConfigProvider) {
   $ionicConfigProvider.tabs.style('standard');

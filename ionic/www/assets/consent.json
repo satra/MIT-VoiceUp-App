@@ -274,7 +274,7 @@
   },
   "surveys": {
     "VoiceDepression_iSurvey01": {
-      "date": "0 6 1 * *",
+      "date": "0 7 1 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -299,7 +299,7 @@
       ]
     },
     "VoiceDepression_iSurvey02": {
-      "date": "0 6 2 * *",
+      "date": "0 7 2 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -324,7 +324,7 @@
       ]
     },
     "VoiceDepression_iSurvey03": {
-      "date": "0 6 3 * *",
+      "date": "0 7 3 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -349,7 +349,7 @@
       ]
     },
     "VoiceDepression_iSurvey04": {
-      "date": "0 6 4 * *",
+      "date": "0 7 4 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -374,7 +374,7 @@
       ]
     },
     "VoiceDepression_iSurvey05": {
-      "date": "0 6 5 * *",
+      "date": "0 7 5 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -399,7 +399,7 @@
       ]
     },
     "VoiceDepression_iSurvey06": {
-      "date": "0 6 6 * *",
+      "date": "0 7 6 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -425,7 +425,7 @@
     },
 
     "VoiceDepression_iSurvey07": {
-      "date": "0 6 7 * *",
+      "date": "0 7 7 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -464,7 +464,7 @@
       ]
     },
     "VoiceDepression_iSurvey08": {
-      "date": "0 6 8 * *",
+      "date": "0 7 8 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -487,7 +487,7 @@
       ]
     },
     "VoiceDepression_iSurvey09": {
-      "date": "0 6 9 * *",
+      "date": "0 7 9 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -512,7 +512,7 @@
       ]
     },
     "VoiceDepression_iSurvey10": {
-      "date": "0 6 10 * *",
+      "date": "0 7 10 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -537,7 +537,7 @@
       ]
     },
     "VoiceDepression_iSurvey11": {
-      "date": "0 6 11 * *",
+      "date": "0 7 11 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -562,7 +562,7 @@
       ]
     },
     "VoiceDepression_iSurvey12": {
-      "date": "0 6 12 * *",
+      "date": "0 7 12 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
@@ -587,7 +587,7 @@
       ]
     },
     "VoiceDepression_iSurvey13": {
-      "date": "0 6 13 * *",
+      "date": "0 7 13 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",

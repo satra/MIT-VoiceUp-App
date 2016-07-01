@@ -2,7 +2,7 @@
 angular.module('surveyCtrl',[])
 // ==== Dummy contorller need to be removed later before production  ========
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
- surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,dataStoreManager,$q,$cordovaFile) {
+ surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,dataStoreManager,syncDataFactory,$q,$cordovaFile) {
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
@@ -198,7 +198,6 @@ $scope.launchSurvey = function (idSelected){
           var steps = JSON.parse(stepsData[T]);
           var questionId = tasks.item(T).questionId ;
           var disableSkip = tasks.item(T).skippable ;
-          console.log(disableSkip);
           for (var k = 0; k < steps.length; k++) {
           surveyHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
 
@@ -213,7 +212,7 @@ $scope.launchSurvey = function (idSelected){
                 if (isSkippedQuestions) {
                            var confirmPopup = $ionicPopup.confirm({
                              title: 'Only Skipped Question',
-                             template: 'Want to display only skipped question ?. '
+                             template: 'Do you want to display only skipped question ?'
                            });
                            confirmPopup.then(function(res) {
                             if(res) {
@@ -257,22 +256,21 @@ $scope.launchSurvey = function (idSelected){
                       }
                   });
                }
-             }
+            }
        }
    }
 };
 
 $scope.showTasksForSlectedSurvey = function(surveyHtml){
-  console.log(surveyHtml);
-if($rootScope.emailId){
-  profileDataManager.getFolderIDByEmail($rootScope.emailId).then(function (folderId){
+  if($rootScope.emailId){
+   profileDataManager.getFolderIDByEmail($rootScope.emailId).then(function (folderId){
     $scope.folderId = folderId ;
-  });
+   });
 
   profileDataManager.getAuthTokenForUser($rootScope.emailId).then(function (authToken){
     $scope.authToken = authToken.token ;
-  });
-}
+   });
+  }
   $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                              '<irk-ordered-tasks>'+
                                              surveyHtml +
@@ -288,7 +286,6 @@ if($rootScope.emailId){
 $scope.closeModal = function() {
     $scope.modal.remove();
     $ionicLoading.show();
-
     $ionicHistory.clearCache().then(function(){
     });
 
@@ -328,114 +325,174 @@ $scope.closeModal = function() {
              });
         }
      }
-     //result entry into the result table
-     surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
-     //get item list by folderId
-     dataStoreManager.getItemListByFolderId($scope.folderId,$scope.authToken).then(function(itemList){
-       if (itemList.status==200) {
-         var itemListDetails = itemList.data ;
+     $scope.uploadSurveyResultToLocalDb(childresult);
+  }else {
+          surveyDataManager.addResultToDb('guest',childresult,'survey').then(function(response){
+           $ionicLoading.hide();
+          });
+      }
+    }
+  };
 
-        // promise variables
-         var promises = [];
-         var deferred = $q.defer();
-         var itemname = [];
 
-         for (var i = 0; i < itemListDetails.length; i++) {
-           var itemName = itemListDetails[i].name;
-           var item_id = itemListDetails[i]._id;
-            if (itemName == 'results') {
-                var today = new Date();
-                var fileName = 'results_json_'+today;
-                $scope.uploadResults($scope.authToken,item_id,JSON.stringify(childresult),fileName);
+$scope.uploadSurveyResultToLocalDb = function(childresult){
+var today = new Date();
+var fileName = 'results_json_'+today.getMonth()+'_'+today.getDate()+'_'+today.getFullYear()+'_'+today.getHours()+'_'+today.getMinutes()+'_'+today.getSeconds();
 
-                for (var k = 0; k < childresult.length; k++) {
+surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
+      var resultJson = JSON.stringify(childresult);
+      syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,fileName,resultJson).then(function(consentUpload){
+              if (consentUpload) {
+                  var promises = [];
+                  var itemNameArray = [];
+                  for (var k = 0; k < childresult.length; k++) {
                       var type = childresult[k].type;
                       if (type=="IRK-AUDIO-TASK") {
                        var fileURL = childresult[k].fileURL;
                        var contentType = childresult[k].contentType;
                        if (fileURL) {
-                        itemname.push(fileURL);
+                        itemNameArray.push(fileURL);
                         var audioFileDirectory = (ionic.Platform.isAndroid() ? cordova.file.dataDirectory : cordova.file.documentsDirectory);
                         promises.push($cordovaFile.readAsDataURL(audioFileDirectory,fileURL));
-                       }
+                        }
                       }
                   }
-              }
-            }
-
-   //Resolve all the promises once for loop is done
-   // create list of files(items) for the check upload
-            if (promises) {
-               var  baseDataArray = '';
-               $q.all(promises).then(function(baseDataArray){
-                var fileItemPromise = [];
-                for (var i = 0; i < baseDataArray.length; i++) {
-                  var dataString = LZString.compressToEncodedURIComponent(baseDataArray[i]);
-                  var fileSize = dataString.length;
-                  var fileName = itemname[i];
-                  fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,item_id,fileName,fileSize));
-                }
-
-            // upload the chunks for the files
-                $q.all(fileItemPromise).then(function(itemCreateInfo){
-                        var uploadChunk = [];
-                                for (var i = 0; i < itemCreateInfo.length; i++) {
-                                if (itemCreateInfo[i].status==200) {
-                                var fileCreateDetails = itemCreateInfo[i].data ;
-                                var fileCreateId = fileCreateDetails._id ;
-                                var dataString = LZString.compressToEncodedURIComponent(baseDataArray[i]);
-                                uploadChunk.push(dataStoreManager.uploadAudioFileChunk($scope.authToken,fileCreateId,dataString));
-                                  }
-                                }
-                         if (uploadChunk) {
-                           $q.all(uploadChunk).then(function(uploadChunkInfo){
-                               for (var L = 0; L < uploadChunkInfo.length; L++) {
-                                 if (uploadChunkInfo[L].status==200) {
-                                 var chunkDetails = uploadChunkInfo[L].data ;
-                                    }
-                                   }
-                               });
+                if (promises.length>0 && itemNameArray.length>0) {
+                    var  baseDataArray = '';
+                    $q.all(promises).then(function(baseDataArray){
+                         var fileItemPromise = [];
+                          for (var i = 0; i < baseDataArray.length; i++) {
+                            fileItemPromise.push(syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,itemNameArray[i],baseDataArray[i]));
                           }
-                  });
-              });
-            }
-
-
-          }
-        });
-      });
-  }else {
-    surveyDataManager.addResultToDb('guest',childresult,'survey').then(function(response){
-       console.log(response);
-       $ionicLoading.hide();
-     });
-  }
-
-    }
-  };
-
-  //=== upload consent json for the file ===========================================
-  $scope.uploadResults = function (girderToken,itemId,uploadData,fileName){
-          try {
-                  var deferred = $q.defer();
-                  var dataString = LZString.compressToEncodedURIComponent(uploadData);
-                  var fileSize = dataString.length;
-                  dataStoreManager.createFileForItem(girderToken,itemId,fileName,fileSize).then(function(fileCreateInfo){
-                  if (fileCreateInfo.status==200) {
-                        var fileCreateDetails = fileCreateInfo.data ;
-                        var fileCreateId = fileCreateDetails._id ;
-                        var chunkInfo = dataStoreManager.uploadChunkForFile(girderToken,fileCreateId,dataString).then(function(chunkInfo){
-                           if (chunkInfo.status==200) {
-                           var chunkDetails = chunkInfo.data ;
-                           }
+                         $q.all(fileItemPromise).then(function(itemCreateInfo){
+                           $scope.startDataSync($scope.authToken,$scope.userId);
                          });
-                       }
-                  });
+                   });
+                }else {
+                  $scope.startDataSync($scope.authToken,$scope.userId);
+                }
             }
-          catch(err) {
-            console.log('error'+err);
-          }
-};
+        });
+    });
+}
+
+
+$scope.startDataSync = function(authToken,userId){
+      $ionicLoading.show();
+      syncDataFactory.queryDataNeededToSync(authToken,userId).then(function(res){
+           if (res) {
+               dataStoreManager.getItemListByFolderId($scope.folderId,$scope.authToken).then(function(itemList){
+                 if (itemList.status==200) {
+                   var itemListDetails = itemList.data ;
+                         var appId=""; var consentId=""; var profileId=""; var resultsId=""; var settingsId="";
+                         for (var i = 0; i < itemListDetails.length; i++) {
+                           var itemName = itemListDetails[i].name;
+                           var itemId = itemListDetails[i]._id;
+                            switch (itemName) {
+                              case "app":
+                                appId = itemId ;
+                                break;
+                              case "consent":
+                                consentId = itemId ;
+                                break;
+                              case "profile":
+                                profileId = itemId ;
+                                break;
+                              case "results":
+                                resultsId = itemId ;
+                                break;
+                              case "settings":
+                                settingsId = itemId ;
+                                break;
+                              default:
+                            }
+                        }
+
+                        var fileItemPromise = [];
+                        for (var k = 0; k < res.length; k++) {
+                             var syncItemName = res.item(k).syncItem;
+                             var syncData = res.item(k).syncData
+                             var dataString = LZString.compressToEncodedURIComponent(syncData);
+                             var fileSize = dataString.length;
+                               switch (syncItemName) {
+                                 case "app":
+                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,appId,syncItemName,fileSize));
+                                   break;
+                                 case "consent":
+                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,consentId,syncItemName,fileSize));
+                                   break;
+                                 case "profile":
+                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,profileId,syncItemName,fileSize));
+                                   break;
+                                 case "settings":
+                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,settingsId,syncItemName,fileSize));
+                                   break;
+                                 default:
+                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,resultsId,syncItemName,fileSize));
+                               }
+                         }
+                          // upload the chunks for the files
+                          $q.all(fileItemPromise).then(function(itemCreateInfo){
+                                    var uploadChunk = [];
+                                    for (var i = 0; i < itemCreateInfo.length; i++) {
+                                    if (itemCreateInfo[i].status==200) {
+                                    var fileCreateDetails = itemCreateInfo[i].data ;
+                                    var fileCreateId = fileCreateDetails._id ;
+                                    var ItemName = fileCreateDetails.name ;
+                                    for (var j = 0; j < res.length; j++) {
+                                         var syncItemName = res.item(j).syncItem;
+                                         if (syncItemName.toLocaleLowerCase() == ItemName.toLocaleLowerCase() ) {
+                                           var syncData = res.item(j).syncData
+                                           var dataString = LZString.compressToEncodedURIComponent(syncData);
+                                           uploadChunk.push(dataStoreManager.uploadAudioFileChunk($scope.authToken,fileCreateId,dataString));
+                                         }
+                                     }
+                                   }
+                                }
+
+                               $q.all(uploadChunk).then(function(uploadChunkInfo){
+                                        var removeChunkFromLocalDb = [];
+                                        for (var L = 0; L < uploadChunkInfo.length; L++) {
+                                              if (uploadChunkInfo[L].status==200) {
+                                                  var chunkDetails = uploadChunkInfo[L].data ;
+                                                  var syncItem = chunkDetails.name ;
+                                                  removeChunkFromLocalDb.push(syncDataFactory.removeSyncQueueFromLocalDb($scope.userId,syncItem));
+                                               }
+                                           }
+                                  $q.all(removeChunkFromLocalDb).then(function(removeChunkInfo){
+                                               $ionicLoading.hide();
+                                               $ionicPopup.alert({
+                                                  title: "Data upload",
+                                                  template: "Data was uploaded successfully."
+                                               });
+                                            },function(error){
+                                               $scope.uploadFailure();
+                                          });
+
+                                        },function(error){
+                                            $scope.uploadFailure();
+                                      });
+                           },function(error){
+                             $scope.uploadFailure();
+                          });
+                    }
+                },function(error){
+                  $scope.uploadFailure();
+            });
+
+           }
+      });
+}
+
+
+$scope.uploadFailure = function() {
+    $ionicLoading.hide();
+    $ionicPopup.alert({
+       title: "Data upload failure",
+       template: "Failed to sync the data, will be synced later."
+    });
+}
+
 
 $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
       var type = stepData.type;
