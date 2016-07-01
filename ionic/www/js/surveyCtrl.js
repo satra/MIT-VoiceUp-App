@@ -294,11 +294,13 @@ $scope.closeModal = function() {
     }else{
      var childresult = irkResults.getResults().childResults ;
      if ($scope.userId) {
+
        for (var i = 0; i < childresult.length; i++) {
        var questionId = childresult[i].id ;
        var answer = childresult[i].answer ;
        var type = childresult[i].type;
        var isSkipped = '';
+
        if (answer) {
        isSkipped = "NO";
              // if answered a question clear form history table so it is answered and no need to add for upcoming survey
@@ -325,7 +327,9 @@ $scope.closeModal = function() {
              });
         }
      }
-     $scope.uploadSurveyResultToLocalDb(childresult);
+  // upload the survey data
+  $scope.uploadSurveyResultToLocalDb(childresult);
+
   }else {
           surveyDataManager.addResultToDb('guest',childresult,'survey').then(function(response){
            $ionicLoading.hide();
@@ -431,7 +435,7 @@ $scope.startDataSync = function(authToken,userId){
                                    fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,resultsId,syncItemName,fileSize));
                                }
                          }
-                          // upload the chunks for the files
+                          // create files for the item
                           $q.all(fileItemPromise).then(function(itemCreateInfo){
                                     var uploadChunk = [];
                                     for (var i = 0; i < itemCreateInfo.length; i++) {
@@ -449,7 +453,7 @@ $scope.startDataSync = function(authToken,userId){
                                      }
                                    }
                                 }
-
+                              // upload the chunk for the fileId
                                $q.all(uploadChunk).then(function(uploadChunkInfo){
                                         var removeChunkFromLocalDb = [];
                                         for (var L = 0; L < uploadChunkInfo.length; L++) {
@@ -459,6 +463,7 @@ $scope.startDataSync = function(authToken,userId){
                                                   removeChunkFromLocalDb.push(syncDataFactory.removeSyncQueueFromLocalDb($scope.userId,syncItem));
                                                }
                                            }
+                                // remove the chunk form the local database
                                   $q.all(removeChunkFromLocalDb).then(function(removeChunkInfo){
                                                $ionicLoading.hide();
                                                $ionicPopup.alert({

@@ -2,7 +2,7 @@ angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
 .controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
    $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$cordovaEmailComposer,
-   $ionicLoading,profileDataManager,databaseManager,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
+   $ionicLoading,profileDataManager,databaseManager,syncDataFactory,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
       if ($rootScope.emailId ) {
@@ -105,7 +105,8 @@ angular.module('updateProfileCtrl',[])
                                  var promiseC = surveyDataManager.removeUserSurveyResults($scope.userId);
                                  var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.userId);
                                  var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.userId);
-                                 $q.all([promiseA, promiseB, promiseC,promiseD,promiseE])
+                                 var promiseF = syncDataFactory.removeUserCacheResults($scope.userId);
+                                 $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF])
                                      .then(function(promiseResult) {
                                      console.log(promiseResult[0], promiseResult[1], promiseResult[2],promiseResult[3],
                                                  promiseResult[4] );

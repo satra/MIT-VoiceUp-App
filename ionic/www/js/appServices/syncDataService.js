@@ -43,6 +43,18 @@ angular.module('syncDataService', [])
         return deferred.promise;
       },
 
+      removeUserCacheResults : function (userId){
+        var deferred = $q.defer();
+        var db = databaseManager.getConnectionObject();
+        var query = "DELETE FROM SyncData WHERE userId = ? " ;
+        var deleteData = $cordovaSQLite.execute(db, query , [userId])
+                         .then(function(res) {
+                          deferred.resolve(res);
+                         }, function (err) {
+                     });
+        return deferred.promise;
+      },
+
       createItemForFolder : function (girderToken,folderId,itemName){
                 var deferred = $q.defer();
                  var URL = base_url+'item?folderId='+folderId+'&name='+itemName ;
