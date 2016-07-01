@@ -261,7 +261,7 @@ $scope.launchpinScreen = function(){
        animation: 'slide-in-up',
      }).then(function(modal) {
          $scope.modal = modal;
-         $scope.passcodeLabel = "Enter Passcode";
+         $scope.passcodeLabel = "Create passcode";
          $scope.managePasscode = false ;
          $scope.managePasscodeConfirm = true ;
          $scope.confirmLoop = 0;
@@ -295,7 +295,7 @@ $scope.launchpinScreen = function(){
             $scope.callAlertDailog("Passcode should match with confirm");
             $scope.confirmLoop = $scope.confirmLoop +1;
              if($scope.confirmLoop >= 3){
-               $scope.passcodeLabel = "Enter Passcode";
+               $scope.passcodeLabel = "Create passcode";
                $scope.managePasscode = false ;
                $scope.managePasscodeConfirm = true ;
                $scope.confirmLoop = 0;

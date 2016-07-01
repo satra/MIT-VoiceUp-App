@@ -443,7 +443,7 @@ $scope.removeSignUpDiv = function(){
 
      //=================================================== confirm  passcode handler ============================
 
-    $scope.passcodeLabel = "Enter Passcode";
+    $scope.passcodeLabel = "Create passcode";
     $scope.managePasscode = false ;
     $scope.managePasscodeConfirm = true ;
     $scope.confirmLoop = 0;
@@ -472,7 +472,7 @@ $scope.removeSignUpDiv = function(){
               $scope.confirmLoop = $scope.confirmLoop +1;
                if($scope.confirmLoop >= 3){
                  document.activeElement.blur(); // remove the keypad
-                 $scope.passcodeLabel = "Enter Passcode";
+                 $scope.passcodeLabel = "Create passcode";
                  $scope.managePasscode = false ;
                  $scope.managePasscodeConfirm = true ;
                  $scope.confirmLoop = 0;
