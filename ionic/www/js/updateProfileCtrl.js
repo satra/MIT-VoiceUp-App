@@ -215,38 +215,29 @@ angular.module('updateProfileCtrl',[])
          }).then(function(modal) {
            $scope.permission = modal;
            $scope.permission.show();
-    $scope.microPhoneLabel="Allow";
 
-           var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
-          function onSuccess(position) {
-                $scope.geoLabel = 'Granted';
-           };
-           function onError(error) {
-                $scope.geoLabel = 'Allow';
-          };
+    $scope.accelerationLabel='Allow';
+    $scope.microPhoneLabel = 'Allow';
+    $scope.geoLabel = 'Allow';
 
-         });
-         var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
-         function accelerometerSuccess(acceleration) {
-            $scope.accelerationLabel = 'Granted';
-         };
-         function accelerometerError() {
-            $scope.accelerationLabel = 'Allow';
-        };
-       }
+               var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
+              function onSuccess(position) {
+                    $scope.geoLabel = 'Granted';
+               };
+               function onError(error) {
+
+              };
 
 
-    $scope.allowAccelerometer = function(){
-       $scope.accelerationLabel="Granted";
-     }
+             var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
+             function accelerometerSuccess(acceleration) {
+               $scope.accelerationLabel='Granted';
+             };
+             function accelerometerError() {
 
-    $scope.allowGeoLocation = function(){
-        $scope.geoLabel="Granted";
-    }
-
-    $scope.allowMicroPhone = function(){
-         $scope.microPhoneLabel="Granted";
-    }
+            };
+ })
+}
 
     $scope.openVerification = function() {
         $scope.permission.remove();

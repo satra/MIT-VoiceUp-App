@@ -500,7 +500,6 @@ $scope.removeSignUpDiv = function(){
         $scope.modal.show();
        });
      };
-
      $scope.openPermisssions = function() {
       $ionicModal.fromTemplateUrl('templates/locationservice.html', {
         scope: $scope,
@@ -509,32 +508,20 @@ $scope.removeSignUpDiv = function(){
         $scope.modal.remove();
         $scope.modal = modal;
         $scope.modal.show();
-        $scope.accelerationLabel="Allow";
-        $scope.microPhoneLabel = "Allow";
-        $scope.geoLabel = "Allow";
-       //  $scope.allowGeoLocation();
+        $scope.accelerationLabel='Allow';
+        $scope.microPhoneLabel = 'Allow';
+        $scope.geoLabel = 'Allow';
+         $scope.allowGeoLocation();
+           $scope.allowAccelerometer();
+          $scope.Disable = false;
 
-         var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
-         function onSuccess(position) {
-             $scope.geoLabel = 'Granted';
-         };
-         function onError(error) {
-
-         };
-
-         var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
-         function accelerometerSuccess(acceleration) {
-           $scope.accelerationLabel = 'Granted';
-       };
-         function accelerometerError() {
-
-         };
-
-        });
-      };
+      });
+    };
 
       $scope.allowGeoLocation = function(){
-        $scope.geoLabel = 'Granted';
+
+          $scope.Disable = true;
+            console.log($scope.Disable);
         // cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
         // $scope.geoLabel = 'Granted';
         // }, function(error){
@@ -553,9 +540,11 @@ $scope.removeSignUpDiv = function(){
               console.log(lat + '   ' + long)
            }, function(err) {
                     $scope.geoLabel = 'Allow';
+                    $scope.Disable = false;
+                  console.log($scope.Disable);
               console.log(err);
       });
-      }
+    };
 
       $scope.allowAccelerometer = function(){
 
@@ -570,23 +559,22 @@ $scope.removeSignUpDiv = function(){
         // Device motion initilaization
         $scope.watch.then(null, function(error) {
                $scope.accelerationLabel='Allow';
+                 $scope.Disable = false;
               console.log($scope.accelerationLabel);
+                            console.log($scope.Disable);
           },
+
           function(accelerometerSuccess) {
           // Set current data
                $scope.accelerationLabel='Granted';
+                    $scope.Disable = true;
                console.log($scope.accelerationLabel);
+                  console.log($scope.Disable);
           // Detecta shake
           $scope.detectShake(result);
 
         });
-       }
-
-
-
-      $scope.allowMicroPhone = function(){
-           $scope.microPhoneLabel="Granted";
-      }
+      };
 
       $scope.allDone = function() {
         $ionicModal.fromTemplateUrl('templates/alldone.html', {

@@ -99,7 +99,7 @@ console.log(dataArray,labelArray,seriesArray);
 });
     // calander//
 $scope.options = {
-    defaultDate: "2015-08-06",
+    defaultDate:  new Date(),
     minDate: "2015-01-01",
     maxDate: "2050-12-31",
     disabledDates: [
