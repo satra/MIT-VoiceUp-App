@@ -382,7 +382,6 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
 
 
 $scope.startDataSync = function(authToken,userId){
-      $ionicLoading.show();
       syncDataFactory.queryDataNeededToSync(authToken,userId).then(function(res){
            if (res) {
                dataStoreManager.getItemListByFolderId($scope.folderId,$scope.authToken).then(function(itemList){
@@ -484,7 +483,6 @@ $scope.startDataSync = function(authToken,userId){
                 },function(error){
                   $scope.uploadFailure();
             });
-
            }
       });
 }
