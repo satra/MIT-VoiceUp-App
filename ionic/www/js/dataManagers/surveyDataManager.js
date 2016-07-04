@@ -85,6 +85,19 @@ angular.module('surveyDataManager', [])
    deferred.resolve(insert);
    return deferred.promise;
  },
+ getSurveyDates : function(){
+   var deferred = $q.defer();
+   var db = databaseManager.getConnectionObject();
+   var query = "SELECT date,surveyId,title FROM Surveys " ;
+   var surveyData = $cordovaSQLite.execute(db, query)
+                    .then(function(res) {
+                      surveyData = res.rows ;
+                      return surveyData;
+                    }, function (err) {
+                });
+   deferred.resolve(surveyData);
+   return deferred.promise;
+ },
   getSurveyTempRowByInsertId :  function  (insertId){
     var deferred = $q.defer();
     var db = databaseManager.getConnectionObject();
@@ -280,5 +293,6 @@ getQuestionExpiry : function  (questionId){
                   });
      return deferred.promise;
    }
+
   }
 });
