@@ -6,7 +6,9 @@
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link rel="stylesheet" href="lib/angular-chart.js/dist/angular-chart.css">
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/flex-calendar.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -28,16 +30,25 @@
     <script src="lib/angular-svg-round-progressbar/build/roundProgress.min.js"></script>
     <script src="lib/pdfmake/build/pdfmake.min.js"></script>
     <script src="lib/pdfmake/build/vfs_fonts.js"></script>
+    <script src="lib/Chart.js/Chart.min.js"></script>
+    <script src="lib/angular-chart.js/dist/angular-chart.min.js"></script>
+    <script src="lib/angular-translate.min.js"></script>
+    <script src="js/flex-calendar.js"></script>
+
+    <!-- LZ string ---------------------->
+    <script src="lib/lz-string/base64-string.js"></script>
+    <script src="lib/lz-string/lz-string.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
     <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
-    <script src="lib/sqLite/SQLitePlugin.js"></script>
+    <script src="lib/sqlLite/SQLitePlugin.js"></script>
     <script src="cordova.js"></script>
 
     <!-- BTC modules involving controller and directives -->
     <script src="js/utils.js"></script>
     <script src="js/angularCustomDirectives.js"></script>
     <script src="js/homeCtrl.js"></script>
+    <script src="js/signInCtrl.js"></script>
     <script src="js/surveyCtrl.js"></script>
     <script src="js/dataManagers/databaseManager.js"></script>
     <script src="js/dataManagers/eligiblityDataManager.js"></script>
@@ -49,10 +60,12 @@
     <script src="js/consentCtrl.js"></script>
     <script src="js/signUpCtrl.js"></script>
     <script src="js/updateProfileCtrl.js"></script>
+    <script src="js/dashboardCtrl.js"></script>
     <script src="js/learnCtrl.js"></script>
     <script src="js/eventManagerCtrl.js"></script>
     <script src="assets/base64/angular-base64.js"></script>
     <script src="js/appServices/passcodehandler.js"></script>
+    <script src="js/appServices/syncDataService.js"></script>
     <!-- your app's js -->
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>

@@ -1,10 +1,19 @@
 angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
-.controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state, $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading,profileDataManager,databaseManager,$state) {
-
-
+.controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
+   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$cordovaEmailComposer,
+   $ionicLoading,profileDataManager,databaseManager,syncDataFactory,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
+      if ($rootScope.emailId ) {
+        // get girder-token from local db for the user logout and further WS calls
+        profileDataManager.getAuthTokenForUser(email).then(function(response){
+          if (response) {
+            $scope.authToken = response.token;
+            $scope.userId = response.userId;
+          }
+        });
+      }
 //=============================get user fields saved locally ===============================
       profileDataManager.getUserUpdateProfile(email).then(function(response){
           if (response) {
@@ -13,7 +22,6 @@ angular.module('updateProfileCtrl',[])
             $scope.updateDiv = '';
             if ($scope.profileFields!='') {
             $scope.items = items ;
-            // usage example:
             for (var i = 0; i < items.length; i++) {
                 if(items[i].type != 'password'){
                   if (items[i].id != '') {  // should be removed later after testing
@@ -23,14 +31,18 @@ angular.module('updateProfileCtrl',[])
               }
             }
 
-            $scope.profileMode = 'Edit';
+            $scope.pM = 'Edit';
             $scope.isDisabled = true;
+            $scope.settings=true ;
+            if (!$rootScope.emailId) {
+                $scope.settings=false ;
+            }
 
             var updateProfile = angular.element(document.querySelector('#updateProfile'));
             updateProfile.append($scope.updateDiv);
             $compile(updateProfile)($scope);
           }else {
-              $scope.updateDiv = '<button class="round1 irk-centered  marT5p marB20 irk.font IRK-FONT3 irk-font-helvetica padB2p " ng-click="beginSignUp()">Sign Up</button>';
+              $scope.updateDiv = '<div class="irk-centered  marT5p marB20 irk.font IRK-FONT3 irk-font-helvetica padB2p">User is not registered</div></br> <button class="round1 irk-centered  marB20 irk.font IRK-FONT3 irk-font-helvetica padB2p " ng-click="beginSignUp()">Sign Up</button>';
               var updateProfile = angular.element(document.querySelector('#updateProfile'));
               updateProfile.append($scope.updateDiv);
               $compile(updateProfile)($scope);
@@ -68,6 +80,96 @@ angular.module('updateProfileCtrl',[])
      $scope.settingsBack = function (){
        $scope.modal.remove();
      }
+
+     $scope.backtotab = function () {
+       $scope.modal.remove();
+       $ionicHistory.clearCache().then(function(){
+          // $state.transitionTo('tab');
+       });
+     };
+
+ //====================userLogout
+     $scope.logOut = function(){
+       var logoutToken = $scope.authToken;
+       if (logoutToken) {
+         var confirmPopup = $ionicPopup.confirm({
+                             title: 'Leave Study Confirm',
+                             template: 'Are you sure you want to Leave Study?'
+                           });
+                           confirmPopup.then(function(res) {
+                             if(res) {
+                               dataStoreManager.userLogout(logoutToken).then(function(res){
+                                if (res.status == 200) {
+                                 var promiseA = profileDataManager.removeUser($scope.userId);
+                                 var promiseB = profileDataManager.removeUserSession($scope.userId);
+                                 var promiseC = surveyDataManager.removeUserSurveyResults($scope.userId);
+                                 var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.userId);
+                                 var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.userId);
+                                 var promiseF = syncDataFactory.removeUserCacheResults($scope.userId);
+                                 $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF])
+                                     .then(function(promiseResult) {
+                                     console.log(promiseResult[0], promiseResult[1], promiseResult[2],promiseResult[3],
+                                                 promiseResult[4] );
+
+                               });
+
+                               $ionicHistory.clearCache().then(function(){
+                               $rootScope.emailId = null;
+                               $scope.modal.remove();
+                               $state.transitionTo('home');
+                               });
+                              }
+                           },function(error){
+                               $scope.checkErrorAsyncCall(error);
+                           });
+                        } else {
+                          $scope.logout = false ;
+                      }
+           });
+       }
+    }
+
+    $scope.checkErrorAsyncCall = function(error){
+      $ionicLoading.hide();
+      if(window.Connection) {
+              if(navigator.connection.type == Connection.NONE) {
+                  $ionicPopup.alert({
+                      title: "Internet Disconnected",
+                      template: "The Internet connection appears to be offline."
+                  });
+              }
+        }
+    }
+
+    $scope.emailConsent = function (){
+      var userId = $scope.userId;
+      // get consent data saved locally
+      profileDataManager.getUserConsentJson(userId).then(function(res){
+           if (res) {
+            if (ionic.Platform.isAndroid()) {
+              pdfMake.createPdf(res).download();
+            }else {
+            pdfMake.createPdf(res).getBase64(function(dataURL) {
+              var email = {
+                     attachments: [
+                       "base64:consent.pdf//"+dataURL
+                     ],
+                     subject: 'Consent doc',
+                     isHtml: true
+                  };
+            $cordovaEmailComposer.isAvailable().then(function() {
+                    $cordovaEmailComposer.open(email).then(null, function () {
+                      console.log('email ');
+                    });
+            }, function () {
+                    console.log('email not available' );
+                  });
+            });
+          }
+
+             }
+        });
+    }
 
      $scope.toggleNotification = function(){
       if ($scope.notification == false) {
@@ -110,19 +212,40 @@ angular.module('updateProfileCtrl',[])
         });
     }
 
-   $scope.viewPermissions = function(){
-        $ionicModal.fromTemplateUrl('templates/locationservice.html', {
-          scope: $scope,
-          animation: 'slide-in-up'
-        }).then(function(modal) {
-          $scope.permission = modal;
-          $scope.permission.show();
-        });
-      }
+    $scope.viewPermissions = function(){
+         $ionicModal.fromTemplateUrl('templates/locationservice.html', {
+           scope: $scope,
+           animation: 'slide-in-up'
+         }).then(function(modal) {
+           $scope.permission = modal;
+           $scope.permission.show();
+
+    $scope.accelerationLabel='Allow';
+    $scope.microPhoneLabel = 'Allow';
+    $scope.geoLabel = 'Allow';
+
+               var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
+              function onSuccess(position) {
+                    $scope.geoLabel = 'Granted';
+               };
+               function onError(error) {
+
+              };
+
+
+             var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
+             function accelerometerSuccess(acceleration) {
+               $scope.accelerationLabel='Granted';
+             };
+             function accelerometerError() {
+
+            };
+ })
+}
 
     $scope.openVerification = function() {
         $scope.permission.remove();
-      };
+    };
 
      $scope.closeModal = function() {
        $scope.modal.remove();
@@ -200,12 +323,12 @@ angular.module('updateProfileCtrl',[])
 
 
      $scope.switchProfileModeOnOff = function(){
-           if ($scope.profileMode == 'Save') {
+           if ($scope.pM == 'Save') {
               $scope.updateProfile();
-              $scope.profileMode = 'Edit';
+              $scope.pM = 'Edit';
               $scope.isDisabled = true;
             }else {
-              $scope.profileMode = 'Save';
+              $scope.pM = 'Save';
               $scope.isDisabled = false;
             }
      }
@@ -320,18 +443,21 @@ angular.module('updateProfileCtrl',[])
             //check current passcode is valid
              $scope.passcode = passcode ;
              var email = $scope.emailId ;
-             console.log(email+ ' ' +passcode);
+
              profileDataManager.getUserIDByEmail(email.trim()).then(function(userId){
                    profileDataManager.checkPasscodeExistsForUserID(userId.trim(),passcode.trim()).then(function(res){
                               if (res) {
+                                document.activeElement.blur(); // remove the keypad
                                 $scope.passcodeLabel = "Enter New Passcode";
                                 $scope.managePasscodeNew = false;
                                 $scope.managePasscode = true ;
                               }else{
+                              //  cordova.plugins.Keyboard.close();
                                 //clear div
                                 var passcode = angular.element(document.querySelector('#passcode'));
                                 $scope.passcode = '';
-                                $compile(passcode)($scope);
+                                passcode.val('');
+                                // $compile(passcode)($scope);
                                 $scope.callAlertDailog("Passcode doesn't match with the existing passcode.");
                               }
                   });
@@ -347,6 +473,7 @@ $scope.checkNewPasscodeDigits = function(){
       //check current passcode is valid
        $scope.passcode = passcode.trim() ;
        var email = $scope.emailId ;
+       document.activeElement.blur(); // remove the keypad
        $scope.passcodeLabel = "Confirm Passcode";
        $scope.managePasscode = true ;
        $scope.managePasscodeNew = true;
@@ -368,7 +495,7 @@ $scope.checkNewPasscodeDigits = function(){
                      profileDataManager.getUserIDByEmail(email).then(function(res){
                             profileDataManager.updatePasscodeToUserID(res.trim(),$scope.passcode).then(function(res){
                                          if (res) {
-                                           $scope.callAlertDailog("Passcode updated.");
+                                           $scope.successAlertMsg("Passcode updated.");
                                            $scope.closePasscodeModal();
                                          }
                                      });
@@ -377,10 +504,12 @@ $scope.checkNewPasscodeDigits = function(){
                }else {
                  //clear div for confirm password
                  $scope.confirm_passcode = '';
-                 $compile(confirm_passcode_div)($scope);
+                // $compile(confirm_passcode_div)($scope);
+                 confirm_passcode_div.val('');
                  $scope.callAlertDailog("Passcode should match with confirm");
                  $scope.confirmLoop = $scope.confirmLoop +1;
                   if($scope.confirmLoop >= 3){
+                    document.activeElement.blur(); // remove the keypad
                     $scope.passcodeLabel = "Enter New Passcode";
                     $scope.confirmLoop = 0;
                     $scope.managePasscode = true ;
@@ -402,6 +531,7 @@ $scope.checkNewPasscodeDigits = function(){
        }
 
      $scope.callAlertDailog =  function (message){
+          document.activeElement.blur(); // remove the keypad
           $ionicPopup.alert({
            title: 'Data Invalid',
            template: message
@@ -414,4 +544,19 @@ $scope.checkNewPasscodeDigits = function(){
           template: message
          });
      }
+
+     $scope.viewCopyrightInfo = function(){
+          $ionicModal.fromTemplateUrl('templates/copyRightInfo.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+          }).then(function(modal) {
+            $scope.permission = modal;
+            $scope.permission.show();
+        });
+    }
+
+    $scope.closeCopyRightInfo = function(){
+      $scope.permission.remove();
+    }
+
 });

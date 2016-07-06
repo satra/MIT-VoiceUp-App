@@ -1,8 +1,16 @@
-<ion-view view-title="Activities" class="irk-modal">
+<ion-view hide-nav-bar="true" class="irk-modal">
+    <ion-header-bar>
+     <div class="buttons">
+      </div>
+      <h1 class="title">Activities</h1>
+      <div class="buttons">
+      </div>
+    </ion-header-bar>
+
 <ion-content>
 <ion-list>
 
-<ion-item ng-repeat="item in list" ng-click=launchSurvey({{item.id}}) class="item-thumbnail-left">
+<ion-item ng-repeat="item in list" ng-click=launchSurvey('{{item.surveyId}}') class="item-thumbnail-left">
 <h2>{{item.title}}</h2>
 <p>{{item.date}}</p>
 </ion-item>

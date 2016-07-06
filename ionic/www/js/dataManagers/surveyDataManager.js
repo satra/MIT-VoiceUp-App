@@ -5,13 +5,16 @@ angular.module('surveyDataManager', [])
   getSurveyListForToday : function(){
       var deferred = $q.defer();
       var db = databaseManager.getConnectionObject();
-      var query = "SELECT surveyJson FROM Surveys";
+      var today = new Date() ;
+      var customDate = (today.getDate())+'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
+      var query = "SELECT * FROM Surveys WHERE date='"+customDate+"'";
       var consent =  $cordovaSQLite.execute(db, query).then(function(res) {
               var len = res.rows.length;
-              for (var i=0; i<len; i++){
-                 consent = JSON.parse(res.rows.item(i).surveyJson);
-                }
-                return consent;
+              var itemsColl = [];
+               for (var i=0; i<len; i++){
+                  itemsColl[i] = res.rows.item(i);
+                 }
+                return itemsColl ;
                 deferred.resolve(consent);
             }, function (err) {
           });
@@ -59,33 +62,126 @@ angular.module('surveyDataManager', [])
    getTaskListByUserId : function  (userId,todayDate){
      var deferred = $q.defer();
      var db = databaseManager.getConnectionObject();
-     var insert =  $cordovaSQLite.execute(db, "SELECT questionId,isSkipped FROM SurveyTemp WHERE creationDate = '"+todayDate+"' AND userId = '"+userId+"' ")
+     var query = "SELECT questionId,isSkipped,skippable FROM SurveyTemp WHERE creationDate = '"+todayDate+"' AND userId = '"+userId+"' ";
+     var insert =  $cordovaSQLite.execute(db,query)
                       .then(function(res) {
+                          console.log(res);
                           return res ;
                       }, function (err) {
                   });
     deferred.resolve(insert);
     return deferred.promise;
   },
-
-  getUnansweredQuestionsLessThanToDate : function  (userId,todayDate){
+  getTaskListBySurveyIDAndDate : function  (surveyId,todayDate){
     var deferred = $q.defer();
     var db = databaseManager.getConnectionObject();
-    var insert =  $cordovaSQLite.execute(db, "SELECT questionId FROM SurveyQuestionExpiry WHERE creationDate < '"+todayDate+"' AND expiryDate >= '"+todayDate+"' AND userId = '"+userId+"' ")
+    var query = "SELECT tasks,skippable, FROM SurveyTemp WHERE creationDate = '"+todayDate+"' AND userId = '"+userId+"' ";
+    var insert =  $cordovaSQLite.execute(db,query)
                      .then(function(res) {
+                         console.log(res);
                          return res ;
                      }, function (err) {
                  });
    deferred.resolve(insert);
    return deferred.promise;
  },
+ getSurveyDates : function(){
+   var deferred = $q.defer();
+   var db = databaseManager.getConnectionObject();
+   var query = "SELECT date,surveyId,title FROM Surveys " ;
+   var surveyData = $cordovaSQLite.execute(db, query)
+                    .then(function(res) {
+                      surveyData = res.rows ;
+                      return surveyData;
+                    }, function (err) {
+                });
+   deferred.resolve(surveyData);
+   return deferred.promise;
+ },
+  getSurveyTempRowByInsertId :  function  (insertId){
+    var deferred = $q.defer();
+    var db = databaseManager.getConnectionObject();
+    var query = "SELECT surveyId,questionId,isSkipped,skippable FROM SurveyTemp WHERE id = '"+insertId+"' ";
+    console.log(query);
+    var insert =  $cordovaSQLite.execute(db,query)
+                     .then(function(res) {
+                         if(res.rows.length > 0){
+                           return res.rows.item(0) ;
+                         }
+                     }, function (err) {
+                 });
+   deferred.resolve(insert);
+   return deferred.promise;
+  },
+getTaskListByquestionId : function  (questionId){
+    var deferred = $q.defer();
+    var db = databaseManager.getConnectionObject();
+    var query = "SELECT steps,timeLimit FROM Tasks WHERE taskId = '"+questionId+"' " ;
+    var insert =  $cordovaSQLite.execute(db, query)
+                     .then(function(res) {
+                       if(res.rows.length > 0){
+                         return res.rows.item(0).steps ;
+                       }
+                     }, function (err) {
+                 });
+   deferred.resolve(insert);
+   return deferred.promise;
+ },
 
- addSurveyResultToDb : function  (userId,childresult){
+ getTaskListForquestion : function  (questionId){
+     var deferred = $q.defer();
+     var db = databaseManager.getConnectionObject();
+     var query = "SELECT taskId,steps,timeLimit FROM Tasks WHERE taskId = '"+questionId+"' " ;
+     var insert =  $cordovaSQLite.execute(db, query)
+                      .then(function(res) {
+                        if(res.rows.length > 0){
+                          return res.rows.item(0) ;
+                        }
+                      }, function (err) {
+                  });
+    deferred.resolve(insert);
+    return deferred.promise;
+  },
+
+
+getQuestionExpiry : function  (questionId){
+  var deferred = $q.defer();
+  var db = databaseManager.getConnectionObject();
+  var insert =  $cordovaSQLite.execute(db, "SELECT timeLimit FROM Tasks WHERE taskId = '"+questionId+"' ")
+                   .then(function(res) {
+                     if(res.rows.length > 0){
+                       return res.rows.item(0).timeLimit ;
+                     }else {
+                       return null ;
+                       }
+                   }, function (err) {
+               });
+ deferred.resolve(insert);
+ return deferred.promise;
+},
+  getUnansweredQuestionsLessThanToDate : function  (userId,todayDate){
+    var deferred = $q.defer();
+    var db = databaseManager.getConnectionObject();
+    var insert =  $cordovaSQLite.execute(db, "SELECT questionId,skippable FROM SurveyQuestionExpiry WHERE creationDate < '"+todayDate+"' AND expiryDate >= '"+todayDate+"' AND userId = '"+userId+"' ")
+                     .then(function(res) {
+                          var len = res.rows.length;
+                          var itemsColl = [];
+                          for (var i=0; i<len; i++){
+                             itemsColl[i] = res.rows.item(i);
+                            }
+                           return itemsColl ;
+                     }, function (err) {
+                 });
+   deferred.resolve(insert);
+   return deferred.promise;
+ },
+
+ addResultToDb : function  (userId,childresult,resultType){
      var deferred = $q.defer();
      var resultJson = JSON.stringify(childresult);
      var db = databaseManager.getConnectionObject();
-     $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS SurveyResult(id INTEGER PRIMARY KEY AUTOINCREMENT, userId TEXT, resultJson TEXT,creationDate DATETIME DEFAULT CURRENT_TIMESTAMP)');
-     var insert =  $cordovaSQLite.execute(db, 'INSERT INTO SurveyResult (userId, resultJson,creationDate) VALUES (?,?,?)', [userId,resultJson,new Date()])
+     $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Results(id INTEGER PRIMARY KEY AUTOINCREMENT, userId TEXT,resultType TEXT, resultJson TEXT,creationDate DATETIME DEFAULT CURRENT_TIMESTAMP)');
+     var insert =  $cordovaSQLite.execute(db, 'INSERT INTO Results(userId, resultType,resultJson,creationDate) VALUES (?,?,?,?)', [userId,resultType,resultJson,new Date()])
                       .then(function(res) {
                           return res.insertId ;
                       }, function (err) {
@@ -116,10 +212,10 @@ angular.module('surveyDataManager', [])
      return deferred.promise;
    },
 
-  addSurveyToUserForToday : function(userId,surveyId,questionId,creationDate){
+  addSurveyToUserForToday : function(userId,surveyId,questionId,creationDate,skippable){
         var deferred = $q.defer();
         var db = databaseManager.getConnectionObject();
-        var insert =  $cordovaSQLite.execute(db, 'INSERT INTO SurveyTemp (userId,surveyId, questionId, isSkipped, creationDate) VALUES (?,?,?,?,?)', [userId,surveyId,questionId,'NONE',creationDate])
+        var insert =  $cordovaSQLite.execute(db, 'INSERT INTO SurveyTemp (userId,surveyId, questionId, isSkipped, creationDate,skippable) VALUES (?,?,?,?,?,?)', [userId,surveyId,questionId,'NONE',creationDate,skippable])
                          .then(function(res) {
                              return res.insertId ;
                          }, function (err) {
@@ -127,11 +223,10 @@ angular.module('surveyDataManager', [])
        deferred.resolve(insert);
        return deferred.promise;
      },
-
-     addThisSurveyToExpiry : function(userId,surveyId,questionId,creationDate,expiryDate){
+     addThisSurveyToExpiry : function(userId,surveyId,questionId,creationDate,expiryDate,skippable){
        var deferred = $q.defer();
        var db = databaseManager.getConnectionObject();
-       var insert =  $cordovaSQLite.execute(db, 'INSERT INTO SurveyQuestionExpiry (userId,surveyId, questionId,creationDate,expiryDate) VALUES (?,?,?,?,?)', [userId,surveyId,questionId,creationDate,expiryDate])
+       var insert =  $cordovaSQLite.execute(db, 'INSERT INTO SurveyQuestionExpiry (userId,surveyId, questionId,creationDate,expiryDate,skippable) VALUES (?,?,?,?,?,?)', [userId,surveyId,questionId,creationDate,expiryDate,skippable])
                         .then(function(res) {
                             return res.insertId ;
                         }, function (err) {
@@ -163,6 +258,41 @@ angular.module('surveyDataManager', [])
                     });
       deferred.resolve(deleteData);
       return deferred.promise;
+   },
+
+  removeUserSurveyResults :  function (userId){
+       var deferred = $q.defer();
+       var db = databaseManager.getConnectionObject();
+       var query = "DELETE FROM Results WHERE userId = ? " ;
+       var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                        .then(function(res) {
+                         deferred.resolve(res);
+                        }, function (err) {
+                    });
+       return deferred.promise;
+     },
+     removeUserSurveyFromTempTable :  function (userId){
+      var deferred = $q.defer();
+      var db = databaseManager.getConnectionObject();
+      var query = "DELETE FROM SurveyTemp WHERE userId = ? " ;
+      var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                       .then(function(res) {
+                        deferred.resolve(res);
+                       }, function (err) {
+                   });
+      return deferred.promise;
+    },
+    removeUserSurveyQuestionExpiry :  function (userId){
+     var deferred = $q.defer();
+     var db = databaseManager.getConnectionObject();
+     var query = "DELETE FROM SurveyQuestionExpiry WHERE userId = ? " ;
+     var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                      .then(function(res) {
+                       deferred.resolve(res);
+                      }, function (err) {
+                  });
+     return deferred.promise;
    }
+
   }
 });

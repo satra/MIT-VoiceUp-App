@@ -16,9 +16,15 @@
 <div ng-hide="hidePasscodeDiv" class="pass">
   <label class=" item-input item-stacked-label ">
   <span  class=" font35 fontB IRK-FONT1" >Enter Passcode</span>
-  <input class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="text" autofocus="true"  name="pinpasscode" id="pinpasscode"
-        maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="pinpasscode" focus-me>
+  <input class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="text"  name="pinpasscode" id="pinpasscode"
+        maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="pinpasscode" >
   </label>
  </div>
 </ion-content>
+
+<div class="bar bar-footer bar-light border-top-none">
+   <button class="button icon" ng-click="showEligibilityTestView()"><span class="fontB IRK-FONT2">New User?</span></button>
+   <button class="button icon" ng-click="openSignIn()"><span class="fontB IRK-FONT2"> Sign In</span></button>
+</div>
+
 </ion-modal-view>

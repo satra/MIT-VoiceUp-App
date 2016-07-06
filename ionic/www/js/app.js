@@ -5,9 +5,9 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','userService','surveyCtrl','databaseManager','surveyDataManager','eligiblityDataManager',
-'profileDataManager','consentDataManager','dataStoreManager','homeCtrl','eligibility','signUp','consent',
-'updateProfileCtrl','customDirectives','ionicResearchKit', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers','userService','signInCtrl','surveyCtrl','databaseManager','surveyDataManager','eligiblityDataManager',
+'profileDataManager','consentDataManager','dataStoreManager','homeCtrl','dashboard','eligibility','signUp','consent',
+'updateProfileCtrl','customDirectives','ionicResearchKit','syncDataService', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova','chart.js','flexcalendar','pascalprecht.translate'])
 .run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state) {
   $ionicPlatform.ready(function() {
 
@@ -27,7 +27,9 @@ $ionicPlatform.registerBackButtonAction(function (event) {
    }, 100);
 })
 
-.config(function($stateProvider, $httpProvider,$urlRouterProvider) {
+.config(function($stateProvider, $httpProvider,$urlRouterProvider,$ionicConfigProvider) {
+
+  $ionicConfigProvider.views.swipeBackEnabled(false);
 
   $httpProvider.defaults.useXDomain = true;
   $httpProvider.defaults.withCredentials = true;
@@ -47,6 +49,11 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     templateUrl: 'templates/home.html',
     controller: 'homeCtrl'
    // controller: 'SurveyCtrl'
+  })
+
+  .state('signIn', {
+    url: '/signIn',
+    controller: 'signInCtrl'
   })
 
   .state('eligiblityTest', {
@@ -119,7 +126,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     views: {
       'tab-dashboard': {
        templateUrl: 'templates/tab-activetasks.html',
-       controller: 'LearnCtrl'
+       controller: 'dashboardCtrl'
       }
     }
   })

@@ -1,7 +1,7 @@
 <ion-modal-view>
   <ion-header-bar>
     <div class="buttons">
-      <button class="button button-clear" ng-click="settingsBack()"><i class="icon ion-ios-arrow-thin-left icon-font-button"></i></button>
+      <button class="button button-clear" ng-click="backtotab()"><i class="icon ion-ios-arrow-thin-left icon-font-button"></i></button>
     </div>
     <h1 class="title">Settings</h1>
   </ion-header-bar>
@@ -12,7 +12,7 @@
         <li class="item item-toggle IRK-FONT2 ">
         Leave Study
              <label class="toggle toggle "  >
-                 <input type="checkbox"  type="submit" >
+                 <input type="checkbox"  type="submit" ng-model="logout" ng-change="logOut()" >
                  <div class="track">
                      <div class="handle"></div>
                  </div>
@@ -57,30 +57,17 @@
          </label>
      </li>
 
-     <a href="javascript:void(0)" class="item item-icon-right IRK-FONT2" > Auto-Lock
-        <div class="icon font-settings"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
-
    <!--call the function in ng-click next to anchor tag-->
-     <a href="javascript:void(0)"  class="item IRK-FONT2" >Download Data</a>
+     <a href="javascript:void(0)"  ng-click="emailConsent()" class="item IRK-FONT2" >Email Consent</a>
 
-     <a href="javascript:void(0)" ng-click="viewPermissions()"class="item item-icon-right IRK-FONT2">  View Permissions
+     <a href="javascript:void(0)" ng-click="viewPermissions()" class="item item-icon-right IRK-FONT2">  View Permissions
      <div class="icon font-settings" > <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
 
-
-     <a href="javascript:void(0)"  class="item IRK-FONT2" >Review Consent</a>
-
-   <a href="javascript:void(0)"  class="item item-icon-right IRK-FONT2" > Privacy Policy
-      <div class="icon font-settings"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
-
-
-      <a href="javascript:void(0)"  class="item item-icon-right IRK-FONT2" > Copyrights Information
+      <a href="javascript:void(0)" ng-click="viewCopyrightInfo()" class="item item-icon-right IRK-FONT2" > Copyrights Information
          <div class="icon font-settings"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
-
 
      <a href="javascript:void(0)" ng-click="changePasscode()" class="item item-icon-right IRK-FONT2">  Change Passcode
      <div class="icon font-settings" > <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
-
-
 
   </ion-content>
 

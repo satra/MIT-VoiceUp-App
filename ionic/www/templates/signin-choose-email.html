@@ -18,17 +18,15 @@
         <a value="email.emailId" >{{email.emailId}}</a>
       </option>
   </select>
-
 </div>
-
 
 <div ng-hide="hidePasscodeDiv" class="pass">
 
 <label class=" item-input item-stacked-label ">
 <span  class=" font35 fontB IRK-FONT1" >Enter Passcode</span>
 <!-- for android delete the pattern and change input type=number-->
-<input class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="text" autofocus="true"  name="passcode" id="passcode"
-      maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="passcode" focus-me>
+<input class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="text" name="passcode" id="passcode"
+      maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="passcode" >
 
 </label>
 

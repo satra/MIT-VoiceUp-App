@@ -1,13 +1,13 @@
 angular.module('consent',[])
 //=======Home screen controller======================
 .controller('consentCtrl', function($scope,$stateParams,$ionicHistory,$cordovaSQLite,$controller,
-  $ionicModal,$http,$compile,$ionicLoading,userService,databaseManager,consentDataManager,irkResults,$state,$location,$window) {
+  $ionicModal,$http,$compile,$ionicLoading,userService,$rootScope,databaseManager,consentDataManager,irkResults,irkConsentDocument,$state,$location,$window) {
 
     consentDataManager.getAllConsentScreens().then(function(response){
-    $scope.enable_review = response.enable_review;
+    $scope.enable_review = response.enable_review_questions;
     $scope.consent_array = response.sections;
-
     var taskListData =  userService.parseConsent($scope.consent_array,$scope.enable_review);
+
     var taskList =   '<ion-modal-view class="irk-modal">'+
     '<irk-ordered-tasks>'+
     taskListData +
@@ -30,9 +30,15 @@ $scope.closeModal = function() {
           childresult.every(function(value, key){
           if (value.type == "IRK-CONSENT-REVIEW-STEP") {
           if (value.answer) {
-          $state.transitionTo('loadSignUp');
+          $rootScope.consentFullJson = irkResults.getResults().childResults ;
+          $rootScope.consentResult = irkConsentDocument.getDocument();
+          $ionicHistory.clearCache().then(function(){
+               $state.transitionTo('loadSignUp');
+            });
           }else {
-          $state.transitionTo('home');
+            $ionicHistory.clearCache().then(function(){
+                $state.transitionTo('home');
+              });
           }
           return false;
           }

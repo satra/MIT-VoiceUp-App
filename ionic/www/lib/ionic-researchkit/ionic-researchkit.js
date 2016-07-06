@@ -1753,7 +1753,8 @@ angular.module('ionicResearchKit',[])
                 //$scope.$parent.formData[$scope.activeStepID].fileURL = "documents://" + audioFileName;
                 //$scope.$parent.formData[$scope.activeStepID].contentType = "audio/m4a";
 
-                $scope.audioSample = $cordovaMedia.newMedia(audioFileName);
+                $scope.audioSample = $cordovaMedia.newMedia("documents://" + audioFileName);
+
 
                 // Record audio
                 $scope.progress = $scope.duration;
