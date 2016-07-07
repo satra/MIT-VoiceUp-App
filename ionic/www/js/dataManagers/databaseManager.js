@@ -9,7 +9,7 @@ angular.module('databaseManager', [])
         var deferred = $q.defer();
         var query = "SELECT * FROM AppContent";
         var db = this.getConnectionObject();
-        //var query = "DROP TABLE AppContent";
+        //var query = "DROP TABLE Surveys";
         var  dataReturn =  $cordovaSQLite.execute(db, query)
         .then(function(res) {
         dataReturn = res.rows;
@@ -37,11 +37,11 @@ angular.module('databaseManager', [])
       deferred.resolve(dataReturn);
       return deferred.promise;
      },
-    createSurveysTable : function(date,title,id,skippable,tasks){
+    createSurveysTable : function(day,month,title,id,skippable,tasks){
          var deferred = $q.defer();
          var db = this.getConnectionObject();
-         $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Surveys (id INTEGER PRIMARY KEY AUTOINCREMENT,date TEXT,title TEXT,surveyId TEXT,skippable TEXT,tasks TEXT)');
-         var  dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO Surveys (date,title,surveyId,skippable,tasks) VALUES (?,?,?,?,?)', [date,title,id,skippable,tasks])
+         $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Surveys (id INTEGER PRIMARY KEY AUTOINCREMENT,day TEXT,month TEXT,title TEXT,surveyId TEXT,skippable TEXT,tasks TEXT)');
+         var  dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO Surveys (day,month,title,surveyId,skippable,tasks) VALUES (?,?,?,?,?,?)', [day,month,title,id,skippable,tasks])
          .then(function(res) {
              return res.insertId;
          });
