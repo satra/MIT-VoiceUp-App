@@ -402,7 +402,7 @@ $scope.startDataSync = function(){
   },function(error){
    $scope.uploadFailure();
  });
- 
+
 }
 
 
@@ -485,7 +485,7 @@ $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
               case 'irk-image-choice-question-step':
                            var choice = '';
                            for (var i = 0; i < stepData.choices.length; i++) {
-                           choice += '<irk-image-choice text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'" normal-state-image="'+stepData.choices[i]['normal-state-image']+'" selected-state-image="'+stepData.choices[i]['selected-state-image']+'" ></irk-image-choice>';
+                           choice += '<irk-image-choice text="" value="'+stepData.choices[i].value+'" normal-state-image="ion-happy-outline" selected-state-image="ion-sad" ></irk-image-choice>';
                            }
                            customDiv = '<irk-task > <irk-image-choice-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
                            choice+'</irk-image-choice-question-step></irk-task>';

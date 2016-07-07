@@ -3163,7 +3163,7 @@
           ],
           "text": "Select only one",
           "title": "How is your mood today?",
-          "type": "irk-image-choice-quetion-step"
+          "type": "irk-image-choice-question-step"
         }
       ]
     },
