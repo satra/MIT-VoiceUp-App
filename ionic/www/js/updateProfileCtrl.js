@@ -14,6 +14,15 @@ angular.module('updateProfileCtrl',[])
           }
         });
       }
+
+  // label for email(ios)/download(android)
+      if (ionic.Platform.isAndroid()) {
+        $scope.emailOrDownloadConsentLabel  = "Download Consent";
+      }else{
+        $scope.emailOrDownloadConsentLabel  = "Email Consent";
+      }
+
+
 //=============================get user fields saved locally ===============================
       profileDataManager.getUserUpdateProfile(email).then(function(response){
           if (response) {

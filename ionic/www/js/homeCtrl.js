@@ -5,7 +5,12 @@ angular.module('homeCtrl',[])
   $base64,$state,$location,$window,syncDataFactory,syncDataService) {
 
 
-
+// label for email(ios)/download(android)
+      if (ionic.Platform.isAndroid()) {
+        $scope.emailOrDownloadConsentLabel  = "Download Consent Document";
+      }else{
+        $scope.emailOrDownloadConsentLabel  = "Email Consent Document";
+  }
 
 databaseManager.checkDatabaseExists().then(function(res){
        if (res == 5 ) {
