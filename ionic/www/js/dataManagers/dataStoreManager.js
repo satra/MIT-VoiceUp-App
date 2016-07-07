@@ -1,5 +1,5 @@
 angular.module('dataStoreManager', [])
-.factory('dataStoreManager', function($http,base_url,$q,$ionicPopup,$ionicLoading) {
+.factory('dataStoreManager', function($http,base_url,$q,$ionicPopup,$ionicLoading,databaseManager,$cordovaSQLite) {
   //open connection
   return {
 
@@ -43,33 +43,26 @@ angular.module('dataStoreManager', [])
          return deferred.promise;
        },
 
+
+
      signInGlobalUser :  function(headerData){
       var deferred = $q.defer();
       var URL = base_url+'user/authentication';
-      var signIn =    $http({    method:'GET',
-                                 url: URL,
-                                 headers: {
-                                'Authorization': headerData
-                                    }
-                                 }).then(function successCallback(data) {
-                                    return data ;
-                                  }, function errorCallback(error) {
-                                    if (!error.data) {
-                                      message = 'Server error'}
-                                    else {
-                                      var message = error.data.message ;
-                                    }
-                                      $ionicLoading.hide();
-                                      $ionicPopup.alert({
-                                      title: 'Error',
-                                      template: message
-                                      });
-                                      return error ;
-                                });
-
-          deferred.resolve(signIn);
+      var createUser =   $http({ method:'GET',
+                                  url: URL,
+                                  headers: {
+                                 'Authorization': headerData
+                                     }
+                                 })
+                       .success(function(res) {
+                                 return res;
+                                 })
+                       .error(function(error) {
+                                return error;
+                           });
+          deferred.resolve(createUser);
           return deferred.promise;
-        },
+       },
 
       userForgotPassword:function (emailId){
         var deferred = $q.defer();
@@ -136,8 +129,8 @@ angular.module('dataStoreManager', [])
       getRemoteFolderId : function (parentId,girderToken){
         var deferred = $q.defer();
         var URL = base_url+'folder/?parentType=user&text=user&parentId='+parentId ;
-        var getFolder =    $http({ method:'GET',
-                                      url: URL,
+        var getFolderId =    $http({ method:'GET',
+                                   url: URL,
                                       headers: {
                                      'girder-token': girderToken
                                       }
@@ -146,37 +139,27 @@ angular.module('dataStoreManager', [])
                                   return res;
                                   })
                         .error(function(error) {
-                                  if (error) {
-                                    $ionicPopup.alert({
-                                    title: 'Error',
-                                    template: error.message
-                                    });
-                                  }
+                                 return error;
                             });
-           deferred.resolve(getFolder);
-           return deferred.promise;
+          deferred.resolve(getFolderId);
+          return deferred.promise;
       },
       getItemListByFolderId : function (folderId,girderToken){
         var deferred = $q.defer();
         var URL = base_url+'/item?folderId='+folderId ;
-        var getItemList =    $http({ method:'GET',
+        var itemList =   $http({ method:'GET',
                                       url: URL,
                                       headers: {
                                      'girder-token': girderToken
                                       }
                                   })
                         .success(function(res) {
-                                  return res;
+                          return res ;
                                   })
                         .error(function(error) {
-                                  if (error) {
-                                    $ionicPopup.alert({
-                                    title: 'Error',
-                                    template: error.message
-                                    });
-                                  }
-                            });
-           deferred.resolve(getItemList);
+                             return error;
+                        });
+           deferred.resolve(itemList);
            return deferred.promise;
       },
       downloadFilesListForItem : function (itemId,girderToken){
@@ -192,12 +175,7 @@ angular.module('dataStoreManager', [])
                                   return res;
                                   })
                         .error(function(error) {
-                                  if (error) {
-                                    $ionicPopup.alert({
-                                    title: 'Error',
-                                    template: error.message
-                                    });
-                                  }
+                                  return error;
                             });
            deferred.resolve(getItemList);
            return deferred.promise;
@@ -216,12 +194,7 @@ angular.module('dataStoreManager', [])
                                   return res;
                                   })
                         .error(function(error) {
-                                  if (error) {
-                                    $ionicPopup.alert({
-                                    title: 'Error',
-                                    template: error.message
-                                    });
-                                  }
+                                  return error;
                             });
            deferred.resolve(getItem);
            return deferred.promise;
@@ -348,6 +321,19 @@ angular.module('dataStoreManager', [])
                            });
           deferred.resolve(createFolder);
           return deferred.promise;
+     },
+     removeSyncQueueFromLocalDb : function(syncItem,itemId){
+       var deferred = $q.defer();
+       var db = databaseManager.getConnectionObject();
+       var query = "DELETE FROM SyncData WHERE itemId = ? AND syncItem = ? " ;
+       var deleteData = $cordovaSQLite.execute(db, query , [itemId,syncItem])
+                        .then(function(res) {
+                         return res;
+                        }, function (err) {
+                    });
+    //   return deferred.promise;
+       deferred.resolve(deleteData);
+       return deferred.promise;
      }
   }
 })

@@ -100,7 +100,22 @@ angular.module('profileDataManager', [])
               deferred.resolve(token);
               return deferred.promise;
           },
-   getUserUpdateProfile : function(emailId){
+        getItemIdForUserIdAndItem:function(userId,itemName){
+            var deferred = $q.defer();
+            var db = databaseManager.getConnectionObject();
+             var query = "SELECT syncItemId FROM userItemMappingTable WHERE localUserId ='"+userId+"' AND syncItemName ='"+itemName.toLowerCase()+"'  ";
+             var token =  $cordovaSQLite.execute(db, query).then(function(res) {
+                       var len = res.rows.length;
+                       for (var i=0; i<len; i++){
+                        token = res.rows.item(i).syncItemId;
+                       }
+                       return token;
+                   }, function (err) {
+                 });
+              deferred.resolve(token);
+              return deferred.promise;
+          },
+        getUserUpdateProfile : function(emailId){
            var deferred = $q.defer();
            var db = databaseManager.getConnectionObject();
           if (emailId) {
@@ -325,6 +340,17 @@ checkUserExistsByEmailAndPasscode:function(email,passcode){
               return deferred.promise;
     },
     removeUserSession : function (userId){
+      var deferred = $q.defer();
+      var db = databaseManager.getConnectionObject();
+      var query = "DELETE FROM Session WHERE userId = ? " ;
+      var deleteData = $cordovaSQLite.execute(db, query , [userId] )
+                       .then(function(res) {
+                        deferred.resolve(res);
+                       }, function (err) {
+                   });
+      return deferred.promise;
+    },
+    deletePasscodeOfUserID : function(userId){
       var deferred = $q.defer();
       var db = databaseManager.getConnectionObject();
       var query = "DELETE FROM Session WHERE userId = ? " ;

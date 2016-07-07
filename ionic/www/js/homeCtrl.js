@@ -1,10 +1,12 @@
 angular.module('homeCtrl',[])
 //=======Home screen controller======================
 .controller('homeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
-  dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
+  dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,
+  $base64,$state,$location,$window,syncDataFactory,syncDataService) {
 
 
-/*    userService.getSeverJson().then(function(obj2){
+/*
+ userService.getSeverJson().then(function(obj2){
            //call a method and read from local json and create schema
            userService.getLocalJson().then(function(obj1){
              var delta = jsondiffpatch.diff(obj1,  obj2);
@@ -13,54 +15,6 @@ angular.module('homeCtrl',[])
            });
         });
 */
-
-//   if (window.cordova) {
-//       if (cordova.platformId == "browser") {
-//           var exec = require("cordova/exec");
-//           console.log('browser');
-//       }else
-//       {
-//           console.log('device');
-//           cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
-//               console.log("Location is " + (enabled ? "enabled" : "disabled"));
-//           }, function(error){
-//               console.error("The following error occurred: "+error);
-//           });
-//       }
-//     }
-//
-//     // geo location ===========================
-//     $scope.geoLabel = 'Allow';
-//     var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
-//     function onSuccess(position) {
-//      $scope.geoLabel = 'Granted';
-//     };
-//     function onError(error) {
-//      $scope.geoLabel = 'Allow';
-//     };
-// //    var audioFileName = "irk-permission" + (new Date().getTime()) + (ionic.Platform.isAndroid() ? ".amr" : ".wav");
-// //    var audioSample = $cordovaMedia.newMedia(audioFileName);
-//
-//   $scope.allowGeoLocation = function(){
-//      var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
-//      function onSuccess(position) {
-//       $scope.geoLabel = 'Granted';
-//      };
-//      function onError(error) {
-//       $scope.geoLabel = 'Allow';
-//     };
-// }
-//
-//
-// $scope.allowAccelerometer = function(){
-//   var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
-//   function accelerometerSuccess(acceleration) {
-//    $scope.accelerationLabel = 'Granted';
-//   };
-//   function accelerometerError() {
-//    $scope.accelerationLabel = 'Allow';
-//   };
-// }
 
 databaseManager.checkDatabaseExists().then(function(res){
        if (res == 5 ) {
@@ -131,22 +85,27 @@ databaseManager.checkDatabaseExists().then(function(res){
              });
 
              databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
-                  console.log('createSurveyQuestionTable  '+ resp);
+                  console.log('createSurveyQuestionExpiryTable  '+ resp);
              });
 
             });
 
-          databaseManager.createSurveyTempTable().then(function(resp){
-              console.log('createSurveyTempTable  '+ resp);
-          });
-
-          databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
-              console.log('createSurveyQuestionTable  '+ resp);
-          });
-
-          databaseManager.createSyncServiceTable().then(function(resp){
-              console.log('createSynchTable  '+ resp);
+            databaseManager.createSurveyTempTable().then(function(resp){
+                console.log('createSurveyTempTable  '+ resp);
             });
+
+            databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
+                console.log('createSurveyQuestionTable  '+ resp);
+            });
+
+            databaseManager.createSyncServiceTable().then(function(resp){
+                console.log('createSynchTable  '+ resp);
+              });
+
+            databaseManager.createUserItemMappingTable().then(function(resp){
+                  console.log('createUserItemMappingTable  '+ resp);
+            });
+
          });
        }
  });

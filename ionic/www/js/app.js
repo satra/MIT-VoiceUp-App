@@ -8,7 +8,7 @@
 angular.module('starter', ['ionic', 'starter.controllers','userService','signInCtrl','surveyCtrl','databaseManager','surveyDataManager','eligiblityDataManager',
 'profileDataManager','consentDataManager','dataStoreManager','homeCtrl','dashboard','eligibility','signUp','consent',
 'updateProfileCtrl','customDirectives','ionicResearchKit','syncDataService', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova','chart.js','flexcalendar','pascalprecht.translate'])
-.run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state) {
+.run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state,syncDataFactory,$ionicLoading,$ionicPopup) {
   $ionicPlatform.ready(function() {
 
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -19,6 +19,25 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    if(window.Connection) {
+            if(navigator.connection.type == Connection.NONE) {
+               /*    $ionicPopup.alert({
+                    title: "Internet Disconnected",
+                    template: "The Internet connection appears to be offline."
+                });
+              */
+            }else {
+              $ionicLoading.show({template: 'Data Sync..'});
+              // call sync services
+              syncDataFactory.startSyncServiesTouploadData().then(function(res){
+                 $ionicLoading.hide();
+               },function(error){
+                $ionicLoading.hide();
+              });
+          }
+      }
+
   });
 
 
@@ -157,9 +176,11 @@ $ionicPlatform.registerBackButtonAction(function (event) {
   $urlRouterProvider.otherwise('home');
 })
 
-.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
+.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
+
 
 .config(function($ionicConfigProvider) {
   $ionicConfigProvider.tabs.style('standard');
   $ionicConfigProvider.tabs.position('bottom');
+
 })
