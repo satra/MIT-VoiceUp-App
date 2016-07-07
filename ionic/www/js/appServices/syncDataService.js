@@ -17,7 +17,7 @@ angular.module('syncDataService', [])
      addTouserItemMappingTable  : function (girderToken,localUserId,syncItemName,itemId){
           var deferred = $q.defer();
           var db = databaseManager.getConnectionObject();
-          var dateTime = new Date().toLocaleString() ;
+        
           var dateTime = new Date().toLocaleString() ;
           var syncData = $cordovaSQLite.execute(db, 'INSERT INTO userItemMappingTable (globalId, localUserId,syncItemName,syncItemId,creationDateTime) VALUES (?,?,?,?,?)', [girderToken,localUserId,syncItemName,itemId,dateTime])
                            .then(function(res) {
