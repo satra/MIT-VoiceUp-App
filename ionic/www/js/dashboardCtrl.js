@@ -7,7 +7,7 @@
 angular.module('dashboard', [])
 
   // calender
-.controller("dashboardCtrl", function($scope,$http) {
+.controller("dashboardCtrl", function($scope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
 	$http.get('assets/results_example_20160523091534.json').then(function (res) {
   var chartData = res.data;
   var dataArray= new Array();
@@ -124,32 +124,57 @@ $scope.options = {
     },
   };
 
-	$scope.events = [
-	  { date: "2016-06-07"},
-	  { date: "2016-04-15"},
-	  { date: "2016-05-07"},
-	  { date: "2016-06-07"},
-	  { date: "2016-05-11"},
-	  { date: "2016-04-15"},
-	  { date: "2016-04-21"},
-	  { date: "2016-05-03"},
-	  { date: "2016-05-02"},
-	  { date: "2016-05-10"},
-	  { date: "2016-05-13"},
-	  { date: "2016-05-18"},
-	  { date: "2016-05-17"},
-	  { date: "2016-03-19"},
-	  { date: "2016-03-07"},
-	  { date: "2016-03-03"},
-	  { date: "2016-04-03"},
-	  { date: "2016-04-06"},
-	  { date: "2016-04-07"},
-	  { date: "2016-04-09"},
-	  { date: "2016-04-11"},
-	   // calander widget ends here//
+	// $scope.events = [
+	//   { date: "2016-06-07"},
+	//   { date: "2016-04-15"},
+	//   { date: "2016-05-07"},
+	//   { date: "2016-06-07"},
+	//   { date: "2016-05-11"},
+	//   { date: "2016-04-15"},
+	//   { date: "2016-04-21"},
+	//   { date: "2016-05-03"},
+	//   { date: "2016-05-02"},
+	//   { date: "2016-05-10"},
+	//   { date: "2016-05-13"},
+	//   { date: "2016-05-18"},
+	//   { date: "2016-05-17"},
+	//   { date: "2016-03-19"},
+	//   { date: "2016-03-07"},
+	//   { date: "2016-03-03"},
+	//   { date: "2016-04-03"},
+	//   { date: "2016-04-06"},
+	//   { date: "2016-04-07"},
+	//   { date: "2016-04-09"},
+	//   { date: "2016-04-11"},
+	//    // calander widget ends here//
+	//
+	// ];
+	$scope.events = [];
+surveyDataManager.getSurveyDates().then(function(res){
+								var dateData = res;
+								var eventsArray = new Array();
+								$scope.events = [];
+								var array =[]
+								var today = new Date();
+								var year = today.getFullYear();
+								for (var i =0; i<dateData.length;i++)
+								{
 
-	];
+									var day = dateData.item(i).day;
+									if (day=="*") {
+											day = today.getDate();
+									}
+									var month = dateData.item(i).month;
+									if (month == "*") {
+											month  = today.getMonth()+1 ;
+									}
+									var dateD1 = year+"-"+month+"-"+day;
+									eventsArray.push({"date":dateD1});
+							 }
+							$scope.events = eventsArray;
+							console.log($scope.events);
 });
 
+});
 // calander ends here
     // calander Widget//

@@ -88,7 +88,7 @@ angular.module('surveyDataManager', [])
  getSurveyDates : function(){
    var deferred = $q.defer();
    var db = databaseManager.getConnectionObject();
-   var query = "SELECT date,surveyId,title FROM Surveys " ;
+   var query = "SELECT day,month FROM Surveys " ;
    var surveyData = $cordovaSQLite.execute(db, query)
                     .then(function(res) {
                       surveyData = res.rows ;
