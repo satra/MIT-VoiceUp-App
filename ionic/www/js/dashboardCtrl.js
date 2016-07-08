@@ -7,7 +7,15 @@
 angular.module('dashboard', [])
 
   // calender
-.controller("dashboardCtrl", function($scope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
+.controller("dashboardCtrl", function($scope,$ionicHistory,$state,$rootScope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
+
+	// == take user to home screeen
+  $scope.switchUser = function (){
+          $ionicHistory.clearCache().then(function(){
+          $rootScope.emailId = null;
+          $state.transitionTo('home');
+          });
+  }
 
 	$http.get('assets/results_example_20160523091534.json').then(function (res) {
   var chartData = res.data;

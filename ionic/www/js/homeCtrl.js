@@ -5,6 +5,7 @@ angular.module('homeCtrl',[])
   $base64,$state,$location,$window,syncDataFactory,syncDataService) {
 
 
+
 // label for email(ios)/download(android)
       if (ionic.Platform.isAndroid()) {
         $scope.emailOrDownloadConsentLabel  = "Download Consent Document";
@@ -107,6 +108,9 @@ databaseManager.checkDatabaseExists().then(function(res){
       $scope.modal.show();
     });
 };
+
+$scope.headerCloseButton = false ;
+$scope.headerBackButton = true ;
 
 $scope.go = function () {
   $scope.modal.remove();

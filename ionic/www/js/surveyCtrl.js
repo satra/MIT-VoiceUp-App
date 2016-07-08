@@ -36,7 +36,15 @@ document.addEventListener("resume", function() {
 
 */
 
-  // ==== Close the existing modal and open Sign in html in new modal======== make these as common function
+// == take user to home screeen
+$scope.switchUser = function (){
+    $ionicHistory.clearCache().then(function(){
+    $rootScope.emailId = null;
+    $state.transitionTo('home');
+    });
+}
+
+// ==== Close the existing modal and open Sign in html in new modal======== make these as common function
   $scope.openSignIn = function() {
     $ionicHistory.clearCache().then(function(){
         $scope.pin.remove();

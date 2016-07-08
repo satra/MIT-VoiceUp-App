@@ -15,6 +15,16 @@ angular.module('updateProfileCtrl',[])
         });
       }
 
+  // == take user to home screeen
+  $scope.switchUser = function (){
+          $scope.modal.remove();
+          $ionicHistory.clearCache().then(function(){
+          $rootScope.emailId = null;
+          $state.transitionTo('home');
+          });
+  }
+
+
   // label for email(ios)/download(android)
       if (ionic.Platform.isAndroid()) {
         $scope.emailOrDownloadConsentLabel  = "Download Consent";
