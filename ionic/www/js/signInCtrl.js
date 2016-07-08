@@ -305,6 +305,17 @@ $scope.launchpinScreen = function(){
       });
   };
 
+
+
+$scope.createUserPin = function(localUserId,email){
+
+  profileDataManager.addPasscodeToUserID(localUserId,$scope.passcode,email,$scope.authToken).then(function(res){
+       $scope.modal.remove();
+       $scope.transition('tab.Activities');
+     });
+
+}
+
 //===================================================passcode handler ============================
   $scope.checkConfirmPasscodeDigits = function(){
       var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
@@ -318,11 +329,10 @@ $scope.launchpinScreen = function(){
                     // run delete query for the userId before add new passcode doesn't matter from which screen user come from
                     var localUserId  = res ;
                     profileDataManager.deletePasscodeOfUserID(localUserId).then(function(removeToken){
-                        profileDataManager.addPasscodeToUserID(localUserId,$scope.passcode,email,$scope.authToken).then(function(res){
-                             $scope.modal.remove();
-                             $scope.transition('tab.Activities');
-                           });
-                       });
+                      $scope.createUserPin(localUserId,email);
+                      },function(error){
+                      $scope.createUserPin(localUserId,email);
+                        });
                     });
                  }
             }else {

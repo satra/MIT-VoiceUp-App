@@ -353,6 +353,7 @@ checkUserExistsByEmailAndPasscode:function(email,passcode){
     deletePasscodeOfUserID : function(userId){
       var deferred = $q.defer();
       var db = databaseManager.getConnectionObject();
+      var create = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS Session(id INTEGER PRIMARY KEY AUTOINCREMENT, passcode TEXT, token TEXT,userId TEXT,emailId TEXT)');
       var query = "DELETE FROM Session WHERE userId = ? " ;
       var deleteData = $cordovaSQLite.execute(db, query , [userId] )
                        .then(function(res) {
