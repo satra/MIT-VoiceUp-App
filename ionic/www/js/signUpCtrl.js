@@ -235,16 +235,6 @@ if (formValid) {
                                                     $q.all(addToLocalQueue).then(function(createLocalData){
                                                       syncDataFactory.startSyncServiesTouploadData().then(function(res){
                                                         $ionicLoading.hide();
-                                                        var message = res.statusText ;
-                                                        var title = "Data upload success";
-                                                        if (!message) {
-                                                          message = "Data added for later upload.";
-                                                          title = "Data upload failed";
-                                                        }
-                                                        $ionicPopup.alert({
-                                                            title: title,
-                                                            template:message
-                                                        });
                                                         $scope.removeSignUpDiv();
                                                         $scope.launchpinScreen();
                                                        },function(error){
