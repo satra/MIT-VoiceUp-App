@@ -20,24 +20,6 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
       StatusBar.styleDefault();
     }
 
-    if(window.Connection) {
-            if(navigator.connection.type == Connection.NONE) {
-               /*    $ionicPopup.alert({
-                    title: "Internet Disconnected",
-                    template: "The Internet connection appears to be offline."
-                });
-              */
-            }else {
-              $ionicLoading.show({template: 'Data Sync..'});
-              // call sync services
-              syncDataFactory.startSyncServiesTouploadData().then(function(res){
-                 $ionicLoading.hide();
-               },function(error){
-                $ionicLoading.hide();
-              });
-          }
-      }
-
   });
 
 
@@ -176,7 +158,9 @@ $ionicPlatform.registerBackButtonAction(function (event) {
   $urlRouterProvider.otherwise('home');
 })
 
-.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
+.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
+//.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
+
 
 
 .config(function($ionicConfigProvider) {

@@ -473,7 +473,7 @@ $scope.removeSignUpDiv = function(){
                console.log($scope.accelerationLabel);
                   console.log($scope.Disable);
           // Detecta shake
-          $scope.detectShake(result);
+        //  $scope.detectShake(result);
 
         });
       };

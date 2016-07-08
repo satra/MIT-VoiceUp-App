@@ -4,6 +4,31 @@ angular.module('homeCtrl',[])
   dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,
   $base64,$state,$location,$window,syncDataFactory,syncDataService) {
 
+  /*  if(window.Connection) {
+            if(navigator.connection.type == Connection.NONE) {
+                  $ionicPopup.alert({
+                    title: "Internet Disconnected",
+                    template: "The Internet connection appears to be offline."
+                });
+            }else {
+              $ionicLoading.show({template: 'Data Sync..'});
+              // call sync services
+              syncDataFactory.startSyncServiesTouploadData().then(function(res){
+                 $ionicLoading.hide();
+               },function(error){
+                $ionicLoading.hide();
+              });
+           }
+      }
+      */
+
+      $ionicLoading.show({template: 'Data Sync..'});
+      // call sync services
+      syncDataFactory.startSyncServiesTouploadData().then(function(res){
+         $ionicLoading.hide();
+       },function(error){
+        $ionicLoading.hide();
+      });
 
 
 // label for email(ios)/download(android)
