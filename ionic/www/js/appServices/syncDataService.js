@@ -1,12 +1,12 @@
 angular.module('syncDataService', [])
-.factory('syncDataFactory', function($http,$cordovaSQLite,$q,databaseManager,base_url) {
+.factory('syncDataFactory', function($http,$cordovaSQLite,$q,databaseManager,base_url,dataStoreManager,$ionicPopup,$ionicLoading) {
   return {
     //====================================Read =======================
-    addToSyncQueue : function (girderToken,userId,syncItem,syncData){
+    addToSyncQueue : function (girderToken,userId,syncItem,syncData,folderId,itemId){
          var deferred = $q.defer();
          var db = databaseManager.getConnectionObject();
          var dateTime = new Date().toLocaleString() ;
-         var syncData = $cordovaSQLite.execute(db, 'INSERT INTO SyncData (globalId, userId,syncItem,syncData,creationDateTime) VALUES (?,?,?,?,?)', [girderToken,userId,syncItem,syncData,dateTime])
+         var syncData = $cordovaSQLite.execute(db, 'INSERT INTO SyncData (globalId, userId,syncItem,syncData,folderId,itemId,creationDateTime) VALUES (?,?,?,?,?,?,?)', [girderToken,userId,syncItem,syncData,folderId,itemId,dateTime])
                           .then(function(res) {
                               return res ;
                            }, function (err) {
@@ -14,7 +14,19 @@ angular.module('syncDataService', [])
         deferred.resolve(syncData);
         return deferred.promise;
       },
-
+     addTouserItemMappingTable  : function (girderToken,localUserId,syncItemName,itemId){
+          var deferred = $q.defer();
+          var db = databaseManager.getConnectionObject();
+        
+          var dateTime = new Date().toLocaleString() ;
+          var syncData = $cordovaSQLite.execute(db, 'INSERT INTO userItemMappingTable (globalId, localUserId,syncItemName,syncItemId,creationDateTime) VALUES (?,?,?,?,?)', [girderToken,localUserId,syncItemName,itemId,dateTime])
+                           .then(function(res) {
+                               return res ;
+                            }, function (err) {
+                         });
+         deferred.resolve(syncData);
+         return deferred.promise;
+       },
       queryDataNeededToSync : function (girderToken,userId){
            var deferred = $q.defer();
            var db = databaseManager.getConnectionObject();
@@ -140,6 +152,88 @@ angular.module('syncDataService', [])
                             }, function (err) {
                         });
           return deferred.promise;
-        }
-   }
+        },
+
+        startSyncServiesTouploadData : function (){
+             var deferred = $q.defer();
+             var db = databaseManager.getConnectionObject();
+             var query = "SELECT * FROM SyncData ";
+             var syncData =  $cordovaSQLite.execute(db, query).then(function(res) {
+                      var  res = res.rows ;
+                      if(res.length > 0 ){
+                      var fileItemPromise = [];
+                      for (var k = 0; k < res.length; k++) {
+                           var fileName = res.item(k).syncItem;
+                           var girderToken = res.item(k).globalId;
+                           var itemId = res.item(k).itemId ;
+                           var syncData = res.item(k).syncData ;
+                           var dataString = LZString.compressToEncodedURIComponent(syncData);
+                           var fileSize = dataString.length;
+                           fileItemPromise.push(dataStoreManager.createFileForItem(girderToken,itemId,fileName,fileSize));
+                      }
+
+                      $q.all(fileItemPromise).then(function(fileItemPromiseInfo){
+                          var uploadChunk = [];
+
+                          for (var i = 0; i < fileItemPromiseInfo.length; i++) {
+                          if (fileItemPromiseInfo[i].status==200) {
+                          var fileCreateDetails = fileItemPromiseInfo[i].data ;
+                          var fileCreateId = fileCreateDetails._id ;
+                          var parentId  = fileCreateDetails.parentId ;
+                          var itemName = fileCreateDetails.name ;
+                            for (var j = 0; j < res.length; j++) {
+                                     var syncItemName = res.item(j).syncItem ;
+                                     var itemId =  res.item(j).itemId ;
+                                     if (syncItemName.toLocaleLowerCase() == itemName.toLocaleLowerCase() && itemId == parentId ) {
+                                       var syncData = res.item(j).syncData
+                                       var dataString = LZString.compressToEncodedURIComponent(syncData);
+                                       uploadChunk.push(dataStoreManager.uploadAudioFileChunk(girderToken,fileCreateId,dataString));
+                                     }
+                                }
+                             }
+                          }
+
+                          $q.all(uploadChunk).then(function(uploadChunkInfo){
+                            var removeChunkFromLocalDb = [];
+                                for (var L = 0; L < uploadChunkInfo.length; L++) {
+                                      if (uploadChunkInfo[L].status==200) {
+                                          var chunkDetails = uploadChunkInfo[L].data ;
+                                          var syncItem = chunkDetails.name ;
+                                          var itemId =  chunkDetails.itemId ;
+                                          removeChunkFromLocalDb.push(dataStoreManager.removeSyncQueueFromLocalDb(syncItem,itemId));
+                                       }
+                                }
+                               $q.all(removeChunkFromLocalDb).then(function(removeChunkInfo){
+                                            var returnArray = {"status":200,"statusText":"Data was uploaded successfully."};
+                                            deferred.resolve(returnArray);
+                                         },function(error){
+                                           deferred.resolve(error);
+                                  });
+                              },function(error){
+                                deferred.resolve(error);
+                             });
+                        },function(error){
+                          deferred.resolve(error);
+                      });
+                    }else {
+                      deferred.resolve(res);
+                    }
+
+                   }, function (error) {
+                     deferred.resolve(error);
+                   });
+            return deferred.promise;
+          }
+     }
+})
+
+.service('syncDataService', function($http,$q) {
+
+  return {
+       getWS: function() {
+           var path = 'jsonWS/context.json';
+           return path;
+       }
+   };
+
 });

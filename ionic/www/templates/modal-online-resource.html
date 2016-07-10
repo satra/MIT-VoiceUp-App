@@ -1,9 +1,12 @@
 <ion-modal-view >
   <ion-header-bar>
     <h1 class="title">Online Resources</h1>
+
     <div class="buttons">
-      <button  id="headerCloseButton" class="button button-clear" ng-click="go()"><i class = "icon icon ion-close-round"></i></button>
+      <button  class="button button-clear" ng-hide="headerCloseButton" ng-click="go()"><i class = "icon icon ion-close-round"></i></button>
+      <button type="submit" class="button button-clear" ng-hide="headerBackButton" ng-click="switchUser()">Home</button>
     </div>
+
   </ion-header-bar>
   <ion-content>
     <form ng-submit="doLogin()">

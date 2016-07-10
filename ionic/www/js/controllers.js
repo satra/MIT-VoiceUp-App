@@ -19,9 +19,9 @@ angular.module('starter.controllers', [])
 //======Show loader and hide on $scope Done
 .run(function($rootScope, $ionicLoading) {
   $rootScope.$on('loading:show', function() {
-    $ionicLoading.show({template: 'Loading data..'})
+    // $ionicLoading.show({template: 'Loading data..'})
   })
   $rootScope.$on('loading:hide', function() {
-    $ionicLoading.hide()
+  //  $ionicLoading.hide()
   })
 })

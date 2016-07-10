@@ -1,7 +1,7 @@
 angular.module('signInCtrl',[])
 //=======Home screen controller======================
 .controller('signInCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
-  dataStoreManager,profileDataManager,surveyDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window,$q) {
+  dataStoreManager,profileDataManager,surveyDataManager,$cordovaEmailComposer,syncDataFactory,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window,$q) {
 
 //==================================Select email view ==========
 profileDataManager.getEmailList().then(function(response){
@@ -121,8 +121,9 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
         if (email && password ) {
           var beforeEncode = email.trim()+':'+password.trim();
           var encoded = 'Basic '+ $base64.encode(unescape(encodeURIComponent(beforeEncode)));
+          $ionicLoading.show();
           dataStoreManager.signInGlobalUser(encoded).then(function(res){
-               if (res.status == 200) {
+               if (res.data) {
                         var resultData = res.data ;
                         var token = resultData.authToken['token'] ;
                         var email = resultData.user['email'] ;
@@ -135,6 +136,7 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                         $scope.emailId = email ;
                           if (userExistsId) {
                                   profileDataManager.updateUserAuthToken(email,token).then(function(insertId){
+                                    $ionicLoading.hide();
                                     $scope.modal.remove();
                                     if (statePassed == 'signin') {  // if the user coming from sign in page
                                      $scope.transition('tab.Activities');
@@ -143,81 +145,114 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
                                    }
                                 });
                           }else {
-                            // valid user doesn't exists locally so get the profile data and set the pin
-                               dataStoreManager.getRemoteFolderId(parentId,$scope.authToken).then(function(folder){
-                                   if (folder) {
-                                     var folderDetails = folder.data;
-                                     var folderId = folderDetails[0]._id;
-                                     dataStoreManager.getItemListByFolderId(folderId,$scope.authToken).then(function(Item){
-                                         if (Item) {
-                                          var ItemList = Item.data;
-                                          var promises = [];
-                                          for (var i = 0; i < ItemList.length; i++) {
-                                            var itemName = ItemList[i].name;
-                                            var item_id = ItemList[i]._id;
-                                             if (itemName == 'profile') {
-                                               //get file list in an item
-                                               dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken).then(function(files){
-                                                   if (files) {
-                                                     var filesList = files.data;
-                                                     var fileId = filesList[0]._id;
-                                                     for (var j = 0; j < filesList.length; j++) {
-                                                       var fileName = filesList[j].name;
-                                                       var file_id = filesList[j]._id;
-                                                       if (fileName == 'profile_json') {
-                                                         dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(userProfile){
-                                                            var profileJson = LZString.decompressFromEncodedURIComponent(userProfile.data); //  fetch this once girder intigrated
-                                                            profileDataManager.createNewUser(JSON.parse(profileJson),$scope.emailId,parentId,folderId).then(function(insertId){
-                                                                  if (insertId) {
-                                                                    $scope.userId = insertId ;
-                                                                    $q.all(promises).then(function(res){
-                                                                       for (var i = 0; i < res.length; i++) {
-                                                                         var filesList = res[i].data ;
-                                                                         if (filesList) {
-                                                                                var fileName = filesList[i].name;
-                                                                                var file_id = filesList[i]._id;
-                                                                                if (fileName == 'consent_json') {
-                                                                                  dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(file){
-                                                                                     var fileJson = LZString.decompressFromEncodedURIComponent(file.data); //  fetch this once girder intigrated
-                                                                                       surveyDataManager.addResultToDb($scope.userId,JSON.parse(fileJson),'consent').then(function(response){
-                                                                                      });
-                                                                                  });
-                                                                              }
-                                                                            }
-                                                                       }
-                                                                    }).finally(function(){
-                                                                      $scope.modal.remove();
-                                                                      // ask to reset the pin
-                                                                      $scope.launchpinScreen();
-                                                                      }
-                                                                    );
-                                                                  }
-                                                              });
-                                                         });
-                                                       }
-                                                     }
-                                                   }
-                                                 });
-                                              }
-
-                                            else  if (itemName == 'consent') {
-                                              promises.push(dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken));
-                                               }
-                                           }
-
-                                         }
-                                     });
-
-                                   }
-                             });
+                            $scope.remoteLoginSuccess(parentId);
                           }
                       });
+                 }else {
+                     if (res.status !=0) {
+                       $scope.failureMessage(res.data.message);
+                     }else {
+                         $scope.failureMessage("Failed to Sign in.");
+                     }
                  }
+           },function(error){
+               if (error.status !=0) {
+                 $scope.failureMessage(error.data.message);
+               }else {
+                   $scope.failureMessage("Failed to Sign in.");
+               }
            });
-         } // validate
+         }
+      }
+};
 
-      } // form valid
-}; // submit
+$scope.remoteLoginSuccess = function(parentId){
+  // valid user doesn't exists locally so get the profile data and set the pin
+  dataStoreManager.getRemoteFolderId(parentId,$scope.authToken).then(function(folder){
+        if (folder.data) {
+          var folderDetails = folder.data ;
+          var folderId = folderDetails[0]._id;
+          dataStoreManager.getItemListByFolderId(folderId,$scope.authToken).then(function(itemSet){
+              if (itemSet.data) {
+                 var itemList = itemSet.data ;
+                 var downloadableConsent = []; var downloadableProfile = [];
+                 for (var i = 0; i < itemList.length; i++) {
+                   var itemName = itemList[i].name;
+                   var item_id = itemList[i]._id;
+                       if (itemName == 'profile') {
+                          downloadableProfile.push(dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken));
+                        }
+                        else  if (itemName == 'consent') {
+                           downloadableConsent.push(dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken));
+                        }
+                   }
+
+                 $q.all(downloadableProfile).then(function(filesToDownload){
+                         if (filesToDownload[0].status==200){
+                               var data = filesToDownload[0].data;
+                               var file_id = data[0]._id;
+                               dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(userProfile){
+                                  var profileJson = LZString.decompressFromEncodedURIComponent(userProfile.data); //  fetch this once girder intigrated
+                                  profileDataManager.createNewUser(JSON.parse(profileJson),$scope.emailId,parentId,folderId).then(function(insertId){
+                                        if (insertId) {
+                                          $scope.userId = insertId ;
+                                          var localUserId = insertId ;
+                                          var cacheItemIdLocally = [] ;
+                                          for (var k = 0; k < itemList.length; k++) {
+                                            var itemName = itemList[k].name;
+                                            var item_id = itemList[k]._id;
+                                            cacheItemIdLocally.push(syncDataFactory.addTouserItemMappingTable($scope.authToken,localUserId,itemName,item_id)); // caceh item if locally
+                                          }
+                                           $q.all(cacheItemIdLocally).then(function(cache){
+                                               $q.all(downloadableConsent).then(function(consentToDownload){
+                                                  if (consentToDownload[0].status==200){
+                                                     var data = consentToDownload[0].data;
+                                                     var file_id = data[0]._id;
+                                                     dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(consentData){
+                                                         var fileJson = LZString.decompressFromEncodedURIComponent(consentData.data);
+                                                         surveyDataManager.addResultToDb($scope.userId,JSON.parse(fileJson),'consent').then(function(response){
+                                                        });
+                                                       $ionicLoading.hide();
+                                                       $scope.modal.remove();
+                                                       $scope.launchpinScreen();
+                                                     });
+                                                   }
+                                               });
+                                           });
+                                        }
+                                    });
+                               });
+                         }
+                    });
+               }else {
+                $scope.failureMessage("Failed to get the server items.");
+            }
+         },function(error){
+                 if (error.status !=0) {
+                   $scope.failureMessage(error.data.message);
+                 }else {
+                     $scope.failureMessage("Failed to get the server items.");
+                 }
+         });
+      }else {
+         $scope.failureMessage("Failed to get the server folder Id.");
+     }
+  },function(error){
+          if (error.status !=0) {
+            $scope.failureMessage(error.data.message);
+          }else {
+              $scope.failureMessage("Failed to get the server folder Id.");
+          }
+  });
+}
+
+$scope.failureMessage = function(message){
+  $ionicLoading.hide();
+  $ionicPopup.alert({
+   title: 'Error',
+   template: message
+  });
+}
 
 // =====================validate sign in form ============
 $scope.validateSignInForm = function (){
@@ -270,6 +305,17 @@ $scope.launchpinScreen = function(){
       });
   };
 
+
+
+$scope.createUserPin = function(localUserId,email){
+
+  profileDataManager.addPasscodeToUserID(localUserId,$scope.passcode,email,$scope.authToken).then(function(res){
+       $scope.modal.remove();
+       $scope.transition('tab.Activities');
+     });
+
+}
+
 //===================================================passcode handler ============================
   $scope.checkConfirmPasscodeDigits = function(){
       var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
@@ -280,12 +326,15 @@ $scope.launchpinScreen = function(){
               var email = $scope.emailId ;
               if (email) {
                 profileDataManager.getUserIDByEmail(email).then(function(res){
-                       profileDataManager.addPasscodeToUserID(res,$scope.passcode,email,$scope.authToken).then(function(res){
-                            $scope.modal.remove();
-                            $scope.transition('tab.Activities');
-                          });
+                    // run delete query for the userId before add new passcode doesn't matter from which screen user come from
+                    var localUserId  = res ;
+                    profileDataManager.deletePasscodeOfUserID(localUserId).then(function(removeToken){
+                      $scope.createUserPin(localUserId,email);
+                      },function(error){
+                      $scope.createUserPin(localUserId,email);
+                        });
                     });
-                }
+                 }
             }else {
             //reset div
             $scope.confirm_passcode = '';
@@ -313,6 +362,7 @@ $scope.launchpinScreen = function(){
   $scope.checkPasscodeDigits = function(){
        var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
        if(passcode.length == 4){
+        document.activeElement.blur(); // remove the keypad
          $scope.passcode = passcode ;
          $scope.managePasscode = true ;
          $scope.passcodeLabel = "Confirm Passcode";

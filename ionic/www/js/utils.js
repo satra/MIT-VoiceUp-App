@@ -140,9 +140,8 @@ function generateProfileDiv(obj){
 
            case 'password':
                            var label = obj.text;
-                           if(obj.text == 'Confirm Password'){
-                             var res = obj.text.split(" ");
-                             label = res[0]+'<br>'+res[1];
+                           if(obj.id == 'password_confirm'){
+                             label = 'Confirm<br>Password';
                            }
                            div += '<label class="item item-input IRK-FONT2" type="password" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+label+'</span>'+
