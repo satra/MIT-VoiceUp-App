@@ -1,5 +1,5 @@
 angular.module('syncDataService', [])
-.factory('syncDataFactory', function($http,$cordovaSQLite,$q,databaseManager,base_url,dataStoreManager,$ionicPopup,$ionicLoading) {
+.factory('syncDataFactory', function($http,$cordovaSQLite,$q,profileDataManager,databaseManager,base_url,dataStoreManager,$ionicPopup,$ionicLoading) {
   return {
     //====================================Read =======================
     addToSyncQueue : function (girderToken,userId,syncItem,syncData,folderId,itemId){
@@ -17,7 +17,7 @@ angular.module('syncDataService', [])
      addTouserItemMappingTable  : function (girderToken,localUserId,syncItemName,itemId){
           var deferred = $q.defer();
           var db = databaseManager.getConnectionObject();
-        
+
           var dateTime = new Date().toLocaleString() ;
           var syncData = $cordovaSQLite.execute(db, 'INSERT INTO userItemMappingTable (globalId, localUserId,syncItemName,syncItemId,creationDateTime) VALUES (?,?,?,?,?)', [girderToken,localUserId,syncItemName,itemId,dateTime])
                            .then(function(res) {
@@ -223,8 +223,79 @@ angular.module('syncDataService', [])
                      deferred.resolve(error);
                    });
             return deferred.promise;
-          }
-     }
+          },
+       startSyncServiesToFetchResults  : function(){
+               var deferred = $q.defer();
+               var getResultItems = [];
+               var girderTokens = [];
+               profileDataManager.getUserList().then(function(response){
+                 for (var i = 0; i < response.length; i++) {
+                   var folderId = response.item(i).folderId ;
+                   var emailID = response.item(i).emailId;
+                   var token = response.item(i).token ;
+                   getResultItems.push(dataStoreManager.getItemListByFolderId(folderId,token));
+                 }
+                 $q.all(getResultItems).then(function(itemSetList){
+                        var downloadableItems = [];
+                        for (var k = 0; k < itemSetList.length; k++) {
+                            if (itemSetList[k].status == "200") {
+                              var itemList = itemSetList[k].data ;
+                              var girderToken = itemSetList[k].config.headers["girder-token"] ;
+                                for (var j = 0; j < itemList.length; j++) {
+                                  var itemName = itemList[j].name;
+                                  var item_id =  itemList[j]._id;
+                                  var folderId = itemList[j].folderId ;
+                                      if (itemName == 'resultsToDisplay') {
+                                         downloadableItems.push(dataStoreManager.downloadFilesListForItem(item_id,girderToken));
+                                       }
+                                  }
+                             }
+                        }
+
+                        $q.all(downloadableItems).then(function(filesToDownload){
+                             var itemsToDownload = [];
+                             for (var d = 0; d < filesToDownload.length; d++) {
+                                 if (filesToDownload[d].status == "200") {
+                                 var data = filesToDownload[d].data;
+                                 var girderToken = filesToDownload[d].config.headers["girder-token"] ;
+                                 var file_id = data[d]._id;
+                                 var createdDate =  data[d].created;
+                                 // var updated =  data[0].updated;
+                                 itemsToDownload.push(dataStoreManager.downloadFileById(file_id,girderToken));
+                                 }
+                            }
+
+                          $q.all(itemsToDownload).then(function(dataDownloaded){
+                                 var liveResults = []; var deleteResults =  [];
+                                 for (var h = 0; h < dataDownloaded.length; h++) {
+                                   if (dataDownloaded[h].status == "200") {
+                                        var data = JSON.stringify(dataDownloaded[h].data);
+                                        var token = dataDownloaded[h].config.headers["girder-token"] ;
+                                        deleteResults.push(dataStoreManager.deleteResultsLocally(token));
+                                        liveResults.push(dataStoreManager.addResultsLocally(data,token));
+                                    }
+                                 }
+
+                               $q.all(deleteResults).then(function(deleteData){
+                                     $q.all(liveResults).then(function(add){
+                                       deferred.resolve(add);
+                                     });
+                                 });
+                             }, function (error) {
+                               deferred.resolve(error);
+                             });
+                         }, function (error) {
+                           deferred.resolve(error);
+                         });
+                     }, function (error) {
+                       deferred.resolve(error);
+                     });
+                 }, function (error) {
+                   deferred.resolve(error);
+                 });
+              return deferred.promise;
+           }
+      }
 })
 
 .service('syncDataService', function($http,$q) {

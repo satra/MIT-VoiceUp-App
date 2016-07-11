@@ -86,6 +86,13 @@ angular.module('databaseManager', [])
       var  dataReturn = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS userItemMappingTable (id INTEGER PRIMARY KEY AUTOINCREMENT,globalId TEXT,localUserId TEXT,syncItemName TEXT,syncItemId TEXT,creationDateTime DATETIME)');
       deferred.resolve(dataReturn);
       return deferred.promise;
+    },
+    createUserResultTable : function(){
+      var deferred = $q.defer();
+      var db = this.getConnectionObject();
+      var  dataReturn = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS resultsToDisplay (id INTEGER PRIMARY KEY AUTOINCREMENT,authToken TEXT,localUserId TEXT,resultData TEXT,creationDateTime DATETIME)');
+      deferred.resolve(dataReturn);
+      return deferred.promise;
     }
 
   }

@@ -65,6 +65,21 @@ angular.module('profileDataManager', [])
                deferred.resolve(profile);
                return deferred.promise;
           },
+    getUserList : function(){
+                    var deferred = $q.defer();
+                    var db = databaseManager.getConnectionObject();
+                    var query = "SELECT A.*,B.token FROM User A,Session B WHERE A.emailId = B.emailId";
+                    var insert =  $cordovaSQLite.execute(db, query).then(function(res) {
+                           if(res.rows.length > 0){
+                             return res.rows ;
+                           }else {
+                             return null ;
+                           }
+                          }, function (err) {
+                        });
+                    deferred.resolve(insert);
+                    return deferred.promise;
+      },
     getAppJSON: function(){
                    var deferred = $q.defer();
                    var db = databaseManager.getConnectionObject();

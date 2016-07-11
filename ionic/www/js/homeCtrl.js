@@ -2,7 +2,7 @@ angular.module('homeCtrl',[])
 //=======Home screen controller======================
 .controller('homeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
   dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,
-  $base64,$state,$location,$window,syncDataFactory,syncDataService) {
+  $base64,$state,$location,$window,syncDataFactory,syncDataService,$q) {
 
   /*  if(window.Connection) {
             if(navigator.connection.type == Connection.NONE) {
@@ -22,18 +22,22 @@ angular.module('homeCtrl',[])
       }
       */
 
-$scope.homeCalss = "icon icon ion-close-round";
+     $scope.homeCalss = "icon icon ion-close-round";
 
       $ionicLoading.show({template: 'Data Sync..'});
       // call sync services
       syncDataFactory.startSyncServiesTouploadData().then(function(res){
-         $ionicLoading.hide();
+         syncDataFactory.startSyncServiesToFetchResults().then(function(res){
+              $ionicLoading.hide();
+         },function(error){
+             $ionicLoading.hide();
+         });
        },function(error){
         $ionicLoading.hide();
       });
 
 
-// label for email(ios)/download(android)
+     // label for email(ios)/download(android)
       if (ionic.Platform.isAndroid()) {
         $scope.emailOrDownloadConsentLabel  = "Download Consent Document";
       }else{
@@ -121,6 +125,10 @@ databaseManager.checkDatabaseExists().then(function(res){
                   console.log('createUserItemMappingTable  '+ resp);
             });
 
+            databaseManager.createUserResultTable().then(function(resp){
+                  console.log('createUserResultTable  '+ resp);
+            });
+
          });
        }
  });
@@ -133,8 +141,7 @@ databaseManager.checkDatabaseExists().then(function(res){
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
-    });
-
+   });
 };
 
 
