@@ -22,6 +22,8 @@ angular.module('homeCtrl',[])
       }
       */
 
+$scope.homeCalss = "icon icon ion-close-round";
+
       $ionicLoading.show({template: 'Data Sync..'});
       // call sync services
       syncDataFactory.startSyncServiesTouploadData().then(function(res){

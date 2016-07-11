@@ -8,9 +8,9 @@ angular.module('learnModule',[])
                       $state.transitionTo('home');
           });
    }
-
-  var homeButton  = '<i>Home</i>';
+$scope.homeCalss = "icon ion-home";
+/*  var homeButton  = '<i class = "icon ion-home" id="makeHome"></i>';
   angular.element(document.querySelector('#makeHome')).remove();
   angular.element(document.querySelector('#backButton')).append(homeButton);
-
+*/
 });
