@@ -9,4 +9,8 @@ angular.module('learnModule',[])
           });
    }
 
+  var homeButton  = '<i>Home</i>';
+  angular.element(document.querySelector('#makeHome')).remove();
+  angular.element(document.querySelector('#backButton')).append(homeButton);
+
 });
