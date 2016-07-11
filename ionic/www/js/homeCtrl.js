@@ -36,7 +36,7 @@ angular.module('homeCtrl',[])
         $scope.emailOrDownloadConsentLabel  = "Download Consent Document";
       }else{
         $scope.emailOrDownloadConsentLabel  = "Email Consent Document";
-  }
+      }
 
 databaseManager.checkDatabaseExists().then(function(res){
        if (res == 5 ) {
@@ -132,10 +132,9 @@ databaseManager.checkDatabaseExists().then(function(res){
       $scope.modal = modal;
       $scope.modal.show();
     });
+
 };
 
-$scope.headerCloseButton = false ;
-$scope.headerBackButton = true ;
 
 $scope.go = function () {
   $scope.modal.remove();

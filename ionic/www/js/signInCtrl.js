@@ -375,7 +375,7 @@ $scope.createUserPin = function(localUserId,email){
 //==================forgot password login via email ================
 $scope.forgotPassword = function (){
   var myPopup = $ionicPopup.show({
-    template: '<input style="text-align: center" type="Email" id="email_recover" placeholder="Email" focus-me>',
+    template: '<input style="text-align: center" type="Email" id="email_recover" placeholder="Email" >',
     title: 'Forgot Password',
     subTitle: 'Please enter your email',
     scope: $scope,
