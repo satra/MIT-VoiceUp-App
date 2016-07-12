@@ -36,7 +36,15 @@ document.addEventListener("resume", function() {
 
 */
 
-  // ==== Close the existing modal and open Sign in html in new modal======== make these as common function
+// == take user to home screeen
+$scope.switchUser = function (){
+    $ionicHistory.clearCache().then(function(){
+    $rootScope.emailId = null;
+    $state.transitionTo('home');
+    });
+}
+
+// ==== Close the existing modal and open Sign in html in new modal======== make these as common function
   $scope.openSignIn = function() {
     $ionicHistory.clearCache().then(function(){
         $scope.pin.remove();
@@ -270,6 +278,11 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
   profileDataManager.getAuthTokenForUser($rootScope.emailId).then(function (authToken){
     $scope.authToken = authToken.token ;
    });
+
+   profileDataManager.getItemIdForUserIdAndItem($scope.userId,"results").then(function (resultItemId){
+     $scope.resultItemId = resultItemId ;
+    });
+
   }
   $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                              '<irk-ordered-tasks>'+
@@ -294,13 +307,11 @@ $scope.closeModal = function() {
     }else{
      var childresult = irkResults.getResults().childResults ;
      if ($scope.userId) {
-
        for (var i = 0; i < childresult.length; i++) {
        var questionId = childresult[i].id ;
        var answer = childresult[i].answer ;
        var type = childresult[i].type;
        var isSkipped = '';
-
        if (answer) {
        isSkipped = "NO";
              // if answered a question clear form history table so it is answered and no need to add for upcoming survey
@@ -345,7 +356,8 @@ var fileName = 'results_json_'+today.getMonth()+'_'+today.getDate()+'_'+today.ge
 
 surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
       var resultJson = JSON.stringify(childresult);
-      syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,fileName,resultJson).then(function(consentUpload){
+
+      syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,fileName,resultJson,$scope.folderId,$scope.resultItemId).then(function(consentUpload){
               if (consentUpload) {
                   var promises = [];
                   var itemNameArray = [];
@@ -366,14 +378,14 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
                     $q.all(promises).then(function(baseDataArray){
                          var fileItemPromise = [];
                           for (var i = 0; i < baseDataArray.length; i++) {
-                            fileItemPromise.push(syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,itemNameArray[i],baseDataArray[i]));
+                            fileItemPromise.push(syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,itemNameArray[i],baseDataArray[i],$scope.folderId,$scope.resultItemId));
                           }
                          $q.all(fileItemPromise).then(function(itemCreateInfo){
-                           $scope.startDataSync($scope.authToken,$scope.userId);
+                            $scope.startDataSync();
                          });
                    });
                 }else {
-                  $scope.startDataSync($scope.authToken,$scope.userId);
+                    $scope.startDataSync();
                 }
             }
         });
@@ -381,110 +393,24 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
 }
 
 
-$scope.startDataSync = function(authToken,userId){
-      syncDataFactory.queryDataNeededToSync(authToken,userId).then(function(res){
-           if (res) {
-               dataStoreManager.getItemListByFolderId($scope.folderId,$scope.authToken).then(function(itemList){
-                 if (itemList.status==200) {
-                   var itemListDetails = itemList.data ;
-                         var appId=""; var consentId=""; var profileId=""; var resultsId=""; var settingsId="";
-                         for (var i = 0; i < itemListDetails.length; i++) {
-                           var itemName = itemListDetails[i].name;
-                           var itemId = itemListDetails[i]._id;
-                            switch (itemName) {
-                              case "app":
-                                appId = itemId ;
-                                break;
-                              case "consent":
-                                consentId = itemId ;
-                                break;
-                              case "profile":
-                                profileId = itemId ;
-                                break;
-                              case "results":
-                                resultsId = itemId ;
-                                break;
-                              case "settings":
-                                settingsId = itemId ;
-                                break;
-                              default:
-                            }
-                        }
+$scope.startDataSync = function(){
+ // call sync services
+ syncDataFactory.startSyncServiesTouploadData().then(function(res){
+    $ionicLoading.hide();
+    var message = res.statusText ;
+    var title = "Data upload success";
+    if (!message) {
+      message = "Data added for later upload.";
+      title = "Data upload failed";
+    }
+    $ionicPopup.alert({
+        title: title,
+        template:message
+    });
+  },function(error){
+   $scope.uploadFailure();
+ });
 
-                        var fileItemPromise = [];
-                        for (var k = 0; k < res.length; k++) {
-                             var syncItemName = res.item(k).syncItem;
-                             var syncData = res.item(k).syncData
-                             var dataString = LZString.compressToEncodedURIComponent(syncData);
-                             var fileSize = dataString.length;
-                               switch (syncItemName) {
-                                 case "app":
-                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,appId,syncItemName,fileSize));
-                                   break;
-                                 case "consent":
-                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,consentId,syncItemName,fileSize));
-                                   break;
-                                 case "profile":
-                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,profileId,syncItemName,fileSize));
-                                   break;
-                                 case "settings":
-                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,settingsId,syncItemName,fileSize));
-                                   break;
-                                 default:
-                                   fileItemPromise.push(dataStoreManager.createFileForItem($scope.authToken,resultsId,syncItemName,fileSize));
-                               }
-                         }
-                          // create files for the item
-                          $q.all(fileItemPromise).then(function(itemCreateInfo){
-                                    var uploadChunk = [];
-                                    for (var i = 0; i < itemCreateInfo.length; i++) {
-                                    if (itemCreateInfo[i].status==200) {
-                                    var fileCreateDetails = itemCreateInfo[i].data ;
-                                    var fileCreateId = fileCreateDetails._id ;
-                                    var ItemName = fileCreateDetails.name ;
-                                    for (var j = 0; j < res.length; j++) {
-                                         var syncItemName = res.item(j).syncItem;
-                                         if (syncItemName.toLocaleLowerCase() == ItemName.toLocaleLowerCase() ) {
-                                           var syncData = res.item(j).syncData
-                                           var dataString = LZString.compressToEncodedURIComponent(syncData);
-                                           uploadChunk.push(dataStoreManager.uploadAudioFileChunk($scope.authToken,fileCreateId,dataString));
-                                         }
-                                     }
-                                   }
-                                }
-                              // upload the chunk for the fileId
-                               $q.all(uploadChunk).then(function(uploadChunkInfo){
-                                        var removeChunkFromLocalDb = [];
-                                        for (var L = 0; L < uploadChunkInfo.length; L++) {
-                                              if (uploadChunkInfo[L].status==200) {
-                                                  var chunkDetails = uploadChunkInfo[L].data ;
-                                                  var syncItem = chunkDetails.name ;
-                                                  removeChunkFromLocalDb.push(syncDataFactory.removeSyncQueueFromLocalDb($scope.userId,syncItem));
-                                               }
-                                           }
-                                // remove the chunk form the local database
-                                  $q.all(removeChunkFromLocalDb).then(function(removeChunkInfo){
-                                               $ionicLoading.hide();
-                                               $ionicPopup.alert({
-                                                  title: "Data upload",
-                                                  template: "Data was uploaded successfully."
-                                               });
-                                            },function(error){
-                                               $scope.uploadFailure();
-                                          });
-
-                                        },function(error){
-                                            $scope.uploadFailure();
-                                      });
-                           },function(error){
-                             $scope.uploadFailure();
-                          });
-                    }
-                },function(error){
-                  $scope.uploadFailure();
-            });
-           }
-      });
 }
 
 
@@ -567,7 +493,7 @@ $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
               case 'irk-image-choice-question-step':
                            var choice = '';
                            for (var i = 0; i < stepData.choices.length; i++) {
-                           choice += '<irk-image-choice text="'+stepData.choices[i].text+'" value="'+stepData.choices[i].value+'" normal-state-image="'+stepData.choices[i]['normal-state-image']+'" selected-state-image="'+stepData.choices[i]['selected-state-image']+'" ></irk-image-choice>';
+                           choice += '<irk-image-choice text="" value="'+stepData.choices[i].value+'" normal-state-image="ion-happy-outline" selected-state-image="ion-sad" ></irk-image-choice>';
                            }
                            customDiv = '<irk-task > <irk-image-choice-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
                            choice+'</irk-image-choice-question-step></irk-task>';

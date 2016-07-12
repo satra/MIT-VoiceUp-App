@@ -1,66 +1,48 @@
 angular.module('homeCtrl',[])
 //=======Home screen controller======================
 .controller('homeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
-  dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window) {
+  dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,
+  $base64,$state,$location,$window,syncDataFactory,syncDataService,$q) {
+
+  /*  if(window.Connection) {
+            if(navigator.connection.type == Connection.NONE) {
+                  $ionicPopup.alert({
+                    title: "Internet Disconnected",
+                    template: "The Internet connection appears to be offline."
+                });
+            }else {
+              $ionicLoading.show({template: 'Data Sync..'});
+              // call sync services
+              syncDataFactory.startSyncServiesTouploadData().then(function(res){
+                 $ionicLoading.hide();
+               },function(error){
+                $ionicLoading.hide();
+              });
+           }
+      }
+      */
+
+     $scope.homeCalss = "icon icon ion-close-round";
+
+      $ionicLoading.show({template: 'Data Sync..'});
+      // call sync services
+      syncDataFactory.startSyncServiesTouploadData().then(function(res){
+         syncDataFactory.startSyncServiesToFetchResults().then(function(res){
+              $ionicLoading.hide();
+         },function(error){
+             $ionicLoading.hide();
+         });
+       },function(error){
+        $ionicLoading.hide();
+      });
 
 
-/*    userService.getSeverJson().then(function(obj2){
-           //call a method and read from local json and create schema
-           userService.getLocalJson().then(function(obj1){
-             var delta = jsondiffpatch.diff(obj1,  obj2);
-             jsondiffpatch.patch(obj1, delta);
-             console.log(obj1);
-           });
-        });
-*/
-
-//   if (window.cordova) {
-//       if (cordova.platformId == "browser") {
-//           var exec = require("cordova/exec");
-//           console.log('browser');
-//       }else
-//       {
-//           console.log('device');
-//           cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
-//               console.log("Location is " + (enabled ? "enabled" : "disabled"));
-//           }, function(error){
-//               console.error("The following error occurred: "+error);
-//           });
-//       }
-//     }
-//
-//     // geo location ===========================
-//     $scope.geoLabel = 'Allow';
-//     var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
-//     function onSuccess(position) {
-//      $scope.geoLabel = 'Granted';
-//     };
-//     function onError(error) {
-//      $scope.geoLabel = 'Allow';
-//     };
-// //    var audioFileName = "irk-permission" + (new Date().getTime()) + (ionic.Platform.isAndroid() ? ".amr" : ".wav");
-// //    var audioSample = $cordovaMedia.newMedia(audioFileName);
-//
-//   $scope.allowGeoLocation = function(){
-//      var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
-//      function onSuccess(position) {
-//       $scope.geoLabel = 'Granted';
-//      };
-//      function onError(error) {
-//       $scope.geoLabel = 'Allow';
-//     };
-// }
-//
-//
-// $scope.allowAccelerometer = function(){
-//   var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
-//   function accelerometerSuccess(acceleration) {
-//    $scope.accelerationLabel = 'Granted';
-//   };
-//   function accelerometerError() {
-//    $scope.accelerationLabel = 'Allow';
-//   };
-// }
+     // label for email(ios)/download(android)
+      if (ionic.Platform.isAndroid()) {
+        $scope.emailOrDownloadConsentLabel  = "Download Consent Document";
+      }else{
+        $scope.emailOrDownloadConsentLabel  = "Email Consent Document";
+      }
 
 databaseManager.checkDatabaseExists().then(function(res){
        if (res == 5 ) {
@@ -96,18 +78,9 @@ databaseManager.checkDatabaseExists().then(function(res){
                    }
                  if (date && title && id && tasks) {
                      var dateArray =date.split(" ");
-                     var min = dateArray[0];
-                     var month = dateArray[1];
                      var day = dateArray[2];
-                     //var month = dateArray[3];
-                     if(month == "*"){
-                       month = today.getMonth()+1;
-                     }
-                     if(day == "*"){
-                      day = today.getDate();
-                     }
-                     var customDate = day+'-'+month+'-'+today.getFullYear() ;
-                     databaseManager.createSurveysTable(customDate,title,id,skippable,tasks).then(function(respw){
+                     var month = dateArray[3];
+                     databaseManager.createSurveysTable(day,month,title,id,skippable,tasks).then(function(respw){
                       console.log('insert survey '+respw);
                      });
                    }
@@ -131,22 +104,31 @@ databaseManager.checkDatabaseExists().then(function(res){
              });
 
              databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
-                  console.log('createSurveyQuestionTable  '+ resp);
+                  console.log('createSurveyQuestionExpiryTable  '+ resp);
              });
 
             });
 
-          databaseManager.createSurveyTempTable().then(function(resp){
-              console.log('createSurveyTempTable  '+ resp);
-          });
-
-          databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
-              console.log('createSurveyQuestionTable  '+ resp);
-          });
-
-          databaseManager.createSyncServiceTable().then(function(resp){
-              console.log('createSynchTable  '+ resp);
+            databaseManager.createSurveyTempTable().then(function(resp){
+                console.log('createSurveyTempTable  '+ resp);
             });
+
+            databaseManager.createSurveyQuestionExpiryTable().then(function(resp){
+                console.log('createSurveyQuestionTable  '+ resp);
+            });
+
+            databaseManager.createSyncServiceTable().then(function(resp){
+                console.log('createSynchTable  '+ resp);
+              });
+
+            databaseManager.createUserItemMappingTable().then(function(resp){
+                  console.log('createUserItemMappingTable  '+ resp);
+            });
+
+            databaseManager.createUserResultTable().then(function(resp){
+                  console.log('createUserResultTable  '+ resp);
+            });
+
          });
        }
  });
@@ -159,8 +141,9 @@ databaseManager.checkDatabaseExists().then(function(res){
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
-    });
+   });
 };
+
 
 $scope.go = function () {
   $scope.modal.remove();

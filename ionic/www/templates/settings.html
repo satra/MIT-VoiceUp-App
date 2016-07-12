@@ -58,7 +58,7 @@
      </li>
 
    <!--call the function in ng-click next to anchor tag-->
-     <a href="javascript:void(0)"  ng-click="emailConsent()" class="item IRK-FONT2" >Email Consent</a>
+     <a href="javascript:void(0)"  ng-click="emailConsent()" class="item IRK-FONT2" >{{emailOrDownloadConsentLabel}}</a>
 
      <a href="javascript:void(0)" ng-click="viewPermissions()" class="item item-icon-right IRK-FONT2">  View Permissions
      <div class="icon font-settings" > <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
@@ -68,6 +68,9 @@
 
      <a href="javascript:void(0)" ng-click="changePasscode()" class="item item-icon-right IRK-FONT2">  Change Passcode
      <div class="icon font-settings" > <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
+
+     <a href="javascript:void(0)" ng-click="switchUser()" class="item item-icon-right IRK-FONT2">  Logout
+
 
   </ion-content>
 

@@ -6,8 +6,11 @@ angular.module('surveyDataManager', [])
       var deferred = $q.defer();
       var db = databaseManager.getConnectionObject();
       var today = new Date() ;
-      var customDate = (today.getDate())+'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
-      var query = "SELECT * FROM Surveys WHERE date='"+customDate+"'";
+      var day = today.getDate() ;
+      var month = today.getMonth()+1 ;
+    //  var customDate = (today.getDate())+'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
+
+      var query = "SELECT * FROM Surveys WHERE (day='"+day+"' AND month='"+month+"') OR (day='"+day+"' AND month='*') OR  (day='*' AND month='"+month+"') OR (day='*' AND month='*') ";
       var consent =  $cordovaSQLite.execute(db, query).then(function(res) {
               var len = res.rows.length;
               var itemsColl = [];
@@ -88,7 +91,8 @@ angular.module('surveyDataManager', [])
  getSurveyDates : function(){
    var deferred = $q.defer();
    var db = databaseManager.getConnectionObject();
-   var query = "SELECT day,month FROM Surveys " ;
+  // var query = "SELECT date,surveyId,title FROM Surveys " ;
+   var query = "SELECT creationDate FROM Results " ;
    var surveyData = $cordovaSQLite.execute(db, query)
                     .then(function(res) {
                       surveyData = res.rows ;
