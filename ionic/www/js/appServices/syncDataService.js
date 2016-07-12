@@ -153,13 +153,21 @@ angular.module('syncDataService', [])
                         });
           return deferred.promise;
         },
-
-        startSyncServiesTouploadData : function (){
+        checkDataAvailableToSync : function(){
+          var deferred = $q.defer();
+          var db = databaseManager.getConnectionObject();
+          var query = "SELECT * FROM SyncData ";
+          var syncData =  $cordovaSQLite.execute(db, query).then(function(res) {
+                   var  res = res.rows ;
+                   deferred.resolve(res);
+                 },function(error){
+                   deferred.resolve(error);
+               });
+         return deferred.promise;
+        },
+        startSyncServiesTouploadData : function (res){
              var deferred = $q.defer();
              var db = databaseManager.getConnectionObject();
-             var query = "SELECT * FROM SyncData ";
-             var syncData =  $cordovaSQLite.execute(db, query).then(function(res) {
-                      var  res = res.rows ;
                       if(res.length > 0 ){
                       var fileItemPromise = [];
                       for (var k = 0; k < res.length; k++) {
@@ -218,10 +226,6 @@ angular.module('syncDataService', [])
                     }else {
                       deferred.resolve(res);
                     }
-
-                   }, function (error) {
-                     deferred.resolve(error);
-                   });
             return deferred.promise;
           },
        startSyncServiesToFetchResults  : function(){

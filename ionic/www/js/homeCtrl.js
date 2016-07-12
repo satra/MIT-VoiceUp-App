@@ -8,14 +8,18 @@ angular.module('homeCtrl',[])
             if(navigator.connection.type == Connection.NONE) {
              $ionicLoading.hide();
             }else {
-             $ionicLoading.show({template: 'Data Sync..'});
-             syncDataFactory.startSyncServiesTouploadData().then(function(res){
-             $ionicLoading.hide();
-             },function(error){
-             $ionicLoading.hide();
-            });
-           }
-    }
+             syncDataFactory.checkDataAvailableToSync().then(function(res){
+                  if (res.length > 0 ) {
+                     $ionicLoading.show({template: 'Data Sync..'});
+                     syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+                     $ionicLoading.hide();
+                     },function(error){
+                     $ionicLoading.hide();
+                     });
+                  }
+              });
+        }
+  }
 
 
      $scope.homeCalss = "icon icon ion-close-round";

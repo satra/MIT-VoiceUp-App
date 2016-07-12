@@ -394,23 +394,32 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
 
 
 $scope.startDataSync = function(){
- // call sync services
- syncDataFactory.startSyncServiesTouploadData().then(function(res){
-    $ionicLoading.hide();
-    var message = res.statusText ;
-    var title = "Data upload success";
-    if (!message) {
-      message = "Data added for later upload.";
-      title = "Data upload failed";
+  if(window.Connection) {
+            if(navigator.connection.type == Connection.NONE) {
+            $scope.uploadFailure();
+            }else {
+             syncDataFactory.checkDataAvailableToSync().then(function(res){
+                  if (res.length > 0 ) {
+                     $ionicLoading.show({template: 'Data Sync..'});
+                     syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+                       $ionicLoading.hide();
+                       var message = res.statusText ;
+                       var title = "Data upload success";
+                       if (!message) {
+                         message = "Data added for later upload.";
+                         title = "Data upload failed";
+                       }
+                       $ionicPopup.alert({
+                           title: title,
+                           template:message
+                       });
+                     },function(error){
+                     $scope.uploadFailure();
+                     });
+                  }
+              });
+        }
     }
-    $ionicPopup.alert({
-        title: title,
-        template:message
-    });
-  },function(error){
-   $scope.uploadFailure();
- });
-
 }
 
 
