@@ -233,13 +233,19 @@ if (formValid) {
 
                                                   $q.all(addToSyncQueue).then(function(createLocalData){
                                                     $q.all(addToLocalQueue).then(function(createLocalData){
-                                                      syncDataFactory.startSyncServiesTouploadData().then(function(res){
-                                                        $ionicLoading.hide();
-                                                        $scope.removeSignUpDiv();
-                                                        $scope.launchpinScreen();
-                                                       },function(error){
-                                                        $scope.callAlertDailog(error.statusText);
-                                                       });
+                                                      syncDataFactory.checkDataAvailableToSync().then(function(res){
+                                                           if (res.length > 0 ) {
+                                                              syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+                                                                $ionicLoading.hide();
+                                                                $scope.removeSignUpDiv();
+                                                                $scope.launchpinScreen();
+                                                              },function(error){
+                                                              $scope.callAlertDailog(error.statusText);
+                                                              });
+                                                           }else {
+                                                             $ionicLoading.hide();
+                                                           }
+                                                        });
                                                      });
                                                    },function(error){
                                                         $scope.callAlertDailog(error.statusText);
@@ -276,7 +282,6 @@ if (formValid) {
          dataCache = [];
        }
   }
-
 
 $scope.callAlertDailog =  function (message){
          document.activeElement.blur(); // remove the keypad
