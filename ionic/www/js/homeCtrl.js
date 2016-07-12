@@ -4,39 +4,21 @@ angular.module('homeCtrl',[])
   dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,
   $base64,$state,$location,$window,syncDataFactory,syncDataService,$q) {
 
-  /*  if(window.Connection) {
+  if(window.Connection) {
             if(navigator.connection.type == Connection.NONE) {
-                  $ionicPopup.alert({
-                    title: "Internet Disconnected",
-                    template: "The Internet connection appears to be offline."
-                });
+             $ionicLoading.hide();
             }else {
-              $ionicLoading.show({template: 'Data Sync..'});
-              // call sync services
-              syncDataFactory.startSyncServiesTouploadData().then(function(res){
-                 $ionicLoading.hide();
-               },function(error){
-                $ionicLoading.hide();
-              });
+             $ionicLoading.show({template: 'Data Sync..'});
+             syncDataFactory.startSyncServiesTouploadData().then(function(res){
+             $ionicLoading.hide();
+             },function(error){
+             $ionicLoading.hide();
+            });
            }
-      }
-      */
+    }
+
 
      $scope.homeCalss = "icon icon ion-close-round";
-
-      $ionicLoading.show({template: 'Data Sync..'});
-      // call sync services
-      syncDataFactory.startSyncServiesTouploadData().then(function(res){
-         syncDataFactory.startSyncServiesToFetchResults().then(function(res){
-              $ionicLoading.hide();
-         },function(error){
-             $ionicLoading.hide();
-         });
-       },function(error){
-        $ionicLoading.hide();
-      });
-
-
      // label for email(ios)/download(android)
       if (ionic.Platform.isAndroid()) {
         $scope.emailOrDownloadConsentLabel  = "Download Consent Document";

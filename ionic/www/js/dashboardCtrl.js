@@ -7,7 +7,7 @@
 angular.module('dashboard', [])
 
   // calender
-.controller("dashboardCtrl", function($scope,$ionicHistory,$state,$rootScope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
+.controller("dashboardCtrl", function($scope,$ionicHistory,$state,$ionicLoading,syncDataFactory,$rootScope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
 
 	// == take user to home screeen
   $scope.switchUser = function (){
@@ -16,6 +16,20 @@ angular.module('dashboard', [])
           $state.transitionTo('home');
           });
   }
+
+  if(window.Connection) {
+            if(navigator.connection.type == Connection.NONE) {
+             $ionicLoading.hide();
+            }else {
+              $ionicLoading.show({template: 'Check for updates'});
+              syncDataFactory.startSyncServiesToFetchResults().then(function(res){
+              $ionicLoading.hide();
+              },function(error){
+              $ionicLoading.hide();
+              });
+           }
+  }
+
 
 	$http.get('assets/results_example_20160523091534.json').then(function (res) {
   var chartData = res.data;
@@ -52,9 +66,7 @@ for(var j=0;j<datad.data.length;j++)
 
    //graph3
    var chartData = res.data;
-
-  var dataArray= new Array();
-
+   var dataArray= new Array();
     for(var i=0;i<chartData.results.sections.length;i++)
     {
      var datad = chartData.results.sections[i][2] ;
