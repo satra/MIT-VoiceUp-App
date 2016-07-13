@@ -258,13 +258,8 @@ angular.module('dataStoreManager', [])
                                  return res;
                                  })
                        .error(function(error) {
-                                 $ionicLoading.hide();
-                                 if (error) {
-                                   $ionicPopup.alert({
-                                   title: 'Error',
-                                   template: error.message
-                                   });
-                                 }
+                              $ionicLoading.hide();
+                              return error ;
                            });
           deferred.resolve(createFolder);
           return deferred.promise;
@@ -286,12 +281,7 @@ angular.module('dataStoreManager', [])
                                  })
                        .error(function(error) {
                                  $ionicLoading.hide();
-                                 if (error) {
-                                   $ionicPopup.alert({
-                                   title: 'Error',
-                                   template: error.message
-                                   });
-                                 }
+                                 return error ;
                            });
           deferred.resolve(createFolder);
           return deferred.promise;

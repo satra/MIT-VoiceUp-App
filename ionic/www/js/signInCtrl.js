@@ -193,7 +193,8 @@ $scope.remoteLoginSuccess = function(parentId){
                                var file_id = data[0]._id;
                                dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(userProfile){
                                   var profileJson = LZString.decompressFromEncodedURIComponent(userProfile.data); //  fetch this once girder intigrated
-                                  profileDataManager.createNewUser(JSON.parse(profileJson),$scope.emailId,parentId,folderId).then(function(insertId){
+                                  var userVerified = "yes";
+                                  profileDataManager.createNewUser(JSON.parse(profileJson),$scope.emailId,parentId,folderId,userVerified).then(function(insertId){
                                         if (insertId) {
                                           $scope.userId = insertId ;
                                           var localUserId = insertId ;

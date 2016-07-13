@@ -1,7 +1,7 @@
 angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
 .controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
-   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$cordovaEmailComposer,
+   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$base64,$ionicModal,$http,$cordovaEmailComposer,
    $ionicLoading,profileDataManager,databaseManager,syncDataFactory,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
       var email = $rootScope.emailId ;
       $rootScope.emailId = email ;
@@ -11,9 +11,15 @@ angular.module('updateProfileCtrl',[])
           if (response) {
             $scope.authToken = response.token;
             $scope.userId = response.userId;
-          }
+              if ($scope.authToken) {
+                $scope.showVerifyButton = true ;
+              }else {
+                $scope.showVerifyButton = false ;
+              }
+           }
         });
-      }
+    }
+
 
   // == take user to home screeen
   $scope.switchUser = function (){
@@ -22,6 +28,71 @@ angular.module('updateProfileCtrl',[])
           $rootScope.emailId = null;
           $state.transitionTo('home');
           });
+  }
+
+  $scope.verifyUser = function() {
+    var emailId = $rootScope.emailId.trim() ;
+      if (emailId) {
+          $ionicPopup.show({
+          template: '<input style="text-align: center" type="password" id="password_recover" placeholder="password" >',
+          title: 'Enter Password',
+          subTitle: 'Please enter your account password',
+          scope: $scope,
+          buttons: [
+             { text: 'Cancel' },
+             {
+              text: '<b>Done</b>',
+              type: 'button-positive',
+              onTap: function(e) {
+                var password = angular.element(document.querySelector('#password_recover')).prop('value') ;
+                if (password.length != 0) {
+                    var beforeEncode = emailId.trim()+':'+password.trim();
+                    var encoded = 'Basic '+ $base64.encode(unescape(encodeURIComponent(beforeEncode)));
+                    $ionicLoading.show();
+                    syncDataFactory.verifyUserToFetchToken(encoded).then(function(res){
+                        $ionicLoading.hide();
+                        if (res.status == 200 || !res.data) {
+                          $scope.showVerifyButton = true ;
+                          $scope.startSyncServices();
+                        }else {
+                          $scope.failureMessage(res.data.message);
+                        }
+                    },function(error){
+                       $scope.failureMessage(error.statusText);
+                    });
+                  } else {
+                     e.preventDefault();
+                  }
+                }
+              }
+            ]
+          });
+      }
+  }
+
+$scope.failureMessage = function(message){
+    $ionicLoading.hide();
+    $ionicPopup.alert({
+     title: 'Error',
+     template: message
+    });
+  }
+
+  $scope.startSyncServices = function(){
+    // start sync services to upload the data
+    $ionicLoading.show({template: 'Data Sync..'});
+    syncDataFactory.checkDataAvailableToSync().then(function(res){
+         if (res.length > 0 ) {
+            syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+              $ionicLoading.hide();
+            },function(error){
+               $scope.failureMessage(error.statusText);
+            });
+         }else {
+           $scope.verifyLater();
+           $ionicLoading.hide();
+         }
+       });
   }
 
 

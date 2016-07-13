@@ -14,6 +14,19 @@ angular.module('syncDataService', [])
         deferred.resolve(syncData);
         return deferred.promise;
       },
+      updateToSyncQueue :  function(token,localUserId,syncItem,folderId,itemId){
+        var deferred = $q.defer();
+        var db = databaseManager.getConnectionObject();
+        var dateTime = new Date().toLocaleString() ;
+        var query = "UPDATE SyncData SET globalId ='"+token+"',folderId='"+folderId+"' , itemId='"+itemId+"' WHERE userId="+localUserId+" AND syncItem='"+syncItem+"'  ";
+        var syncData = $cordovaSQLite.execute(db, query)
+                         .then(function(res) {
+                             return res ;
+                          }, function (err) {
+                       });
+       deferred.resolve(syncData);
+       return deferred.promise;
+      },
      addTouserItemMappingTable  : function (girderToken,localUserId,syncItemName,itemId){
           var deferred = $q.defer();
           var db = databaseManager.getConnectionObject();
@@ -156,7 +169,7 @@ angular.module('syncDataService', [])
         checkDataAvailableToSync : function(){
           var deferred = $q.defer();
           var db = databaseManager.getConnectionObject();
-          var query = "SELECT * FROM SyncData ";
+          var query = "SELECT * FROM SyncData WHERE globalId != '' AND folderId != '' AND itemId != '' ";
           var syncData =  $cordovaSQLite.execute(db, query).then(function(res) {
                    var  res = res.rows ;
                    deferred.resolve(res);
@@ -298,7 +311,99 @@ angular.module('syncDataService', [])
                    deferred.resolve(error);
                  });
               return deferred.promise;
-           }
+           },
+        verifyUserToFetchToken : function(encoded){
+             var deferred = $q.defer();
+            dataStoreManager.signInGlobalUser(encoded).then(function(res){
+                 if (res.data) {
+                     var resultData = res.data ;
+                     var token = resultData.authToken['token'] ;
+                     var parentId = resultData.user['_id'];
+                     var email = resultData.user['email'];
+                     if (token &&email) {
+                     profileDataManager.getUserIDByEmail(email).then(function (localUserId){
+                      var folderName = 'user';
+                      dataStoreManager.createUserFolderInServer(token,parentId,folderName).then(function(folderInfo){
+                        if (folderInfo.data) {
+                           var folderDetails = folderInfo.data ;
+                           var folderId = folderDetails._id ;
+                           var createItems = [];
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"profile"));
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"consent"));
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"app"));
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"results"));
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"settings"));
+
+                           $q.all(createItems).then(function(itemCreateInfo){
+                               var addToLocalQueue = [];
+                               var updateMappingTable = [];
+                               var updateItemIdForResultsList = [];
+                               for (var i = 0; i < itemCreateInfo.length; i++) {
+                                    if (itemCreateInfo[i].status==200) {
+                                        var data = itemCreateInfo[i].data ;
+                                        if (data) {
+                                          var name = data.name ;
+                                          var itemId = data._id ;
+                                          addToLocalQueue.push(profileDataManager.addTouserItemMappingTable(token,localUserId,name,itemId));
+                                            //update SyncData table with itemId folderID and girderToken
+                                            switch (name) {
+                                                case "app":
+                                                updateMappingTable.push(profileDataManager.updateToSyncQueue(token,localUserId,"app_json",folderId,itemId));
+                                                break;
+                                                case "consent":
+                                                updateMappingTable.push(profileDataManager.updateToSyncQueue(token,localUserId,"consent_json",folderId,itemId));
+                                                break;
+                                                case "profile":
+                                                updateMappingTable.push(profileDataManager.updateToSyncQueue(token,localUserId,"profile_json",folderId,itemId));
+                                                break;
+                                                case "results":
+                                                updateItemIdForResultsList.push(profileDataManager.updateToSyncQueueForResultsList(token,localUserId,folderId,itemId));
+                                                break;
+                                              default:
+                                            }
+                                        }
+                                    }
+                               }
+
+                               $q.all(addToLocalQueue).then(function(createLocalData){
+                               $q.all(updateMappingTable).then(function(updateLocalData){
+                               $q.all(updateItemIdForResultsList).then(function(updateLocalResultsItemId){
+                                 },function(error){
+                                      deferred.resolve(error);
+                                 });
+
+                                   profileDataManager.updateFolderIdToUserID(localUserId,folderId,"yes").then(function(updateId){
+                                      profileDataManager.updateUserAuthToken(email.trim(),token).then(function(updateId){
+                                         deferred.resolve(updateId);
+                                      },function(error){
+                                           deferred.resolve(error);
+                                      });
+                                    },function(error){
+                                         deferred.resolve(error);
+                                    });
+                                  },function(error){
+                                       deferred.resolve(error);
+                                  });
+                                },function(error){
+                                     deferred.resolve(error);
+                                });
+                             },function(error){
+                                  deferred.resolve(error);
+                             });
+                           }
+                         },function(error){
+                              deferred.resolve(error);
+                         });
+                       },function(error){
+                            deferred.resolve(error);
+                       });
+                     }
+                  }
+              },function(error){
+                   deferred.resolve(error);
+              });
+            return deferred.promise;
+         }
       }
 })
 

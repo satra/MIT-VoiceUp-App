@@ -104,7 +104,6 @@ $scope.switchUser = function (){
 
 surveyDataManager.getSurveyListForToday().then(function(response){
     $scope.list = response;
-    console.log($scope.list);
     var surveyMainList = response;
     var today = new Date() ;
     var creationDate = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
@@ -284,6 +283,7 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
     });
 
   }
+
   $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                              '<irk-ordered-tasks>'+
                                              surveyHtml +
@@ -313,7 +313,7 @@ $scope.closeModal = function() {
        var type = childresult[i].type;
        var isSkipped = '';
        if (answer) {
-       isSkipped = "NO";
+              isSkipped = "NO";
              // if answered a question clear form history table so it is answered and no need to add for upcoming survey
              surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
 
@@ -394,32 +394,44 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
 
 
 $scope.startDataSync = function(){
-  if(window.Connection) {
-            if(navigator.connection.type == Connection.NONE) {
-            $scope.uploadFailure();
-            }else {
-             syncDataFactory.checkDataAvailableToSync().then(function(res){
-                  if (res.length > 0 ) {
-                     $ionicLoading.show({template: 'Data Sync..'});
-                     syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
-                       $ionicLoading.hide();
-                       var message = res.statusText ;
-                       var title = "Data upload success";
-                       if (!message) {
-                         message = "Data added for later upload.";
-                         title = "Data upload failed";
-                       }
-                       $ionicPopup.alert({
-                           title: title,
-                           template:message
-                       });
-                     },function(error){
-                     $scope.uploadFailure();
-                     });
-                  }
-              });
+  // user autherized or not
+  profileDataManager.checkIsUserValid($rootScope.emailId).then(function(res){
+    if (res.toLowerCase() == "yes".toLowerCase()) {
+      if(window.Connection) {
+                if(navigator.connection.type == Connection.NONE) {
+                $scope.uploadFailure();
+                }else {
+                 syncDataFactory.checkDataAvailableToSync().then(function(res){
+                      if (res.length > 0 ) {
+                         $ionicLoading.show({template: 'Data Sync..'});
+                           syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+                           $ionicLoading.hide();
+                           var message = res.statusText ;
+                           var title = "Data upload success";
+                           if (!message) {
+                             message = "Data added for later upload.";
+                             title = "Data upload failed";
+                           }
+                           $ionicPopup.alert({
+                               title: title,
+                               template:message
+                           });
+                         },function(error){
+                         $scope.uploadFailure();
+                         });
+                      }
+                  });
+            }
         }
-    }
+      }else{
+          $ionicLoading.hide();
+          $ionicPopup.alert({
+              title: "Verify",
+              template:"User verification is failed."
+          });
+       }
+  });
+
 }
 
 

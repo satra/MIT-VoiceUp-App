@@ -21,12 +21,14 @@ angular.module('dashboard', [])
             if(navigator.connection.type == Connection.NONE) {
              $ionicLoading.hide();
             }else {
-              $ionicLoading.show({template: 'Check for updates'});
-              syncDataFactory.startSyncServiesToFetchResults().then(function(res){
-              $ionicLoading.hide();
-              },function(error){
-              $ionicLoading.hide();
-              });
+              if ($rootScope.emailId) {
+                $ionicLoading.show({template: 'Check for updates'});
+                syncDataFactory.startSyncServiesToFetchResults().then(function(res){
+                $ionicLoading.hide();
+                },function(error){
+                $ionicLoading.hide();
+                });
+              }
            }
   }
 
@@ -146,7 +148,9 @@ $scope.options = {
   };
 
 	$scope.events = [];
+
 	surveyDataManager.getSurveyDates().then(function(res){
+            if (res) {
 									var dateData = res;
 									var eventsArray = new Array();
 									for (var i =0; i<res.length;i++)
@@ -154,8 +158,9 @@ $scope.options = {
 										eventsArray.push({"date":res.item(i).creationDate});
 								 }
 								$scope.events = eventsArray;
-								console.log($scope.events);
+            }
 	 });
+
 
 
 });
