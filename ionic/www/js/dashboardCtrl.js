@@ -20,45 +20,62 @@ angular.module('dashboard', [])
   if(window.Connection) {
             if(navigator.connection.type == Connection.NONE) {
              $ionicLoading.hide();
+             $scope.fetchMapResults();
             }else {
               if ($rootScope.emailId) {
                 $ionicLoading.show({template: 'Check for updates'});
                 syncDataFactory.startSyncServiesToFetchResults().then(function(res){
                 $ionicLoading.hide();
+                $scope.fetchMapResults () ;
                 },function(error){
                 $ionicLoading.hide();
+                $scope.fetchMapResults () ;
                 });
               }
            }
   }
 
+$scope.events = [];
+surveyDataManager.getSurveyDates().then(function(res){
+            if (res) {
+                  var dateData = res;
+                  var eventsArray = new Array();
+                  for (var i =0; i<res.length;i++)
+                    {
+                    eventsArray.push({"date":res.item(i).creationDate});
+                 }
+                $scope.events = eventsArray;
+            }
+});
 
-	$http.get('assets/results_example_20160523091534.json').then(function (res) {
-  var chartData = res.data;
+$scope.fetchMapResults = function(){
+
+var emailId = $rootScope.emailId ;
+if (emailId) {
+surveyDataManager.getResults(emailId.trim()).then(function(res){
+  if (res) {
+
+  var chartData = JSON.parse(res["resultData"]);
   var dataArray= new Array();
 
   //graph1
-   for(var i=0;i<chartData.results.sections.length;i++)
+   for(var i=0;i<chartData.sections.length;i++)
    {
-		 var datad = chartData.results.sections[i][0] ;
+		 var datad = chartData.sections[i][0] ;
   	 $scope.labels = datad.labels;
-		 //dataArray.push(datad.data);
-for(var j=0;j<datad.data.length;j++)
-{
-  //console.log(datad.data[j])
-  dataArray.push(datad.data[j]);
-}
-    //  console.log(datad.data);
-		 $scope.series = datad.series ;
+     for(var j=0;j<datad.data.length;j++)
+      {
+       dataArray.push(datad.data[j]);
+      }
+  	 $scope.series = datad.series ;
+   	 $scope.data = dataArray;
+  }
 
-	 $scope.data = dataArray;
-}
-	 var chartData = res.data;
 	var dataArray= new Array();
 	 //graph2
-		for(var i=0;i<chartData.results.sections.length;i++)
+		for(var i=0;i<chartData.sections.length;i++)
 		{
-		 var datad = chartData.results.sections[i][1] ;
+		 var datad = chartData.sections[i][1] ;
 		 $scope.labels1 = datad.labels;
 		 dataArray.push(datad.data);
 		// console.log(datad);
@@ -66,60 +83,52 @@ for(var j=0;j<datad.data.length;j++)
 	 }
 	 $scope.data1 = dataArray;
 
-   //graph3
-   var chartData = res.data;
-   var dataArray= new Array();
-    for(var i=0;i<chartData.results.sections.length;i++)
+
+     var dataArray= new Array();
+   for(var i=0;i<chartData.sections.length;i++)
     {
-     var datad = chartData.results.sections[i][2] ;
+     var datad = chartData.sections[i][2] ;
      $scope.labels2 = datad.labels;
      dataArray.push(datad.data);
-     //console.log(datad.data);
      $scope.series2 = datad.series ;
    }
    $scope.data2 = dataArray;
      //graph4
-var chartData = res.data;
+
 var dataArray= new Array();
 
- for(var i=0;i<chartData.results.sections.length;i++)
- {
-   var datad = chartData.results.sections[i][3] ;
+ for(var i=0;i<chartData.sections.length;i++)
+  {
+   var datad = chartData.sections[i][3] ;
    $scope.labels3 = datad.labels;
-   //dataArray.push(datad.data);
-for(var k=0;k<datad.data.length;k++)
-{
-//console.log(datad.data[j])
-dataArray.push(datad.data[k]);
-}
-  //  console.log(datad.data);
+   for(var k=0;k<datad.data.length;k++)
+   {
+   dataArray.push(datad.data[k]);
+   }
    $scope.series3 = datad.series ;
+   $scope.data3 = dataArray;
+ }
 
- $scope.data3 = dataArray;
- //console.log( $scope.data3 );
-}
-      //graph5
-var chartData = res.data;
 var dataArray= new Array();
 var labelArray= new Array();
 var seriesArray= new Array();
- for(var i=0;i<chartData.results.sections.length;i++)
+ for(var i=0;i<chartData.sections.length;i++)
  {
-var chartd = chartData.results.sections[i][4] ;
+  var chartd = chartData.sections[i][4] ;
   $scope.labels4 = chartd.labels;
   dataArray.push(chartd.data);
   $scope.series4 = chartd.series;
   labelArray.push(chartd.labels);
   seriesArray.push(chartd.series);
-//  console.log(chartd.labels);
-
 }
 
 $scope.data4 = dataArray;
 $scope.labels4 = labelArray;
 $scope.series4 = seriesArray;
-console.log(dataArray,labelArray,seriesArray);
-});
+   }
+  });
+ }
+}
     // calander//
 $scope.options = {
     defaultDate:  new Date(),
@@ -146,21 +155,6 @@ $scope.options = {
       console.log(filteredEvents);
     },
   };
-
-	$scope.events = [];
-
-	surveyDataManager.getSurveyDates().then(function(res){
-            if (res) {
-									var dateData = res;
-									var eventsArray = new Array();
-									for (var i =0; i<res.length;i++)
-									  {
-										eventsArray.push({"date":res.item(i).creationDate});
-								 }
-								$scope.events = eventsArray;
-            }
-	 });
-
 
 
 });
