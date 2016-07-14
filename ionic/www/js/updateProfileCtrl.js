@@ -4,6 +4,7 @@ angular.module('updateProfileCtrl',[])
    $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$base64,$ionicModal,$http,$cordovaEmailComposer,
    $ionicLoading,profileDataManager,databaseManager,syncDataFactory,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
       var email = $rootScope.emailId ;
+
       $rootScope.emailId = email ;
       if ($rootScope.emailId ) {
         // get girder-token from local db for the user logout and further WS calls
@@ -23,7 +24,7 @@ angular.module('updateProfileCtrl',[])
 
   // == take user to home screeen
   $scope.switchUser = function (){
-          $scope.modal.remove();
+          $rootScope.modal.remove();
           $ionicHistory.clearCache().then(function(){
           $rootScope.emailId = null;
           $state.transitionTo('home');
@@ -162,17 +163,17 @@ $scope.failureMessage = function(message){
          scope: $scope,
          animation: 'slide-in-up'
        }).then(function(modal) {
-         $scope.modal = modal;
-         $scope.modal.show();
+         $rootScope.modal = modal;
+         $rootScope.modal.show();
        });
      };
 
      $scope.settingsBack = function (){
-       $scope.modal.remove();
+       $rootScope.modal.remove();
      }
 
      $scope.backtotab = function () {
-       $scope.modal.remove();
+       $rootScope.modal.remove();
        $ionicHistory.clearCache().then(function(){
           // $state.transitionTo('tab');
        });
@@ -205,7 +206,7 @@ $scope.failureMessage = function(message){
 
                                $ionicHistory.clearCache().then(function(){
                                $rootScope.emailId = null;
-                               $scope.modal.remove();
+                               $rootScope.modal.remove();
                                $state.transitionTo('home');
                                });
                               }
@@ -307,8 +308,8 @@ $scope.failureMessage = function(message){
            scope: $scope,
            animation: 'slide-in-up'
          }).then(function(modal) {
-           $scope.permission = modal;
-           $scope.permission.show();
+           $rootScope.permission = modal;
+           $rootScope.permission.show();
 
     $scope.accelerationLabel='Allow';
     $scope.microPhoneLabel = 'Allow';
@@ -334,11 +335,11 @@ $scope.failureMessage = function(message){
 }
 
     $scope.openVerification = function() {
-        $scope.permission.remove();
+        $rootScope.permission.remove();
     };
 
      $scope.closeModal = function() {
-       $scope.modal.remove();
+       $rootScope.modal.remove();
      };
 
      // Cleanup the modal when we're done with it!
@@ -521,8 +522,8 @@ $scope.failureMessage = function(message){
           scope: $scope,
           animation: 'slide-in-up',
         }).then(function(modal) {
-          $scope.passcodeModal = modal;
-          $scope.passcodeModal.show();
+          $rootScope.passcodeModal = modal;
+          $rootScope.passcodeModal.show();
         });
     }
 
@@ -617,7 +618,7 @@ $scope.checkNewPasscodeDigits = function(){
        }
 
       $scope.closePasscodeModal =  function (){
-          $scope.passcodeModal.remove();
+          $rootScope.passcodeModal.remove();
        }
 
      $scope.callAlertDailog =  function (message){
@@ -640,13 +641,13 @@ $scope.checkNewPasscodeDigits = function(){
             scope: $scope,
             animation: 'slide-in-up'
           }).then(function(modal) {
-            $scope.permission = modal;
-            $scope.permission.show();
+            $rootScope.permission = modal;
+            $rootScope.permission.show();
         });
     }
 
     $scope.closeCopyRightInfo = function(){
-      $scope.permission.remove();
+      $rootScope.permission.remove();
     }
 
 });
