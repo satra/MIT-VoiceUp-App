@@ -202,11 +202,13 @@ angular.module('syncDataService', [])
                           var fileCreateId = fileCreateDetails._id ;
                           var parentId  = fileCreateDetails.parentId ;
                           var itemName = fileCreateDetails.name ;
+                          var girderToken = fileItemPromiseInfo[i].config.headers["girder-token"];
                             for (var j = 0; j < res.length; j++) {
                                      var syncItemName = res.item(j).syncItem ;
                                      var itemId =  res.item(j).itemId ;
                                      if (syncItemName.toLocaleLowerCase() == itemName.toLocaleLowerCase() && itemId == parentId ) {
-                                       var syncData = res.item(j).syncData
+                                       var syncData = res.item(j).syncData;
+                                      //   var girderToken = res.item(j).globalId ;
                                        var dataString = LZString.compressToEncodedURIComponent(syncData);
                                        uploadChunk.push(dataStoreManager.uploadAudioFileChunk(girderToken,fileCreateId,dataString));
                                      }
