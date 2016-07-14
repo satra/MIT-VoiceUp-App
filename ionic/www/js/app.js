@@ -158,8 +158,8 @@ $ionicPlatform.registerBackButtonAction(function (event) {
   //$urlRouterProvider.otherwise('home');
 })
 
-.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
-//.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
+//.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
+.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
 
 
 
