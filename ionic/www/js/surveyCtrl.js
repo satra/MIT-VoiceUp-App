@@ -6,36 +6,6 @@ angular.module('surveyCtrl',[])
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
-/*
-document.addEventListener("resume", function() {
-    if ($rootScope.activeUser) {
-       profileDataManager.getEmailList().then(function(response){
-       var emailArray = new Array() ;
-       for (var i = 0; i < response.length; i++) {
-       emailArray.push({'emailId':response.item(i).emailId});
-       if (response.item(i).emailId == $rootScope.activeUser) {
-          $scope.selectedEmail = emailArray[i];
-          }
-        }
-       $scope.emails = emailArray;
-     });
-
-    if ($scope.pin) {
-      $scope.pin.remove();
-    }
-    $ionicModal.fromTemplateUrl('templates/pinScreen.html', {
-              scope: $scope,
-              animation: 'slide-in-up'
-            }).then(function(modal) {
-              $scope.pin = modal;
-              $scope.pin.show();
-      });
-
-   }
-  }, false);
-
-*/
-
 // == take user to home screeen
 $scope.switchUser = function (){
     $ionicHistory.clearCache().then(function(){
@@ -292,12 +262,12 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
                                              scope: $scope,
                                              animation: 'slide-in-up'
                                            });
-  $scope.modal = $scope.learnmore;
+  $rootScope.modal = $scope.learnmore;
   $scope.learnmore.show();
 };
 
 $scope.closeModal = function() {
-    $scope.modal.remove();
+    $rootScope.modal.remove();
     $ionicLoading.show();
     $ionicHistory.clearCache().then(function(){
     });
