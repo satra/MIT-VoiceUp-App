@@ -185,22 +185,37 @@ $scope.launchSurvey = function (idSelected){
         }
       }
 
-    if (surveyHtml || onlySkippedQuestionHtml) {
+$rootScope.AllowedToDisplayNextPopUp = true ;
+if (surveyHtml || onlySkippedQuestionHtml) {
                 if (isSkippedQuestions) {
-                           var confirmPopup = $ionicPopup.confirm({
-                             title: 'Only Skipped Question',
-                             template: 'Do you want to display only skipped question ?'
-                           });
-                           confirmPopup.then(function(res) {
-                            if(res) {
-                             $scope.showTasksForSlectedSurvey(onlySkippedQuestionHtml);
-                            } else {
-                             $scope.showTasksForSlectedSurvey(surveyHtml);
-                            }
-                         });
-                       }else {
-                            $scope.showTasksForSlectedSurvey(surveyHtml);
-                       }
+                $rootScope.popupAny = $ionicPopup.show({
+                  title: 'Only Skipped Question',
+                  subTitle: 'Do you want to display only skipped question ?',
+                  scope: $scope,
+                  buttons: [
+                         {
+                          text: '<b>YES</b>',
+                          onTap: function(e) {
+                             if ($rootScope.AllowedToDisplayNextPopUp) {
+                               $scope.showTasksForSlectedSurvey(onlySkippedQuestionHtml);
+                             }
+                           }
+                         },
+                         {
+                           text: 'NO',
+                           type: 'button-positive',
+                           onTap: function(e) {
+                              if ($rootScope.AllowedToDisplayNextPopUp) {
+                               $scope.showTasksForSlectedSurvey(surveyHtml);
+                             }
+                           }
+                        }
+                       ]
+                });
+
+             }else {
+                 $scope.showTasksForSlectedSurvey(surveyHtml);
+              }
          }
       });
      }
@@ -254,7 +269,12 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
 
   }
 
-  $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
+// if any modal already remove
+if ($rootScope.modal) {
+$rootScope.modal.remove();
+}
+
+$scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                              '<irk-ordered-tasks>'+
                                              surveyHtml +
                                              '</irk-ordered-tasks>'+

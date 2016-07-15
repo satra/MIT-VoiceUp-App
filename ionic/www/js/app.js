@@ -44,6 +44,10 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
                      if ($rootScope.passcodeModal) {
                        $rootScope.passcodeModal.remove();
                      }
+                     if ($rootScope.popupAny) {
+                        $rootScope.popupAny.close();
+                        $rootScope.AllowedToDisplayNextPopUp = false ;
+                     }
                      $ionicHistory.clearCache().then(function(){
                         $rootScope.emailId = null;
                         $state.transitionTo('home');

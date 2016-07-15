@@ -1,7 +1,7 @@
 angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
 .controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
-   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$base64,$ionicModal,$http,$cordovaEmailComposer,
+   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$base64,$ionicModal,$http,$cordovaEmailComposer,$cordovaDatePicker,
    $ionicLoading,profileDataManager,databaseManager,syncDataFactory,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
       var email = $rootScope.emailId ;
 
@@ -140,34 +140,6 @@ $scope.failureMessage = function(message){
           }
      });
 
-     // by defalut
-     $scope.notification = false;
-     $scope.daily = false;
-     $scope.week = false ;
-
-     $scope.userSettings = function() {
-      // get the settings from database
-      profileDataManager.getUserSettingsJson($rootScope.emailId).then(function(response){
-          if (response) {
-             if (response!='') {
-               for (var i = 0; i < response.length; i++) {
-                 $scope.notification = response[i].notification;
-                 $scope.daily = response[i].dailyNotification ;
-                 $scope.week = response[i].weeklyNotification ;
-                 }
-               }
-             }
-        });
-
-       $ionicModal.fromTemplateUrl('templates/settings.html', {
-         scope: $scope,
-         animation: 'slide-in-up'
-       }).then(function(modal) {
-         $rootScope.modal = modal;
-         $rootScope.modal.show();
-       });
-     };
-
      $scope.settingsBack = function (){
        $rootScope.modal.remove();
      }
@@ -220,7 +192,7 @@ $scope.failureMessage = function(message){
        }
     }
 
-    $scope.checkErrorAsyncCall = function(error){
+  $scope.checkErrorAsyncCall = function(error){
       $ionicLoading.hide();
       if(window.Connection) {
               if(navigator.connection.type == Connection.NONE) {
@@ -262,58 +234,131 @@ $scope.failureMessage = function(message){
         });
     }
 
-     $scope.toggleNotification = function(){
-      if ($scope.notification == false) {
-          $scope.notification = true;
-        }else {
-          $scope.notification = false;
-          $scope.daily =false ;
-          $scope.week =false ;
-        }
-       $scope.updateToggleValue();
-     }
-
-     $scope.toggleDailyNotification = function(){
-            if ($scope.daily == false) {
-                $scope.notification = true;
-                $scope.daily =true ;
-              }else {
-                $scope.daily =false ;
+// by defalut
+$scope.daily = false;
+$scope.userSettings = function() {
+     profileDataManager.getUserSettingsJson($rootScope.emailId).then(function(response){
+         if (response) {
+            if (response!='') {
+              for (var i = 0; i < response.length; i++) {
+                $scope.daily = response[i].dailyNotification ;
+                }
               }
-          $scope.updateToggleValue();
-     }
+            }
+       });
+      $ionicModal.fromTemplateUrl('templates/settings.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+        $rootScope.modal = modal;
+        $rootScope.modal.show();
+      });
+};
 
-     $scope.toggleBiweekNotification = function(){
-            if ($scope.week == false) {
-                  $scope.notification = true;
-                  $scope.week = true;
-              }else {
-                  $scope.week = false;
-              }
-        $scope.updateToggleValue();
-    }
+$scope.toggleDailyNotification = function(){
+           if ($scope.daily == false) {
+              $scope.daily =true ;
+              // enable notification and set the timer
+              $scope.enableLocalNotification();
+          }else {
+              $scope.daily =false ;
+              // disable all the notification and clear
+              $scope.disableLocalNotification();
+          }
+        //  $scope.updateToggleValue();
+}
 
-    $scope.updateToggleValue = function(){
+ $scope.updateToggleValue = function(){
       var emailId = $rootScope.emailId ;
-      var settingsJson = new Array({"notification": $scope.notification,  "dailyNotification":$scope.daily ,"weeklyNotification":$scope.week});
+      var settingsJson = new Array({ "dailyNotification":$scope.daily});
       profileDataManager.updateSettingsJsonToUserID(emailId,settingsJson).then(function(response){
            if (response) {
              console.log(response);
            }
         });
-    }
+}
 
-    $scope.viewPermissions = function(){
+$scope.enableLocalNotification = function(){
+  cordova.plugins.notification.local.hasPermission(function (granted) {
+    if(granted){
+      console.log('permissions given');
+      $scope.chooseTime();
+    }else{
+      cordova.plugins.notification.local.registerPermission(function (granted) {
+     console.log('Permission has been granted: ' + granted);
+       if (granted) {
+             $scope.chooseTime();
+             }
+        else {
+            console.log('Enable notifications from Device Settings');
+          }
+      });
+    }
+  });
+}
+
+$scope.chooseTime = function () {
+var minDate = new Date();
+minDate.setHours(0);
+minDate.setMinutes(0);
+minDate.setSeconds(1);
+var maxDate = new Date();
+maxDate.setHours(23);
+maxDate.setMinutes(59);
+maxDate.setSeconds(1);
+var options = {
+    date: new Date(),
+    mode: 'time', // or 'time'
+    minDate: minDate,
+		maxDate: maxDate,
+    allowOldDates: true,
+    allowFutureDates: true,
+    doneButtonLabel: 'DONE',
+    doneButtonColor: '#000000',
+    cancelButtonLabel: 'CANCEL',
+    cancelButtonColor: '#000000',
+		minuteInterval: 15
+  };
+$cordovaDatePicker.show(options).then(function(date){
+			console.log(date);
+      if (date) {
+       $scope.scheduleNotification(date);
+      }else {
+        $scope.daily = false ;
+        // update local Db
+        $scope.updateToggleValue();
+      }
+	});
+}
+
+$scope.scheduleNotification = function (notifDate) {
+  cordova.plugins.notification.local.schedule({
+    id: 1332,
+    title: "VoiceUp",
+    text: "Survey Reminder",
+    at: notifDate,
+    every: "day"
+  });
+  $scope.updateToggleValue();
+}
+
+$scope.disableLocalNotification = function(){
+  cordova.plugins.notification.local.cancelAll(function(res) {
+  $scope.updateToggleValue();
+  }, this);
+}
+
+
+$scope.viewPermissions = function(){
          $ionicModal.fromTemplateUrl('templates/locationservice.html', {
            scope: $scope,
            animation: 'slide-in-up'
          }).then(function(modal) {
            $rootScope.permission = modal;
            $rootScope.permission.show();
-
-    $scope.accelerationLabel='Allow';
-    $scope.microPhoneLabel = 'Allow';
-    $scope.geoLabel = 'Allow';
+           $scope.accelerationLabel='Allow';
+           $scope.microPhoneLabel = 'Allow';
+           $scope.geoLabel = 'Allow';
 
                var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
               function onSuccess(position) {
