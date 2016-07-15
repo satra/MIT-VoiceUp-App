@@ -7,7 +7,8 @@
 angular.module('dashboard', [])
 
   // calender
-.controller("dashboardCtrl", function($scope,$ionicHistory,$state,$ionicLoading,syncDataFactory,$rootScope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
+.controller("dashboardCtrl", function($scope,$ionicHistory,$ionicPopup,$state,$ionicLoading,syncDataFactory,$rootScope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
+
 
 	// == take user to home screeen
   $scope.switchUser = function (){
@@ -54,10 +55,8 @@ var emailId = $rootScope.emailId ;
 if (emailId) {
 surveyDataManager.getResults(emailId.trim()).then(function(res){
   if (res) {
-
-  var chartData = JSON.parse(res["resultData"]);
+  var chartData = JSON.parse(res["resultData"]).results;
   var dataArray= new Array();
-
   //graph1
    for(var i=0;i<chartData.sections.length;i++)
    {

@@ -79,7 +79,28 @@ angular.module('syncDataService', [])
                      });
         return deferred.promise;
       },
-
+        removeUserCacheServerResults : function (userId){
+          var deferred = $q.defer();
+          var db = databaseManager.getConnectionObject();
+          var query = "DELETE FROM resultsToDisplay WHERE userId = ? " ;
+          var deleteData = $cordovaSQLite.execute(db, query , [userId])
+                           .then(function(res) {
+                            deferred.resolve(res);
+                           }, function (err) {
+                       });
+          return deferred.promise;
+        },
+        removeUserCacheItemIds : function (userId){
+          var deferred = $q.defer();
+          var db = databaseManager.getConnectionObject();
+          var query = "DELETE FROM userItemMappingTable WHERE localUserId = ? " ;
+          var deleteData = $cordovaSQLite.execute(db, query , [userId])
+                           .then(function(res) {
+                            deferred.resolve(res);
+                           }, function (err) {
+                       });
+          return deferred.promise;
+        },
       createItemForFolder : function (girderToken,folderId,itemName){
                 var deferred = $q.defer();
                  var URL = base_url+'item?folderId='+folderId+'&name='+itemName ;
@@ -264,7 +285,7 @@ angular.module('syncDataService', [])
                                   var itemName = itemList[j].name;
                                   var item_id =  itemList[j]._id;
                                   var folderId = itemList[j].folderId ;
-                                      if (itemName == 'resultsToDisplay') {
+                                      if (itemName == 'results') {
                                          downloadableItems.push(dataStoreManager.downloadFilesListForItem(item_id,girderToken));
                                        }
                                   }
@@ -333,7 +354,7 @@ angular.module('syncDataService', [])
                            createItems.push(dataStoreManager.createItemForFolder(token,folderId,"profile"));
                            createItems.push(dataStoreManager.createItemForFolder(token,folderId,"consent"));
                            createItems.push(dataStoreManager.createItemForFolder(token,folderId,"app"));
-                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"results"));
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"response"));
                            createItems.push(dataStoreManager.createItemForFolder(token,folderId,"settings"));
 
                            $q.all(createItems).then(function(itemCreateInfo){
@@ -358,7 +379,7 @@ angular.module('syncDataService', [])
                                                 case "profile":
                                                 updateMappingTable.push(profileDataManager.updateToSyncQueue(token,localUserId,"profile_json",folderId,itemId));
                                                 break;
-                                                case "results":
+                                                case "response":
                                                 updateItemIdForResultsList.push(profileDataManager.updateToSyncQueueForResultsList(token,localUserId,folderId,itemId));
                                                 break;
                                               default:

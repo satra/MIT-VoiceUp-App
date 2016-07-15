@@ -263,7 +263,7 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
     $scope.authToken = authToken.token ;
    });
 
-   profileDataManager.getItemIdForUserIdAndItem($scope.userId,"results").then(function (resultItemId){
+   profileDataManager.getItemIdForUserIdAndItem($scope.userId,"response").then(function (resultItemId){
      $scope.resultItemId = resultItemId ;
     });
 

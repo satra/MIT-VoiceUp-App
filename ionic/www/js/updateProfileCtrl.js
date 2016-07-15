@@ -171,7 +171,10 @@ $scope.failureMessage = function(message){
                                  var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.userId);
                                  var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.userId);
                                  var promiseF = syncDataFactory.removeUserCacheResults($scope.userId);
-                                 $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF])
+                                 var promiseG = syncDataFactory.removeUserCacheServerResults($scope.userId);
+                                 var promiseH = syncDataFactory.removeUserCacheItemIds($scope.userId);
+
+                                 $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF,promiseG,promiseH])
                                      .then(function(promiseResult) {
                                      console.log(promiseResult[0], promiseResult[1], promiseResult[2],promiseResult[3],
                                                  promiseResult[4] );
