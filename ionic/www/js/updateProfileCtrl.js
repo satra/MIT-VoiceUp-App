@@ -154,13 +154,15 @@ $scope.failureMessage = function(message){
  //====================userLogout
      $scope.logOut = function(){
        var logoutToken = $scope.authToken;
+       $rootScope.AllowedToDisplayNextPopUp = true ;
        if (logoutToken) {
          var confirmPopup = $ionicPopup.confirm({
                              title: 'Leave Study Confirm',
                              template: 'Are you sure you want to Leave Study?'
                            });
-                           confirmPopup.then(function(res) {
-                             if(res) {
+         $rootScope.popupAny = confirmPopup ;
+         confirmPopup.then(function(res) {
+                             if(res && $rootScope.AllowedToDisplayNextPopUp) {
                                dataStoreManager.userLogout(logoutToken).then(function(res){
                                 if (res.status == 200) {
                                  var promiseA = profileDataManager.removeUser($scope.userId);
@@ -189,6 +191,8 @@ $scope.failureMessage = function(message){
                           $scope.logout = false ;
                       }
            });
+
+
        }
     }
 
