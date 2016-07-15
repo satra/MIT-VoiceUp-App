@@ -220,13 +220,13 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     }
   });
 
-  // if none of the above states are matched, use this as the fallback
+   // if none of the above states are matched, use this as the fallback
    $urlRouterProvider.otherwise('home');
-  //$urlRouterProvider.otherwise('home');
+   //$urlRouterProvider.otherwise('home');
 })
 
 .constant('base_url', 'http://23.89.199.27:8180/api/v1/')
-// .constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
+//.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
 
 
 
