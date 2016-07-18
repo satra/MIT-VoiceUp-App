@@ -2,7 +2,7 @@ angular.module('homeCtrl',[])
 //=======Home screen controller======================
 .controller('homeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
   dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,
-  $base64,$state,$location,$window,syncDataFactory,syncDataService,$q) {
+  $base64,$state,$location,$window,syncDataFactory,syncDataService,$q,$cordovaFileTransfer,$cordovaFile,$base64) {
 
   if(window.Connection) {
             if(navigator.connection.type == Connection.NONE) {
@@ -148,9 +148,52 @@ $scope.GoBack = function () {
 };
 
 $scope.sendConsentDoc = function (){
-
   if (ionic.Platform.isAndroid()) {
-    pdfMake.createPdf(res).download();
+    var assetURL = encodeURI("http://voicesurvey.mit.edu/sites/default/files/documents/consent_mobile_20150528.pdf");
+    var fileName = "consent_mobile_20150528.pdf";
+    var DEV_PATH = cordova.file.externalRootDirectory+"consent_mobile_20150528.pdf";
+//  $scope.audioSample = "file://localhost/persistent/path/to/downloads/"+"/consent_mobile_20150528.pdf";
+
+window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+  var entry = fileSystem.root+"consent_mobile_20150528.pdf";
+  entry.getDirectory("MIT", { // Give your directory name instead of Directory_Name
+    create: true,
+    exclusive: false
+  },onSuccess, onFail);
+},null);
+
+// onSuccess function for creating directory
+ function onSuccess(parent) {
+   dirPath = parent.nativeURL; // It will return location of the folder in device
+ }
+
+// onFail function for creating directory
+function onFail(error) {
+  console.log(error);
+}
+
+           var fileTransfer = new FileTransfer();
+               fileTransfer.download(assetURL,DEV_PATH,
+                   function(entry) {
+                       console.log("Success!"+entry.toURL());
+                        /*    var fileUri = entry.toURL() ;
+                       var localPath = cordova.file.externalRootDirectory;
+                       console.log(localPath);
+                       $cordovaFile.moveFile(cordova.file.externalDataDirectory, "consent_mobile_20150528.pdf", localPath)
+                               .then(function (success) {
+                                 console.log(success);
+                                 // success
+                               }, function (error) {
+                                 console.log(error);
+                                 // error
+                               });
+                             */
+                     },
+                   function(err) {
+                       console.log("Error"+err);
+                   },true);
+
   }else {
     var email = {
        attachments: [
