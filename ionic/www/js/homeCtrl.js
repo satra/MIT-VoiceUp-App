@@ -21,8 +21,10 @@ angular.module('homeCtrl',[])
         }
   }
 
+// learn controller parameters
+$scope.homeCalss = "icon icon ion-close-round";
+$scope.showCloseButton = true ;
 
-     $scope.homeCalss = "icon icon ion-close-round";
      // label for email(ios)/download(android)
       if (ionic.Platform.isAndroid()) {
         $scope.emailOrDownloadConsentLabel  = "Download Consent Document";

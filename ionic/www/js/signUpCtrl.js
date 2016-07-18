@@ -179,7 +179,10 @@ if (formValid) {
                             var userVerified = "no";
                             var consentResult = $rootScope.consentResult;
                             var profileJsonString = JSON.stringify(dataCache) ;
-                            var docDefinition = JSON.stringify(consentResult.docDefinition);
+                            var docDefinition = "";
+                            if (consentResult) {
+                              docDefinition = JSON.stringify(consentResult.docDefinition);
+                            }
                             profileDataManager.getAppJSON().then(function(appJson){
                             if (appJson) {
                             var appJson = JSON.stringify(appJson) ;
@@ -194,7 +197,11 @@ if (formValid) {
                                   addToSyncQueue.push(syncDataFactory.addToSyncQueue("",localUserId,"consent_json",docDefinition,folderId,itemId));
                                   addToSyncQueue.push(syncDataFactory.addToSyncQueue("",localUserId,"profile_json",profileJsonString,folderId,itemId));
                                   $q.all(addToSyncQueue).then(function(createLocalData){
-                                  surveyDataManager.addResultToDb(localUserId,consentResult.docDefinition,'consent').then(function(response){
+                                    var consent = "";
+                                    if (consentResult) {
+                                      consent = consentResult.docDefinition ;
+                                    }
+                                  surveyDataManager.addResultToDb(localUserId,consent,'consent').then(function(response){
                                         $ionicLoading.hide();
                                         $scope.removeSignUpDiv();
                                         $scope.launchpinScreen();
