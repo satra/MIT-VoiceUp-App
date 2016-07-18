@@ -32,9 +32,10 @@ angular.module('updateProfileCtrl',[])
   }
 
   $scope.verifyUser = function() {
+    $rootScope.AllowedToDisplayNextPopUp = true ;
     var emailId = $rootScope.emailId.trim() ;
       if (emailId) {
-          $ionicPopup.show({
+      $rootScope.popupAny = $ionicPopup.show({
           template: '<input style="text-align: center" type="password" id="password_recover" placeholder="password" >',
           title: 'Enter Password',
           subTitle: 'Please enter your account password',
@@ -45,6 +46,7 @@ angular.module('updateProfileCtrl',[])
               text: '<b>Done</b>',
               type: 'button-positive',
               onTap: function(e) {
+                if ($rootScope.AllowedToDisplayNextPopUp) {
                 var password = angular.element(document.querySelector('#password_recover')).prop('value') ;
                 if (password.length != 0) {
                     var beforeEncode = emailId.trim()+':'+password.trim();
@@ -64,6 +66,7 @@ angular.module('updateProfileCtrl',[])
                   } else {
                      e.preventDefault();
                   }
+                 }
                 }
               }
             ]
@@ -675,14 +678,14 @@ $scope.checkNewPasscodeDigits = function(){
 
      $scope.callAlertDailog =  function (message){
           document.activeElement.blur(); // remove the keypad
-          $ionicPopup.alert({
+        $rootScope.alertDialog = $ionicPopup.alert({
            title: 'Data Invalid',
            template: message
           });
      }
 
      $scope.successAlertMsg = function (message) {
-         $ionicPopup.alert({
+      $rootScope.alertDialog =    $ionicPopup.alert({
           title: 'Success',
           template: message
          });

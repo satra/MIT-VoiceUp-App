@@ -48,6 +48,9 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
                         $rootScope.popupAny.close();
                         $rootScope.AllowedToDisplayNextPopUp = false ;
                      }
+                     if ($rootScope.alertDialog) {
+                        $rootScope.alertDialog.close();
+                     }
                      $ionicHistory.clearCache().then(function(){
                         $rootScope.emailId = null;
                         $state.transitionTo('home');
