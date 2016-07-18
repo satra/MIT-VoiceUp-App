@@ -22,7 +22,8 @@
     "com.ionic.keyboard",
     "cordova-plugin-media",
     "cordova-plugin-device-motion",
-    "cordova-plugin-geolocation"
+    "cordova-plugin-geolocation",
+    "cordova.plugins.diagnostic"
   ],
   "cordovaPlatforms": [
     "android",
