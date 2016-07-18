@@ -674,6 +674,20 @@ margin-bottom:12%;
               vertical-align: middle !important;
 
     }
+    .irk-btnlocDisabled{
+
+
+        background:#8b7a7d ;
+        border:1px solid #8b7a7d ;
+        border-radius:15px;
+            width: 100px;
+              height: 30px;
+            color: white;
+              text-align: center !important;
+                vertical-align: middle !important;
+
+      }
+
 
 
     .marL33{
@@ -957,10 +971,10 @@ color:#a31f34 !important ;
 }
 
 .buttonRed {
-background-color: #e50000;
+background-color: #a31f34;
 padding: 8px 10px ;
-background:#red;
-border:1px red;
+background:#a31f34;
+border:1px #a31f34;
 
     width: 280px;
       height: 46px;

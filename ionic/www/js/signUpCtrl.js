@@ -358,6 +358,7 @@ $scope.verifyLater = function(){
      $scope.microPhoneLabel = 'Allow';
      $scope.geoLabel = 'Allow';
      $scope.allowGeoLocation();
+      $scope.allowMicroPhone ();
      $scope.allowAccelerometer();
      $scope.Disable = false;
    });
@@ -444,6 +445,7 @@ $scope.allowGeoLocation = function(){
               var lat  = position.coords.latitude
               var long = position.coords.longitude
               $scope.geoLabel = 'Granted';
+
               console.log(lat + '   ' + long)
            }, function(err) {
                     $scope.geoLabel = 'Allow';
@@ -452,7 +454,38 @@ $scope.allowGeoLocation = function(){
               console.log(err);
       });
     };
+    // FOr LAter use//
+  //   $scope.allowMicroPhone = function(){
+  //           var myEl = angular.element( document.querySelector( '#microID' ) );
+  //   cordova.plugins.diagnostic.requestMicrophoneAuthorization(function(status){
+  //      if(status === cordova.plugins.diagnostic.permissionStatus.GRANTED){
+  //           $scope.microPhoneLabel = 'Granted';
+  //          console.log("Microphone use is authorized");
+  //      }
+  //   }, function(error){
+  //
+  //        $scope.microPhoneLabel = 'Allow';
+  //       console.error(error);
+  //   });
+  // }
+// for later use
 
+//   $scope.haslocation = function(){
+//     cordova.plugins.diagnostic.isLocationAuthorized(function(enabled){
+//                     $scope.geoLabel = 'Allow';
+//     console.log("Location authorization is " + (enabled ? "enabled" : "disabled"));
+// }, function(error){
+//                 $scope.geoLabel = 'Allow';
+//     console.error("The following error occurred: "+error);
+// });
+// // cordova.plugins.diagnostic.isLocationEnabled(function(Success){
+// //                        $scope.geoLabel = 'Granted';
+// //     console.log("Location setting is " + (enabled ? "enabled" : "disabled"));
+// // }, function(error){
+// //             $scope.geoLabel = 'Allow';
+// //     console.error("The following error occurred: "+error);
+// // });
+//   }
       $scope.allowAccelerometer = function(){
 
         //  var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
@@ -462,23 +495,50 @@ $scope.allowGeoLocation = function(){
         //  function accelerometerError() {
         //     $scope.accelerationLabel = 'Allow';
         //  };
+        // $scope.watch = $cordovaDeviceMotion.watchAcceleration($scope.options);
+        // // Device motion initilaization
+        // var options = { frequency:1000 };  // Update every 3 seconds
+        // $scope.watch.then(null, function(error) {
+        //        $scope.accelerationLabel='Allow';
+        //          $scope.Disable = false;
+        //       console.log($scope.accelerationLabel);
+        //                     console.log($scope.Disable);
+        //   },
+        //
+        //   function(accelerometerSuccess,options) {
+        //   // Set current data
+        //        $scope.accelerationLabel='Granted';
+        //             $scope.Disable = true;
+        //        console.log($scope.accelerationLabel);
+        //           console.log($scope.Disable);
+        //   // Detecta shake
+        // //  $scope.detectShake(result);
+        //
+        // });
+
+
+        $scope.options = {
+          frequency: 50, // Measure every 100ms
+              deviation : 25  // We'll use deviation to determine the shake event, best values in the range between 25 and 30
+        };
         $scope.watch = $cordovaDeviceMotion.watchAcceleration($scope.options);
+
         // Device motion initilaization
         $scope.watch.then(null, function(error) {
-               $scope.accelerationLabel='Allow';
-                 $scope.Disable = false;
-              console.log($scope.accelerationLabel);
-                            console.log($scope.Disable);
-          },
 
-          function(accelerometerSuccess) {
+           $scope.accelerationLabel='Allow';
+          console.log('Error');
+          console.log( $scope.accelerationLabel)
+          },function(result) {
           // Set current data
-               $scope.accelerationLabel='Granted';
-                    $scope.Disable = true;
-               console.log($scope.accelerationLabel);
-                  console.log($scope.Disable);
-          // Detecta shake
-        //  $scope.detectShake(result);
+              $scope.accelerationLabel='Granted';
+
+          $scope.measurements.x = result.x;
+          $scope.measurements.y = result.y;
+          $scope.measurements.z = result.z;
+          $scope.measurements.timestamp = result.timestamp;
+          $scope.detectShake(result);
+            console.log( $scope.accelerationLabel)
 
         });
       };
