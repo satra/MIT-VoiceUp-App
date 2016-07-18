@@ -21,28 +21,39 @@ angular.module('userService', [])
 		    angular.forEach($consent_array, function(value, key){
             		        var mainType = '';  var title = '';
                         var type  = value.type;
-                       	   angular.forEach(value, function(valueIn, key){
+                       	angular.forEach(value, function(valueIn, key){
 														  var 	main_typeNext = valueIn.main_type;
+															var type = valueIn.type ;
 														   if(main_typeNext!='consent-review'){
-																title = valueIn.title ;
-																if (valueIn.data) {
-																	if(!title){
-																		title = '';
-																	}
-																		task +='<irk-task><irk-visual-consent-step id="'+valueIn.id+
-																		'" type="'+valueIn.type+'" text="Learn more" summary="'+valueIn.summary+
-																		'" title="'+title+'"  >'+valueIn.data+'</irk-visual-consent-step></irk-task>';
-																 }else {
-																	 if(!title){
-																		 title = '';
+                                 if (main_typeNext.toLowerCase() == "review-questions" && type.toLowerCase() =="boolean" ) {
+																	 var text = "";
+																	 if (valueIn.text) {
+																	 	text = valueIn.text ;
 																	 }
-																	 task += '<irk-task><irk-visual-consent-step id="'+valueIn.id+
-																	 '" type="'+valueIn.type+'" text="Learn more" show-Learn-More="false" summary="'+
-																	 valueIn.summary+'" title="'+title+'" ></irk-visual-consent-step></irk-task>';
-																 }
+																	 var trueText = valueIn["true-text"];
+																	 var falseText = valueIn["false-text"];
+																	 task +='<irk-task><irk-boolean-question-step  optional="false" id="H'+key+'" title="'+valueIn.title+'" text="'+text+'" true-text="'+trueText+'" false-text="'+falseText+'" /></irk-task>';
 
-															  }
-	                          });
+                                 }else {
+																	 title = valueIn.title ;
+	 																if (valueIn.data) {
+	 																	if(!title){
+	 																		title = '';
+	 																	}
+	 																		task +='<irk-task><irk-visual-consent-step id="'+valueIn.id+
+	 																		'" type="'+valueIn.type+'" text="Learn more" summary="'+valueIn.summary+
+	 																		'" title="'+title+'"  >'+valueIn.data+'</irk-visual-consent-step></irk-task>';
+	 																 }else {
+	 																	 if(!title){
+	 																		 title = '';
+	 																	 }
+	 																	 task += '<irk-task><irk-visual-consent-step id="'+valueIn.id+
+	 																	 '" type="'+valueIn.type+'" text="Learn more" show-Learn-More="false" summary="'+
+	 																	 valueIn.summary+'" title="'+title+'" ></irk-visual-consent-step></irk-task>';
+	 																 }
+																 }
+															}
+	                      });
 
 			  });
 
