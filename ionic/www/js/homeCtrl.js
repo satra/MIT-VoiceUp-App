@@ -178,7 +178,7 @@ $scope.sendConsentDoc = function (){
                                   $ionicLoading.hide();
                                   $ionicPopup.alert({
                                    title: 'Download',
-                                   template: "File Downloaded to the folder VoiceUp."
+                                   template: "Consent document downloaded to VoiceUp folder."
                                   });
                               },
                            function(err) {
