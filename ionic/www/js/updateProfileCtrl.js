@@ -369,6 +369,9 @@ $scope.viewPermissions = function(){
            $scope.accelerationLabel='Allow';
            $scope.microPhoneLabel = 'Allow';
            $scope.geoLabel = 'Allow';
+           
+           var iEl = angular.element( document.querySelector( '#btn1' ) );
+                  iEl.remove();
 
                var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
               function onSuccess(position) {
