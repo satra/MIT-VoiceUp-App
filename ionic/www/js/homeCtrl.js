@@ -149,52 +149,35 @@ $scope.GoBack = function () {
 
 $scope.sendConsentDoc = function (){
   if (ionic.Platform.isAndroid()) {
-    var assetURL = encodeURI("http://voicesurvey.mit.edu/sites/default/files/documents/consent_mobile_20150528.pdf");
-    var fileName = "consent_mobile_20150528.pdf";
-    var DEV_PATH = cordova.file.externalRootDirectory+"consent_mobile_20150528.pdf";
-//  $scope.audioSample = "file://localhost/persistent/path/to/downloads/"+"/consent_mobile_20150528.pdf";
-
-window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
-window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
-  var entry = fileSystem.root+"consent_mobile_20150528.pdf";
-  entry.getDirectory("MIT", { // Give your directory name instead of Directory_Name
-    create: true,
-    exclusive: false
-  },onSuccess, onFail);
-},null);
-
-// onSuccess function for creating directory
- function onSuccess(parent) {
-   dirPath = parent.nativeURL; // It will return location of the folder in device
- }
-
-// onFail function for creating directory
-function onFail(error) {
-  console.log(error);
-}
-
-           var fileTransfer = new FileTransfer();
-               fileTransfer.download(assetURL,DEV_PATH,
-                   function(entry) {
-                       console.log("Success!"+entry.toURL());
-                        /*    var fileUri = entry.toURL() ;
-                       var localPath = cordova.file.externalRootDirectory;
-                       console.log(localPath);
-                       $cordovaFile.moveFile(cordova.file.externalDataDirectory, "consent_mobile_20150528.pdf", localPath)
-                               .then(function (success) {
-                                 console.log(success);
-                                 // success
-                               }, function (error) {
-                                 console.log(error);
-                                 // error
-                               });
-                             */
-                     },
-                   function(err) {
-                       console.log("Error"+err);
-                   },true);
-
-  }else {
+      if(window.Connection) {
+        if(navigator.connection.type == Connection.NONE) {
+         $ionicLoading.hide();
+         $ionicPopup.alert({
+            title: 'Download',
+            template: "Please check network connection."
+           });
+        }else {
+         $ionicLoading.show();
+         var assetURL = encodeURI("http://voicesurvey.mit.edu/sites/default/files/documents/consent_mobile_20150528.pdf");
+         var DEV_PATH = cordova.file.externalRootDirectory+"consent_mobile_20150528.pdf";
+         $window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+                     var destination = fileSystem.root.toURL() ;
+                    var fileTransfer = new FileTransfer();
+                    fileTransfer.download(assetURL,DEV_PATH,
+                    function(entry) {
+                           $ionicLoading.hide();
+                           $ionicPopup.alert({
+                            title: 'Download',
+                            template: "File Downloaded to "+entry.nativeURL
+                           });
+                       },
+                 function(err) {
+                    $ionicLoading.hide();
+                },true);
+          });
+      }
+    }
+}else {
     var email = {
        attachments: [
          'file://assets/consent_mobile_20150528.pdf'
