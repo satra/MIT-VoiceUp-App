@@ -13,9 +13,11 @@ angular.module('updateProfileCtrl',[])
             $scope.authToken = response.token;
             $scope.userId = response.userId;
               if ($scope.authToken) {
-                $scope.showVerifyButton = true ;
+                $rootScope.hideVerifyButton = true ;
+                $scope.hideVerifyButton = true ;
               }else {
-                $scope.showVerifyButton = false ;
+                $rootScope.hideVerifyButton = false ;
+                $scope.hideVerifyButton = false ;
               }
            }
         });
@@ -55,7 +57,8 @@ angular.module('updateProfileCtrl',[])
                     syncDataFactory.verifyUserToFetchToken(encoded).then(function(res){
                         $ionicLoading.hide();
                         if (res.status == 200 || !res.data) {
-                          $scope.showVerifyButton = true ;
+                          $rootScope.hideVerifyButton = true ;
+                          $scope.hideVerifyButton = true ;
                           $scope.startSyncServices();
                         }else {
                           $scope.failureMessage(res.data.message);
