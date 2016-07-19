@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.btc.mit.voiceup" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.btc.mit.voiceup" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>VoiceUp</name>
   <description>
       MIT VoiceUp - A Biomedical research study.
     </description>
-  <author email="solutionsi@boston-technology.com" href="http://www.boston-technology.com/">
+  <author email="solutions@boston-technology.com" href="http://www.boston-technology.com/">
     BTC
 </author>
   <content src="index.html"/>
