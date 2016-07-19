@@ -12,12 +12,12 @@ angular.module('updateProfileCtrl',[])
           if (response) {
             $scope.authToken = response.token;
             $scope.userId = response.userId;
-              if ($scope.authToken) {
-                $rootScope.hideVerifyButton = true ;
-                $scope.hideVerifyButton = true ;
-              }else {
+              if ($scope.authToken === undefined || $scope.authToken === null || $scope.authToken === "undefined" || !$scope.authToken ) {
                 $rootScope.hideVerifyButton = false ;
                 $scope.hideVerifyButton = false ;
+              }else {
+                $rootScope.hideVerifyButton = true ;
+                $scope.hideVerifyButton = true ;
               }
            }
         });
