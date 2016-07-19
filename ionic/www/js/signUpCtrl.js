@@ -215,7 +215,13 @@ if (formValid) {
                       }
                    },function(error){
                      if (!error.statusText) {
-                       $scope.callAlertDailog("couldn't able to create user "+error.statusText);
+                       if(window.Connection) {
+                          if(navigator.connection.type == Connection.NONE) {
+                           $scope.callAlertDailog("Please check your network connection.");
+                          }else {
+                           $scope.callAlertDailog("Failed to create the user.");
+                          }
+                       }
                      }
                  });
              }
