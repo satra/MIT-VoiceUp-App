@@ -975,7 +975,7 @@ background-color: #a31f34;
 padding: 8px 10px ;
 background:#a31f34;
 border:1px #a31f34;
-
+ border-radius: 23px !important;
     width: 280px;
       height: 46px;
     color: white;
