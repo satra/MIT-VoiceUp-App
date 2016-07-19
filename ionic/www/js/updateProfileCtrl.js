@@ -2,7 +2,7 @@ angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
 .controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
    $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$base64,$ionicModal,$http,$cordovaEmailComposer,$cordovaDatePicker,
-   $ionicLoading,profileDataManager,databaseManager,syncDataFactory,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
+   $ionicLoading,profileDataManager,databaseManager,syncDataFactory,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$cordovaFile,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
       var email = $rootScope.emailId ;
 
       $rootScope.emailId = email ;
@@ -220,8 +220,60 @@ $scope.failureMessage = function(message){
       profileDataManager.getUserConsentJson(userId).then(function(res){
            if (res) {
             if (ionic.Platform.isAndroid()) {
-              pdfMake.createPdf(res).download();
-            }else {
+             $ionicLoading.show();
+            pdfMake.createPdf(res).getBase64(function(b64Data) {
+             var contentType = 'application/pdf' ;
+             contentType = contentType || '';
+             sliceSize =  512;
+             var byteCharacters = atob(b64Data);
+             var byteArrays = [];
+             for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+             var slice = byteCharacters.slice(offset, offset + sliceSize);
+             var byteNumbers = new Array(slice.length);
+             for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+             }
+             var byteArray = new Uint8Array(byteNumbers);
+             byteArrays.push(byteArray);
+             }
+            var blob = new Blob(byteArrays, {
+            type: contentType
+           });
+          if (blob) {
+            window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+               var entry = fileSystem.root;
+               entry.getDirectory("VoiceUp", {
+                 create: true,
+                 exclusive: false
+               },onSuccess, onFail);
+             },null);
+                  function onSuccess(parent) {
+                          dirPath = parent.nativeURL;
+                          $cordovaFile.writeFile(dirPath, $rootScope.emailId.trim()+".pdf", blob, true)
+                           .then(function(success) {
+                             $ionicLoading.hide();
+                             $ionicPopup.alert({
+                              title: 'Download',
+                              template: "File Downloaded to the folder VoiceUp."
+                             });
+                           }, function(error) {
+                               $ionicLoading.hide();
+                               console.log(error);
+                           });
+                        }
+                   function onFail(error) {
+                      $ionicLoading.hide();
+                     console.log(error);
+                    }
+           } else {
+             $ionicLoading.hide();
+             console.log("could not create the blob");
+          }
+      },function(error){
+         $ionicLoading.hide();
+      });
+  }else {
             pdfMake.createPdf(res).getBase64(function(dataURL) {
               var email = {
                      attachments: [
@@ -369,7 +421,7 @@ $scope.viewPermissions = function(){
            $scope.accelerationLabel='Allow';
            $scope.microPhoneLabel = 'Allow';
            $scope.geoLabel = 'Allow';
-           
+
            var iEl = angular.element( document.querySelector( '#btn1' ) );
                   iEl.remove();
 
