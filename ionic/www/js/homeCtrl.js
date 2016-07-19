@@ -188,6 +188,7 @@ $scope.sendConsentDoc = function (){
 
                 // onFail function for creating directory
                 function onFail(error) {
+                   $ionicLoading.hide();
                   console.log(error);
                  }
       }
