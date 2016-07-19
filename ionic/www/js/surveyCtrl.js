@@ -256,18 +256,32 @@ if (surveyHtml || onlySkippedQuestionHtml) {
 $scope.showTasksForSlectedSurvey = function(surveyHtml){
   if($rootScope.emailId){
    profileDataManager.getFolderIDByEmail($rootScope.emailId).then(function (folderId){
-    $scope.folderId = folderId ;
+     $scope.folderId = folderId ;
+     if (folderId === undefined || folderId === null || folderId === "undefined" ) {
+       $scope.folderId = "" ;
+     }else {
+       $scope.folderId = folderId ;
+     }
    });
 
   profileDataManager.getAuthTokenForUser($rootScope.emailId).then(function (authToken){
-    $scope.authToken = authToken.token ;
+      $scope.authToken = authToken.token ;
+      if ($scope.authToken === undefined || $scope.authToken === null || $scope.authToken === "undefined" ) {
+       $scope.authToken = "" ;
+      }else {
+        $scope.authToken = authToken.token ;
+      }
    });
 
    profileDataManager.getItemIdForUserIdAndItem($scope.userId,"response").then(function (resultItemId){
-     $scope.resultItemId = resultItemId ;
+       $scope.resultItemId = resultItemId ;
+       if (resultItemId === undefined || resultItemId === null || resultItemId === "undefined" ) {
+         $scope.resultItemId = "" ;
+       }else {
+         $scope.resultItemId = resultItemId ;
+       }
     });
-
-  }
+}
 
 // if any modal already remove
 if ($rootScope.modal) {
@@ -358,7 +372,7 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
                        var contentType = childresult[k].contentType;
                        if (fileURL) {
                         itemNameArray.push(fileURL);
-                        var audioFileDirectory = (ionic.Platform.isAndroid() ? cordova.file.dataDirectory : cordova.file.documentsDirectory);
+                        var audioFileDirectory = (ionic.Platform.isAndroid() ? cordova.file.externalRootDirectory : cordova.file.documentsDirectory);
                         promises.push($cordovaFile.readAsDataURL(audioFileDirectory,fileURL));
                         }
                       }
@@ -373,6 +387,8 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
                          $q.all(fileItemPromise).then(function(itemCreateInfo){
                             $scope.startDataSync();
                          });
+                   },function (error) {
+                     $ionicLoading.hide();
                    });
                 }else {
                     $scope.startDataSync();

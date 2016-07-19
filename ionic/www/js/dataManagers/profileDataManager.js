@@ -120,11 +120,11 @@ angular.module('profileDataManager', [])
             var db = databaseManager.getConnectionObject();
              var query = "SELECT syncItemId FROM userItemMappingTable WHERE localUserId ='"+userId+"' AND syncItemName ='"+itemName.toLowerCase()+"'  ";
              var token =  $cordovaSQLite.execute(db, query).then(function(res) {
-                       var len = res.rows.length;
-                       for (var i=0; i<len; i++){
-                        token = res.rows.item(i).syncItemId;
-                       }
-                       return token;
+                           if(res.rows.length > 0){
+                             return res.rows.item(0).syncItemId ;
+                           }else {
+                             return "" ;
+                           }
                    }, function (err) {
                  });
               deferred.resolve(token);
@@ -204,7 +204,7 @@ getUserSettingsJson : function(emailId){
                if(res.rows.length > 0){
                  return res.rows.item(0).folderId ;
                }else {
-                 return null ;
+                 return "" ;
                  }
               }, function (err) {
             });

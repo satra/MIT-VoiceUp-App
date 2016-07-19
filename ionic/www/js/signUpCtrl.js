@@ -315,7 +315,7 @@ $scope.removeSignUpDiv = function(){
             //check is both are equal
             if($scope.passcode == confirm_passcode){
                 var email = $scope.emailId ;
-                var girderToken = $scope.girderToken;
+                var girderToken = "";
                 if (email) {
                   profileDataManager.getUserIDByEmail(email).then(function(res){
                          profileDataManager.addPasscodeToUserID(res,$scope.passcode,email,girderToken).then(function(res){
