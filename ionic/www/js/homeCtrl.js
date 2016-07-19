@@ -160,21 +160,36 @@ $scope.sendConsentDoc = function (){
          $ionicLoading.show();
          var assetURL = encodeURI("http://voicesurvey.mit.edu/sites/default/files/documents/consent_mobile_20150528.pdf");
          var DEV_PATH = cordova.file.externalRootDirectory+"consent_mobile_20150528.pdf";
-         $window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
-                     var destination = fileSystem.root.toURL() ;
-                    var fileTransfer = new FileTransfer();
-                    fileTransfer.download(assetURL,DEV_PATH,
-                    function(entry) {
+         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+          var entry = fileSystem.root;
+          entry.getDirectory("VoiceUp", { // Give your directory name instead of Directory_Name
+            create: true,
+            exclusive: false
+          },onSuccess, onFail);
+        },null);
+// onSuccess function for creating directory
+                 function onSuccess(parent) {
+                       dirPath = parent.nativeURL;
+                       var DEV_PATH = parent.nativeURL+"consent_mobile_20150528.pdf";
+                       var fileTransfer = new FileTransfer();
+                       fileTransfer.download(assetURL,DEV_PATH,
+                             function(entry) {
+                                  $ionicLoading.hide();
+                                  $ionicPopup.alert({
+                                   title: 'Download',
+                                   template: "File Downloaded to the folder VoiceUp."
+                                  });
+                              },
+                           function(err) {
                            $ionicLoading.hide();
-                           $ionicPopup.alert({
-                            title: 'Download',
-                            template: "File Downloaded to "+entry.nativeURL
-                           });
-                       },
-                 function(err) {
-                    $ionicLoading.hide();
-                },true);
-          });
+                           },true);
+                     }
+
+                // onFail function for creating directory
+                function onFail(error) {
+                  console.log(error);
+                 }
       }
     }
 }else {
