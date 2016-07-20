@@ -7,6 +7,15 @@ angular.module('updateProfileCtrl',[])
 
       $rootScope.emailId = email ;
       if ($rootScope.emailId ) {
+      $scope.hideDownloadButton = false ;
+      $rootScope.hideDownloadButton = false ;
+      // get consent data saved locally
+      profileDataManager.getUserConsentJson(userId).then(function(res){
+           if (!res) {
+             $scope.hideDownloadButton = true ;
+             $rootScope.hideDownloadButton = true ;
+           }
+      });
         // get girder-token from local db for the user logout and further WS calls
         profileDataManager.getAuthTokenForUser(email).then(function(response){
           if (response) {
@@ -21,6 +30,8 @@ angular.module('updateProfileCtrl',[])
               }
            }
         });
+
+
     }
 
 

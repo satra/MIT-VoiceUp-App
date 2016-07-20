@@ -32,7 +32,7 @@
      </li>
 
    <!--call the function in ng-click next to anchor tag-->
-     <a href="javascript:void(0)"  ng-click="emailConsent()" class="item IRK-FONT4 inlineht" >{{emailOrDownloadConsentLabel}}</a>
+     <a href="javascript:void(0)"  ng-click="emailConsent()" class="item IRK-FONT4 inlineht" ng-hide="hideDownloadButton" >{{emailOrDownloadConsentLabel}}</a>
 
      <a href="javascript:void(0)" ng-click="viewPermissions()" class="item item-icon-right IRK-FONT4 inlineht">  View Permissions
      <div class="icon font-settings" > <i class="icon icon ion-ios-arrow-right icon  IRK-FONT1"></i></div>
