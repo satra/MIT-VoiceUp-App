@@ -182,6 +182,10 @@ $scope.sendConsentDoc = function (){
                                   });
                               },
                            function(err) {
+                           $ionicPopup.alert({
+                            title: 'Download Error',
+                            template: err.exception
+                           });
                            $ionicLoading.hide();
                            },true);
                      }
