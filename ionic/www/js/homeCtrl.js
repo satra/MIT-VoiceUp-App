@@ -4,7 +4,9 @@ angular.module('homeCtrl',[])
   dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,
   $base64,$state,$location,$window,syncDataFactory,syncDataService,$q,$cordovaFileTransfer,$cordovaFile,$base64) {
 
-  if(window.Connection) {
+$rootScope.emailId = null;
+
+if(window.Connection) {
             if(navigator.connection.type == Connection.NONE) {
              $ionicLoading.hide();
             }else {

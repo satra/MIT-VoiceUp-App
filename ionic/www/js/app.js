@@ -23,12 +23,15 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
 
     document.addEventListener("resume", function() {
       if ($rootScope.emailId) {
+         if ($rootScope.pinDalog) {
+             $rootScope.pinDalog.close();
+         }
          $rootScope.promptToPinScreen($rootScope.emailId);
        }
       }, false);
 
     $rootScope.promptToPinScreen = function (email) {
-        $ionicPopup.show({
+      $rootScope.pinDalog =   $ionicPopup.show({
         template: '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >',
         title: 'Enter Passcode',
         subTitle: email,
@@ -72,6 +75,7 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
             }
           ]
         });
+
       }
 
     $rootScope.loginViaPasscodeForPin = function (email,passcode) {

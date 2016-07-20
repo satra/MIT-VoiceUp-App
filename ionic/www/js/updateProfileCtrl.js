@@ -9,13 +9,7 @@ angular.module('updateProfileCtrl',[])
       if ($rootScope.emailId ) {
       $scope.hideDownloadButton = false ;
       $rootScope.hideDownloadButton = false ;
-      // get consent data saved locally
-      profileDataManager.getUserConsentJson(userId).then(function(res){
-           if (!res) {
-             $scope.hideDownloadButton = true ;
-             $rootScope.hideDownloadButton = true ;
-           }
-      });
+
         // get girder-token from local db for the user logout and further WS calls
         profileDataManager.getAuthTokenForUser(email).then(function(response){
           if (response) {
@@ -28,6 +22,13 @@ angular.module('updateProfileCtrl',[])
                 $rootScope.hideVerifyButton = true ;
                 $scope.hideVerifyButton = true ;
               }
+              // get consent data saved locally
+              profileDataManager.getUserConsentJson($scope.userId).then(function(res){
+                   if (!res) {
+                     $scope.hideDownloadButton = true ;
+                     $rootScope.hideDownloadButton = true ;
+                   }
+              });
            }
         });
 

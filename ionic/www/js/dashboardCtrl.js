@@ -24,7 +24,7 @@ angular.module('dashboard', [])
              $scope.fetchMapResults();
             }else {
               if ($rootScope.emailId) {
-                $ionicLoading.show({template: 'Check for updates'});
+                $ionicLoading.show({template: 'Updating..'});
                 syncDataFactory.startSyncServiesToFetchResults().then(function(res){
                 $ionicLoading.hide();
                 $scope.fetchMapResults () ;

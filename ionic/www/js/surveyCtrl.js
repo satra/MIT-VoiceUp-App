@@ -428,14 +428,10 @@ $scope.startDataSync = function(){
                       }
                   });
             }
-        }
+         }
       }else{
           $ionicLoading.hide();
-          $ionicPopup.alert({
-              title: "Verify",
-              template:"User verification is failed."
-          });
-       }
+      }
   });
 
 }
