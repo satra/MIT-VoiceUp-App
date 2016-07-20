@@ -16,7 +16,8 @@ profileDataManager.getEmailList().then(function(response){
 
     $ionicModal.fromTemplateUrl('templates/signin-choose-email.html', {
       scope: $scope,
-      animation: 'slide-in-up'
+      animation: 'slide-in-up',
+      hardwareBackButtonClose: false,
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
@@ -88,7 +89,8 @@ profileDataManager.getEmailList().then(function(response){
   $scope.openSignIn = function() {
        $ionicModal.fromTemplateUrl('templates/Login-IRK.html', {
          scope: $scope,
-         animation: 'slide-in-up'
+         animation: 'slide-in-up',
+           hardwareBackButtonClose: false,
        }).then(function(modal) {
          $scope.modal.remove();
          $scope.modal = modal;
@@ -103,7 +105,8 @@ profileDataManager.getEmailList().then(function(response){
     $scope.emailId = email.trim(); //capture the email id selected
     $ionicModal.fromTemplateUrl('templates/signin-enter-passcode.html', {
        scope: $scope,
-       animation: 'slide-in-up'
+       animation: 'slide-in-up',
+         hardwareBackButtonClose: false,
      }).then(function(modal) {
        $scope.modal.remove();
        $scope.modal = modal;
@@ -295,6 +298,7 @@ $scope.launchpinScreen = function(){
      $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
        scope: $scope,
        animation: 'slide-in-up',
+         hardwareBackButtonClose: false,
      }).then(function(modal) {
          $scope.modal = modal;
          $scope.passcodeLabel = "Create passcode";

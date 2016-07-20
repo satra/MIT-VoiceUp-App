@@ -313,7 +313,8 @@ $scope.userSettings = function() {
        });
       $ionicModal.fromTemplateUrl('templates/settings.html', {
         scope: $scope,
-        animation: 'slide-in-up'
+        animation: 'slide-in-up',
+          hardwareBackButtonClose: false,
       }).then(function(modal) {
         $rootScope.modal = modal;
         $rootScope.modal.show();
@@ -417,7 +418,8 @@ $scope.disableLocalNotification = function(){
 $scope.viewPermissions = function(){
          $ionicModal.fromTemplateUrl('templates/locationservice.html', {
            scope: $scope,
-           animation: 'slide-in-up'
+           animation: 'slide-in-up',
+             hardwareBackButtonClose: false,
          }).then(function(modal) {
            $rootScope.permission = modal;
            $rootScope.permission.show();
@@ -634,6 +636,7 @@ $scope.viewPermissions = function(){
         $ionicModal.fromTemplateUrl('templates/updatePasscode.html', {
           scope: $scope,
           animation: 'slide-in-up',
+            hardwareBackButtonClose: false,
         }).then(function(modal) {
           $rootScope.passcodeModal = modal;
           $rootScope.passcodeModal.show();
@@ -752,7 +755,8 @@ $scope.checkNewPasscodeDigits = function(){
      $scope.viewCopyrightInfo = function(){
           $ionicModal.fromTemplateUrl('templates/copyRightInfo.html', {
             scope: $scope,
-            animation: 'slide-in-up'
+            animation: 'slide-in-up',
+              hardwareBackButtonClose: false,
           }).then(function(modal) {
             $rootScope.permission = modal;
             $rootScope.permission.show();
