@@ -2,20 +2,18 @@
   <ion-header-bar>
         <button class="button button-clear font40 IRK-FONT2" ng-click="openVerification()"><i class="icon ion-ios-arrow-thin-left icon-font-button"></i></i></button>
 
-    <h1 class="title"></h1>
-    <div class="buttons">
-    </div>
+
   </ion-header-bar>
-  <ion-content>
-           <div class="irk-centered marT5p font30 IRK-FONT1 irk-font-helvetica">Location service</div>
+  <ion-content >
+           <div class="irk-centered marT3 font30 IRK-FONT1 irk-font-helvetica">Location service</div>
                 <div class="irk-centered marT2P IRK-FONT4 irk-font-helvetica">Using GPS enables the app to accurately</div>
                  <div class="irk-centered IRK-FONT4 irk-font-helvetica">dertermine the distance travelled.</div>
                          <div  class="irk-centered IRK-FONT4 irk-font-helvetica">Your actual location will never be shared.</div>
-                 <button class="irk-btnloc irk-centered  marT5p marB20 irk-font-helvetica" input type="checkbox" value="1" ng-click="allowGeoLocation()"ng-disabled="item.disabled">{{geoLabel}}</button> <br> <hr color ="#e6e6e4">
+                 <button class="irk-btnloc irk-centered  marT5p marB20 irk-font-helvetica" input type="checkbox" value="1" ng-click="allowGeoLocation()"ng-disabled="item.disabled">{{geoLabel}}</button>  <hr color ="#e6e6e4">
                  <div class="irk-centered  padT10p font30 IRK-FONT1 irk-font-helvetica">Microphone</div>
                 <div class="irk-centered marT2P IRK-FONT4 irk-font-helvetica">Access to microphone is requried for your</div>
                        <div class="irk-centered IRK-FONT4 irk-font-helvetica">Voice Recording Activity .</div>
-                       <button class="irk-btnloc irk-centered  marT5p marB20 irk-font-helvetica"input type="checkbox" value="1"ng-click="allowMicroPhone()">{{microPhoneLabel}}</button> <br> <hr color ="#e6e6e4">
+                       <button class="irk-btnloc irk-centered  marT5p marB20 irk-font-helvetica"input type="checkbox" value="1"ng-click="allowMicroPhone()">{{microPhoneLabel}}</button>  <hr color ="#e6e6e4">
 
                        <div class="irk-centered  padT10p font30 IRK-FONT1 irk-font-helvetica">Accelerometer</div>
                 <div class="irk-centered  marT2P IRK-FONT4 irk-font-helvetica">Access to Accelerometer is requried for your</div>
