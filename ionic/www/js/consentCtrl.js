@@ -27,23 +27,25 @@ $scope.closeModal = function() {
           });
      }else if (irkResults.getResults()) { // launch sign up
           var childresult = irkResults.getResults().childResults ;
-          childresult.every(function(value, key){
-          if (value.type == "IRK-CONSENT-REVIEW-STEP") {
-          if (value.answer) {
+          // var signUpForm = false ;
+        //  childresult.every(function(value, key){
+        //  if (value.type == "IRK-CONSENT-REVIEW-STEP") {
+        //  if (value.answer) {
           $rootScope.consentFullJson = irkResults.getResults().childResults ;
           $rootScope.consentResult = irkConsentDocument.getDocument();
           $ionicHistory.clearCache().then(function(){
                $state.transitionTo('loadSignUp');
             });
-          }else {
-            $ionicHistory.clearCache().then(function(){
+        //  }else {
+          /*  $ionicHistory.clearCache().then(function(){
                 $state.transitionTo('home');
               });
           }
-          return false;
-          }
-          return true ;
-       });
+          */
+        //  return false;
+        //  }
+        //  return true ;
+      // });
     }
 }
 

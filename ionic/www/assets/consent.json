@@ -1,7 +1,7 @@
 {
-  "URL": "https://dl.dropbox.com/s/aemu9hsn4brc9ga/new_spec_160413.json",
+  "URL": "https://raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160708.json",
   "consent": {
-    "enable_review_questions": "True",
+    "enable_review_questions": "False",
     "sections": [
       [
         {
@@ -155,7 +155,35 @@
           "type": "review"
         }
       ],
-
+      [
+        {
+          "expected_answer": "Yes",
+          "false-text": "No",
+          "id": "c9.1",
+          "main_type": "review-questions",
+          "title": "You need to be 18 years or older to participate.",
+          "true-text": "Yes",
+          "type": "boolean"
+        },
+        {
+          "expected_answer": "No",
+          "false-text": "No",
+          "id": "c9.2",
+          "main_type": "review-questions",
+          "title": "Your data will be shared publicly without your permission.",
+          "true-text": "Yes",
+          "type": "boolean"
+        },
+        {
+          "expected_answer": "Yes",
+          "false-text": "No",
+          "id": "c9.3",
+          "main_type": "review-questions",
+          "title": "This study focuses on understanding symptom variations in depression",
+          "true-text": "Yes",
+          "type": "boolean"
+        }
+      ],
       [
         {
           "consent-name": {
@@ -187,6 +215,7 @@
     ],
     "version": "0.1.1"
   },
+  "diffURL": "https://raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160708.patch",
   "eligibility": [
     {
       "expected_answer": "Yes",
@@ -274,11 +303,11 @@
   },
   "surveys": {
     "VoiceDepression_iSurvey01": {
-      "date": "0 7 1 * *",
+      "date": "0 3 1 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_55",
@@ -289,7 +318,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_55",
@@ -299,11 +328,11 @@
       ]
     },
     "VoiceDepression_iSurvey02": {
-      "date": "0 7 2 * *",
+      "date": "0 3 2 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_49",
@@ -314,7 +343,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_49",
@@ -324,11 +353,11 @@
       ]
     },
     "VoiceDepression_iSurvey03": {
-      "date": "0 7 3 * *",
+      "date": "0 3 3 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_53",
@@ -339,7 +368,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_53",
@@ -349,11 +378,11 @@
       ]
     },
     "VoiceDepression_iSurvey04": {
-      "date": "0 7 4 * *",
+      "date": "0 3 4 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_47",
@@ -364,7 +393,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_47",
@@ -374,11 +403,11 @@
       ]
     },
     "VoiceDepression_iSurvey05": {
-      "date": "0 7 5 * *",
+      "date": "0 3 5 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_55",
@@ -389,7 +418,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_55",
@@ -399,11 +428,11 @@
       ]
     },
     "VoiceDepression_iSurvey06": {
-      "date": "0 7 6 * *",
+      "date": "0 3 6 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_95",
@@ -414,7 +443,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_95",
@@ -423,13 +452,12 @@
         "QIDS_13"
       ]
     },
-
     "VoiceDepression_iSurvey07": {
-      "date": "0 7 7 * *",
+      "date": "0 3 7 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_5",
@@ -441,13 +469,13 @@
         "PHQ8_5",
         "PHQ8_6",
         "PHQ8_7",
+        "PHQ8_8",
         "PHQ8_8"
-
       ],
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_5",
@@ -459,15 +487,16 @@
         "PHQ8_5",
         "PHQ8_6",
         "PHQ8_7",
+        "PHQ8_8",
         "PHQ8_8"
       ]
     },
     "VoiceDepression_iSurvey08": {
-      "date": "0 7 8 * *",
+      "date": "0 3 8 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_71",
@@ -477,7 +506,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_71",
@@ -486,11 +515,11 @@
       ]
     },
     "VoiceDepression_iSurvey09": {
-      "date": "0 7 9 * *",
+      "date": "0 3 9 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_31",
@@ -501,7 +530,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_31",
@@ -511,11 +540,11 @@
       ]
     },
     "VoiceDepression_iSurvey10": {
-      "date": "0 7 10 * *",
+      "date": "0 3 10 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_45",
@@ -526,7 +555,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_45",
@@ -536,11 +565,11 @@
       ]
     },
     "VoiceDepression_iSurvey11": {
-      "date": "0 7 11 * *",
+      "date": "0 3 11 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_72",
@@ -551,7 +580,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_72",
@@ -561,11 +590,11 @@
       ]
     },
     "VoiceDepression_iSurvey12": {
-      "date": "0 7 12 * *",
+      "date": "0 3 12 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_46",
@@ -576,7 +605,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_46",
@@ -586,11 +615,11 @@
       ]
     },
     "VoiceDepression_iSurvey13": {
-      "date": "0 7 13 * *",
+      "date": "0 3 13 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "HarvardIEEE_13",
@@ -601,7 +630,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "HarvardIEEE_13",
@@ -611,11 +640,11 @@
       ]
     },
     "VoiceDepression_iSurvey14": {
-      "date": "0 6 14 * *",
+      "date": "0 3 14 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_1",
@@ -638,7 +667,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_1",
@@ -660,11 +689,11 @@
       ]
     },
     "VoiceDepression_iSurvey15": {
-      "date": "0 6 15 * *",
+      "date": "0 3 15 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_50",
@@ -674,7 +703,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_50",
@@ -683,11 +712,11 @@
       ]
     },
     "VoiceDepression_iSurvey16": {
-      "date": "0 6 16 * *",
+      "date": "0 3 16 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "HarvardIEEE_3",
@@ -698,7 +727,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "HarvardIEEE_3",
@@ -708,11 +737,11 @@
       ]
     },
     "VoiceDepression_iSurvey17": {
-      "date": "0 6 17 * *",
+      "date": "0 3 17 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_65",
@@ -723,7 +752,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_65",
@@ -733,11 +762,11 @@
       ]
     },
     "VoiceDepression_iSurvey18": {
-      "date": "0 6 18 * *",
+      "date": "0 3 18 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_2",
@@ -748,7 +777,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_2",
@@ -758,11 +787,11 @@
       ]
     },
     "VoiceDepression_iSurvey19": {
-      "date": "0 6 19 * *",
+      "date": "0 3 19 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_36",
@@ -773,7 +802,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_36",
@@ -783,11 +812,11 @@
       ]
     },
     "VoiceDepression_iSurvey20": {
-      "date": "0 6 20 * *",
+      "date": "0 3 20 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "Caterpillar",
@@ -798,7 +827,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "Caterpillar",
@@ -808,11 +837,11 @@
       ]
     },
     "VoiceDepression_iSurvey21": {
-      "date": "0 6 21 * *",
+      "date": "0 3 21 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_69",
@@ -829,7 +858,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_69",
@@ -845,11 +874,11 @@
       ]
     },
     "VoiceDepression_iSurvey22": {
-      "date": "0 6 22 * *",
+      "date": "0 3 22 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_25",
@@ -860,7 +889,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_25",
@@ -870,11 +899,11 @@
       ]
     },
     "VoiceDepression_iSurvey23": {
-      "date": "0 6 23 * *",
+      "date": "0 3 23 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_58",
@@ -885,7 +914,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_58",
@@ -895,11 +924,11 @@
       ]
     },
     "VoiceDepression_iSurvey24": {
-      "date": "0 6 24 * *",
+      "date": "0 3 24 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_73",
@@ -910,7 +939,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_73",
@@ -920,11 +949,11 @@
       ]
     },
     "VoiceDepression_iSurvey25": {
-      "date": "0 6 25 * *",
+      "date": "0 3 25 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "HarvardIEEE_12",
@@ -935,7 +964,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "HarvardIEEE_12",
@@ -945,11 +974,11 @@
       ]
     },
     "VoiceDepression_iSurvey26": {
-      "date": "0 6 26 * *",
+      "date": "0 3 26 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_41",
@@ -960,7 +989,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_41",
@@ -970,11 +999,11 @@
       ]
     },
     "VoiceDepression_iSurvey27": {
-      "date": "0 6 27 * *",
+      "date": "0 3 27 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_88",
@@ -985,7 +1014,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_88",
@@ -995,11 +1024,11 @@
       ]
     },
     "VoiceDepression_iSurvey28": {
-      "date": "0 6 28 * *",
+      "date": "0 3 28 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_30",
@@ -1027,7 +1056,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_30",
@@ -1054,11 +1083,11 @@
       ]
     },
     "VoiceDepression_iSurvey29": {
-      "date": "0 6 29 * *",
+      "date": "0 3 29 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_61",
@@ -1069,7 +1098,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_61",
@@ -1079,11 +1108,11 @@
       ]
     },
     "VoiceDepression_iSurvey30": {
-      "date": "0 6 30 * *",
+      "date": "0 3 30 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_46",
@@ -1094,7 +1123,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_46",
@@ -1104,11 +1133,11 @@
       ]
     },
     "VoiceDepression_iSurvey31": {
-      "date": "0 6 31 * *",
+      "date": "0 3 31 * *",
       "skippable": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_97",
@@ -1119,7 +1148,7 @@
       "tasks": [
         "SAGE_1",
         "SAGE_2",
-        "SAGE_3p",
+        "SAGE_3",
         "SAGE_4",
         "SAGE_5",
         "EmoSentence_97",
@@ -3136,34 +3165,34 @@
         }
       ]
     },
-    "SAGE_3p": {
+    "SAGE_3": {
       "steps": [
         {
           "choices": [
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood0.png",
+              "text": "The best I have felt",
               "value": 1
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood1.png",
+              "text": " Better than usual",
               "value": 2
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood2.png",
+              "text": " Normal ",
               "value": 3
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood3.png",
+              "text": " Down",
               "value": 4
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood4.png",
+              "text": " Extremely down",
               "value": 5
             }
           ],
           "text": "Select only one",
           "title": "How is your mood today?",
-          "type": "irk-image-choice-question-step"
+          "type": "irk-text-choice-question-step"
         }
       ]
     },
