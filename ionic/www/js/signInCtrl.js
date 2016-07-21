@@ -16,7 +16,8 @@ profileDataManager.getEmailList().then(function(response){
 
     $ionicModal.fromTemplateUrl('templates/signin-choose-email.html', {
       scope: $scope,
-      animation: 'slide-in-up'
+      animation: 'slide-in-up',
+      hardwareBackButtonClose: false,
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
@@ -88,7 +89,8 @@ profileDataManager.getEmailList().then(function(response){
   $scope.openSignIn = function() {
        $ionicModal.fromTemplateUrl('templates/Login-IRK.html', {
          scope: $scope,
-         animation: 'slide-in-up'
+         animation: 'slide-in-up',
+           hardwareBackButtonClose: false,
        }).then(function(modal) {
          $scope.modal.remove();
          $scope.modal = modal;
@@ -103,7 +105,8 @@ profileDataManager.getEmailList().then(function(response){
     $scope.emailId = email.trim(); //capture the email id selected
     $ionicModal.fromTemplateUrl('templates/signin-enter-passcode.html', {
        scope: $scope,
-       animation: 'slide-in-up'
+       animation: 'slide-in-up',
+         hardwareBackButtonClose: false,
      }).then(function(modal) {
        $scope.modal.remove();
        $scope.modal = modal;
@@ -193,7 +196,8 @@ $scope.remoteLoginSuccess = function(parentId){
                                var file_id = data[0]._id;
                                dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(userProfile){
                                   var profileJson = LZString.decompressFromEncodedURIComponent(userProfile.data); //  fetch this once girder intigrated
-                                  profileDataManager.createNewUser(JSON.parse(profileJson),$scope.emailId,parentId,folderId).then(function(insertId){
+                                  var userVerified = "yes";
+                                  profileDataManager.createNewUser(JSON.parse(profileJson),$scope.emailId,parentId,folderId,userVerified).then(function(insertId){
                                         if (insertId) {
                                           $scope.userId = insertId ;
                                           var localUserId = insertId ;
@@ -294,6 +298,7 @@ $scope.launchpinScreen = function(){
      $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
        scope: $scope,
        animation: 'slide-in-up',
+         hardwareBackButtonClose: false,
      }).then(function(modal) {
          $scope.modal = modal;
          $scope.passcodeLabel = "Create passcode";
@@ -375,7 +380,7 @@ $scope.createUserPin = function(localUserId,email){
 //==================forgot password login via email ================
 $scope.forgotPassword = function (){
   var myPopup = $ionicPopup.show({
-    template: '<input style="text-align: center" type="Email" id="email_recover" placeholder="Email" focus-me>',
+    template: '<input style="text-align: center" type="Email" id="email_recover" placeholder="Email" >',
     title: 'Forgot Password',
     subTitle: 'Please enter your email',
     scope: $scope,

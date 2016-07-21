@@ -1,27 +1,117 @@
 angular.module('updateProfileCtrl',[])
 //=======Home screen controller======================
 .controller('updateProfileCtrl', function($scope,$rootScope,$ionicHistory,$state,
-   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$ionicModal,$http,$cordovaEmailComposer,
-   $ionicLoading,profileDataManager,databaseManager,syncDataFactory,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
+   $ionicHistory,$cordovaSQLite,$ionicPopup,$q,$compile,$base64,$ionicModal,$http,$cordovaEmailComposer,$cordovaDatePicker,
+   $ionicLoading,profileDataManager,databaseManager,syncDataFactory,surveyDataManager,$state,dataStoreManager,$cordovaFileTransfer,$cordovaFile,$location,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
       var email = $rootScope.emailId ;
+
       $rootScope.emailId = email ;
       if ($rootScope.emailId ) {
+      $scope.hideDownloadButton = false ;
+      $rootScope.hideDownloadButton = false ;
+
         // get girder-token from local db for the user logout and further WS calls
         profileDataManager.getAuthTokenForUser(email).then(function(response){
           if (response) {
             $scope.authToken = response.token;
             $scope.userId = response.userId;
-          }
+              if ($scope.authToken === undefined || $scope.authToken === null || $scope.authToken === "undefined" || !$scope.authToken ) {
+                $rootScope.hideVerifyButton = false ;
+                $scope.hideVerifyButton = false ;
+              }else {
+                $rootScope.hideVerifyButton = true ;
+                $scope.hideVerifyButton = true ;
+              }
+              // get consent data saved locally
+              profileDataManager.getUserConsentJson($scope.userId).then(function(res){
+                   if (!res) {
+                     $scope.hideDownloadButton = true ;
+                     $rootScope.hideDownloadButton = true ;
+                   }
+              });
+           }
         });
-      }
+
+
+    }
+
 
   // == take user to home screeen
   $scope.switchUser = function (){
-          $scope.modal.remove();
+          $rootScope.modal.remove();
           $ionicHistory.clearCache().then(function(){
           $rootScope.emailId = null;
           $state.transitionTo('home');
           });
+  }
+
+  $scope.verifyUser = function() {
+    $rootScope.AllowedToDisplayNextPopUp = true ;
+    var emailId = $rootScope.emailId.trim() ;
+      if (emailId) {
+      $rootScope.popupAny = $ionicPopup.show({
+          template: '<input style="text-align: center" type="password" id="password_recover" placeholder="password" >',
+          title: 'Enter Password',
+          subTitle: 'Please enter your account password',
+          scope: $scope,
+          buttons: [
+             { text: 'Cancel' },
+             {
+              text: '<b>Done</b>',
+              type: 'button-positive',
+              onTap: function(e) {
+                if ($rootScope.AllowedToDisplayNextPopUp) {
+                var password = angular.element(document.querySelector('#password_recover')).prop('value') ;
+                if (password.length != 0) {
+                    var beforeEncode = emailId.trim()+':'+password.trim();
+                    var encoded = 'Basic '+ $base64.encode(unescape(encodeURIComponent(beforeEncode)));
+                    $ionicLoading.show();
+                    syncDataFactory.verifyUserToFetchToken(encoded).then(function(res){
+                        $ionicLoading.hide();
+                        if (res.status == 200 || !res.data) {
+                          $rootScope.hideVerifyButton = true ;
+                          $scope.hideVerifyButton = true ;
+                          $scope.startSyncServices();
+                        }else {
+                          $scope.failureMessage(res.data.message);
+                        }
+                    },function(error){
+                       $scope.failureMessage(error.statusText);
+                    });
+                  } else {
+                     e.preventDefault();
+                  }
+                 }
+                }
+              }
+            ]
+          });
+      }
+  }
+
+$scope.failureMessage = function(message){
+    $ionicLoading.hide();
+    $ionicPopup.alert({
+     title: 'Error',
+     template: message
+    });
+  }
+
+  $scope.startSyncServices = function(){
+    // start sync services to upload the data
+    $ionicLoading.show({template: 'Data Sync..'});
+    syncDataFactory.checkDataAvailableToSync().then(function(res){
+         if (res.length > 0 ) {
+            syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+              $ionicLoading.hide();
+            },function(error){
+               $scope.failureMessage(error.statusText);
+            });
+         }else {
+           $scope.verifyLater();
+           $ionicLoading.hide();
+         }
+       });
   }
 
 
@@ -68,40 +158,12 @@ angular.module('updateProfileCtrl',[])
           }
      });
 
-     // by defalut
-     $scope.notification = false;
-     $scope.daily = false;
-     $scope.week = false ;
-
-     $scope.userSettings = function() {
-      // get the settings from database
-      profileDataManager.getUserSettingsJson($rootScope.emailId).then(function(response){
-          if (response) {
-             if (response!='') {
-               for (var i = 0; i < response.length; i++) {
-                 $scope.notification = response[i].notification;
-                 $scope.daily = response[i].dailyNotification ;
-                 $scope.week = response[i].weeklyNotification ;
-                 }
-               }
-             }
-        });
-
-       $ionicModal.fromTemplateUrl('templates/settings.html', {
-         scope: $scope,
-         animation: 'slide-in-up'
-       }).then(function(modal) {
-         $scope.modal = modal;
-         $scope.modal.show();
-       });
-     };
-
      $scope.settingsBack = function (){
-       $scope.modal.remove();
+       $rootScope.modal.remove();
      }
 
      $scope.backtotab = function () {
-       $scope.modal.remove();
+       $rootScope.modal.remove();
        $ionicHistory.clearCache().then(function(){
           // $state.transitionTo('tab');
        });
@@ -110,13 +172,15 @@ angular.module('updateProfileCtrl',[])
  //====================userLogout
      $scope.logOut = function(){
        var logoutToken = $scope.authToken;
+       $rootScope.AllowedToDisplayNextPopUp = true ;
        if (logoutToken) {
          var confirmPopup = $ionicPopup.confirm({
                              title: 'Leave Study Confirm',
                              template: 'Are you sure you want to Leave Study?'
                            });
-                           confirmPopup.then(function(res) {
-                             if(res) {
+         $rootScope.popupAny = confirmPopup ;
+         confirmPopup.then(function(res) {
+                             if(res && $rootScope.AllowedToDisplayNextPopUp) {
                                dataStoreManager.userLogout(logoutToken).then(function(res){
                                 if (res.status == 200) {
                                  var promiseA = profileDataManager.removeUser($scope.userId);
@@ -125,7 +189,10 @@ angular.module('updateProfileCtrl',[])
                                  var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.userId);
                                  var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.userId);
                                  var promiseF = syncDataFactory.removeUserCacheResults($scope.userId);
-                                 $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF])
+                                 var promiseG = syncDataFactory.removeUserCacheServerResults($scope.userId);
+                                 var promiseH = syncDataFactory.removeUserCacheItemIds($scope.userId);
+
+                                 $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF,promiseG,promiseH])
                                      .then(function(promiseResult) {
                                      console.log(promiseResult[0], promiseResult[1], promiseResult[2],promiseResult[3],
                                                  promiseResult[4] );
@@ -134,7 +201,7 @@ angular.module('updateProfileCtrl',[])
 
                                $ionicHistory.clearCache().then(function(){
                                $rootScope.emailId = null;
-                               $scope.modal.remove();
+                               $rootScope.modal.remove();
                                $state.transitionTo('home');
                                });
                               }
@@ -145,10 +212,12 @@ angular.module('updateProfileCtrl',[])
                           $scope.logout = false ;
                       }
            });
+
+
        }
     }
 
-    $scope.checkErrorAsyncCall = function(error){
+  $scope.checkErrorAsyncCall = function(error){
       $ionicLoading.hide();
       if(window.Connection) {
               if(navigator.connection.type == Connection.NONE) {
@@ -166,8 +235,60 @@ angular.module('updateProfileCtrl',[])
       profileDataManager.getUserConsentJson(userId).then(function(res){
            if (res) {
             if (ionic.Platform.isAndroid()) {
-              pdfMake.createPdf(res).download();
-            }else {
+             $ionicLoading.show();
+            pdfMake.createPdf(res).getBase64(function(b64Data) {
+             var contentType = 'application/pdf' ;
+             contentType = contentType || '';
+             sliceSize =  512;
+             var byteCharacters = atob(b64Data);
+             var byteArrays = [];
+             for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+             var slice = byteCharacters.slice(offset, offset + sliceSize);
+             var byteNumbers = new Array(slice.length);
+             for (var i = 0; i < slice.length; i++) {
+              byteNumbers[i] = slice.charCodeAt(i);
+             }
+             var byteArray = new Uint8Array(byteNumbers);
+             byteArrays.push(byteArray);
+             }
+            var blob = new Blob(byteArrays, {
+            type: contentType
+           });
+          if (blob) {
+            window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+               var entry = fileSystem.root;
+               entry.getDirectory("VoiceUp", {
+                 create: true,
+                 exclusive: false
+               },onSuccess, onFail);
+             },null);
+                  function onSuccess(parent) {
+                          dirPath = parent.nativeURL;
+                          $cordovaFile.writeFile(dirPath, $rootScope.emailId.trim()+".pdf", blob, true)
+                           .then(function(success) {
+                             $ionicLoading.hide();
+                             $ionicPopup.alert({
+                              title: 'Download',
+                              template: "Consent document downloaded to VoiceUp folder."
+                             });
+                           }, function(error) {
+                               $ionicLoading.hide();
+                               console.log(error);
+                           });
+                        }
+                   function onFail(error) {
+                      $ionicLoading.hide();
+                     console.log(error);
+                    }
+           } else {
+             $ionicLoading.hide();
+             console.log("could not create the blob");
+          }
+      },function(error){
+         $ionicLoading.hide();
+      });
+  }else {
             pdfMake.createPdf(res).getBase64(function(dataURL) {
               var email = {
                      attachments: [
@@ -190,58 +311,136 @@ angular.module('updateProfileCtrl',[])
         });
     }
 
-     $scope.toggleNotification = function(){
-      if ($scope.notification == false) {
-          $scope.notification = true;
-        }else {
-          $scope.notification = false;
-          $scope.daily =false ;
-          $scope.week =false ;
-        }
-       $scope.updateToggleValue();
-     }
-
-     $scope.toggleDailyNotification = function(){
-            if ($scope.daily == false) {
-                $scope.notification = true;
-                $scope.daily =true ;
-              }else {
-                $scope.daily =false ;
+// by defalut
+$scope.daily = false;
+$scope.userSettings = function() {
+     profileDataManager.getUserSettingsJson($rootScope.emailId).then(function(response){
+         if (response) {
+            if (response!='') {
+              for (var i = 0; i < response.length; i++) {
+                $scope.daily = response[i].dailyNotification ;
+                }
               }
-          $scope.updateToggleValue();
-     }
+            }
+       });
+      $ionicModal.fromTemplateUrl('templates/settings.html', {
+        scope: $scope,
+        animation: 'slide-in-up',
+          hardwareBackButtonClose: false,
+      }).then(function(modal) {
+        $rootScope.modal = modal;
+        $rootScope.modal.show();
+      });
+};
 
-     $scope.toggleBiweekNotification = function(){
-            if ($scope.week == false) {
-                  $scope.notification = true;
-                  $scope.week = true;
-              }else {
-                  $scope.week = false;
-              }
-        $scope.updateToggleValue();
-    }
+$scope.toggleDailyNotification = function(){
+           if ($scope.daily == false) {
+              $scope.daily =true ;
+              // enable notification and set the timer
+              $scope.enableLocalNotification();
+          }else {
+              $scope.daily =false ;
+              // disable all the notification and clear
+              $scope.disableLocalNotification();
+          }
+        //  $scope.updateToggleValue();
+}
 
-    $scope.updateToggleValue = function(){
+ $scope.updateToggleValue = function(){
       var emailId = $rootScope.emailId ;
-      var settingsJson = new Array({"notification": $scope.notification,  "dailyNotification":$scope.daily ,"weeklyNotification":$scope.week});
+      var settingsJson = new Array({ "dailyNotification":$scope.daily});
       profileDataManager.updateSettingsJsonToUserID(emailId,settingsJson).then(function(response){
            if (response) {
              console.log(response);
            }
         });
-    }
+}
 
-    $scope.viewPermissions = function(){
+$scope.enableLocalNotification = function(){
+  cordova.plugins.notification.local.hasPermission(function (granted) {
+    if(granted){
+      console.log('permissions given');
+      $scope.chooseTime();
+    }else{
+      cordova.plugins.notification.local.registerPermission(function (granted) {
+     console.log('Permission has been granted: ' + granted);
+       if (granted) {
+             $scope.chooseTime();
+             }
+        else {
+            console.log('Enable notifications from Device Settings');
+          }
+      });
+    }
+  });
+}
+
+$scope.chooseTime = function () {
+var minDate = new Date();
+minDate.setHours(0);
+minDate.setMinutes(0);
+minDate.setSeconds(1);
+var maxDate = new Date();
+maxDate.setHours(23);
+maxDate.setMinutes(59);
+maxDate.setSeconds(1);
+var options = {
+    date: new Date(),
+    mode: 'time', // or 'time'
+    minDate: minDate,
+		maxDate: maxDate,
+    allowOldDates: true,
+    allowFutureDates: true,
+    doneButtonLabel: 'DONE',
+    doneButtonColor: '#000000',
+    cancelButtonLabel: 'CANCEL',
+    cancelButtonColor: '#000000',
+		minuteInterval: 15
+  };
+$cordovaDatePicker.show(options).then(function(date){
+			console.log(date);
+      if (date) {
+       $scope.scheduleNotification(date);
+      }else {
+        $scope.daily = false ;
+        // update local Db
+        $scope.updateToggleValue();
+      }
+	});
+}
+
+$scope.scheduleNotification = function (notifDate) {
+  cordova.plugins.notification.local.schedule({
+    id: 1332,
+    title: "VoiceUp",
+    text: "Survey Reminder",
+    at: notifDate,
+    every: "day"
+  });
+  $scope.updateToggleValue();
+}
+
+$scope.disableLocalNotification = function(){
+  cordova.plugins.notification.local.cancelAll(function(res) {
+  $scope.updateToggleValue();
+  }, this);
+}
+
+
+$scope.viewPermissions = function(){
          $ionicModal.fromTemplateUrl('templates/locationservice.html', {
            scope: $scope,
-           animation: 'slide-in-up'
+           animation: 'slide-in-up',
+             hardwareBackButtonClose: false,
          }).then(function(modal) {
-           $scope.permission = modal;
-           $scope.permission.show();
+           $rootScope.permission = modal;
+           $rootScope.permission.show();
+           $scope.accelerationLabel='Allow';
+           $scope.microPhoneLabel = 'Allow';
+           $scope.geoLabel = 'Allow';
 
-    $scope.accelerationLabel='Allow';
-    $scope.microPhoneLabel = 'Allow';
-    $scope.geoLabel = 'Allow';
+           var iEl = angular.element( document.querySelector( '#btn1' ) );
+                  iEl.remove();
 
                var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
               function onSuccess(position) {
@@ -263,11 +462,11 @@ angular.module('updateProfileCtrl',[])
 }
 
     $scope.openVerification = function() {
-        $scope.permission.remove();
+        $rootScope.permission.remove();
     };
 
      $scope.closeModal = function() {
-       $scope.modal.remove();
+       $rootScope.modal.remove();
      };
 
      // Cleanup the modal when we're done with it!
@@ -449,9 +648,10 @@ angular.module('updateProfileCtrl',[])
         $ionicModal.fromTemplateUrl('templates/updatePasscode.html', {
           scope: $scope,
           animation: 'slide-in-up',
+            hardwareBackButtonClose: false,
         }).then(function(modal) {
-          $scope.passcodeModal = modal;
-          $scope.passcodeModal.show();
+          $rootScope.passcodeModal = modal;
+          $rootScope.passcodeModal.show();
         });
     }
 
@@ -546,19 +746,19 @@ $scope.checkNewPasscodeDigits = function(){
        }
 
       $scope.closePasscodeModal =  function (){
-          $scope.passcodeModal.remove();
+          $rootScope.passcodeModal.remove();
        }
 
      $scope.callAlertDailog =  function (message){
           document.activeElement.blur(); // remove the keypad
-          $ionicPopup.alert({
+        $rootScope.alertDialog = $ionicPopup.alert({
            title: 'Data Invalid',
            template: message
           });
      }
 
      $scope.successAlertMsg = function (message) {
-         $ionicPopup.alert({
+      $rootScope.alertDialog =    $ionicPopup.alert({
           title: 'Success',
           template: message
          });
@@ -567,15 +767,16 @@ $scope.checkNewPasscodeDigits = function(){
      $scope.viewCopyrightInfo = function(){
           $ionicModal.fromTemplateUrl('templates/copyRightInfo.html', {
             scope: $scope,
-            animation: 'slide-in-up'
+            animation: 'slide-in-up',
+              hardwareBackButtonClose: false,
           }).then(function(modal) {
-            $scope.permission = modal;
-            $scope.permission.show();
+            $rootScope.permission = modal;
+            $rootScope.permission.show();
         });
     }
 
     $scope.closeCopyRightInfo = function(){
-      $scope.permission.remove();
+      $rootScope.permission.remove();
     }
 
 });

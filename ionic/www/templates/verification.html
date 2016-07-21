@@ -1,30 +1,30 @@
 <ion-modal-view>
-  <ion-header-bar>
+  <!-- <ion-header-bar>
     <h1 class="title"></h1>
     <div class="buttons">
 
     </div>
-  </ion-header-bar>
+  </ion-header-bar> -->
   <ion-content>
     <form ng-submit="doLogin()">
-   <div class="txtcenter marT10p">
-  <img src="img/voiceup_icon_1.png"/>
-   </div>
-   <div class="irk-centered  font22 linehgt30 marT30 IRK-FONT2 irk-font-helvetica">MIT</div>
+      <div class="banner_holder">
+          <img src="img/logo-2.png"class="banner_holderImage">
+      </div>
+   <div class="irk-centered  font22 linehgt30 marT30 IRK-FONT2 irk-font-helvetica">MIT VoiceUp</div>
    <div class="irk-centered font22 linehgt30 IRK-FONT1 irk-font-helvetica">has sent you verification email at</div>
    <div class="txtcenter marB15 font22 linehgt30 IRK-FONT3 irk-font-helvetica">{{emailId}}</div>
    <div class="clearboth"></div>
-   <div class="marB50 irk-centered  marT10 irk-font-helvetica"><a href="#" class="vatag">Wrong email address? Tap here</a></div>
+   <!-- <div class="marB50 irk-centered  marT10 irk-font-helvetica"><a href="#" class="vatag">Wrong email address? Tap here</a></div> -->
    <div class="clearboth"></div>
    <div class="marB10 irk-centered font22 IRK-FONT2 irk-font-helvetica">Once verfied, tap below</div>
    <div class="clearboth"></div>
     <button class="irk-btn irk-centered marL32p marT5p marB10p font15 irk-font-helvetica" ng-click="openPermisssions()">CONTINUE</button>
-   <button class="irk-centered  marT30 footer-boder1 marB18p IRK-TRANSPARENT-BUTTON IRK-FONT2 irk-font-helvetica">Verify Later</button>
+   <button class="irk-centered  marT30 footer-boder1 marB18p IRK-TRANSPARENT-BUTTON IRK-FONT2 irk-font-helvetica" ng-click="verifyLater()">Verify Later</button>
   <div class="clearboth"></div>
-  <div class="irk-centered  footercolor IRK-FONT3 irk-font-helvetica">A full copy of consent agreement wil be </div>
-  <div class="irk-centered footercolo IRK-FONT3 irk-font-helvetica">Sent to your profile</div>
+  <div class="irk-centered  footercolor IRK-FONT3 irk-font-helvetica">A full copy of consent agreement will be </div>
+  <div class="irk-centered footercolo IRK-FONT3 irk-font-helvetica">sent to your profile</div>
   <div class="irk-centered marT15p">
-  <button class="IRK-TEXT-DECORATION-N IRK-TRANSPARENT-BUTTON-btm IRK-FONT2 irk-font-helvetica"><b>Resend verification email</b></button>
+  <!-- <button class="IRK-TEXT-DECORATION-N IRK-TRANSPARENT-BUTTON-btm IRK-FONT2 irk-font-helvetica"><b>Resend verification email</b></button> -->
   </div>
   </ion-content>
 </ion-modal-view>

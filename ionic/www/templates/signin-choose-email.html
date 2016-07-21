@@ -8,9 +8,12 @@
 
 <ion-content class="scroll-content">
 <div>
-  <div class="irk-image irk-centered marT10p width150" ng-hide="hideImageDiv" >
+  <!-- <div class="irk-image irk-centered marT10p width150" ng-hide="hideImageDiv" >
      <img src="img/logo-2.png" class="irk-step-image">
-  </div>
+  </div> -->
+  <div class="banner_holder" ng-hide="hideImageDiv">
+    <img src="img/logo-2.png"class="banner_holderImage">
+</div>
 
   <select class="passcode-dropdown" ng-model="email"  ng-change="resetInput()" >
       <option value="" disabled selected>Choose email</option>

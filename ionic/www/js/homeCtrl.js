@@ -2,41 +2,37 @@ angular.module('homeCtrl',[])
 //=======Home screen controller======================
 .controller('homeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
   dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,
-  $base64,$state,$location,$window,syncDataFactory,syncDataService) {
+  $base64,$state,$location,$window,syncDataFactory,syncDataService,$q,$cordovaFileTransfer,$cordovaFile,$base64) {
 
-  /*  if(window.Connection) {
+$rootScope.emailId = null;
+
+if(window.Connection) {
             if(navigator.connection.type == Connection.NONE) {
-                  $ionicPopup.alert({
-                    title: "Internet Disconnected",
-                    template: "The Internet connection appears to be offline."
-                });
+             $ionicLoading.hide();
             }else {
-              $ionicLoading.show({template: 'Data Sync..'});
-              // call sync services
-              syncDataFactory.startSyncServiesTouploadData().then(function(res){
-                 $ionicLoading.hide();
-               },function(error){
-                $ionicLoading.hide();
+             syncDataFactory.checkDataAvailableToSync().then(function(res){
+                  if (res.length > 0 ) {
+                     $ionicLoading.show({template: 'Data Sync..'});
+                     syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+                     $ionicLoading.hide();
+                     },function(error){
+                     $ionicLoading.hide();
+                     });
+                  }
               });
-           }
-      }
-      */
+        }
+  }
 
-      $ionicLoading.show({template: 'Data Sync..'});
-      // call sync services
-      syncDataFactory.startSyncServiesTouploadData().then(function(res){
-         $ionicLoading.hide();
-       },function(error){
-        $ionicLoading.hide();
-      });
+// learn controller parameters
+$scope.homeCalss = "icon icon ion-close-round";
+$scope.showCloseButton = true ;
 
-
-// label for email(ios)/download(android)
+     // label for email(ios)/download(android)
       if (ionic.Platform.isAndroid()) {
         $scope.emailOrDownloadConsentLabel  = "Download Consent Document";
       }else{
         $scope.emailOrDownloadConsentLabel  = "Email Consent Document";
-  }
+      }
 
 databaseManager.checkDatabaseExists().then(function(res){
        if (res == 5 ) {
@@ -119,6 +115,10 @@ databaseManager.checkDatabaseExists().then(function(res){
                   console.log('createUserItemMappingTable  '+ resp);
             });
 
+            databaseManager.createUserResultTable().then(function(resp){
+                  console.log('createUserResultTable  '+ resp);
+            });
+
          });
        }
  });
@@ -131,11 +131,9 @@ databaseManager.checkDatabaseExists().then(function(res){
     }).then(function(modal) {
       $scope.modal = modal;
       $scope.modal.show();
-    });
+   });
 };
 
-$scope.headerCloseButton = false ;
-$scope.headerBackButton = true ;
 
 $scope.go = function () {
   $scope.modal.remove();
@@ -152,10 +150,56 @@ $scope.GoBack = function () {
 };
 
 $scope.sendConsentDoc = function (){
-
   if (ionic.Platform.isAndroid()) {
-    pdfMake.createPdf(res).download();
-  }else {
+      if(window.Connection) {
+        if(navigator.connection.type == Connection.NONE) {
+         $ionicLoading.hide();
+         $ionicPopup.alert({
+            title: 'Download',
+            template: "Please check network connection."
+           });
+        }else {
+         $ionicLoading.show();
+         var assetURL = encodeURI("http://voicesurvey.mit.edu/sites/default/files/documents/consent_mobile_20150528.pdf");
+         var DEV_PATH = cordova.file.externalRootDirectory+"consent_mobile_20150528.pdf";
+         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+         window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+          var entry = fileSystem.root;
+          entry.getDirectory("VoiceUp", { // Give your directory name instead of Directory_Name
+            create: true,
+            exclusive: false
+          },onSuccess, onFail);
+        },null);
+// onSuccess function for creating directory
+                 function onSuccess(parent) {
+                       dirPath = parent.nativeURL;
+                       var DEV_PATH = parent.nativeURL+"consent_mobile_20150528.pdf";
+                       var fileTransfer = new FileTransfer();
+                       fileTransfer.download(assetURL,DEV_PATH,
+                             function(entry) {
+                                  $ionicLoading.hide();
+                                  $ionicPopup.alert({
+                                   title: 'Download',
+                                   template: "Consent document downloaded to VoiceUp folder."
+                                  });
+                              },
+                           function(err) {
+                           $ionicPopup.alert({
+                            title: 'Download Error',
+                            template: err.exception
+                           });
+                           $ionicLoading.hide();
+                           },true);
+                     }
+
+                // onFail function for creating directory
+                function onFail(error) {
+                   $ionicLoading.hide();
+                  console.log(error);
+                 }
+      }
+    }
+}else {
     var email = {
        attachments: [
          'file://assets/consent_mobile_20150528.pdf'

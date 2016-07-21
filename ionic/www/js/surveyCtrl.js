@@ -6,36 +6,6 @@ angular.module('surveyCtrl',[])
 
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
-/*
-document.addEventListener("resume", function() {
-    if ($rootScope.activeUser) {
-       profileDataManager.getEmailList().then(function(response){
-       var emailArray = new Array() ;
-       for (var i = 0; i < response.length; i++) {
-       emailArray.push({'emailId':response.item(i).emailId});
-       if (response.item(i).emailId == $rootScope.activeUser) {
-          $scope.selectedEmail = emailArray[i];
-          }
-        }
-       $scope.emails = emailArray;
-     });
-
-    if ($scope.pin) {
-      $scope.pin.remove();
-    }
-    $ionicModal.fromTemplateUrl('templates/pinScreen.html', {
-              scope: $scope,
-              animation: 'slide-in-up'
-            }).then(function(modal) {
-              $scope.pin = modal;
-              $scope.pin.show();
-      });
-
-   }
-  }, false);
-
-*/
-
 // == take user to home screeen
 $scope.switchUser = function (){
     $ionicHistory.clearCache().then(function(){
@@ -104,7 +74,6 @@ $scope.switchUser = function (){
 
 surveyDataManager.getSurveyListForToday().then(function(response){
     $scope.list = response;
-    console.log($scope.list);
     var surveyMainList = response;
     var today = new Date() ;
     var creationDate = today.getDate()+'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
@@ -216,22 +185,37 @@ $scope.launchSurvey = function (idSelected){
         }
       }
 
-    if (surveyHtml || onlySkippedQuestionHtml) {
+$rootScope.AllowedToDisplayNextPopUp = true ;
+if (surveyHtml || onlySkippedQuestionHtml) {
                 if (isSkippedQuestions) {
-                           var confirmPopup = $ionicPopup.confirm({
-                             title: 'Only Skipped Question',
-                             template: 'Do you want to display only skipped question ?'
-                           });
-                           confirmPopup.then(function(res) {
-                            if(res) {
-                             $scope.showTasksForSlectedSurvey(onlySkippedQuestionHtml);
-                            } else {
-                             $scope.showTasksForSlectedSurvey(surveyHtml);
-                            }
-                         });
-                       }else {
-                            $scope.showTasksForSlectedSurvey(surveyHtml);
-                       }
+                $rootScope.popupAny = $ionicPopup.show({
+                  title: 'Only Skipped Question',
+                  subTitle: 'Do you want to display only skipped question ?',
+                  scope: $scope,
+                  buttons: [
+                         {
+                          text: '<b>YES</b>',
+                          onTap: function(e) {
+                             if ($rootScope.AllowedToDisplayNextPopUp) {
+                               $scope.showTasksForSlectedSurvey(onlySkippedQuestionHtml);
+                             }
+                           }
+                         },
+                         {
+                           text: 'NO',
+                           type: 'button-positive',
+                           onTap: function(e) {
+                              if ($rootScope.AllowedToDisplayNextPopUp) {
+                               $scope.showTasksForSlectedSurvey(surveyHtml);
+                             }
+                           }
+                        }
+                       ]
+                });
+
+             }else {
+                 $scope.showTasksForSlectedSurvey(surveyHtml);
+              }
          }
       });
      }
@@ -272,19 +256,39 @@ $scope.launchSurvey = function (idSelected){
 $scope.showTasksForSlectedSurvey = function(surveyHtml){
   if($rootScope.emailId){
    profileDataManager.getFolderIDByEmail($rootScope.emailId).then(function (folderId){
-    $scope.folderId = folderId ;
+     $scope.folderId = folderId ;
+     if (folderId === undefined || folderId === null || folderId === "undefined" ) {
+       $scope.folderId = "" ;
+     }else {
+       $scope.folderId = folderId ;
+     }
    });
 
   profileDataManager.getAuthTokenForUser($rootScope.emailId).then(function (authToken){
-    $scope.authToken = authToken.token ;
+      $scope.authToken = authToken.token ;
+      if ($scope.authToken === undefined || $scope.authToken === null || $scope.authToken === "undefined" ) {
+       $scope.authToken = "" ;
+      }else {
+        $scope.authToken = authToken.token ;
+      }
    });
 
-   profileDataManager.getItemIdForUserIdAndItem($scope.userId,"results").then(function (resultItemId){
-     $scope.resultItemId = resultItemId ;
+   profileDataManager.getItemIdForUserIdAndItem($scope.userId,"response").then(function (resultItemId){
+       $scope.resultItemId = resultItemId ;
+       if (resultItemId === undefined || resultItemId === null || resultItemId === "undefined" ) {
+         $scope.resultItemId = "" ;
+       }else {
+         $scope.resultItemId = resultItemId ;
+       }
     });
+}
 
-  }
-  $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
+// if any modal already remove
+if ($rootScope.modal) {
+$rootScope.modal.remove();
+}
+
+$scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                              '<irk-ordered-tasks>'+
                                              surveyHtml +
                                              '</irk-ordered-tasks>'+
@@ -292,12 +296,12 @@ $scope.showTasksForSlectedSurvey = function(surveyHtml){
                                              scope: $scope,
                                              animation: 'slide-in-up'
                                            });
-  $scope.modal = $scope.learnmore;
+  $rootScope.modal = $scope.learnmore;
   $scope.learnmore.show();
 };
 
 $scope.closeModal = function() {
-    $scope.modal.remove();
+    $rootScope.modal.remove();
     $ionicLoading.show();
     $ionicHistory.clearCache().then(function(){
     });
@@ -313,7 +317,7 @@ $scope.closeModal = function() {
        var type = childresult[i].type;
        var isSkipped = '';
        if (answer) {
-       isSkipped = "NO";
+              isSkipped = "NO";
              // if answered a question clear form history table so it is answered and no need to add for upcoming survey
              surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
 
@@ -368,7 +372,7 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
                        var contentType = childresult[k].contentType;
                        if (fileURL) {
                         itemNameArray.push(fileURL);
-                        var audioFileDirectory = (ionic.Platform.isAndroid() ? cordova.file.dataDirectory : cordova.file.documentsDirectory);
+                        var audioFileDirectory = (ionic.Platform.isAndroid() ? cordova.file.externalRootDirectory : cordova.file.documentsDirectory);
                         promises.push($cordovaFile.readAsDataURL(audioFileDirectory,fileURL));
                         }
                       }
@@ -383,6 +387,8 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
                          $q.all(fileItemPromise).then(function(itemCreateInfo){
                             $scope.startDataSync();
                          });
+                   },function (error) {
+                     $ionicLoading.hide();
                    });
                 }else {
                     $scope.startDataSync();
@@ -394,22 +400,39 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
 
 
 $scope.startDataSync = function(){
- // call sync services
- syncDataFactory.startSyncServiesTouploadData().then(function(res){
-    $ionicLoading.hide();
-    var message = res.statusText ;
-    var title = "Data upload success";
-    if (!message) {
-      message = "Data added for later upload.";
-      title = "Data upload failed";
-    }
-    $ionicPopup.alert({
-        title: title,
-        template:message
-    });
-  },function(error){
-   $scope.uploadFailure();
- });
+  // user autherized or not
+  profileDataManager.checkIsUserValid($rootScope.emailId).then(function(res){
+    if (res.toLowerCase() == "yes".toLowerCase()) {
+      if(window.Connection) {
+                if(navigator.connection.type == Connection.NONE) {
+                $scope.uploadFailure();
+                }else {
+                 syncDataFactory.checkDataAvailableToSync().then(function(res){
+                      if (res.length > 0 ) {
+                         $ionicLoading.show({template: 'Data Sync..'});
+                           syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+                           $ionicLoading.hide();
+                           var message = res.statusText ;
+                           var title = "Data upload success";
+                           if (!message) {
+                             message = "Data added for later upload.";
+                             title = "Data upload failed";
+                           }
+                           $ionicPopup.alert({
+                               title: title,
+                               template:message
+                           });
+                         },function(error){
+                         $scope.uploadFailure();
+                         });
+                      }
+                  });
+            }
+         }
+      }else{
+          $ionicLoading.hide();
+      }
+  });
 
 }
 

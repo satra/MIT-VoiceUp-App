@@ -1,7 +1,7 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
 .controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
-  ,profileDataManager,databaseManager,dataStoreManager,syncDataFactory,surveyDataManager,$state,userService,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
+  ,profileDataManager,databaseManager,dataStoreManager,syncDataFactory,$base64,surveyDataManager,$state,userService,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
 
       profileDataManager.getUserProfileFields().then(function(response){
       var userProfile = response;
@@ -162,7 +162,7 @@ if (formValid) {
              if(res){ //user email id already exits
               $scope.callAlertDailog('User already exists ');
              }else { // insert this user to db
-
+               $scope.password = password ;
                $ionicLoading.show();
                var today = new Date() ;
                var dateFormatted = today.getFullYear();
@@ -176,93 +176,52 @@ if (formValid) {
                           var resultData = res.data ;
                           var userId = resultData._id;
                           if (userId) {
-                            var girderToken = resultData.authToken['token'];
-                            $scope.girderToken = girderToken ;
-                            var folderName = 'user';
+                            var userVerified = "no";
+                            var consentResult = $rootScope.consentResult;
+                            var profileJsonString = JSON.stringify(dataCache) ;
+                            var docDefinition = "";
+                            if (consentResult) {
+                              docDefinition = JSON.stringify(consentResult.docDefinition);
+                            }
                             profileDataManager.getAppJSON().then(function(appJson){
-                                if (appJson) {
-                                  var appJson = JSON.stringify(appJson) ;
-                                  dataStoreManager.createUserFolderInServer(girderToken,resultData._id,folderName).then(function(folderInfo){
-                                     if (folderInfo.status==200) {
-                                       var folderDetails = folderInfo.data ;
-                                       var folderId = folderDetails._id ;
-                                       var consentResult = $rootScope.consentResult;
-                                       var profileJsonString = JSON.stringify(dataCache) ;
-                                       var docDefinition = JSON.stringify(consentResult.docDefinition);
-
-                                       profileDataManager.createNewUser(dataCache,$scope.emailId,userId,folderId).then(function(localUserId){
-                                          if (localUserId) {
-                                              surveyDataManager.addResultToDb(localUserId,consentResult.docDefinition,'consent').then(function(response){
-                                              $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
-                                              $rootScope.activeUser =  $scope.emailId ;
-
-                                              var createItems = [];
-                                              createItems.push(dataStoreManager.createItemForFolder(girderToken,folderId,"profile"));
-                                              createItems.push(dataStoreManager.createItemForFolder(girderToken,folderId,"consent"));
-                                              createItems.push(dataStoreManager.createItemForFolder(girderToken,folderId,"app"));
-                                              createItems.push(dataStoreManager.createItemForFolder(girderToken,folderId,"results"));
-                                              createItems.push(dataStoreManager.createItemForFolder(girderToken,folderId,"settings"));
-
-                                              $q.all(createItems).then(function(itemCreateInfo){
-                                                 var  addToSyncQueue = []; var addToLocalQueue = [];
-                                                 for (var i = 0; i < itemCreateInfo.length; i++) {
-                                                      if (itemCreateInfo[i].status==200) {
-                                                          var data = itemCreateInfo[i].data ;
-                                                          if (data) {
-                                                            var name = data.name ;
-                                                            var itemId = data._id ;
-                                                                switch (name) {
-                                                                    case "app":
-                                                                    addToSyncQueue.push(syncDataFactory.addToSyncQueue(girderToken,localUserId,name,"app_json",folderId,itemId));
-                                                                    addToLocalQueue.push(syncDataFactory.addTouserItemMappingTable(girderToken,localUserId,name,itemId)); // caceh item if locally
-                                                                    break;
-                                                                    case "consent":
-                                                                    addToSyncQueue.push(syncDataFactory.addToSyncQueue(girderToken,localUserId,"consent_json",docDefinition,folderId,itemId));
-                                                                    addToLocalQueue.push(syncDataFactory.addTouserItemMappingTable(girderToken,localUserId,name,itemId));
-                                                                    break;
-                                                                    case "profile":
-                                                                    addToSyncQueue.push(syncDataFactory.addToSyncQueue(girderToken,localUserId,"profile_json",profileJsonString,folderId,itemId));
-                                                                    addToLocalQueue.push(syncDataFactory.addTouserItemMappingTable(girderToken,localUserId,name,itemId));
-                                                                    break;
-                                                                  default:
-                                                                  addToLocalQueue.push(syncDataFactory.addTouserItemMappingTable(girderToken,localUserId,name,itemId));
-                                                                }
-                                                          }
-                                                      }
-                                                  }
-
-                                                  $q.all(addToSyncQueue).then(function(createLocalData){
-                                                    $q.all(addToLocalQueue).then(function(createLocalData){
-                                                      syncDataFactory.startSyncServiesTouploadData().then(function(res){
-                                                        $ionicLoading.hide();
-                                                        $scope.removeSignUpDiv();
-                                                        $scope.launchpinScreen();
-                                                       },function(error){
-                                                        $scope.callAlertDailog(error.statusText);
-                                                       });
-                                                     });
-                                                   },function(error){
-                                                        $scope.callAlertDailog(error.statusText);
-                                                   });
-                                               },function(error){
-                                                     $scope.callAlertDailog("couldn't able to create user items "+error.statusText);
-                                                });
-                                             });
-                                          }
-                                      });
+                            if (appJson) {
+                            var appJson = JSON.stringify(appJson) ;
+                            profileDataManager.createNewUser(dataCache,$scope.emailId,userId,"",userVerified).then(function(localUserId){
+                                if (localUserId) {
+                                  $scope.localUserId = localUserId ;
+                                  $rootScope.emailId =  $scope.emailId ; // save it to access in update profile
+                                  $rootScope.activeUser =  $scope.emailId ;
+                                  var folderId = ""; var itemId = "";
+                                  var  addToSyncQueue = [];
+                                  addToSyncQueue.push(syncDataFactory.addToSyncQueue("",localUserId,"app_json",appJson,folderId,itemId));
+                                  addToSyncQueue.push(syncDataFactory.addToSyncQueue("",localUserId,"consent_json",docDefinition,folderId,itemId));
+                                  addToSyncQueue.push(syncDataFactory.addToSyncQueue("",localUserId,"profile_json",profileJsonString,folderId,itemId));
+                                  $q.all(addToSyncQueue).then(function(createLocalData){
+                                    var consent = "";
+                                    if (consentResult) {
+                                      consent = consentResult.docDefinition ;
                                     }
-                                 },function(error){
-                                   if (!error.statusText) {
-                                      $scope.callAlertDailog("couldn't able to create user folder "+error.statusText);
-                                   }
+                                  surveyDataManager.addResultToDb(localUserId,consent,'consent').then(function(response){
+                                        $ionicLoading.hide();
+                                        $scope.removeSignUpDiv();
+                                        $scope.launchpinScreen();
+                                       });
                                   });
-                                }
+                                 }
                               });
-                          }
+                            }
+                          });
+                         }
                       }
                    },function(error){
                      if (!error.statusText) {
-                       $scope.callAlertDailog("couldn't able to create user "+error.statusText);
+                       if(window.Connection) {
+                          if(navigator.connection.type == Connection.NONE) {
+                           $scope.callAlertDailog("Please check your network connection.");
+                          }else {
+                           $scope.callAlertDailog("Failed to create the user.");
+                          }
+                       }
                      }
                  });
              }
@@ -276,7 +235,6 @@ if (formValid) {
          dataCache = [];
        }
   }
-
 
 $scope.callAlertDailog =  function (message){
          document.activeElement.blur(); // remove the keypad
@@ -293,11 +251,12 @@ $scope.skipSignUp = function(){
       });
     }
 
-    $scope.launchpinScreen = function(){
+$scope.launchpinScreen = function(){
       $ionicHistory.clearCache().then(function(){
         $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
           scope: $scope,
           animation: 'slide-in-up',
+          hardwareBackButtonClose: false,
         }).then(function(modal) {
           $scope.modal = modal;
           $scope.modal.show();
@@ -357,7 +316,7 @@ $scope.removeSignUpDiv = function(){
             //check is both are equal
             if($scope.passcode == confirm_passcode){
                 var email = $scope.emailId ;
-                var girderToken = $scope.girderToken;
+                var girderToken = "";
                 if (email) {
                   profileDataManager.getUserIDByEmail(email).then(function(res){
                          profileDataManager.addPasscodeToUserID(res,$scope.passcode,email,girderToken).then(function(res){
@@ -391,36 +350,91 @@ $scope.removeSignUpDiv = function(){
     }
 
 
+
+//=================== verify user later ======
+$scope.verifyLater = function(){
+
+  $ionicModal.fromTemplateUrl('templates/locationservice.html', {
+    scope: $scope,
+    animation: 'slide-in-up',
+    hardwareBackButtonClose: false
+   }).then(function(modal) {
+     $scope.modal.remove();
+     $scope.modal = modal;
+     $scope.modal.show();
+     $scope.accelerationLabel='Allow';
+     $scope.microPhoneLabel = 'Allow';
+     $scope.geoLabel = 'Allow';
+     $scope.allowGeoLocation();
+     $scope.allowAccelerometer();
+     $scope.Disable = false;
+   });
+}
+
+
 //========================All set go to next screen ===========================
     $scope.openVerification = function() {
       $ionicModal.fromTemplateUrl('templates/verification.html', {
         scope: $scope,
-        animation: 'slide-in-up'
+        animation: 'slide-in-up',
+        hardwareBackButtonClose: false
        }).then(function(modal) {
         $scope.modal.remove();
         $scope.modal = modal;
         $scope.modal.show();
        });
      };
-     $scope.openPermisssions = function() {
-      $ionicModal.fromTemplateUrl('templates/locationservice.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      }).then(function(modal) {
-        $scope.modal.remove();
-        $scope.modal = modal;
-        $scope.modal.show();
-        $scope.accelerationLabel='Allow';
-        $scope.microPhoneLabel = 'Allow';
-        $scope.geoLabel = 'Allow';
-         $scope.allowGeoLocation();
-           $scope.allowAccelerometer();
-          $scope.Disable = false;
 
+$scope.openPermisssions = function() {
+       var email = $scope.emailId ;
+       var password = $scope.password ;
+       if (email && password && !$scope.userSyncStatus) {
+         var beforeEncode = email.trim()+':'+password.trim();
+         var encoded = 'Basic '+ $base64.encode(unescape(encodeURIComponent(beforeEncode)));
+         $ionicLoading.show();
+         syncDataFactory.verifyUserToFetchToken(encoded).then(function(res){
+             $ionicLoading.hide();
+             if (res.status == 200 || !res.data) {
+               $scope.userSyncStatus = true ;
+               $scope.startSyncServices();
+             }else {
+               $scope.failureMessage(res.data.message);
+             }
+         },function(error){
+            $scope.failureMessage(error.statusText);
+         });
+
+      }else if ($scope.userSyncStatus) {
+          $scope.verifyLater();
+      }
+};
+
+$scope.startSyncServices = function(){
+  // start sync services to upload the data
+  syncDataFactory.checkDataAvailableToSync().then(function(res){
+       if (res.length > 0 ) {
+          syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+            $ionicLoading.hide();
+            $scope.verifyLater();
+          },function(error){
+             $scope.failureMessage(error.statusText);
+          });
+       }else {
+         $scope.verifyLater();
+         $ionicLoading.hide();
+       }
+     });
+}
+
+$scope.failureMessage = function(message){
+      $ionicLoading.hide();
+      $ionicPopup.alert({
+       title: "Error",
+       template: message
       });
-    };
+}
 
-      $scope.allowGeoLocation = function(){
+$scope.allowGeoLocation = function(){
 
           $scope.Disable = true;
             console.log($scope.Disable);
@@ -450,13 +464,10 @@ $scope.removeSignUpDiv = function(){
 
       $scope.allowAccelerometer = function(){
 
-        //  var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
-        //  function accelerometerSuccess(acceleration) {
-        //     $scope.accelerationLabel = 'Granted';
-        //  };
-        //  function accelerometerError() {
-        //     $scope.accelerationLabel = 'Allow';
-        //  };
+        $scope.options = {
+      		frequency: 20, // Measure every 100ms
+              deviation : 25  // We'll use deviation to determine the shake event, best values in the range between 25 and 30
+      	};
         $scope.watch = $cordovaDeviceMotion.watchAcceleration($scope.options);
         // Device motion initilaization
         $scope.watch.then(null, function(error) {
@@ -481,7 +492,8 @@ $scope.removeSignUpDiv = function(){
       $scope.allDone = function() {
         $ionicModal.fromTemplateUrl('templates/alldone.html', {
           scope: $scope,
-          animation: 'slide-in-up'
+          animation: 'slide-in-up',
+          hardwareBackButtonClose: false,
         }).then(function(modal) {
           $scope.modal.remove();
           $scope.modal = modal;

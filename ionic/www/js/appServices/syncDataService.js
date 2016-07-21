@@ -1,5 +1,5 @@
 angular.module('syncDataService', [])
-.factory('syncDataFactory', function($http,$cordovaSQLite,$q,databaseManager,base_url,dataStoreManager,$ionicPopup,$ionicLoading) {
+.factory('syncDataFactory', function($http,$cordovaSQLite,$q,profileDataManager,databaseManager,base_url,dataStoreManager,$ionicPopup,$ionicLoading) {
   return {
     //====================================Read =======================
     addToSyncQueue : function (girderToken,userId,syncItem,syncData,folderId,itemId){
@@ -14,10 +14,23 @@ angular.module('syncDataService', [])
         deferred.resolve(syncData);
         return deferred.promise;
       },
+      updateToSyncQueue :  function(token,localUserId,syncItem,folderId,itemId){
+        var deferred = $q.defer();
+        var db = databaseManager.getConnectionObject();
+        var dateTime = new Date().toLocaleString() ;
+        var query = "UPDATE SyncData SET globalId ='"+token+"',folderId='"+folderId+"' , itemId='"+itemId+"' WHERE userId="+localUserId+" AND syncItem='"+syncItem+"'  ";
+        var syncData = $cordovaSQLite.execute(db, query)
+                         .then(function(res) {
+                             return res ;
+                          }, function (err) {
+                       });
+       deferred.resolve(syncData);
+       return deferred.promise;
+      },
      addTouserItemMappingTable  : function (girderToken,localUserId,syncItemName,itemId){
           var deferred = $q.defer();
           var db = databaseManager.getConnectionObject();
-        
+
           var dateTime = new Date().toLocaleString() ;
           var syncData = $cordovaSQLite.execute(db, 'INSERT INTO userItemMappingTable (globalId, localUserId,syncItemName,syncItemId,creationDateTime) VALUES (?,?,?,?,?)', [girderToken,localUserId,syncItemName,itemId,dateTime])
                            .then(function(res) {
@@ -66,7 +79,28 @@ angular.module('syncDataService', [])
                      });
         return deferred.promise;
       },
-
+        removeUserCacheServerResults : function (userId){
+          var deferred = $q.defer();
+          var db = databaseManager.getConnectionObject();
+          var query = "DELETE FROM resultsToDisplay WHERE userId = ? " ;
+          var deleteData = $cordovaSQLite.execute(db, query , [userId])
+                           .then(function(res) {
+                            deferred.resolve(res);
+                           }, function (err) {
+                       });
+          return deferred.promise;
+        },
+        removeUserCacheItemIds : function (userId){
+          var deferred = $q.defer();
+          var db = databaseManager.getConnectionObject();
+          var query = "DELETE FROM userItemMappingTable WHERE localUserId = ? " ;
+          var deleteData = $cordovaSQLite.execute(db, query , [userId])
+                           .then(function(res) {
+                            deferred.resolve(res);
+                           }, function (err) {
+                       });
+          return deferred.promise;
+        },
       createItemForFolder : function (girderToken,folderId,itemName){
                 var deferred = $q.defer();
                  var URL = base_url+'item?folderId='+folderId+'&name='+itemName ;
@@ -153,13 +187,21 @@ angular.module('syncDataService', [])
                         });
           return deferred.promise;
         },
-
-        startSyncServiesTouploadData : function (){
+        checkDataAvailableToSync : function(){
+          var deferred = $q.defer();
+          var db = databaseManager.getConnectionObject();
+          var query = "SELECT * FROM SyncData WHERE globalId != '' AND folderId != '' AND itemId != '' ";
+          var syncData =  $cordovaSQLite.execute(db, query).then(function(res) {
+                   var  res = res.rows ;
+                   deferred.resolve(res);
+                 },function(error){
+                   deferred.resolve(error);
+               });
+         return deferred.promise;
+        },
+        startSyncServiesTouploadData : function (res){
              var deferred = $q.defer();
              var db = databaseManager.getConnectionObject();
-             var query = "SELECT * FROM SyncData ";
-             var syncData =  $cordovaSQLite.execute(db, query).then(function(res) {
-                      var  res = res.rows ;
                       if(res.length > 0 ){
                       var fileItemPromise = [];
                       for (var k = 0; k < res.length; k++) {
@@ -181,11 +223,13 @@ angular.module('syncDataService', [])
                           var fileCreateId = fileCreateDetails._id ;
                           var parentId  = fileCreateDetails.parentId ;
                           var itemName = fileCreateDetails.name ;
+                          var girderToken = fileItemPromiseInfo[i].config.headers["girder-token"];
                             for (var j = 0; j < res.length; j++) {
                                      var syncItemName = res.item(j).syncItem ;
                                      var itemId =  res.item(j).itemId ;
                                      if (syncItemName.toLocaleLowerCase() == itemName.toLocaleLowerCase() && itemId == parentId ) {
-                                       var syncData = res.item(j).syncData
+                                       var syncData = res.item(j).syncData;
+                                      //   var girderToken = res.item(j).globalId ;
                                        var dataString = LZString.compressToEncodedURIComponent(syncData);
                                        uploadChunk.push(dataStoreManager.uploadAudioFileChunk(girderToken,fileCreateId,dataString));
                                      }
@@ -218,13 +262,172 @@ angular.module('syncDataService', [])
                     }else {
                       deferred.resolve(res);
                     }
-
-                   }, function (error) {
-                     deferred.resolve(error);
-                   });
             return deferred.promise;
-          }
-     }
+          },
+       startSyncServiesToFetchResults  : function(){
+               var deferred = $q.defer();
+               var getResultItems = [];
+               var girderTokens = [];
+               profileDataManager.getUserList().then(function(response){
+                 for (var i = 0; i < response.length; i++) {
+                   var folderId = response.item(i).folderId ;
+                   var emailID = response.item(i).emailId;
+                   var token = response.item(i).token ;
+                   getResultItems.push(dataStoreManager.getItemListByFolderId(folderId,token));
+                 }
+                 $q.all(getResultItems).then(function(itemSetList){
+                        var downloadableItems = [];
+                        for (var k = 0; k < itemSetList.length; k++) {
+                            if (itemSetList[k].status == "200") {
+                              var itemList = itemSetList[k].data ;
+                              var girderToken = itemSetList[k].config.headers["girder-token"] ;
+                                for (var j = 0; j < itemList.length; j++) {
+                                  var itemName = itemList[j].name;
+                                  var item_id =  itemList[j]._id;
+                                  var folderId = itemList[j].folderId ;
+                                      if (itemName == 'results') {
+                                         downloadableItems.push(dataStoreManager.downloadFilesListForItem(item_id,girderToken));
+                                       }
+                                  }
+                             }
+                        }
+
+                        $q.all(downloadableItems).then(function(filesToDownload){
+                             var itemsToDownload = [];
+                             for (var d = 0; d < filesToDownload.length; d++) {
+                                 if (filesToDownload[d].status == "200") {
+                                 var data = filesToDownload[d].data;
+                                 var girderToken = filesToDownload[d].config.headers["girder-token"] ;
+                                 var file_id = data[d]._id;
+                                 var createdDate =  data[d].created;
+                                 // var updated =  data[0].updated;
+                                 itemsToDownload.push(dataStoreManager.downloadFileById(file_id,girderToken));
+                                 }
+                            }
+
+                          $q.all(itemsToDownload).then(function(dataDownloaded){
+                                 var liveResults = []; var deleteResults =  [];
+                                 for (var h = 0; h < dataDownloaded.length; h++) {
+                                   if (dataDownloaded[h].status == "200") {
+                                        var data = JSON.stringify(dataDownloaded[h].data);
+                                        var token = dataDownloaded[h].config.headers["girder-token"] ;
+                                        deleteResults.push(dataStoreManager.deleteResultsLocally(token));
+                                        liveResults.push(dataStoreManager.addResultsLocally(data,token));
+                                    }
+                                 }
+
+                               $q.all(deleteResults).then(function(deleteData){
+                                     $q.all(liveResults).then(function(add){
+                                       deferred.resolve(add);
+                                     });
+                                 });
+                             }, function (error) {
+                               deferred.resolve(error);
+                             });
+                         }, function (error) {
+                           deferred.resolve(error);
+                         });
+                     }, function (error) {
+                       deferred.resolve(error);
+                     });
+                 }, function (error) {
+                   deferred.resolve(error);
+                 });
+              return deferred.promise;
+           },
+        verifyUserToFetchToken : function(encoded){
+             var deferred = $q.defer();
+            dataStoreManager.signInGlobalUser(encoded).then(function(res){
+                 if (res.data) {
+                     var resultData = res.data ;
+                     var token = resultData.authToken['token'] ;
+                     var parentId = resultData.user['_id'];
+                     var email = resultData.user['email'];
+                     if (token &&email) {
+                     profileDataManager.getUserIDByEmail(email).then(function (localUserId){
+                      var folderName = 'user';
+                      dataStoreManager.createUserFolderInServer(token,parentId,folderName).then(function(folderInfo){
+                        if (folderInfo.data) {
+                           var folderDetails = folderInfo.data ;
+                           var folderId = folderDetails._id ;
+                           var createItems = [];
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"profile"));
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"consent"));
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"app"));
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"response"));
+                           createItems.push(dataStoreManager.createItemForFolder(token,folderId,"settings"));
+
+                           $q.all(createItems).then(function(itemCreateInfo){
+                               var addToLocalQueue = [];
+                               var updateMappingTable = [];
+                               var updateItemIdForResultsList = [];
+                               for (var i = 0; i < itemCreateInfo.length; i++) {
+                                    if (itemCreateInfo[i].status==200) {
+                                        var data = itemCreateInfo[i].data ;
+                                        if (data) {
+                                          var name = data.name ;
+                                          var itemId = data._id ;
+                                          addToLocalQueue.push(profileDataManager.addTouserItemMappingTable(token,localUserId,name,itemId));
+                                            //update SyncData table with itemId folderID and girderToken
+                                            switch (name) {
+                                                case "app":
+                                                updateMappingTable.push(profileDataManager.updateToSyncQueue(token,localUserId,"app_json",folderId,itemId));
+                                                break;
+                                                case "consent":
+                                                updateMappingTable.push(profileDataManager.updateToSyncQueue(token,localUserId,"consent_json",folderId,itemId));
+                                                break;
+                                                case "profile":
+                                                updateMappingTable.push(profileDataManager.updateToSyncQueue(token,localUserId,"profile_json",folderId,itemId));
+                                                break;
+                                                case "response":
+                                                updateItemIdForResultsList.push(profileDataManager.updateToSyncQueueForResultsList(token,localUserId,folderId,itemId));
+                                                break;
+                                              default:
+                                            }
+                                        }
+                                    }
+                               }
+
+                               $q.all(addToLocalQueue).then(function(createLocalData){
+                               $q.all(updateMappingTable).then(function(updateLocalData){
+                               $q.all(updateItemIdForResultsList).then(function(updateLocalResultsItemId){
+                                 },function(error){
+                                      deferred.resolve(error);
+                                 });
+
+                                   profileDataManager.updateFolderIdToUserID(localUserId,folderId,"yes").then(function(updateId){
+                                      profileDataManager.updateUserAuthToken(email.trim(),token).then(function(updateId){
+                                         deferred.resolve(updateId);
+                                      },function(error){
+                                           deferred.resolve(error);
+                                      });
+                                    },function(error){
+                                         deferred.resolve(error);
+                                    });
+                                  },function(error){
+                                       deferred.resolve(error);
+                                  });
+                                },function(error){
+                                     deferred.resolve(error);
+                                });
+                             },function(error){
+                                  deferred.resolve(error);
+                             });
+                           }
+                         },function(error){
+                              deferred.resolve(error);
+                         });
+                       },function(error){
+                            deferred.resolve(error);
+                       });
+                     }
+                  }
+              },function(error){
+                   deferred.resolve(error);
+              });
+            return deferred.promise;
+         }
+      }
 })
 
 .service('syncDataService', function($http,$q) {

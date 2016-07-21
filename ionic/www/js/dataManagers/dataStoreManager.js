@@ -43,8 +43,6 @@ angular.module('dataStoreManager', [])
          return deferred.promise;
        },
 
-
-
      signInGlobalUser :  function(headerData){
       var deferred = $q.defer();
       var URL = base_url+'user/authentication';
@@ -260,13 +258,8 @@ angular.module('dataStoreManager', [])
                                  return res;
                                  })
                        .error(function(error) {
-                                 $ionicLoading.hide();
-                                 if (error) {
-                                   $ionicPopup.alert({
-                                   title: 'Error',
-                                   template: error.message
-                                   });
-                                 }
+                              $ionicLoading.hide();
+                              return error ;
                            });
           deferred.resolve(createFolder);
           return deferred.promise;
@@ -288,12 +281,7 @@ angular.module('dataStoreManager', [])
                                  })
                        .error(function(error) {
                                  $ionicLoading.hide();
-                                 if (error) {
-                                   $ionicPopup.alert({
-                                   title: 'Error',
-                                   template: error.message
-                                   });
-                                 }
+                                 return error ;
                            });
           deferred.resolve(createFolder);
           return deferred.promise;
@@ -331,10 +319,38 @@ angular.module('dataStoreManager', [])
                          return res;
                         }, function (err) {
                     });
-    //   return deferred.promise;
+       deferred.resolve(deleteData);
+       return deferred.promise;
+     },
+
+     addResultsLocally: function(data,token){
+       var deferred = $q.defer();
+       var localDate = new Date();
+       var db = databaseManager.getConnectionObject();
+       var query = "INSERT INTO resultsToDisplay (authToken, resultData,creationDateTime) VALUES (?,?,?)" ;
+       var insert = $cordovaSQLite.execute(db, query , [token,data,localDate])
+                        .then(function(res) {
+                         return res;
+                        }, function (err) {
+                          return err ;
+                    });
+       deferred.resolve(insert);
+       return deferred.promise;
+     },
+     deleteResultsLocally :  function(token){
+       var deferred = $q.defer();
+       var db = databaseManager.getConnectionObject();
+       var query = "DELETE FROM resultsToDisplay WHERE authToken = ?" ;
+       var deleteData = $cordovaSQLite.execute(db, query , [token])
+                        .then(function(res) {
+                         return res;
+                        }, function (err) {
+                          return err ;
+                    });
        deferred.resolve(deleteData);
        return deferred.promise;
      }
+
   }
 })
 

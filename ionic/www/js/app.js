@@ -8,7 +8,7 @@
 angular.module('starter', ['ionic', 'starter.controllers','userService','signInCtrl','surveyCtrl','databaseManager','surveyDataManager','eligiblityDataManager',
 'profileDataManager','consentDataManager','dataStoreManager','homeCtrl','dashboard','eligibility','signUp','consent',
 'updateProfileCtrl','customDirectives','ionicResearchKit','syncDataService', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova','chart.js','flexcalendar','pascalprecht.translate'])
-.run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state,syncDataFactory,$ionicLoading,$ionicPopup) {
+.run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state,profileDataManager,$ionicLoading,$ionicPopup) {
   $ionicPlatform.ready(function() {
 
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -19,6 +19,80 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+
+    document.addEventListener("resume", function() {
+      if ($rootScope.emailId) {
+         if ($rootScope.pinDalog) {
+             $rootScope.pinDalog.close();
+         }
+         $rootScope.promptToPinScreen($rootScope.emailId);
+       }
+      }, false);
+
+    $rootScope.promptToPinScreen = function (email) {
+      $rootScope.pinDalog =   $ionicPopup.show({
+        template: '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >',
+        title: 'Enter Passcode',
+        subTitle: email,
+        scope: $rootScope,
+        buttons: [
+                   { text: 'Switch User',  onTap: function(e) {
+                     if ($rootScope.modal) {
+                       $rootScope.modal.remove();
+                     }
+                     if ($rootScope.permission) {
+                       $rootScope.permission.remove();
+                     }
+                     if ($rootScope.passcodeModal) {
+                       $rootScope.passcodeModal.remove();
+                     }
+                     if ($rootScope.popupAny) {
+                        $rootScope.popupAny.close();
+                        $rootScope.AllowedToDisplayNextPopUp = false ;
+                     }
+                     if ($rootScope.alertDialog) {
+                        $rootScope.alertDialog.close();
+                     }
+                     $ionicHistory.clearCache().then(function(){
+                        $rootScope.emailId = null;
+                        $state.transitionTo('home');
+                     });
+                   }
+               },
+             {
+            text: '<b>Done</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              var password = angular.element(document.querySelector('#passcodepin')).prop('value') ;
+               if (password.length != 0) {
+                   $ionicLoading.show();
+                   $rootScope.loginViaPasscodeForPin(email.trim(),password.trim());
+                }else{
+                e.preventDefault();
+                }
+              }
+            }
+          ]
+        });
+
+      }
+
+    $rootScope.loginViaPasscodeForPin = function (email,passcode) {
+        profileDataManager.logInViaPasscode(email,passcode).then(function(res){
+                     if (res) {
+                      $ionicLoading.hide();
+                     }else {
+                       $ionicLoading.hide();
+                       $ionicPopup.alert({
+                        title: 'Error',
+                        template: "Invalid User"
+                      }).then(function(){
+                         $rootScope.promptToPinScreen($rootScope.emailId);
+                       });
+                     }
+                  });
+      }
 
   });
 
@@ -153,13 +227,13 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     }
   });
 
-  // if none of the above states are matched, use this as the fallback
-  // $urlRouterProvider.otherwise('/tab/Activities');
-  $urlRouterProvider.otherwise('home');
+   // if none of the above states are matched, use this as the fallback
+   $urlRouterProvider.otherwise('home');
+   //$urlRouterProvider.otherwise('home');
 })
 
-.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
-//.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
+//.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
+.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
 
 
 

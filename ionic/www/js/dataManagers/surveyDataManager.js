@@ -296,7 +296,25 @@ getQuestionExpiry : function  (questionId){
                       }, function (err) {
                   });
      return deferred.promise;
-   }
+   },
+  getResults : function(emailId){
+   var deferred = $q.defer();
+   var db = databaseManager.getConnectionObject();
+   var query = "SELECT a.resultData from resultsToDisplay a, Session b  WHERE b.emailId = '"+emailId+"' AND a.authToken = b.token";
+   $cordovaSQLite.execute(db, query)
+                     .then(function(res){
+                       var len = res.rows.length;
+                       var resultsData = "";
+                       for(var i=0;i<len;i++)
+                       {
+                        resultsData = res.rows.item(i);
+                       }
+                       deferred.resolve(resultsData);
+                    }, function (err) {
+                      deferred.resolve(err);
+                 });
+   return deferred.promise;
+ }
 
   }
 });

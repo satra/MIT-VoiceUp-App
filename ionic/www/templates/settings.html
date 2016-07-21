@@ -9,16 +9,9 @@
 <ion-content>
   <div class="list">
 
-        <li class="item item-toggle IRK-FONT2 ">
-        Leave Study
-             <label class="toggle toggle "  >
-                 <input type="checkbox"  type="submit" ng-model="logout" ng-change="logOut()" >
-                 <div class="track">
-                     <div class="handle"></div>
-                 </div>
-             </label>
-         </li>
-        <li class="item item-toggle IRK-FONT2 ">
+        <a href="javascript:void(0)"  ng-click="logOut()" class="item IRK-FONT4 inlineht" >Leave Study</a>
+
+        <li class="item item-toggle IRK-FONT4 inlineht ">
               Pause Study
              <label class="toggle toggle "  >
                  <input type="checkbox"  type="submit" >
@@ -27,18 +20,9 @@
                  </div>
              </label>
          </li>
-    <li class="item item-toggle IRK-FONT2 ">
-         Notifications
-         <label class="toggle toggle "  >
-             <input type="checkbox" ng-model="notification" ng-change="toggleNotification()" type="submit" >
-             <div class="track">
-                 <div class="handle"></div>
-             </div>
-         </label>
-     </li>
 
-     <li class="item item-toggle IRK-FONT2">
-         Daily Push Notification
+     <li class="item item-toggle IRK-FONT4 inlineht">
+         Daily Notification
          <label class="toggle toggle" >
              <input type="checkbox" ng-model="daily" ng-change="toggleDailyNotification()" type="submit">
              <div class="track">
@@ -47,29 +31,21 @@
          </label>
      </li>
 
-     <li class="item item-toggle IRK-FONT2">
-         weekly Push Notification
-         <label class="toggle toggle">
-             <input type="checkbox" ng-model="week" ng-change="toggleBiweekNotification()" type="submit">
-             <div class="track">
-                 <div class="handle"></div>
-             </div>
-         </label>
-     </li>
-
    <!--call the function in ng-click next to anchor tag-->
-     <a href="javascript:void(0)"  ng-click="emailConsent()" class="item IRK-FONT2" >{{emailOrDownloadConsentLabel}}</a>
+     <a href="javascript:void(0)"  ng-click="emailConsent()" class="item IRK-FONT4 inlineht" ng-hide="hideDownloadButton" >{{emailOrDownloadConsentLabel}}</a>
 
-     <a href="javascript:void(0)" ng-click="viewPermissions()" class="item item-icon-right IRK-FONT2">  View Permissions
-     <div class="icon font-settings" > <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
+     <a href="javascript:void(0)" ng-click="viewPermissions()" class="item item-icon-right IRK-FONT4 inlineht">  View Permissions
+     <div class="icon font-settings" > <i class="icon icon ion-ios-arrow-right icon  IRK-FONT1"></i></div>
 
-      <a href="javascript:void(0)" ng-click="viewCopyrightInfo()" class="item item-icon-right IRK-FONT2" > Copyrights Information
-         <div class="icon font-settings"> <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
+      <a href="javascript:void(0)" ng-click="viewCopyrightInfo()" class="item item-icon-right IRK-FONT4 inlineht" > Copyrights Information
+         <div class="icon font-settings"> <i class="icon icon ion-ios-arrow-right icon IRK-FONT1"></i></div>
 
-     <a href="javascript:void(0)" ng-click="changePasscode()" class="item item-icon-right IRK-FONT2">  Change Passcode
-     <div class="icon font-settings" > <i class="icon ion-chevron-right icon IRK-FONT1"></i></div>
-
-     <a href="javascript:void(0)" ng-click="switchUser()" class="item item-icon-right IRK-FONT2">  Logout
+    <a href="javascript:void(0)" ng-click="changePasscode()" class="item item-icon-right IRK-FONT4 inlineht">  Change Passcode
+    <div class="icon font-settings" > <i class="icon icon ion-ios-arrow-right icon IRK-FONT1"></i></div>
+    <!-- <a href="javascript:void(0)" ng-click="verifyUser()" class="item item-icon-right IRK-FONT2 buttonRed" ng-hide="showVerifyButton">  Verify
+    <a href="javascript:void(0)" ng-click="switchUser()" class="item item-icon-right IRK-FONT2 buttonRed" >  Logout -->
+    <a type="button" ng-click="verifyUser()" class=" buttonRed marB2p irk-centered marT5p" ng-hide="hideVerifyButton">Verify</a>
+      <a type="button" ng-click="switchUser()"class=" buttonRed marB2p marT5p irk-centered" >Logout</a>
 
 
   </ion-content>
