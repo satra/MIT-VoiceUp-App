@@ -50,7 +50,7 @@ angular.module('updateProfileCtrl',[])
     var emailId = $rootScope.emailId.trim() ;
       if (emailId) {
       $rootScope.popupAny = $ionicPopup.show({
-          template: '<input style="text-align: center" type="password" id="password_recover" placeholder="password" >',
+          template: '<input style="text-align: center" type="password" id="password_recover" >',
           title: 'Enter Password',
           subTitle: 'Please enter your account password',
           scope: $scope,
