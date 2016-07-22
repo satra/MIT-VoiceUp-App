@@ -59,7 +59,7 @@ angular.module('signUp',[])
                 formValid = false;
                 keepGoing = false;
                 //clear the array
-                $scope.callAlertDailog('Please enter your '+lableId);
+                $scope.callAlertDailog('Please enter your '+text);
               }else {
                 obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                 dataCache.push(obj);
@@ -69,7 +69,7 @@ angular.module('signUp',[])
        case 'lastname':
                if(value ==''){
                    formValid = false ; keepGoing = false;
-                   $scope.callAlertDailog('Please enter your '+lableId);
+                   $scope.callAlertDailog('Please enter your '+text);
                }else {
                  obj = {"id": lableId,  "placeholder": placeholder,"text":text,"type": type,"value":value};
                  dataCache.push(obj);
@@ -79,7 +79,7 @@ angular.module('signUp',[])
        case 'email':
                if(value ==''){
                    formValid = false ; keepGoing = false;
-                   $scope.callAlertDailog('Please enter your '+lableId);
+                   $scope.callAlertDailog('Please enter your '+text);
                }else {
                  //is email valid
                  if(inputValue.hasClass('ng-invalid-email') || inputValue.hasClass('ng-invalid')){
@@ -97,7 +97,7 @@ angular.module('signUp',[])
              password = value ;
                if(password ==''){
                    formValid = false ; keepGoing = false;
-                   $scope.callAlertDailog('Please enter your '+lableId);
+                   $scope.callAlertDailog('Please enter your '+text);
                }else {
                      if(password.length < 6){
                        formValid = false ; keepGoing = false;
@@ -111,7 +111,7 @@ angular.module('signUp',[])
                password_confirm = value ;
                if(password_confirm ==''){
                    formValid = false ; keepGoing = false;
-                   $scope.callAlertDailog('Please enter your '+lableId);
+                   $scope.callAlertDailog('Please enter your '+text);
                }else {
                  if(password_confirm.length < 6){
                    formValid = false ; keepGoing = false;
