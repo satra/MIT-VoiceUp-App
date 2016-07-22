@@ -9,6 +9,10 @@ angular.module('dashboard', [])
   // calender
 .controller("dashboardCtrl", function($scope,$ionicHistory,$ionicPopup,$state,$ionicLoading,syncDataFactory,$rootScope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
 
+  $scope.one = false;
+  $scope.two = false;
+  $scope.three = false;
+  $scope.four = false;
 
 	// == take user to home screeen
   $scope.switchUser = function (){
@@ -67,6 +71,7 @@ surveyDataManager.getResults(emailId.trim()).then(function(res){
        dataArray.push(datad.data[j]);
       }
   	 $scope.series = datad.series ;
+       $scope.one = true;
    	 $scope.data = dataArray;
   }
 
@@ -80,6 +85,7 @@ surveyDataManager.getResults(emailId.trim()).then(function(res){
 		// console.log(datad);
 		 $scope.series1 = datad.series ;
 	 }
+     $scope.two = true;
 	 $scope.data1 = dataArray;
 
 
@@ -91,6 +97,7 @@ surveyDataManager.getResults(emailId.trim()).then(function(res){
      dataArray.push(datad.data);
      $scope.series2 = datad.series ;
    }
+    $scope.three = true;
    $scope.data2 = dataArray;
      //graph4
 
@@ -105,6 +112,7 @@ var dataArray= new Array();
    dataArray.push(datad.data[k]);
    }
    $scope.series3 = datad.series ;
+    $scope.four = true;
    $scope.data3 = dataArray;
  }
 
