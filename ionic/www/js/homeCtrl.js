@@ -223,28 +223,6 @@ $scope.sendConsentDoc = function (){
       $scope.transition('signIn');
   };
 
-  /*
-  //get IP like email ids
-   profileDataManager.getEmailList().then(function(response){
-     var griderArray = new Array() ;
-     for (var i = 0; i < response.length; i++) {
-       griderArray.push({'emailId':response.item(i).emailId});
-     }
-     $scope.emails = griderArray;
-  });
-
-  $ionicModal.fromTemplateUrl('templates/signin-choose-email.html', {
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.modal = modal;
-    $scope.modal.show();
-    $scope.setPasscodeFocus = true ;
-    $scope.hidePasscodeDiv = true ;
-    $scope.hideImageDiv = false ;
-  });
-
-  */
 
 //from Sign in screen to  eligiblityTest
   $scope.showEligibilityTestView = function() {
