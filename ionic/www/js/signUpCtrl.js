@@ -158,10 +158,10 @@ if (formValid) {
           $scope.emailId = emailId ;
           //clear the sign up form
           $scope.clearSignUpDiv();
-          profileDataManager.checkUserExistsByEmail(emailId).then(function(res){
-             if(res){ //user email id already exits
-              $scope.callAlertDailog('User already exists ');
-             }else { // insert this user to db
+             //  profileDataManager.checkUserExistsByEmail(emailId).then(function(res){
+             //if(res){ //user email id already exits
+            //  $scope.callAlertDailog('User already exists ');
+             //}else { // insert this user to db
                $scope.password = password ;
                $ionicLoading.show();
                var today = new Date() ;
@@ -224,8 +224,8 @@ if (formValid) {
                        }
                      }
                  });
-             }
-          });
+            // }
+        //  });
         }else {
           formValid = false ; keepGoing = false;
           $scope.callAlertDailog('Password should match with confirm password');
