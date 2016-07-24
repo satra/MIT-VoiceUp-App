@@ -132,7 +132,7 @@ surveyDataManager.getSurveyListForToday().then(function(response){
                         var questionId  = row.questionId ;
                         surveyDataManager.getQuestionExpiry(questionId).then(function(limitExists){
                              if (limitExists) {
-                                   expiryDays = today.getDate() + 2 ;
+                                   expiryDays = today.getDate() + parseInt(limitExists.split("-")[0]) ;
                                    var expiryDate = expiryDays +'-'+(today.getMonth()+1)+'-'+today.getFullYear() ;
                                    surveyDataManager.addThisSurveyToExpiry($scope.userId,row.surveyId,row.questionId,creationDate,expiryDate,row.skippable)
                                    .then(function(resp){
