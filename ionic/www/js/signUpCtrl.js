@@ -362,10 +362,21 @@ $scope.verifyLater = function(){
      $scope.modal.remove();
      $scope.modal = modal;
      $scope.modal.show();
-     $scope.accelerationLabel='Allow';
+    //  $scope.accelerationLabel='Allow';
      $scope.microPhoneLabel = 'Allow';
-     $scope.geoLabel = 'Allow';
-     $scope.allowGeoLocation();
+    //  $scope.geoLabel = 'Allow';
+
+
+     console.log($scope.geoloc);
+     if(window.localStorage.getItem('Geo') == 'YES')
+     {
+       $scope.geoLabel='Granted'
+        console.log($scope.geoLabel);
+     }else {
+       $scope.geoLabel = 'Allow'
+       console.log($scope.geoLabel);
+     }
+
      $scope.allowAccelerometer();
      $scope.Disable = false;
    });
@@ -437,30 +448,37 @@ $scope.failureMessage = function(message){
 $scope.allowGeoLocation = function(){
 
           $scope.Disable = true;
-            console.log($scope.Disable);
+            console.log($scope.allowGeoLocation);
         // cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
         // $scope.geoLabel = 'Granted';
         // }, function(error){
         // $scope.geoLabel = 'Allow';
         // });
         var posOptions = {timeout: 10000, enableHighAccuracy: false};
+        console.log(posOptions);
 
            $cordovaGeolocation
            .getCurrentPosition(posOptions)
 
            .then(function (position) {
+             if(position){
+            window.localStorage.setItem('Geo', 'YES');
+             }
 
               var lat  = position.coords.latitude
               var long = position.coords.longitude
               $scope.geoLabel = 'Granted';
               console.log(lat + '   ' + long)
-           }, function(err) {
+           },function(err) {
+               window.localStorage.setItem('Geo','NO');
                     $scope.geoLabel = 'Allow';
                     $scope.Disable = false;
+
                   console.log($scope.Disable);
               console.log(err);
       });
     };
+
 
       $scope.allowAccelerometer = function(){
 

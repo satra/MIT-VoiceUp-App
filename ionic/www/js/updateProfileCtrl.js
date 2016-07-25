@@ -442,13 +442,57 @@ $scope.viewPermissions = function(){
            var iEl = angular.element( document.querySelector( '#btn1' ) );
                   iEl.remove();
 
-               var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
-              function onSuccess(position) {
-                    $scope.geoLabel = 'Granted';
-               };
-               function onError(error) {
+              //  var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
+              // function onSuccess(position) {
+              //       $scope.geoLabel = 'Granted';
+              //  };
+              //  function onError(error) {
+              //
+              // };
+              $scope.geoloc = window.localStorage.getItem('Geo');
+                    console.log($scope.geoloc);
+                    if(window.localStorage.getItem('Geo') == 'YES')
+                    {
+                      $scope.geoLabel='Granted'
+                       console.log($scope.geoLabel);
+                    }else {
+                      $scope.geoLabel = 'Allow'
+                      console.log($scope.geoLabel);
+                    }
 
-              };
+                                        $scope.allowGeoLocation = function(){
+                                                  $scope.Disable = true;
+                                                    console.log($scope.allowGeoLocation);
+                                                // cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
+                                                // $scope.geoLabel = 'Granted';
+                                                // }, function(error){
+                                                // $scope.geoLabel = 'Allow';
+                                                // });
+                                                var posOptions = {timeout: 10000, enableHighAccuracy: false};
+                                                console.log(posOptions);
+
+                                                   $cordovaGeolocation
+                                                   .getCurrentPosition(posOptions)
+
+                                                   .then(function (position) {
+                                                     if(position){
+                                                    window.localStorage.setItem('Geo', 'YES');
+                                                     }
+
+                                                      var lat  = position.coords.latitude
+                                                      var long = position.coords.longitude
+                                                      $scope.geoLabel = 'Granted';
+                                                      console.log(lat + '   ' + long)
+                                                   },function(err) {
+                                                       window.localStorage.setItem('Geo','NO');
+                                                            $scope.geoLabel = 'Allow';
+                                                            $scope.Disable = false;
+
+                                                          console.log($scope.Disable);
+                                                      console.log(err);
+                                              });
+                                            };
+
 
 
              var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
