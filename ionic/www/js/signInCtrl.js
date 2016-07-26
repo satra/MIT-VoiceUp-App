@@ -43,6 +43,13 @@ profileDataManager.getEmailList().then(function(response){
     };
 
   $scope.resetInput = function() {
+    if(ionic.Platform.isIOS()){
+    $scope.ShowIos = true;
+    console.log("its iOs");
+  }else if(ionic.Platform.isAndroid()){
+    $scope.ShowAndroid = true;
+    console.log("its android");
+  }
        $scope.hidePasscodeDiv = false;
        $scope.hideImageDiv = true ;
        var passcode_div = angular.element(document.querySelector('#passcode'));

@@ -680,6 +680,13 @@ $scope.viewPermissions = function(){
 
       //===================================================passcode handler ============================
       $scope.changePasscode = function(){
+        if(ionic.Platform.isIOS()){
+        $scope.ShowIos = true;
+        console.log("its iOs");
+      }else if(ionic.Platform.isAndroid()){
+        $scope.ShowAndroid = true;
+        console.log("its android");
+      }
         $scope.passcodeLabel = "Enter Current Passcode";
         $scope.managePasscode = false ;
         $scope.managePasscodeNew = true;

@@ -14,6 +14,9 @@
      <img src="img/logo-2.png" class="irk-step-image">
    </div>
         <div class="textcenter input"> <input type="text" class="fontB irk-centered" ng-disabled="true" ng-model="emailId"> </div> <br>
+
+
+        <div ng-if = "ShowIos">
         <div class="irk-centered">
             <label class=" item-input item-stacked-label" style="margin-top: 20px;">
                 <span style="font-size:20px;font-weight:bold;" class="font35">{{passcodeLabel}}</span>
@@ -22,5 +25,16 @@
                 <input class="CirclePasscode irk-centered" style="line-height: 90%;" placeholder="OOOO" type="password"    pattern="[0-9]*" name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()" maxlength="4" ng-hide="managePasscodeConfirm" >
             </label>
         </div>
+      </div>
+              <div ng-if = "ShowAndroid">
+              <div class="irk-centered">
+                  <label class=" item-input item-stacked-label" style="margin-top: 20px;">
+                      <span style="font-size:20px;font-weight:bold;" class="font35">{{passcodeLabel}}</span>
+                      <input class="CirclePasscode  irk-centered"  style="line-height: 90%;" placeholder="OOOO" type="tel"   name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4" ng-hide="managePasscode" >
+                      <input class="CirclePasscode irk-centered" style="line-height: 90%;" placeholder="OOOO" type="tel"    name="new_passcode" id="new_passcode" ng-model="new_passcode" ng-change="checkNewPasscodeDigits()" maxlength="4" ng-hide="managePasscodeNew" >
+                      <input class="CirclePasscode irk-centered" style="line-height: 90%;" placeholder="OOOO" type="tel"  name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()" maxlength="4" ng-hide="managePasscodeConfirm" >
+                  </label>
+              </div>
+            </div>
     </ion-content>
 </ion-modal-view>

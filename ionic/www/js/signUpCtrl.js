@@ -252,6 +252,13 @@ $scope.skipSignUp = function(){
     }
 
 $scope.launchpinScreen = function(){
+  if(ionic.Platform.isIOS()){
+    $scope.ShowIos = true;
+    console.log("its iOs");
+  }else if(ionic.Platform.isAndroid()){
+    $scope.ShowAndroid = true;
+    console.log("its android");
+  }
       $ionicHistory.clearCache().then(function(){
         $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
           scope: $scope,
