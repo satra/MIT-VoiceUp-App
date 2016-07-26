@@ -164,11 +164,9 @@ if (formValid) {
              //}else { // insert this user to db
                $scope.password = password ;
                $ionicLoading.show();
-               var today = new Date() ;
-               var dateFormatted = today.getFullYear();
-               dateFormatted += today.getMonth();
-               dateFormatted +=today.getDay();
-               var login = girderArray[0].firstName+girderArray[1].lastName+dateFormatted ;
+               var loginString = new Date().getTime();
+               var login = girderArray[0].firstName+girderArray[1].lastName+loginString ;
+               console.log(login);
                girderArray.push({'login':login});
 
                dataStoreManager.createGlobalUser(girderArray).then(function(res){
