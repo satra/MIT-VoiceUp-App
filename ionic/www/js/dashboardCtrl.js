@@ -9,10 +9,6 @@ angular.module('dashboard', [])
   // calender
 .controller("dashboardCtrl", function($scope,$ionicHistory,$ionicPopup,$state,$ionicLoading,syncDataFactory,$rootScope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
 
-  $scope.one = false;
-  $scope.two = false;
-  $scope.three = false;
-  $scope.four = false;
 
 	// == take user to home screeen
   $scope.switchUser = function (){
