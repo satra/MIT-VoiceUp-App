@@ -1,5 +1,5 @@
 angular.module('userService', [])
-.factory('userService', function($http,$cordovaSQLite) {
+.factory('userService', function($http,$cordovaSQLite,databaseManager,$q) {
 	return {
 		getConfigJson:function(){
 			  return $http.get("assets/consent.json").then(function(response) {
@@ -11,11 +11,30 @@ angular.module('userService', [])
 					 return response.data;
 			});
 		},
+
 		getSeverJson:function(){
-			return $http.get("assets/newspec.json").then(function(response) {
+			return $http.get("assets/diffJson.json").then(function(response) {
 					 return response.data;
 			});
 		},
+
+		getAppContent :  function (){
+			var deferred = $q.defer();
+			var db = databaseManager.getConnectionObject();
+			var query = "SELECT * FROM AppContent";
+			$cordovaSQLite.execute(db, query).then(function(res) {
+							var len = res.rows.length;
+							var eligiblity = null;
+						  if (len > 0) {
+						  eligiblity = res.rows.item(0);
+						  }
+							deferred.resolve(eligiblity);
+						}, function (err) {
+							deferred.resolve(err);
+					});
+		 return deferred.promise;
+		},
+
 	  parseConsent: function($consent_array,$enable_review){
 			  var task = '';
 		    angular.forEach($consent_array, function(value, key){
@@ -57,9 +76,7 @@ angular.module('userService', [])
 
 			  });
 
-		    //check if review enabled
-		    if($enable_review== "True"){
-		    	angular.forEach($consent_array, function(value, key){
+	angular.forEach($consent_array, function(value, key){
                 		    var mainType = '';
                         var type  = value.type;
                         var tagData = '';
@@ -101,7 +118,6 @@ task = task +'<irk-task><irk-'+main_typeNext+'-step '+reviewTag+' ">'+subTag+'</
 			                          }
 	                          });
 			      })
-		    }
 			 return task;
 		 }
   }
