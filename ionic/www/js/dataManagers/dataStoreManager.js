@@ -160,6 +160,45 @@ angular.module('dataStoreManager', [])
            deferred.resolve(itemList);
            return deferred.promise;
       },
+
+      getListOfFilesForItem :  function (girderToken,itemId){
+        var deferred = $q.defer();
+        var URL = base_url+'/item/'+itemId+'/files' ;
+        var itemList =   $http({ method:'GET',
+                                      url: URL,
+                                      headers: {
+                                     'girder-token': girderToken
+                                      }
+                                  })
+                        .success(function(res) {
+                         deferred.resolve(res);
+                                  })
+                        .error(function(error) {
+                          deferred.resolve(error);
+                        });
+          return deferred.promise;
+      },
+
+      createUpdateRequest : function(girderToken,fileId,fileSize){
+          var deferred = $q.defer();
+          var URL = base_url+'/file/'+fileId+'/contents?size='+fileSize ;
+          var itemList =   $http({ method:'PUT',
+                                        url: URL,
+                                        headers: {
+                                       'girder-token': girderToken
+                                        }
+                                    })
+                          .success(function(data, status, headers, config) {
+                            var dataArray = new Array() ;
+                            dataArray.push({'data':data,'config':config});
+                            deferred.resolve(dataArray);
+                                    })
+                          .error(function(error, status, headers, config) {
+                            deferred.resolve(error);
+                          });
+           return deferred.promise;
+      },
+
       downloadFilesListForItem : function (itemId,girderToken){
         var deferred = $q.defer();
         var URL = base_url+'/item/'+itemId+'/files' ;
@@ -286,6 +325,26 @@ angular.module('dataStoreManager', [])
           deferred.resolve(createFolder);
           return deferred.promise;
      },
+     updateFileChunks : function (girderToken,updateId,chunk){
+       var deferred = $q.defer();
+       var URL = base_url+'/file/chunk' ;
+                          $http({
+                                     method:'POST',
+                                     url: URL,
+                                     headers: {
+                                     'girder-token': girderToken,
+                                     'Content-Type':'application/x-www-form-urlencoded'
+                                     },
+                                     data: 'offset=0&uploadId='+updateId+'&chunk='+chunk
+                                 })
+                       .success(function(res) {
+                                 deferred.resolve(res);
+                                 })
+                       .error(function(error) {
+                                deferred.resolve(error);
+                           });
+        return deferred.promise;
+     },
      userLogout : function (girderToken){
        var deferred = $q.defer();
        var URL = base_url+'/user/authentication/' ;
@@ -348,6 +407,19 @@ angular.module('dataStoreManager', [])
                           return err ;
                     });
        deferred.resolve(deleteData);
+       return deferred.promise;
+     },
+     updateUserProfileData : function(girderToken,data){
+       var deferred = $q.defer();
+       var db = databaseManager.getConnectionObject();
+       var query = "UPDATE User SET profileJson = '"+data+"' WHERE userId IN (SELECT userId FROM Session WHERE token='"+girderToken+"') ";
+       var updateData = $cordovaSQLite.execute(db, query)
+                        .then(function(res) {
+                         return res;
+                        }, function (err) {
+                            return err ;
+                    });
+       deferred.resolve(updateData);
        return deferred.promise;
      }
 

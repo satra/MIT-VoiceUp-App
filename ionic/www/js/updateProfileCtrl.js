@@ -29,9 +29,35 @@ angular.module('updateProfileCtrl',[])
                      $rootScope.hideDownloadButton = true ;
                    }
               });
+
+              profileDataManager.getFolderIDByEmail($rootScope.emailId).then(function (folderId){
+                     $scope.folderId = folderId ;
+                     if (folderId === undefined || folderId === null || folderId === "undefined" ) {
+                       $scope.folderId = "" ;
+                     }else {
+                       $scope.folderId = folderId ;
+                     }
+                   });
+
+              profileDataManager.getAuthTokenForUser($rootScope.emailId).then(function (authToken){
+                      $scope.authToken = authToken.token ;
+                      if ($scope.authToken === undefined || $scope.authToken === null || $scope.authToken === "undefined" ) {
+                       $scope.authToken = "" ;
+                      }else {
+                        $scope.authToken = authToken.token ;
+                      }
+                   });
+
+              profileDataManager.getItemIdForUserIdAndItem($scope.userId,"profile").then(function (profileItemId){
+                       $scope.profileItemId = profileItemId ;
+                       if (profileItemId === undefined || profileItemId === null || profileItemId === "undefined" ) {
+                         $scope.profileItemId = "" ;
+                       }else {
+                         $scope.profileItemId = profileItemId ;
+                       }
+              });
            }
         });
-
 
     }
 
@@ -212,7 +238,6 @@ $scope.failureMessage = function(message){
                           $scope.logout = false ;
                       }
            });
-
 
        }
     }
@@ -494,7 +519,6 @@ $scope.viewPermissions = function(){
                                             };
 
 
-
              var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
              function accelerometerSuccess(acceleration) {
                $scope.accelerationLabel='Granted';
@@ -667,16 +691,86 @@ $scope.viewPermissions = function(){
           $scope.emailId = emailId ;
           profileDataManager.updateUserByEmailId(dataCache,$scope.emailId).then(function(res){
             if(res){
-               $scope.successAlertMsg('Profile Data Updated');
-            }
+               var profileJson = JSON.stringify(dataCache);
+                // check data available in update table
+                syncDataFactory.checkProfileJsonForUerID($scope.userId,"profile_json").then(function(rows){
+                   if (rows.length >0) {
+                     //call update service
+                     syncDataFactory.updateToSyncQueueData($scope.userId,"profile_json",profileJson,true).then(function(consentUpload){
+                       if (consentUpload && $scope.authToken) {
+                          // start sync and upload services
+                            $scope.syncServiceToUpdate();
+                          }
+                      });
+                   }else {
+                      // call insert service
+                      syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,"profile_json",profileJson,$scope.folderId,$scope.profileItemId,true).then(function(consentUpload){
+                        if (consentUpload && $scope.authToken)  {
+                           // start sync and upload services
+                            $scope.syncServiceToUpdate();
+                          }
+                      });
+                   }
+
+                });
+              }
           });
        }
-    }
-  $scope.beginSignUp = function(){
+}
+
+
+$scope.syncServiceToUpdate = function () {
+  // user autherized or not
+  profileDataManager.checkIsUserValid($rootScope.emailId).then(function(res){
+    if (res.toLowerCase() == "yes".toLowerCase()) {
+    // query for the update data
+    if(window.Connection) {
+              if(navigator.connection.type == Connection.NONE) {
+              $scope.uploadFailure();
+              }else {
+              syncDataFactory.queryDataNeedToSyncUpdate("profile_json").then(function(syncData){
+                 if (syncData.rows.length > 0)  {
+                        $ionicLoading.show({template: 'Data Sync..'});
+                         syncDataFactory.startSyncServiesToUpdateData(syncData.rows).then(function(res){
+                          $ionicLoading.hide();
+                            var message = res.statusText ;
+                            var title = "Data update success";
+                              if (!message) {
+                                message = "Data added for later update.";
+                                title = "Data update failed";
+                              }
+                            $ionicPopup.alert({
+                                title: title,
+                                template:message
+                            });
+                      },function(error){
+                      $scope.uploadFailure();
+                      });
+                   }
+                });
+              }
+          }else{
+            $ionicLoading.hide();
+          }
+       }
+   });
+}
+
+
+
+$scope.uploadFailure = function() {
+    $ionicLoading.hide();
+    $ionicPopup.alert({
+       title: "Data upload failure",
+       template: "Failed to sync the data, will be synced later."
+    });
+}
+
+$scope.beginSignUp = function(){
         $ionicHistory.clearCache().then(function(){
             $state.transitionTo('loadSignUp');
         });
-}
+  }
 
       //===================================================passcode handler ============================
       $scope.changePasscode = function(){

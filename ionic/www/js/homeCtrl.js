@@ -6,33 +6,69 @@ angular.module('homeCtrl',[])
 
 $rootScope.emailId = null;
 
+//==================================Select email view ==========
+  $scope.openSignInChooseEmail = function() {
+    $scope.transition('signIn');
+  };
+
+
 if(window.Connection) {
             if(navigator.connection.type == Connection.NONE) {
              $ionicLoading.hide();
             }else {
+             var uploadData = null;
+             var updateData = null;
              syncDataFactory.checkDataAvailableToSync().then(function(res){
                   if (res.length > 0 ) {
-                     $ionicLoading.show({template: 'Data Sync..'});
-                     syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
-                     $ionicLoading.hide();
-                     },function(error){
-                     $ionicLoading.hide();
-                     });
+                  uploadData = res ;
                   }
-              });
+                  syncDataFactory.queryDataNeedToSyncUpdate("profile_json").then(function(syncData){
+                    if (syncData) {
+                      if (syncData.rows.length > 0)  {
+                      updateData = syncData.rows ;
+                      }
+                    }
+                    if (uploadData) {
+                        $ionicLoading.show({template: 'Data Sync..'});
+                        syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+                        $ionicLoading.hide();
+                        if (updateData) {
+                        $scope.startUpdateSync(updateData);
+                        }
+                        },function(error){
+                        $ionicLoading.hide();
+                        if (updateData) {
+                        $scope.startUpdateSync(updateData);
+                        }
+                        });
+                      }else {
+                        if (updateData) {
+                        $scope.startUpdateSync(updateData);
+                        }
+                    }
+                 });
+            });
         }
   }
+
+$scope.startUpdateSync = function(updateData){
+  $ionicLoading.show({template: 'Update Sync..'});
+  syncDataFactory.startSyncServiesToUpdateData(updateData).then(function(res){
+  $ionicLoading.hide();
+  },function(error){
+  $ionicLoading.hide();
+  });
+}
 
 // learn controller parameters
 $scope.homeCalss = "icon icon ion-close-round";
 $scope.showCloseButton = true ;
-
-     // label for email(ios)/download(android)
-      if (ionic.Platform.isAndroid()) {
-        $scope.emailOrDownloadConsentLabel  = "Download Consent Document";
-      }else{
-        $scope.emailOrDownloadConsentLabel  = "Email Consent Document";
-      }
+// label for email(ios)/download(android)
+if (ionic.Platform.isAndroid()) {
+$scope.emailOrDownloadConsentLabel  = "Download Consent Document";
+}else{
+$scope.emailOrDownloadConsentLabel  = "Email Consent Document";
+}
 
 databaseManager.checkDatabaseExists().then(function(res){
        if (res == 5 ) {
@@ -47,7 +83,7 @@ databaseManager.checkDatabaseExists().then(function(res){
             var tasksJson =  response.tasks;
             var today = new Date() ;
 
-         databaseManager.createAppContentTable(response.version, response.URL,eligibility,profile,consent_screens,completeJson).then(function(resp){
+         databaseManager.createAppContentTable(response.version, response.URL,response.diffURL,eligibility,profile,consent_screens,completeJson).then(function(resp){
               for (var survey in surveyJson) {
                 if (surveyJson.hasOwnProperty(survey)) {
                 var obj = surveyJson[survey];
@@ -218,10 +254,6 @@ $scope.sendConsentDoc = function (){
  }
 }
 
-//==================================Select email view ==========
-     $scope.openSignInChooseEmail = function() {
-      $scope.transition('signIn');
-  };
 
 
 //from Sign in screen to  eligiblityTest

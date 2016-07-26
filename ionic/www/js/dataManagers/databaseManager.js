@@ -26,11 +26,11 @@ angular.module('databaseManager', [])
       deferred.resolve(dataReturn);
       return deferred.promise;
     },
-    createAppContentTable : function(version,URL,eligibility,profile,consent_screens,completeJson){
+    createAppContentTable : function(version,URL,diffURL,eligibility,profile,consent_screens,completeJson){
        var deferred = $q.defer();
        var db = this.getConnectionObject();
-       $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS AppContent(id INTEGER PRIMARY KEY AUTOINCREMENT, version TEXT, url TEXT,profile TEXT, eligibility TEXT, consent TEXT,completeJson TEXT)');
-       var  dataReturn =  $cordovaSQLite.execute(db, 'INSERT INTO AppContent (version, url, profile, eligibility, consent, completeJson) VALUES (?,?,?,?,?,?)', [version, URL , profile, eligibility,consent_screens,completeJson])
+       $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS AppContent(id INTEGER PRIMARY KEY AUTOINCREMENT, version TEXT, url TEXT,diffURL TEXT,profile TEXT, eligibility TEXT, consent TEXT,completeJson TEXT)');
+       var  dataReturn =  $cordovaSQLite.execute(db, 'INSERT INTO AppContent (version, url, diffURL,profile, eligibility, consent, completeJson) VALUES (?,?,?,?,?,?,?)', [version, URL ,diffURL, profile, eligibility,consent_screens,completeJson])
           .then(function(res) {
               return res.insertId;
           });
@@ -76,7 +76,7 @@ angular.module('databaseManager', [])
      createSyncServiceTable : function(){
        var deferred = $q.defer();
        var db = this.getConnectionObject();
-       var  dataReturn = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS SyncData (id INTEGER PRIMARY KEY AUTOINCREMENT,globalId TEXT,userId TEXT,syncItem DATETIME,syncData TEXT,folderId TEXT,itemId TEXT,creationDateTime DATETIME)');
+       var  dataReturn = $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS SyncData (id INTEGER PRIMARY KEY AUTOINCREMENT,globalId TEXT,userId TEXT,syncItem DATETIME,syncData TEXT,folderId TEXT,itemId TEXT,creationDateTime DATETIME,updateFlag TEXT)');
        deferred.resolve(dataReturn);
        return deferred.promise;
     },

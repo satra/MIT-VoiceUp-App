@@ -4,6 +4,22 @@ angular.module('surveyCtrl',[])
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
  surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,dataStoreManager,syncDataFactory,$q,$cordovaFile) {
 
+// =================== if the internet available flush the results and profile data for the user
+if(window.Connection) {
+               if(navigator.connection.type == Connection.NONE) {
+                $ionicLoading.hide();
+               }else {
+                 if ($rootScope.emailId) {
+                   $ionicLoading.show({template: 'Updating..'});
+                   syncDataFactory.startSyncServiesToFetchResults($rootScope.emailId).then(function(res){
+                   $ionicLoading.hide();
+                   },function(error){
+                   $ionicLoading.hide();
+                   });
+                 }
+              }
+}
+
 //on resume handler===================================================================
 $scope.hideImageDiv = true;
 // == take user to home screeen
@@ -29,6 +45,7 @@ $scope.switchUser = function (){
         $state.transitionTo('eligiblityTest');
     });
   };
+
 
 //sign in via email and passcode on change of passcode call this function
   $scope.loginViaPasscode = function (){
@@ -361,7 +378,7 @@ var fileName = 'results_json_'+today.getMonth()+'_'+today.getDate()+'_'+today.ge
 surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(function(response){
       var resultJson = JSON.stringify(childresult);
 
-      syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,fileName,resultJson,$scope.folderId,$scope.resultItemId).then(function(consentUpload){
+      syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,fileName,resultJson,$scope.folderId,$scope.resultItemId,false).then(function(consentUpload){
               if (consentUpload) {
                   var promises = [];
                   var itemNameArray = [];
@@ -382,7 +399,7 @@ surveyDataManager.addResultToDb($scope.userId,childresult,'survey').then(functio
                     $q.all(promises).then(function(baseDataArray){
                          var fileItemPromise = [];
                           for (var i = 0; i < baseDataArray.length; i++) {
-                            fileItemPromise.push(syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,itemNameArray[i],baseDataArray[i],$scope.folderId,$scope.resultItemId));
+                            fileItemPromise.push(syncDataFactory.addToSyncQueue($scope.authToken,$scope.userId,itemNameArray[i],baseDataArray[i],$scope.folderId,$scope.resultItemId,false));
                           }
                          $q.all(fileItemPromise).then(function(itemCreateInfo){
                             $scope.startDataSync();
@@ -407,26 +424,31 @@ $scope.startDataSync = function(){
                 if(navigator.connection.type == Connection.NONE) {
                 $scope.uploadFailure();
                 }else {
+
                  syncDataFactory.checkDataAvailableToSync().then(function(res){
                       if (res.length > 0 ) {
-                         $ionicLoading.show({template: 'Data Sync..'});
+                           $ionicLoading.show({template: 'Data Sync..'});
                            syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
-                           $ionicLoading.hide();
-                           var message = res.statusText ;
-                           var title = "Data upload success";
-                           if (!message) {
-                             message = "Data added for later upload.";
-                             title = "Data upload failed";
-                           }
-                           $ionicPopup.alert({
-                               title: title,
-                               template:message
-                           });
+                             $ionicLoading.hide();
+                             var message = res.statusText ;
+                             var title = "Data upload success";
+                             if (!message) {
+                               message = "Data added for later upload.";
+                               title = "Data upload failed";
+                             }
+                             $ionicPopup.alert({
+                                 title: title,
+                                 template:message
+                             });
                          },function(error){
                          $scope.uploadFailure();
                          });
-                      }
+                  }
+
+
                   });
+
+
             }
          }
       }else{

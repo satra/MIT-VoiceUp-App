@@ -22,24 +22,6 @@ angular.module('dashboard', [])
           });
   }
 
-  if(window.Connection) {
-            if(navigator.connection.type == Connection.NONE) {
-             $ionicLoading.hide();
-             $scope.fetchMapResults();
-            }else {
-              if ($rootScope.emailId) {
-                $ionicLoading.show({template: 'Updating..'});
-                syncDataFactory.startSyncServiesToFetchResults().then(function(res){
-                $ionicLoading.hide();
-                $scope.fetchMapResults () ;
-                },function(error){
-                $ionicLoading.hide();
-                $scope.fetchMapResults () ;
-                });
-              }
-           }
-  }
-
 $scope.events = [];
 surveyDataManager.getSurveyDates().then(function(res){
             if (res) {
@@ -53,7 +35,7 @@ surveyDataManager.getSurveyDates().then(function(res){
             }
 });
 
-$scope.fetchMapResults = function(){
+//$scope.fetchMapResults = function(){
 
 var emailId = $rootScope.emailId ;
 if (emailId) {
@@ -135,7 +117,7 @@ $scope.series4 = seriesArray;
    }
   });
  }
-}
+//}
     // calander//
 $scope.options = {
     defaultDate:  new Date(),
