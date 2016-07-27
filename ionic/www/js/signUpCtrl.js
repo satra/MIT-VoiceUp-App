@@ -372,7 +372,6 @@ $scope.verifyLater = function(){
     //  $scope.geoLabel = 'Allow';
 
 
-     console.log($scope.geoloc);
      if(window.localStorage.getItem('Geo') == 'YES')
      {
        $scope.geoLabel='Granted'

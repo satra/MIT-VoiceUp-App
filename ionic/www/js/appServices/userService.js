@@ -43,17 +43,17 @@ angular.module('userService', [])
                        	angular.forEach(value, function(valueIn, key){
 														  var 	main_typeNext = valueIn.main_type;
 															var type = valueIn.type ;
-														   if(main_typeNext!='consent-review'){
-                                 if (main_typeNext.toLowerCase() == "review-questions" && type.toLowerCase() =="boolean" ) {
-																	 var text = "";
+														   if(main_typeNext!='consent-review' && main_typeNext != "review-questions"){
+															//   if (main_typeNext.toLowerCase() == "review-questions" && type.toLowerCase() =="boolean" ) {
+																/*	 var text = "";
 																	 if (valueIn.text) {
 																	 	text = valueIn.text ;
 																	 }
 																	 var trueText = valueIn["true-text"];
 																	 var falseText = valueIn["false-text"];
 																	 task +='<irk-task><irk-boolean-question-step  optional="false" id="H'+key+'" title="'+valueIn.title+'" text="'+text+'" true-text="'+trueText+'" false-text="'+falseText+'" /></irk-task>';
-
-                                 }else {
+                                */
+                              //   }else {
 																	 title = valueIn.title ;
 	 																if (valueIn.data) {
 	 																	if(!title){
@@ -70,7 +70,7 @@ angular.module('userService', [])
 	 																	 '" type="'+valueIn.type+'" text="Learn more" show-Learn-More="false" summary="'+
 	 																	 valueIn.summary+'" title="'+title+'" ></irk-visual-consent-step></irk-task>';
 	 																 }
-																 }
+																// }
 															}
 	                      });
 
@@ -84,7 +84,23 @@ angular.module('userService', [])
 		                           var 	main_typeNext = value.main_type;
 															 type = value.main_type;
                                    var tagData = '';
-                                    if(main_typeNext=='consent-review'){
+																if(main_typeNext == "review-questions"){
+	 																	  if ($enable_review == "True" ) {
+	 																			  var qtype = value.type
+	 																				if (qtype.toLowerCase() =="boolean" ) {
+	 																					var text = "";
+	 																					if (value.text) {
+	 																					 text = value.text ;
+	 																					}
+																						var id = value.id ;
+																						var splitId = id.replace(/\./g,'_');
+	 																					var trueText = value["true-text"];
+	 																					var falseText = value["false-text"];
+																						task +='<irk-task><irk-boolean-question-step  optional="false" id="'+splitId+'" title="'+value.title+'" text="'+text+'" true-text="'+trueText+'" false-text="'+falseText+'" /></irk-task>';
+	 																				}
+	 																	 	}
+	 																}
+                                  else if(main_typeNext=='consent-review'){
              	                        var reviewTag = '';
              	                        var subTag = '';
 						                           for(var i in value){
