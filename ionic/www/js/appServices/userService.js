@@ -85,7 +85,7 @@ angular.module('userService', [])
 															 type = value.main_type;
                                    var tagData = '';
 																if(main_typeNext == "review-questions"){
-	 																	  if ($enable_review == "True" ) {
+	 																	  if ($enable_review.toLowerCase() == "true" ) {
 	 																			  var qtype = value.type
 	 																				if (qtype.toLowerCase() =="boolean" ) {
 	 																					var text = "";

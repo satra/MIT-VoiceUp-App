@@ -27,14 +27,15 @@ $scope.closeModal = function() {
           });
      }else if (irkResults.getResults()) {
           var childresult = irkResults.getResults().childResults ;
-          if ($scope.enable_review == "True") {
+          var enable_review = $scope.enable_review ;
+          if ( enable_review.toLowerCase()== "true") {
           var consentArray = $scope.consent_array ;
           var validateFalg = true ;
           angular.forEach(consentArray, function(value, key){
                                 var type  = value.type;
                                 angular.forEach(value, function(value, key){
                                        var 	main_typeNext = value.main_type;
-                                          if(main_typeNext == "review-questions"){
+                                          if(main_typeNext.toLowerCase() == "review-questions"){
                                                     var qtype = value.type
                                                     if (qtype.toLowerCase() =="boolean" ) {
                                                       var id = value.id ;
@@ -44,7 +45,7 @@ $scope.closeModal = function() {
                                                          var localId = childresult[i].id;
                                                          if (localId == splitId) {
                                                             var customAnswer  ;
-                                                            if (expected_answer == 'Yes') {
+                                                            if (expected_answer.toLowerCase() == 'yes') {
                                                             customAnswer = "true" ;
                                                             }else {customAnswer = "false" ;}
                                                             if (childresult[i].answer != customAnswer ) {
