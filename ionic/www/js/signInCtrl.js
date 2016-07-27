@@ -302,6 +302,13 @@ $scope.validateSignInForm = function (){
 
 //on forgot passcode launch pin screen and reset the passcode
 $scope.launchpinScreen = function(){
+
+  if(ionic.Platform.isIOS()){
+  $scope.ShowIos = true;
+  }else if(ionic.Platform.isAndroid()){
+  $scope.ShowAndroid = true;
+  }
+
      $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
        scope: $scope,
        animation: 'slide-in-up',
