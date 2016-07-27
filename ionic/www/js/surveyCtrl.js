@@ -453,6 +453,10 @@ $scope.startDataSync = function(){
          }
       }else{
           $ionicLoading.hide();
+          $ionicPopup.alert({
+              title: "Alert",
+              template:"Survey will be synced once the user account is verified."
+          });
       }
   });
 
