@@ -30,12 +30,16 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
        }
       }, false);
 
-    $rootScope.promptToPinScreen = function (email) {
-      $rootScope.pinDalog =   $ionicPopup.show({
-        template: '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >',
-        title: 'Enter Passcode',
-        subTitle: email,
-        scope: $rootScope,
+      $rootScope.promptToPinScreen = function (email) {
+      var  template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >';
+          if (ionic.Platform.isAndroid()) {
+            template =  '<input class = "CirclePasscode1" style="text-align: center" type="tel" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >';
+          }
+        $rootScope.pinDalog =   $ionicPopup.show({
+          template:template,
+          title: 'Enter Passcode',
+          subTitle: email,
+          scope: $rootScope,
         buttons: [
                    { text: 'Switch User',  onTap: function(e) {
                      if ($rootScope.modal) {
@@ -77,6 +81,7 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
         });
 
       }
+
 
     $rootScope.loginViaPasscodeForPin = function (email,passcode) {
         profileDataManager.logInViaPasscode(email,passcode).then(function(res){

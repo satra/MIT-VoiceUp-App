@@ -437,6 +437,11 @@ margin-bottom:15%;
     border-top: none !important;
     border-bottom: none !important;
 }
+input.CirclePasscode1{
+-webkit-text-security: disc;
+letter-spacing:.1em;
+}
+
 .inln40{
 height:45px;
 font-size:40px;

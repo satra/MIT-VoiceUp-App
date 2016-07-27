@@ -1879,7 +1879,7 @@ angular.module('ionicResearchKit',[])
         template: function(elem, attr) {
             return  '<div class="irk-centered">'+
                     '<div class="irk-text-centered">'+
-                    '<h2>' + (attr.text ? attr.text : 'Your more specific voice instruction goes here. For example, say \'Aaaah\'.') + '</h2>'+
+                    '<h2 class= "FontIrkAudio">' + (attr.text ? attr.text : 'Your more specific voice instruction goes here. For example, say \'Aaaah\'.') + '</h2>'+
                     '</div>'+
                     '<div class="irk-audio-button-container" ng-show="audioActive">'+
                     '<ion-spinner icon="lines" class="spinner-positive irk-spinner-audio-task"></ion-spinner>' +
