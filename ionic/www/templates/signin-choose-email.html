@@ -1,7 +1,7 @@
 <ion-modal-view view-title="Ionic ResearchKit">
   <ion-header-bar>
-    <h1 class="title">Choose Email</h1>
-    <div class="buttons">
+    <h1 class="title irk-centered " >Choose Email</h1>
+    <div class="buttons irk-centered ">
       <button class="button button-clear" ng-click="GoBack()">Cancel</button>
     </div>
   </ion-header-bar>
@@ -15,10 +15,10 @@
     <img src="img/logo-2.png"class="banner_holderImage">
 </div>
 
-  <select class="passcode-dropdown" ng-model="email"  ng-change="resetInput()" >
-      <option value="" disabled selected>Choose email</option>
+  <select class="passcode-dropdown  " ng-model="email"  ng-change="resetInput()" >
+      <option  value="" disabled selected>Choose email</option>
       <option  ng-repeat="email in emails " >
-        <a value="email.emailId" >{{email.emailId}}</a>
+        <a class ="irk-centered " value="email.emailId" >{{email.emailId}}</a>
       </option>
   </select>
 </div>
@@ -27,10 +27,11 @@
 <label class=" item-input item-stacked-label ">
 <span  class=" font35 fontB IRK-FONT1" >Enter Passcode</span>
 <!-- for android delete the pattern and change input type=number-->
-<input ng-if ="ShowIos"class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="text" name="passcode" id="passcode"
-      maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="passcode" >
-      <input ng-if ="ShowAndroid"class=" CirclePasscode  irk-centered " style="line-height: 90%;" placeholder="OOOO" type="tel" name="passcode" id="passcode"
-            maxlength="4"  ng-change="loginViaPasscode()"  ng-model="passcode" >
+<input ng-if ="ShowIos"class=" CirclePasscode  irk-centered " size = "4"style="line-height: 90%;" placeholder="OOOO" type="text" name="passcode" id="passcode"
+      maxlength="4"  ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="passcode" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()"ng-pattern="/^(0|[1-9][0-9]*)$/">
+
+      <input ng-if ="ShowAndroid"class=" CirclePasscode  irk-centered " size = "4" style="line-height: 90%;" placeholder="OOOO" type="tel" name="passcode" id="passcode"
+            maxlength="4"  ng-change="loginViaPasscode()"  ng-model="passcode"ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/" >
 </label>
 <div>
 <button class="button icon backgroundTrans" ng-click="forgotPasscodeDialog()">Forgot Passcode ?</button>

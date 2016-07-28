@@ -295,6 +295,7 @@ $scope.removeSignUpDiv = function(){
 //=================================================== forgot passcode handler ============================
 
     $scope.checkPasscodeDigits = function(){
+
          var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
          if(passcode.length == 4){
            $scope.passcode = passcode ;
@@ -304,7 +305,7 @@ $scope.removeSignUpDiv = function(){
            $scope.managePasscodeConfirm = false ;
          }else if(passcode.length > 4) {
           $scope.callAlertDailog("Passcode length should be max 4.");
-         }
+        }
      }
 
      //=================================================== confirm  passcode handler ============================
@@ -368,16 +369,19 @@ $scope.verifyLater = function(){
      $scope.modal = modal;
      $scope.modal.show();
     //  $scope.accelerationLabel='Allow';
-     $scope.microPhoneLabel = 'Allow';
+     $scope.microPhoneLabel = 'ALLOW';
     //  $scope.geoLabel = 'Allow';
 
 
+     console.log($scope.geoloc);
      if(window.localStorage.getItem('Geo') == 'YES')
-     {
-       $scope.geoLabel='Granted'
+     {     var myEl = angular.element( document.querySelector( '#geo' ) );
+       myEl.removeClass('irk-btnloc');
+          myEl.addClass('irk-btnlocG');
+       $scope.geoLabel='GRANTED'
         console.log($scope.geoLabel);
      }else {
-       $scope.geoLabel = 'Allow'
+       $scope.geoLabel = 'ALLOW'
        console.log($scope.geoLabel);
      }
 
@@ -466,12 +470,15 @@ $scope.allowGeoLocation = function(){
 
            .then(function (position) {
              if(position){
+               var myEl = angular.element( document.querySelector( '#geo' ) );
+               myEl.removeClass('irk-btnloc');
+                  myEl.addClass('irk-btnlocG');
             window.localStorage.setItem('Geo', 'YES');
              }
 
               var lat  = position.coords.latitude
               var long = position.coords.longitude
-              $scope.geoLabel = 'Granted';
+              $scope.geoLabel = 'GRANTED';
               console.log(lat + '   ' + long)
            },function(err) {
                window.localStorage.setItem('Geo','NO');
@@ -493,7 +500,7 @@ $scope.allowGeoLocation = function(){
         $scope.watch = $cordovaDeviceMotion.watchAcceleration($scope.options);
         // Device motion initilaization
         $scope.watch.then(null, function(error) {
-               $scope.accelerationLabel='Allow';
+               $scope.accelerationLabel='ALLOW';
                  $scope.Disable = false;
               console.log($scope.accelerationLabel);
                             console.log($scope.Disable);
@@ -501,7 +508,10 @@ $scope.allowGeoLocation = function(){
 
           function(accelerometerSuccess) {
           // Set current data
-               $scope.accelerationLabel='Granted';
+          var myEl = angular.element( document.querySelector( '#acc' ) );
+          myEl.removeClass('irk-btnloc');
+             myEl.addClass('irk-btnlocG');
+               $scope.accelerationLabel='GRANTED';
                     $scope.Disable = true;
                console.log($scope.accelerationLabel);
                   console.log($scope.Disable);

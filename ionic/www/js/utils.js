@@ -128,12 +128,12 @@ function generateProfileDiv(obj){
            case 'label': div += '<irk-form-item title="'+obj.title+'"></irk-form-item>'
                          break ;
 
-           case 'text' : div += '<label class="item item-input IRK-FONT2" type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+           case 'text' : div += '<label class="item item-input IRK-FONT2 inlineht" type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                  '<input type="text" id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style="" ></label>';
                          break;
 
-           case 'email':  div += '<label class="item item-input IRK-FONT2" type="email" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+           case 'email':  div += '<label class="item item-input IRK-FONT2 inlineht" type="email" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                  '<input type="email"  id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style=""></label>';
                          break;
@@ -148,7 +148,7 @@ function generateProfileDiv(obj){
                                  '<input type="password" id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style=""></label>';
                          break;
 
-           case 'date': div += '<label class="item item-input IRK-FONT2" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+           case 'date': div += '<label class="item item-input IRK-FONT2 inlineht" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                  '<input type="date" id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style=""></label>';
                          break;
@@ -158,9 +158,9 @@ function generateProfileDiv(obj){
                               optionDiv += '<option value="'+obj.choices[i]+'">'+obj.choices[i]+'</option>';
                          }
 
-                        div += '<label class="item item-input item-select IRK-FONT2" type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                        div += '<label class="item item-input item-select IRK-FONT2 inlineht padR10" type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                 '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                '<select id="'+obj.id +'_'+obj.id+'"  type="radio" placeholder="'+obj.placeholder+'" ng-required="false">'+
+                                '<select id="'+obj.id +'_'+obj.id+'"  type="radio" placeholder="'+obj.placeholder+'" class ="padR10 "ng-required="false">'+
                                  optionDiv+
                                 '</select>  </label>';
                         break;
@@ -169,9 +169,9 @@ function generateProfileDiv(obj){
                             var res = obj.text.split(" ");
                             label = res[0]+'<br>'+res[1];
 
-                div += '<label class="item item-input IRK-FONT2" type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                div += '<label class="item item-input IRK-FONT2" type="number inlineht " id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+label+'</span>'+
-                                 '<input type="number" id="'+obj.id +'_'+obj.id+'" string-to-number placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style=""></label>';
+                                 '<input type="number" id="'+obj.id +'_'+obj.id+'" string-to-number placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style="" ng-pattern="/^[0-9]{1,7}$/"></label>';
                          break;
 
            default :  break ;

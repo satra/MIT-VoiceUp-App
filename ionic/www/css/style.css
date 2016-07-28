@@ -436,6 +436,7 @@ margin-bottom:15%;
     border-right: transparent !important;
     border-top: none !important;
     border-bottom: none !important;
+
 }
 input.CirclePasscode1{
 -webkit-text-security: disc;
@@ -617,7 +618,7 @@ margin-bottom:12%;
   }
 
   .round1{
-    padding: 8px 10px !important ;
+
     background:#fff !important;
     border:1px solid #a31f34 !important;
     border-radius:23px !important ;
@@ -625,7 +626,19 @@ margin-bottom:12%;
             height: 46px !important;
             text-align: center !important;
             vertical-align: middle !important;
-            line-height: 30px !important;
+
+            color:#a31f34 !important;
+  }
+  .round2{
+
+    background:#fff !important;
+    border:1px solid #a31f34 !important;
+    border-radius:23px !important ;
+          width: 180px !important;
+            height: 46px !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+
             color:#a31f34 !important;
   }
 
@@ -679,7 +692,8 @@ margin-bottom:12%;
               vertical-align: middle !important;
 
     }
-    .irk-btnlocDisabled{
+
+    .irk-btnlocG{
 
 
         background:#8b7a7d ;
@@ -746,18 +760,18 @@ margin-bottom:12%;
 
     background: #a31f34;
     border: 1px solid #a31f34;
-    border-radius: 32.5px;
-    width: 65px;
-    height: 65px;
+    border-radius: 40px;
+    width: 80px;
+    height: 80px;
     color: white;
 }
   .irk-btn-round-outline{
 
      background: white;
      border: 1px solid #c0a9ac;
-     border-radius: 32.5px;
-     width: 65px;
-     height: 65px;
+     border-radius: 40px;
+     width: 80px;
+     height: 80px;
      color: black;
   }
 
@@ -810,7 +824,7 @@ margin-bottom:12%;
 
 .button.irk-button-step-next.active, .button.irk-button-step-next.activated,
 {
-padding: 8px 10px ;
+
   background:#a31f34;
   border:1px solid #a31f34;
   border-radius:23px;
@@ -828,12 +842,11 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
   border-color: #a31f34;
   background: transparent;
   color: #3c3c3c ;
-    border-radius:23px;
+    border-radius:21.5px;
       width: 180px !important;
-        height: 46px;
+        height: 42px;
       color:  #a31f34;
-
-
+      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 .button.irk-button-step-previous.button-outline.active, .button.irk-button-step-previous.button-outline.activated,
 .button.irk-button-step-cancel.button-outline.active, .button.irk-button-step-cancel.button-outline.activated,
@@ -854,20 +867,23 @@ box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
       border-color: #a31f34 !important;
          color:  #a31f34 !important;
 
+
 }
 
 .irk-bottom-bar1{
   background-image: none !important;
   display: block;
-  height: 95px;
+  height: 130px;
 }
 .irk-button-consent-popup-agree:hover{
   background:#a31f34 !important;
   color:white!important;
+
 }
 .irk-button-consent-popup-disagree{
       border-color: #a31f34 !important;
          color:  #a31f34 !important;
+
 
 }
 .irk-button-consent-popup-disagree:hover{
@@ -1018,3 +1034,27 @@ border:1px #a31f34;
 .font20{
   font-size: 20px !important;
 }
+.fixed-outside{
+  position: absolute;
+  bottom: 0;
+  color:white;
+  width: 100%;
+  height:  120px;
+  text-align:center;
+}
+
+.has-bottom .scroll{
+  padding-bottom:120px !important;
+}
+.borwidth{
+  width:90% !important;
+}
+
+.dropcenter { text-indent: 5px; }
+.txtwidth{
+   width: 100px !important;
+    margin:0px auto;
+}
+
+
+/*for IE10*/

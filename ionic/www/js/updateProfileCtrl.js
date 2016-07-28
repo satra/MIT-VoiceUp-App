@@ -460,9 +460,9 @@ $scope.viewPermissions = function(){
          }).then(function(modal) {
            $rootScope.permission = modal;
            $rootScope.permission.show();
-           $scope.accelerationLabel='Allow';
-           $scope.microPhoneLabel = 'Allow';
-           $scope.geoLabel = 'Allow';
+           $scope.accelerationLabel='ALLOW';
+           $scope.microPhoneLabel = 'ALLOW';
+           $scope.geoLabel = 'ALLOW';
 
            var iEl = angular.element( document.querySelector( '#btn1' ) );
                   iEl.remove();
@@ -478,10 +478,13 @@ $scope.viewPermissions = function(){
                     console.log($scope.geoloc);
                     if(window.localStorage.getItem('Geo') == 'YES')
                     {
-                      $scope.geoLabel='Granted'
+                      $scope.geoLabel='GRANTED'
                        console.log($scope.geoLabel);
+                       var myEl = angular.element( document.querySelector( '#geo' ) );
+                       myEl.removeClass('irk-btnloc');
+                          myEl.addClass('irk-btnlocG');
                     }else {
-                      $scope.geoLabel = 'Allow'
+                      $scope.geoLabel = 'ALLOW'
                       console.log($scope.geoLabel);
                     }
 
@@ -501,16 +504,19 @@ $scope.viewPermissions = function(){
 
                                                    .then(function (position) {
                                                      if(position){
+                                                       var myEl = angular.element( document.querySelector( '#geo' ) );
+                                                       myEl.removeClass('irk-btnloc');
+                                                          myEl.addClass('irk-btnlocG');
                                                     window.localStorage.setItem('Geo', 'YES');
                                                      }
 
                                                       var lat  = position.coords.latitude
                                                       var long = position.coords.longitude
-                                                      $scope.geoLabel = 'Granted';
+                                                      $scope.geoLabel = 'GRANTED';
                                                       console.log(lat + '   ' + long)
                                                    },function(err) {
                                                        window.localStorage.setItem('Geo','NO');
-                                                            $scope.geoLabel = 'Allow';
+                                                            $scope.geoLabel = 'ALLOW';
                                                             $scope.Disable = false;
 
                                                           console.log($scope.Disable);
@@ -521,7 +527,10 @@ $scope.viewPermissions = function(){
 
              var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {frequency: 3000});
              function accelerometerSuccess(acceleration) {
-               $scope.accelerationLabel='Granted';
+               var myEl = angular.element( document.querySelector( '#acc' ) );
+               myEl.removeClass('irk-btnloc');
+                  myEl.addClass('irk-btnlocG');
+               $scope.accelerationLabel='GRANTED';
              };
              function accelerometerError() {
 
@@ -562,20 +571,20 @@ $scope.viewPermissions = function(){
         var div = '';
              switch(type){
                 case 'text' :
-                              div += '<label class="item item-input IRK-FONT2" type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                              div += '<label class="item item-input IRK-FONT2 inlineht" type="text" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                       '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                       '<input type="text" ng-disabled="isDisabled"   ng-model="'+id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style="" ></label>';
                               break;
 
                 case 'email':
-                              div += '<label class="item item-input IRK-FONT2" type="email" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                              div += '<label class="item item-input IRK-FONT2 inlineht" type="email" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                       '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                       '<input type="email"  ng-model="'+id+'" ng-disabled="true" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
 
                 case 'date':   var id = obj.id ;
                                $scope[id] = new Date(value);
-                               div += '<label class="item item-input IRK-FONT2" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                               div += '<label class="item item-input IRK-FONT2 inlineht" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                       '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                       '<input type="date" ng-model="'+id+'" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
@@ -588,7 +597,7 @@ $scope.viewPermissions = function(){
                                      optionDiv += '<option value="'+obj.choices[i]+'">'+obj.choices[i]+'</option>';
                                    }
                                 }
-                                div += '<label class="item item-input item-select IRK-FONT2" type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                div += '<label class="item item-input item-select IRK-FONT2 inlineht" type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                 '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                 '<select type="radio" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false">'+
                                 optionDiv+
@@ -597,7 +606,7 @@ $scope.viewPermissions = function(){
 
                 case 'number':  var int = parseInt(value, 10);
                                 $scope[id] = int;
-                                div += '<label class="item item-input IRK-FONT2" type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
+                                div += '<label class="item item-input IRK-FONT2 inlineht" type="number" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                       '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
                                       '<input type="number" ng-model="'+id+'" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
                               break;
@@ -802,6 +811,7 @@ $scope.beginSignUp = function(){
 
 //check existing passcode valid or not if yes launch to enter new passcode
       $scope.checkPasscodeDigits = function(){
+
            var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
            if(passcode.length == 4){
             //check current passcode is valid
@@ -826,7 +836,7 @@ $scope.beginSignUp = function(){
                               }
                   });
              });
-           }else if(passcode.length > 4) {
+           }else if(passcode.length > 4 ) {
             $scope.callAlertDailog("Passcode length should be max 4.");
            }
        }
