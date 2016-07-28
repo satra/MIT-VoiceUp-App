@@ -260,7 +260,7 @@ $scope.launchpinScreen = function(){
       $ionicHistory.clearCache().then(function(){
         $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
           scope: $scope,
-          animation: 'slide-in-up',
+          animation: 'slide-in-left',
           hardwareBackButtonClose: false,
         }).then(function(modal) {
           $scope.modal = modal;
@@ -362,7 +362,7 @@ $scope.verifyLater = function(){
 
   $ionicModal.fromTemplateUrl('templates/locationservice.html', {
     scope: $scope,
-    animation: 'slide-in-up',
+    animation: 'slide-in-left',
     hardwareBackButtonClose: false
    }).then(function(modal) {
      $scope.modal.remove();
@@ -395,7 +395,7 @@ $scope.verifyLater = function(){
     $scope.openVerification = function() {
       $ionicModal.fromTemplateUrl('templates/verification.html', {
         scope: $scope,
-        animation: 'slide-in-up',
+        animation: 'slide-in-left',
         hardwareBackButtonClose: false
        }).then(function(modal) {
         $scope.modal.remove();
@@ -524,7 +524,7 @@ $scope.allowGeoLocation = function(){
       $scope.allDone = function() {
         $ionicModal.fromTemplateUrl('templates/alldone.html', {
           scope: $scope,
-          animation: 'slide-in-up',
+          animation: 'slide-in-left',
           hardwareBackButtonClose: false,
         }).then(function(modal) {
           $scope.modal.remove();

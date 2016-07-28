@@ -63,7 +63,7 @@ if(check){
    $ionicHistory.clearCache().then(function(){
         $ionicModal.fromTemplateUrl('templates/eligiblity-yes.html', {
           scope: $scope,
-          animation: 'slide-in-up'
+          animation: 'slide-in-left'
         }).then(function(modal) {
           $scope.modal = modal;
           $scope.modal.show();
@@ -82,7 +82,7 @@ else{
   $scope.openSignIn = function() {
     $ionicModal.fromTemplateUrl('templates/Login-IRK.html', {
       scope: $scope,
-      animation: 'slide-in-up'
+      animation: 'slide-in-left'
     }).then(function(modal) {
       $scope.modal.remove();
       $scope.modal = modal;

@@ -33,7 +33,7 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
       $rootScope.promptToPinScreen = function (email) {
       var  template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >';
           if (ionic.Platform.isAndroid()) {
-            template =  '<input class = "CirclePasscode1" style="text-align: center" type="tel" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >';
+            template =  '<input class = "CirclePasscode1" style="text-align: center" type="number" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >';
           }
         $rootScope.pinDalog =   $ionicPopup.show({
           template:template,
