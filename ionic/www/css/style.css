@@ -277,7 +277,7 @@ font-weight: bold;}
      background-position: 30% 20%;
 }
       .item-select select,  .item-select select option{
-  left: 66%;
+  text-align: : 50%;
 }
 
 .Main-layout{
@@ -621,21 +621,19 @@ margin-bottom:12%;
 
     background:#fff !important;
     border:1px solid #a31f34 !important;
-    border-radius:23px !important ;
+    border-radius:23.5px !important ;
           width: 180px !important;
-            height: 46px !important;
+            height: 47px !important;
             text-align: center !important;
-            vertical-align: middle !important;
-
             color:#a31f34 !important;
   }
   .round2{
 
     background:#fff !important;
     border:1px solid #a31f34 !important;
-    border-radius:23px !important ;
+    border-radius:23.5px !important ;
           width: 180px !important;
-            height: 46px !important;
+            height: 47px !important;
             text-align: center !important;
             vertical-align: middle !important;
 
@@ -760,18 +758,18 @@ margin-bottom:12%;
 
     background: #a31f34;
     border: 1px solid #a31f34;
-    border-radius: 40px;
-    width: 80px;
-    height: 80px;
+    border-radius: 37.5px;
+    width: 75px;
+    height: 75px;
     color: white;
 }
   .irk-btn-round-outline{
 
      background: white;
      border: 1px solid #c0a9ac;
-     border-radius: 40px;
-     width: 80px;
-     height: 80px;
+     border-radius: 37.5px;
+     width: 75px;
+     height: 75px;
      color: black;
   }
 
@@ -1049,12 +1047,17 @@ border:1px #a31f34;
 .borwidth{
   width:90% !important;
 }
-
+.bottomimg{
+margin-top: 5px;
+  height: 30px;
+    width: 40px;
+}
 .dropcenter { text-indent: 5px; }
 .txtwidth{
    width: 100px !important;
     margin:0px auto;
 }
 
-
-/*for IE10*/
+.infoColor{
+  color:#bfa9ac;
+}
