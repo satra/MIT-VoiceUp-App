@@ -250,13 +250,13 @@ $scope.skipSignUp = function(){
     }
 
 $scope.launchpinScreen = function(){
+
   if(ionic.Platform.isIOS()){
     $scope.ShowIos = true;
     console.log("its iOs");
   }else if(ionic.Platform.isAndroid()){
     $scope.ShowAndroid = true;
-    console.log("its android");
-  }
+    }
       $ionicHistory.clearCache().then(function(){
         $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
           scope: $scope,
@@ -295,7 +295,10 @@ $scope.removeSignUpDiv = function(){
 //=================================================== forgot passcode handler ============================
 
     $scope.checkPasscodeDigits = function(){
-
+   if (event.keyCode===32 )
+    {
+     $event.preventDefault();
+    }
          var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
          if(passcode.length == 4){
            $scope.passcode = passcode ;
@@ -316,6 +319,10 @@ $scope.removeSignUpDiv = function(){
     $scope.confirmLoop = 0;
 
     $scope.checkConfirmPasscodeDigits = function(){
+      if (event.keyCode===32  )
+      {
+        $event.preventDefault();
+      }
         var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
         var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value');
            if(confirm_passcode.length == 4){

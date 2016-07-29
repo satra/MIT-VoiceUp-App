@@ -31,9 +31,9 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
       }, false);
 
       $rootScope.promptToPinScreen = function (email) {
-      var  template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >';
+      var  template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/"  >';
           if (ionic.Platform.isAndroid()) {
-            template =  '<input class = "CirclePasscode1" style="text-align: center" type="number" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"  >';
+            template =  '<input class = "CirclePasscode1" style="text-align: center" type="number" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/" >';
           }
         $rootScope.pinDalog =   $ionicPopup.show({
           template:template,

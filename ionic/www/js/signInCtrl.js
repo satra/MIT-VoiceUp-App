@@ -59,6 +59,10 @@ profileDataManager.getEmailList().then(function(response){
 
 //sign in via email and passcode on change of passcode call this function
   $scope.loginViaPasscode = function (){
+    if (event.keyCode===32 && event.keyCode===13 )
+    {
+      $event.preventDefault();
+    }
       var inputValue = angular.element(document.querySelectorAll('#passcode'));
       var passcode = inputValue.prop('value') ;
       if(passcode.length == 4){
@@ -379,6 +383,10 @@ $scope.createUserPin = function(localUserId,email){
   };
 
   $scope.checkPasscodeDigits = function(){
+    if (event.keyCode===32 && event.keyCode===13 )
+    {
+      $event.preventDefault();
+    }
        var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
        if(passcode.length == 4){
         document.activeElement.blur(); // remove the keypad

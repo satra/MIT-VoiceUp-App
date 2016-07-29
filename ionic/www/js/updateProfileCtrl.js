@@ -811,7 +811,10 @@ $scope.beginSignUp = function(){
 
 //check existing passcode valid or not if yes launch to enter new passcode
       $scope.checkPasscodeDigits = function(){
-
+        if (event.keyCode===32  )
+        {
+          $event.preventDefault();
+        }
            var passcode = angular.element(document.querySelector('#passcode')).prop('value') ;
            if(passcode.length == 4){
             //check current passcode is valid
@@ -842,6 +845,10 @@ $scope.beginSignUp = function(){
        }
 //enter new passcode if size ? then launch to connfirm new passcode
 $scope.checkNewPasscodeDigits = function(){
+  if (event.keyCode===32  )
+  {
+    $event.preventDefault();
+  }
      var passcode = angular.element(document.querySelector('#new_passcode')).prop('value') ;
      if(passcode.length == 4){
       //check current passcode is valid
@@ -859,6 +866,10 @@ $scope.checkNewPasscodeDigits = function(){
  }
 
  $scope.checkConfirmPasscodeDigits = function(){
+   if (event.keyCode===32 )
+   {
+     $event.preventDefault();
+   }
            var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
            var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value');
               if(confirm_passcode.length == 4){
