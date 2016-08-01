@@ -160,7 +160,7 @@ function generateProfileDiv(obj){
 
                         div += '<label class="item item-input item-select IRK-FONT2 inlineht padR10" type="radio" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                 '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                '<select id="'+obj.id +'_'+obj.id+'"  type="radio" placeholder="'+obj.placeholder+'" class ="padR10 "ng-required="false">'+
+                                '<select id="'+obj.id +'_'+obj.id+'"  type="radio" placeholder="'+obj.placeholder+'" class ="irk-centered" ng-required="false">'+
                                  optionDiv+
                                 '</select>  </label>';
                         break;
