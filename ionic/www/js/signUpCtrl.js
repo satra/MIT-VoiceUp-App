@@ -253,7 +253,8 @@ $scope.launchpinScreen = function(){
 
   if(ionic.Platform.isIOS()){
     $scope.ShowIos = true;
-    console.log("its iOs");
+
+
   }else if(ionic.Platform.isAndroid()){
     $scope.ShowAndroid = true;
     }
@@ -386,10 +387,10 @@ $scope.verifyLater = function(){
        myEl.removeClass('irk-btnloc');
           myEl.addClass('irk-btnlocG');
        $scope.geoLabel='GRANTED'
-        console.log($scope.geoLabel);
+
      }else {
        $scope.geoLabel = 'ALLOW'
-       console.log($scope.geoLabel);
+
      }
 
      $scope.allowAccelerometer();
@@ -463,14 +464,14 @@ $scope.failureMessage = function(message){
 $scope.allowGeoLocation = function(){
 
           $scope.Disable = true;
-            console.log($scope.allowGeoLocation);
+
         // cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
         // $scope.geoLabel = 'Granted';
         // }, function(error){
         // $scope.geoLabel = 'Allow';
         // });
         var posOptions = {timeout: 10000, enableHighAccuracy: false};
-        console.log(posOptions);
+
 
            $cordovaGeolocation
            .getCurrentPosition(posOptions)
@@ -491,8 +492,6 @@ $scope.allowGeoLocation = function(){
                window.localStorage.setItem('Geo','NO');
                     $scope.geoLabel = 'Allow';
                     $scope.Disable = false;
-
-                  console.log($scope.Disable);
               console.log(err);
       });
     };
@@ -509,8 +508,7 @@ $scope.allowGeoLocation = function(){
         $scope.watch.then(null, function(error) {
                $scope.accelerationLabel='ALLOW';
                  $scope.Disable = false;
-              console.log($scope.accelerationLabel);
-                            console.log($scope.Disable);
+
           },
 
           function(accelerometerSuccess) {
@@ -520,8 +518,6 @@ $scope.allowGeoLocation = function(){
              myEl.addClass('irk-btnlocG');
                $scope.accelerationLabel='GRANTED';
                     $scope.Disable = true;
-               console.log($scope.accelerationLabel);
-                  console.log($scope.Disable);
           // Detecta shake
         //  $scope.detectShake(result);
 

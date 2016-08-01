@@ -475,29 +475,29 @@ $scope.viewPermissions = function(){
               //
               // };
               $scope.geoloc = window.localStorage.getItem('Geo');
-                    console.log($scope.geoloc);
+
                     if(window.localStorage.getItem('Geo') == 'YES')
                     {
                       $scope.geoLabel='GRANTED'
-                       console.log($scope.geoLabel);
+
                        var myEl = angular.element( document.querySelector( '#geo' ) );
                        myEl.removeClass('irk-btnloc');
                           myEl.addClass('irk-btnlocG');
                     }else {
                       $scope.geoLabel = 'ALLOW'
-                      console.log($scope.geoLabel);
+
                     }
 
                                         $scope.allowGeoLocation = function(){
                                                   $scope.Disable = true;
-                                                    console.log($scope.allowGeoLocation);
+
                                                 // cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
                                                 // $scope.geoLabel = 'Granted';
                                                 // }, function(error){
                                                 // $scope.geoLabel = 'Allow';
                                                 // });
                                                 var posOptions = {timeout: 10000, enableHighAccuracy: false};
-                                                console.log(posOptions);
+
 
                                                    $cordovaGeolocation
                                                    .getCurrentPosition(posOptions)
@@ -519,7 +519,7 @@ $scope.viewPermissions = function(){
                                                             $scope.geoLabel = 'ALLOW';
                                                             $scope.Disable = false;
 
-                                                          console.log($scope.Disable);
+
                                                       console.log(err);
                                               });
                                             };
@@ -785,10 +785,10 @@ $scope.beginSignUp = function(){
       $scope.changePasscode = function(){
         if(ionic.Platform.isIOS()){
         $scope.ShowIos = true;
-        console.log("its iOs");
+
       }else if(ionic.Platform.isAndroid()){
         $scope.ShowAndroid = true;
-        console.log("its android");
+
       }
         $scope.passcodeLabel = "Enter Current Passcode";
         $scope.managePasscode = false ;
