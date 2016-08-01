@@ -23,10 +23,12 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
 
     document.addEventListener("resume", function() {
       if ($rootScope.emailId) {
-         if ($rootScope.pinDalog) {
-             $rootScope.pinDalog.close();
-         }
-         $rootScope.promptToPinScreen($rootScope.emailId);
+           if ($rootScope.pinDalog) {
+               $rootScope.pinDalog.close();
+           }
+          if ($rootScope.LoggedInStatus) {
+             $rootScope.promptToPinScreen($rootScope.emailId);
+          }
        }
       }, false);
 
@@ -60,6 +62,7 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
                      }
                      $ionicHistory.clearCache().then(function(){
                         $rootScope.emailId = null;
+                        $rootScope.LoggedInStatus = false;
                         $state.transitionTo('home');
                      });
                    }
