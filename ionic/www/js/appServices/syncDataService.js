@@ -428,15 +428,17 @@ angular.module('syncDataService', [])
                              for (var d = 0; d < filesToDownload.length; d++) {
                                  if (filesToDownload[d].status == "200") {
                                  var data = filesToDownload[d].data;
-                                 var girderToken = filesToDownload[d].config.headers["girder-token"] ;
-                                 var file_id = data[0]._id;
-                                 var createdDate =  data[0].created;
-                                 var name = data[0].name;
-                                 if (name == "profile_json") {
-                                  profileJsonData.push(dataStoreManager.downloadFileById(file_id,girderToken));
-                                 }else {
-                                 itemsToDownload.push(dataStoreManager.downloadFileById(file_id,girderToken));
-                                }
+                                 if (data.length>0) {
+                                   var girderToken = filesToDownload[d].config.headers["girder-token"] ;
+                                   var file_id = data[0]._id;
+                                   var createdDate =  data[0].created;
+                                   var name = data[0].name;
+                                   if (name == "profile_json") {
+                                    profileJsonData.push(dataStoreManager.downloadFileById(file_id,girderToken));
+                                   }else {
+                                   itemsToDownload.push(dataStoreManager.downloadFileById(file_id,girderToken));
+                                  }
+                                 }
                               }
                             }
                           $q.all(itemsToDownload).then(function(dataDownloaded){
