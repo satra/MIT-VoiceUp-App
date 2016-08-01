@@ -131,6 +131,9 @@ $scope.failureMessage = function(message){
          if (res.length > 0 ) {
             syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
               $ionicLoading.hide();
+              if (!$scope.authToken) {
+                $scope.getDataOnSync();
+              }
             },function(error){
                $scope.failureMessage(error.statusText);
             });
@@ -195,6 +198,58 @@ $scope.failureMessage = function(message){
           // $state.transitionTo('tab');
        });
      };
+
+
+$scope.getDataOnSync = function(){
+  // get girder-token from local db for the user logout and further WS calls
+  profileDataManager.getAuthTokenForUser(email).then(function(response){
+    if (response) {
+      $scope.authToken = response.token;
+      $scope.userId = response.userId;
+        if ($scope.authToken === undefined || $scope.authToken === null || $scope.authToken === "undefined" || !$scope.authToken ) {
+          $rootScope.hideVerifyButton = false ;
+          $scope.hideVerifyButton = false ;
+        }else {
+          $rootScope.hideVerifyButton = true ;
+          $scope.hideVerifyButton = true ;
+        }
+        // get consent data saved locally
+        profileDataManager.getUserConsentJson($scope.userId).then(function(res){
+             if (!res) {
+               $scope.hideDownloadButton = true ;
+               $rootScope.hideDownloadButton = true ;
+             }
+        });
+
+        profileDataManager.getFolderIDByEmail($rootScope.emailId).then(function (folderId){
+               $scope.folderId = folderId ;
+               if (folderId === undefined || folderId === null || folderId === "undefined" ) {
+                 $scope.folderId = "" ;
+               }else {
+                 $scope.folderId = folderId ;
+               }
+             });
+
+        profileDataManager.getAuthTokenForUser($rootScope.emailId).then(function (authToken){
+                $scope.authToken = authToken.token ;
+                if ($scope.authToken === undefined || $scope.authToken === null || $scope.authToken === "undefined" ) {
+                 $scope.authToken = "" ;
+                }else {
+                  $scope.authToken = authToken.token ;
+                }
+             });
+
+        profileDataManager.getItemIdForUserIdAndItem($scope.userId,"profile").then(function (profileItemId){
+                 $scope.profileItemId = profileItemId ;
+                 if (profileItemId === undefined || profileItemId === null || profileItemId === "undefined" ) {
+                   $scope.profileItemId = "" ;
+                 }else {
+                   $scope.profileItemId = profileItemId ;
+                 }
+        });
+     }
+  });
+}
 
  //====================userLogout
      $scope.logOut = function(){
@@ -713,6 +768,11 @@ $scope.viewPermissions = function(){
                        if (consentUpload && $scope.authToken) {
                           // start sync and upload services
                             $scope.syncServiceToUpdate();
+                          }else {
+                            $ionicPopup.alert({
+                                title: "Alert",
+                                template:"Profile data will be synced once the user account is verified."
+                            });
                           }
                       });
                    }else {
@@ -721,6 +781,11 @@ $scope.viewPermissions = function(){
                         if (consentUpload && $scope.authToken)  {
                            // start sync and upload services
                             $scope.syncServiceToUpdate();
+                          }else {
+                            $ionicPopup.alert({
+                                title: "Alert",
+                                template:"Profile data will be synced once the user account is verified."
+                            });
                           }
                       });
                    }
@@ -765,6 +830,11 @@ $scope.syncServiceToUpdate = function () {
           }else{
             $ionicLoading.hide();
           }
+       }else {
+         $ionicPopup.alert({
+             title: "Alert",
+             template:"Profile data will be synced once the user account is verified."
+         });
        }
    });
 }
