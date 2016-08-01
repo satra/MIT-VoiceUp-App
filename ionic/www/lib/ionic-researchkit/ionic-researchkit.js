@@ -158,19 +158,22 @@ angular.module('ionicResearchKit',[])
         if (pdfDefinition) {
             pdfContent.push({ text: '\n\n\n', style: 'paragraph' });
             pdfContent.push({ image: pdfSignature, fit: [150, 150] });
-            pdfContent.push({
-                columns: [
-                    {
-                        width: '*',
-                        text: pdfName.toUpperCase()
-                    },
-                    {
-                        width: '*',
-                        text: $filter('date')(new Date(), "MM/dd/yyyy")
-                    }
-                ],
-                columnGap: 10
-            });
+            if (pdfName) {
+              pdfContent.push({
+                  columns: [
+                      {
+                          width: '*',
+                          text: pdfName.toUpperCase()
+                      },
+                      {
+                          width: '*',
+                          text: $filter('date')(new Date(), "MM/dd/yyyy")
+                      }
+                  ],
+                  columnGap: 10
+              });
+            }
+
             pdfContent.push({
                 columns: [
                     {

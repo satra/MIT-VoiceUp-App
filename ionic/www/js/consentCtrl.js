@@ -26,7 +26,19 @@ $scope.closeModal = function() {
           $state.transitionTo('home');
           });
      }else if (irkResults.getResults()) {
-          var childresult = irkResults.getResults().childResults ;
+       var childresult = irkResults.getResults().childResults ;
+       var processFlag = false;
+       for (var j = 0; j < childresult.length; j++) {
+             if (childresult[j].type) {
+               if(childresult[j].type.toLowerCase() == "IRK-CONSENT-REVIEW-STEP".toLowerCase()){
+                 if (childresult[j].answer) {
+                   processFlag = true;
+                 }
+              }
+          }
+      }
+
+    if (processFlag) {
           var enable_review = $scope.enable_review ;
           if ( enable_review.toLowerCase()== "true") {
           var consentArray = $scope.consent_array ;
@@ -77,7 +89,12 @@ $scope.closeModal = function() {
           $ionicHistory.clearCache().then(function(){
                $state.transitionTo('loadSignUp');
             });
-          }
+        }
+      }else {
+          $ionicHistory.clearCache().then(function(){
+             $state.transitionTo('home');
+          });
+       }
     }
  }
 
