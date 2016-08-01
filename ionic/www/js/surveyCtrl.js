@@ -4,7 +4,7 @@ angular.module('surveyCtrl',[])
 .controller('surveyCtrl', function($scope,$ionicHistory,$state, $rootScope,$ionicModal,
  surveyDataManager,$ionicLoading,$ionicPopup,irkResults,profileDataManager,dataStoreManager,syncDataFactory,$q,$cordovaFile) {
 
-$rootScope.LoggedInStatus  = true ;
+$rootScope.loggedInStatus  = true ;
 
 // =================== if the internet available flush the results and profile data for the user
 if(window.Connection) {
@@ -307,7 +307,7 @@ if ($rootScope.modal) {
 $rootScope.modal.remove();
 }
 
-$rootScope.LoggedInStatus = false ;
+$rootScope.loggedInStatus = false ;
 $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                              '<irk-ordered-tasks>'+
                                              surveyHtml +
@@ -322,7 +322,7 @@ $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal h
 
 $scope.closeModal = function() {
     $rootScope.modal.remove();
-    $rootScope.LoggedInStatus = true ;
+    $rootScope.loggedInStatus = true ;
     $ionicLoading.show();
     $ionicHistory.clearCache().then(function(){
     });

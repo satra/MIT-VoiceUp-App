@@ -67,7 +67,7 @@ angular.module('updateProfileCtrl',[])
           $rootScope.modal.remove();
           $ionicHistory.clearCache().then(function(){
           $rootScope.emailId = null;
-          $rootScope.LoggedInStatus = false;
+          $rootScope.loggedInStatus = false;
           $state.transitionTo('home');
           });
   }
@@ -461,7 +461,7 @@ $scope.viewPermissions = function(){
              hardwareBackButtonClose: false,
          }).then(function(modal) {
            $rootScope.permission = modal;
-           $rootScope.LoggedInStatus = false ;
+           $rootScope.loggedInStatus = false ;
            $rootScope.permission.show();
            $scope.accelerationLabel='ALLOW';
            $scope.microPhoneLabel = 'ALLOW';
@@ -542,7 +542,7 @@ $scope.viewPermissions = function(){
 }
 
     $scope.openVerification = function() {
-        $rootScope.LoggedInStatus = true;
+        $rootScope.loggedInStatus = true;
         $rootScope.permission.remove();
     };
 

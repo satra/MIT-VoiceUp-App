@@ -26,7 +26,7 @@ angular.module('starter', ['ionic', 'starter.controllers','userService','signInC
            if ($rootScope.pinDalog) {
                $rootScope.pinDalog.close();
            }
-          if ($rootScope.LoggedInStatus) {
+          if ($rootScope.loggedInStatus) {
              $rootScope.promptToPinScreen($rootScope.emailId);
           }
        }
