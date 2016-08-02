@@ -138,7 +138,6 @@ $scope.failureMessage = function(message){
                $scope.failureMessage(error.statusText);
             });
          }else {
-           $scope.verifyLater();
            $ionicLoading.hide();
          }
        });
@@ -294,7 +293,11 @@ $scope.getDataOnSync = function(){
                           $scope.logout = false ;
                       }
            });
-
+       }else {
+         $ionicPopup.alert({
+             title: "Alert",
+             template: "Please verify the account to leave the study."
+         });
        }
     }
 
