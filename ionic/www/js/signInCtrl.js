@@ -204,6 +204,7 @@ $scope.remoteLoginSuccess = function(parentId){
                  $q.all(downloadableProfile).then(function(filesToDownload){
                          if (filesToDownload[0].status==200){
                                var data = filesToDownload[0].data;
+                               if (data.length > 0) {
                                var file_id = data[0]._id;
                                dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(userProfile){
                                   var profileJson = LZString.decompressFromEncodedURIComponent(userProfile.data); //  fetch this once girder intigrated
@@ -237,7 +238,12 @@ $scope.remoteLoginSuccess = function(parentId){
                                         }
                                     });
                                });
-                         }
+                           }else {
+                               $scope.failureMessage("Failed to get the profile data.");
+                           }
+                        }else {
+                              $scope.failureMessage("Failed to get the data from server.");
+                        }
                     });
                }else {
                 $scope.failureMessage("Failed to get the server items.");

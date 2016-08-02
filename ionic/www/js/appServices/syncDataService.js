@@ -229,6 +229,18 @@ angular.module('syncDataService', [])
                });
          return deferred.promise;
         },
+        checkProfileDataAvailableToSync : function(userId){
+          var deferred = $q.defer();
+          var db = databaseManager.getConnectionObject();
+          var query = "SELECT * FROM SyncData WHERE  userId = '"+userId.trim()+"' AND syncItem = 'profile_json' AND updateFlag = 'true' ";
+          var syncData =  $cordovaSQLite.execute(db, query).then(function(res) {
+                   var  res = res.rows ;
+                   deferred.resolve(res);
+                 },function(error){
+                   deferred.resolve(error);
+               });
+         return deferred.promise;
+        },
         checkProfileJsonForUerID :  function(userId,syncItem){
           var deferred = $q.defer();
           var db = databaseManager.getConnectionObject();

@@ -130,19 +130,45 @@ $scope.failureMessage = function(message){
     syncDataFactory.checkDataAvailableToSync().then(function(res){
          if (res.length > 0 ) {
             syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
-              $ionicLoading.hide();
-              if (!$scope.authToken) {
-                $scope.getDataOnSync();
+              if ($scope.userId) {
+                // if the profile is updated before the account verification  will not be added to sync
+                // so as it will escape from the main sync so have to run a sub sync query for safer side where update = true
+                $scope.uploadProfileItemForTheFirstTime($scope.userId);
+              }else {
+                $ionicLoading.hide();
+                if (!$scope.authToken) {
+                  $scope.getDataOnSync();
+                }
               }
+
             },function(error){
                $scope.failureMessage(error.statusText);
             });
          }else {
-           $ionicLoading.hide();
+                $ionicLoading.hide();
          }
        });
   }
 
+$scope.uploadProfileItemForTheFirstTime = function(userId){
+    syncDataFactory.checkProfileDataAvailableToSync(userId).then(function(res){
+           if (res.length > 0 ) {
+             syncDataFactory.startSyncServiesTouploadData(res).then(function(res){
+               $ionicLoading.hide();
+               if (!$scope.authToken) {
+                 $scope.getDataOnSync();
+               }
+             },function(error){
+                $scope.failureMessage(error.statusText);
+             });
+           }else {
+             $ionicLoading.hide();
+             if (!$scope.authToken) {
+               $scope.getDataOnSync();
+             }
+           }
+       });
+}
 
   // label for email(ios)/download(android)
       if (ionic.Platform.isAndroid()) {
