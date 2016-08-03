@@ -378,9 +378,7 @@ $scope.verifyLater = function(){
      $scope.modal.show();
     //  $scope.accelerationLabel='Allow';
      $scope.microPhoneLabel = 'ALLOW';
-    //  $scope.geoLabel = 'Allow';
-
-
+  $scope.geoLabel = 'ALLOW';
      console.log($scope.geoloc);
      if(window.localStorage.getItem('Geo') == 'YES')
      {     var myEl = angular.element( document.querySelector( '#geo' ) );
@@ -388,9 +386,10 @@ $scope.verifyLater = function(){
           myEl.addClass('irk-btnlocG');
        $scope.geoLabel='GRANTED'
 
+     }else if(window.localStorage.getItem('Geo') == 'NO') {
+       $scope.geoLabel = 'DENIED'
      }else {
        $scope.geoLabel = 'ALLOW'
-
      }
 
      $scope.allowAccelerometer();
@@ -490,7 +489,11 @@ $scope.allowGeoLocation = function(){
               console.log(lat + '   ' + long)
            },function(err) {
                window.localStorage.setItem('Geo','NO');
-                    $scope.geoLabel = 'Allow';
+               $ionicPopup.alert({
+                title: 'Alert',
+                template: "Go to settings and allow location service for thr app"
+               });
+                    $scope.geoLabel = 'DENIED';
                     $scope.Disable = false;
               console.log(err);
       });
