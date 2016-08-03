@@ -549,18 +549,12 @@ $scope.viewPermissions = function(){
            $rootScope.permission.show();
            $scope.accelerationLabel='ALLOW';
            $scope.microPhoneLabel = 'ALLOW';
-           $scope.geoLabel = 'ALLOW';
+
 
            var iEl = angular.element( document.querySelector( '#btn1' ) );
                   iEl.remove();
 
-              //  var watchID = navigator.geolocation.watchPosition(onSuccess, onError, {timeout: 3000});
-              // function onSuccess(position) {
-              //       $scope.geoLabel = 'Granted';
-              //  };
-              //  function onError(error) {
-              //
-              // };
+
               $scope.geoloc = window.localStorage.getItem('Geo');
 
                     if(window.localStorage.getItem('Geo') == 'YES')
@@ -570,9 +564,10 @@ $scope.viewPermissions = function(){
                        var myEl = angular.element( document.querySelector( '#geo' ) );
                        myEl.removeClass('irk-btnloc');
                           myEl.addClass('irk-btnlocG');
+                    }else if(window.localStorage.getItem('Geo') == 'NO') {
+                      $scope.geoLabel = 'DENIED'
                     }else {
                       $scope.geoLabel = 'ALLOW'
-
                     }
 
                                         $scope.allowGeoLocation = function(){
@@ -603,7 +598,11 @@ $scope.viewPermissions = function(){
                                                       console.log(lat + '   ' + long)
                                                    },function(err) {
                                                        window.localStorage.setItem('Geo','NO');
-                                                            $scope.geoLabel = 'ALLOW';
+                                                       $ionicPopup.alert({
+                                                        title: 'Alert',
+                                                        template: "Go to settings and allow location service for thr app"
+                                                       });
+                                                            $scope.geoLabel = 'DENIED';
                                                             $scope.Disable = false;
 
 
