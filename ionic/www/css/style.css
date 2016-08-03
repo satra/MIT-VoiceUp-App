@@ -172,6 +172,7 @@ input{
 .marT25p{margin-top:25% ! important;}
 .marT30p{margin-top:30% ! important;}
 .marT3{margin-top:3px ! important;}
+.marL3p{margin-top:5% ! important;}
 /* margin-left *******************/
 .marL0{margin-left:0px ! important;}
 .marL5{margin-left:5px ! important;}
@@ -782,10 +783,10 @@ margin-bottom:12%;
      color:#8b7a7d !important ;
 }
 .irk-button-step-skip{
-  color:#a31f34!important;
+  color:#8b7a7d !important;
 }
 .irk-button-learn-more{
-   color:#a31f34!important;
+   color:#8b7a7d !important;
 }
 .irk-button-learn-more-done{
        color:#8b7a7d !important
@@ -1053,12 +1054,20 @@ margin-top: 5px;
   height: 30px;
     width: 40px;
 }
-.dropcenter { text-indent: 5px; }
-.txtwidth{
-   width: 100px !important;
-    margin:0px auto;
-}
 
 .infoColor{
   color:#bfa9ac;
+}
+
+.btn {
+    background: #ff0000;
+    color: #fff;
+    display: inline-block;
+    padding: 1em;
+}
+
+.bottomimg1{
+  height: 25px;
+    width: 25px;
+    margin-left: 3% !important;
 }
