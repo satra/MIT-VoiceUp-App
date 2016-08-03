@@ -452,7 +452,7 @@ $scope.skipSignIn = function (){
 $scope.callAlertDailog =  function (message){
         document.activeElement.blur(); // remove the keypad
         $ionicPopup.alert({
-         title: 'Error',
+         title: 'Alert',
          template: message
         });
   };
