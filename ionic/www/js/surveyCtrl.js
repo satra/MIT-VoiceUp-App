@@ -331,46 +331,49 @@ $scope.closeModal = function() {
     $ionicLoading.hide();
     }else{
      var childresult = irkResults.getResults().childResults ;
-     if ($scope.userId) {
-       for (var i = 0; i < childresult.length; i++) {
-       var questionId = childresult[i].id ;
-       var answer = childresult[i].answer ;
-       var type = childresult[i].type;
-       var isSkipped = '';
-       if (answer) {
-              isSkipped = "NO";
-             // if answered a question clear form history table so it is answered and no need to add for upcoming survey
-             surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
+     if ($scope.captureDataValue && childresult ){
+      // start data processing
+       $scope.captureDataValue = false ;
+       if ($scope.userId) {
+                 for (var i = 0; i < childresult.length; i++) {
+                 var questionId = childresult[i].id ;
+                 var answer = childresult[i].answer ;
+                 var type = childresult[i].type;
+                 var isSkipped = '';
+                 if (answer) {
+                        isSkipped = "NO";
+                       // if answered a question clear form history table so it is answered and no need to add for upcoming survey
+                       surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
 
-             });
-       }else if (type=="IRK-AUDIO-TASK"){
-          var fileURL = childresult[i].fileURL;
-          if (fileURL) {
-            isSkipped = "NO";
-          }else {
-            isSkipped = "YES";
-          }
-            // if answered a question clear form history table so it is answered and no need to add for upcoming survey
-            surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
+                       });
+                 }else if (type=="IRK-AUDIO-TASK"){
+                    var fileURL = childresult[i].fileURL;
+                    if (fileURL) {
+                      isSkipped = "NO";
+                    }else {
+                      isSkipped = "YES";
+                    }
+                      // if answered a question clear form history table so it is answered and no need to add for upcoming survey
+                      surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
 
-            });
+                      });
+                 }
+                 else{
+                   isSkipped = "YES";
+                       // if answered a question clear form history table so it is answered and no need to add for upcoming survey
+                       surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
+
+                       });
+                  }
+               }
+            // upload the survey data
+            $scope.uploadSurveyResultToLocalDb(childresult);
+            }else {
+                    surveyDataManager.addResultToDb('guest',childresult,'survey').then(function(response){
+                     $ionicLoading.hide();
+                    });
+            }
        }
-       else{
-         isSkipped = "YES";
-             // if answered a question clear form history table so it is answered and no need to add for upcoming survey
-             surveyDataManager.updateSurveyResultToTempTable($scope.userId,questionId,isSkipped).then(function(response){
-
-             });
-        }
-     }
-  // upload the survey data
-  $scope.uploadSurveyResultToLocalDb(childresult);
-
-  }else {
-          surveyDataManager.addResultToDb('guest',childresult,'survey').then(function(response){
-           $ionicLoading.hide();
-          });
-      }
     }
   };
 
