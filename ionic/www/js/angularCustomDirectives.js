@@ -23,6 +23,26 @@ angular.module('customDirectives',[])
     }
 })
 
+//===== take out keyboard once they clik on enter key only issue with the android
+.directive('input', function($timeout){
+  if (ionic.Platform.isAndroid()) {
+     return {
+         restrict: 'E',
+         scope: {
+             'returnClose': '=',
+             'onReturn': '&'
+        },
+        link: function(scope, element, attr){
+            element.bind('keydown', function(e){
+                if(e.which == 13){
+                  element[0].blur();
+                }
+            });
+        }
+    }
+  }
+})
+
 //======================================================================================
 // Usage: <btc-image-choice value="choice" text="Your choice." normal-state-image="" selected-state-image="" type="image" />
 // =====================================================================================
