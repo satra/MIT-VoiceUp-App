@@ -299,18 +299,18 @@ $scope.getDataOnSync = function(){
                                  var promiseG = syncDataFactory.removeUserCacheServerResults($scope.userId);
                                  var promiseH = syncDataFactory.removeUserCacheItemIds($scope.userId);
 
-                                 $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF,promiseG,promiseH])
+                              $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF,promiseG,promiseH])
                                      .then(function(promiseResult) {
-                                     console.log(promiseResult[0], promiseResult[1], promiseResult[2],promiseResult[3],
-                                                 promiseResult[4] );
-
+                                      $scope.disableLocalNotification();
                                });
 
                                $ionicHistory.clearCache().then(function(){
                                $rootScope.emailId = null;
+                               $rootScope.loggedInStatus = false;
                                $rootScope.modal.remove();
                                $state.transitionTo('home');
                                });
+
                               }
                            },function(error){
                                $scope.checkErrorAsyncCall(error);
