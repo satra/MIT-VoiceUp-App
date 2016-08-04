@@ -308,6 +308,7 @@ $rootScope.modal.remove();
 }
 
 $rootScope.loggedInStatus = false ;
+$scope.captureDataValue = true ;
 $scope.learnmore = $ionicModal.fromTemplate( '<ion-modal-view class="irk-modal has-tabs"> '+
                                              '<irk-ordered-tasks>'+
                                              surveyHtml +
@@ -373,6 +374,9 @@ $scope.closeModal = function() {
                      $ionicLoading.hide();
                     });
             }
+       }else {
+            // start data processing
+            $ionicLoading.hide();
        }
     }
   };
