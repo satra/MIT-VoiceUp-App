@@ -673,7 +673,8 @@ $scope.viewPermissions = function(){
                                $scope[id] = new Date(value);
                                div += '<label class="item item-input IRK-FONT2 inlineht" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                       '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                      '<input type="date" ng-model="'+id+'" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style=""></label>';
+                                      '<input type="date" ng-model="'+id+'" ng-disabled="isDisabled" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="$parent.formData.dynamicContent.'+obj.id+'" style="">'+
+                                      '<span class="input-label irk-input-label datePlaceholderfitRight" ng-if="!'+id+'">'+obj.placeholder+'</span></label>';
                               break;
 
                 case 'radio':  var optionDiv = '';

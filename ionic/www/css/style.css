@@ -1067,7 +1067,14 @@ margin-top: 5px;
 }
 
 .bottomimg1{
-  height: 25px;
+    height: 25px;
     width: 25px;
     margin-left: 3% !important;
+}
+
+.datePlaceholderfitRight{
+  position:absolute !important;
+  right:0% !important;
+  padding-right:10px !important;
+  text-align:right !important;
 }

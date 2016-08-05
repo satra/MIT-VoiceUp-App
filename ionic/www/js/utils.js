@@ -150,7 +150,8 @@ function generateProfileDiv(obj){
 
            case 'date': div += '<label class="item item-input IRK-FONT2 inlineht" type="date" id="'+obj.id+'" text="'+obj.text+'" placeholder="'+obj.placeholder+'">'+
                                  '<span class="input-label irk-form-input-label IRK-FONT2" aria-label="'+obj.text+'" >'+obj.text+'</span>'+
-                                 '<input type="date" id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style=""></label>';
+                                 '<input type="date" id="'+obj.id +'_'+obj.id+'" placeholder="'+obj.placeholder+'" ng-required="false" ng-model="'+obj.id +'_'+obj.id+'" style="">'+
+                                 '<span class="input-label irk-input-label datePlaceholderfitRight" ng-if="!'+obj.id +'_'+obj.id+'">'+obj.placeholder+'</span></label>';
                          break;
 
           case 'radio':  var optionDiv = '';
