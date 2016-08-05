@@ -183,7 +183,7 @@ $scope.signInSubmit = function (statePassed) { // recive the state to determine 
 $scope.remoteLoginSuccess = function(parentId){
   // valid user doesn't exists locally so get the profile data and set the pin
   dataStoreManager.getRemoteFolderId(parentId,$scope.authToken).then(function(folder){
-        if (folder.data) {
+        if (folder.data.length > 0) {
           var folderDetails = folder.data ;
           var folderId = folderDetails[0]._id;
           dataStoreManager.getItemListByFolderId(folderId,$scope.authToken).then(function(itemSet){
@@ -256,7 +256,11 @@ $scope.remoteLoginSuccess = function(parentId){
                  }
          });
       }else {
-         $scope.failureMessage("Failed to get the server folder Id.");
+         $scope.failureMessage("Please verify to sync the profile from the sign up device.");
+         $ionicHistory.clearCache().then(function(){
+           $scope.modal.remove();
+           $state.transitionTo('home');
+         });
      }
   },function(error){
           if (error.status !=0) {
