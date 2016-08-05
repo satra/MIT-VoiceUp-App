@@ -1,6 +1,6 @@
 angular.module('signUp',[])
 //=======Home screen controller======================
-.controller('signUpCtrl', function($scope,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
+.controller('signUpCtrl', function($scope,$timeout,$rootScope,$cordovaSQLite,$ionicHistory,$ionicPopup,$q,$compile,$ionicModal,$http,$ionicLoading
   ,profileDataManager,databaseManager,dataStoreManager,syncDataFactory,$base64,surveyDataManager,$state,userService,$window,$cordovaDeviceMotion,$cordovaMedia,$cordovaGeolocation) {
 
       profileDataManager.getUserProfileFields().then(function(response){
@@ -400,6 +400,7 @@ $scope.verifyLater = function(){
 
 //========================All set go to next screen ===========================
     $scope.openVerification = function() {
+      $scope.disableVerifyButton = false ;
       $ionicModal.fromTemplateUrl('templates/verification.html', {
         scope: $scope,
         animation: 'slide-in-left',
@@ -412,14 +413,18 @@ $scope.verifyLater = function(){
      };
 
 $scope.openPermisssions = function() {
+       $scope.disableVerifyButton = true ;
        var email = $scope.emailId ;
        var password = $scope.password ;
        if (email && password && !$scope.userSyncStatus) {
          var beforeEncode = email.trim()+':'+password.trim();
          var encoded = 'Basic '+ $base64.encode(unescape(encodeURIComponent(beforeEncode)));
-         $ionicLoading.show();
+        // $ionicLoading.show();
+         $ionicLoading.show({noBackdrop:true});
+
          syncDataFactory.verifyUserToFetchToken(encoded).then(function(res){
              $ionicLoading.hide();
+             $scope.disableVerifyButton = false ;
              if (res.status == 200 || !res.data) {
                $scope.userSyncStatus = true ;
                $scope.startSyncServices();
@@ -427,11 +432,13 @@ $scope.openPermisssions = function() {
                $scope.failureMessage(res.data.message);
              }
          },function(error){
+            $scope.disableVerifyButton = false ;
             $scope.failureMessage(error.statusText);
          });
 
       }else if ($scope.userSyncStatus) {
           $scope.verifyLater();
+          $scope.disableVerifyButton = false ;
       }
 };
 
@@ -453,17 +460,27 @@ $scope.startSyncServices = function(){
 }
 
 $scope.failureMessage = function(message){
+  $ionicLoading.hide();
+  $ionicPopup.alert({
+   title: "Error",
+   template: message
+  });
+  
+/*
+  alertPopup.then(function(res) {
+    $ionicLoading.show();
+
+    $timeout(function() {
       $ionicLoading.hide();
-      $ionicPopup.alert({
-       title: "Error",
-       template: message
-      });
+    }, 1000);
+
+  });
+  */
+
 }
 
 $scope.allowGeoLocation = function(){
-
           $scope.Disable = true;
-
         // cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
         // $scope.geoLabel = 'Granted';
         // }, function(error){
