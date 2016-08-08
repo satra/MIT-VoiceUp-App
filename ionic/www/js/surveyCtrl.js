@@ -496,19 +496,20 @@ $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
                    customDiv = '<irk-task><irk-instruction-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /> </irk-task>';
                    }
                    break ;
+
              case 'irk-scale-question-step':
-                   customDiv = '<irk-task><irk-scale-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" step="'+stepData.step+'" value="'+stepData.value+'" /> </irk-task>';
+                    customDiv = '<irk-task><irk-scale-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" min="'+stepData.min+'" max="'+stepData.max+'" step="'+stepData.step+'" value="'+stepData.value+'" min-text="'+stepData["min-text"]+'" max-text="'+stepData["max-text"]+'" /> </irk-task>';
                    break;
 
              case 'irk-boolean-question-step':
-                   customDiv = '<irk-task><irk-boolean-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" true-text="'+stepData['true-text']+'" false-text="'+stepData['false-text']+'" /> </irk-task>';
+                   customDiv = '<irk-task><irk-boolean-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" true-text="'+stepData['true-text']+'" false-text="'+stepData['false-text']+'" true-value="'+stepData['true-value']+'" false-value="'+stepData['false-value']+'" /> </irk-task>';
                    break;
 
              case 'irk-text-question-step':
                    if(stepData['multiple-lines']){
-                   customDiv = '<irk-task><irk-text-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" multiple-lines="'+stepData['multiple-lines']+'" /> </irk-task>';
+                   customDiv = '<irk-task><irk-text-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" multiple-lines="'+stepData['multiple-lines']+'" placeholder="'+stepData.placeholder+'"/> </irk-task>';
                    }else {
-                   customDiv = '<irk-task><irk-text-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /> </irk-task>';
+                   customDiv = '<irk-task><irk-text-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" placeholder="'+stepData.placeholder+'" /> </irk-task>';
                    }
                    break;
 
@@ -530,11 +531,11 @@ $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
                     break;
 
               case 'irk-numeric-question-step':
-                    customDiv = '<irk-task > <irk-numeric-question-step optional="'+disableSkip+'" id="'+customId+'"  title="'+stepData.title+'" text="'+stepData.text+'" unit="'+stepData['unit']+'"/></irk-task>';
+                    customDiv = '<irk-task > <irk-numeric-question-step optional="'+disableSkip+'" id="'+customId+'"  title="'+stepData.title+'" text="'+stepData.text+'" unit="'+stepData.unit+'" min="'+stepData.min+'" max="'+stepData.max+'" placeholder="'+stepData.placeholder+'" /></irk-task>';
                     break;
 
               case 'irk-date-question-step':
-                    customDiv = '<irk-task > <irk-date-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /></irk-task>';
+                     customDiv = '<irk-task > <irk-date-question-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'" /></irk-task>';
                     break;
 
               case 'irk-time-question-step':
@@ -562,7 +563,11 @@ $scope.activitiesDivGenerator= function(customId,stepData,disableSkip){
               case 'irk-form-step':
                            var choice = '';
                            for (var i = 0; i < stepData.choices.length; i++) {
-                           choice += '<irk-form-item text="'+stepData.choices[i].text+'" type="'+stepData.choices[i].type+'" id="'+stepData.choices[i].id+'" placeholder="'+stepData.choices[i].placeholder+'"  ></irk-form-item>';
+                             if (stepData.choices[i].title) {
+                              choice += '<irk-form-item title="'+stepData.choices[i].title+'"  ></irk-form-item>';
+                             }else {
+                              choice += '<irk-form-item text="'+stepData.choices[i].text+'" type="'+stepData.choices[i].type+'" id="'+stepData.choices[i].id+'" placeholder="'+stepData.choices[i].placeholder+'"  ></irk-form-item>';
+                             }
                            }
                            customDiv = '<irk-task > <irk-form-step optional="'+disableSkip+'" id="'+customId+'" title="'+stepData.title+'" text="'+stepData.text+'">'+
                            choice+'</irk-form-step></irk-task>';
