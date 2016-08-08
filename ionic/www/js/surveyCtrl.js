@@ -198,7 +198,7 @@ $scope.launchSurvey = function (idSelected){
           surveyHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
 
           // compose skipped html as well
-          if (tasks.item(T).isSkipped === "YES") {
+          if (tasks.item(T).isSkipped === "YES" || tasks.item(T).isSkipped === "NONE" ) {
            onlySkippedQuestionHtml += $scope.activitiesDivGenerator(questionId,steps[k],disableSkip);
           }
         }
