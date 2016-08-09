@@ -600,7 +600,7 @@ $scope.viewPermissions = function(){
                                                        window.localStorage.setItem('Geo','NO');
                                                        $ionicPopup.alert({
                                                         title: 'Alert',
-                                                        template: "Go to settings and allow location service for thr app"
+                                                        template: "Go to settings and allow location service for the app."
                                                        });
                                                             $scope.geoLabel = 'DENIED';
                                                             $scope.Disable = false;
