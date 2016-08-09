@@ -554,7 +554,6 @@ $scope.viewPermissions = function(){
            var iEl = angular.element( document.querySelector( '#btn1' ) );
                   iEl.remove();
 
-
               $scope.geoloc = window.localStorage.getItem('Geo');
 
                     if(window.localStorage.getItem('Geo') == 'YES')
@@ -562,7 +561,7 @@ $scope.viewPermissions = function(){
                       $scope.geoLabel='GRANTED'
 
                        var myEl = angular.element( document.querySelector( '#geo' ) );
-                       myEl.removeClass('irk-btnloc');
+                          myEl.removeClass('irk-btnloc');
                           myEl.addClass('irk-btnlocG');
                     }else if(window.localStorage.getItem('Geo') == 'NO') {
                       $scope.geoLabel = 'DENIED'
@@ -587,15 +586,15 @@ $scope.viewPermissions = function(){
                                                    .then(function (position) {
                                                      if(position){
                                                        var myEl = angular.element( document.querySelector( '#geo' ) );
-                                                       myEl.removeClass('irk-btnloc');
+                                                          myEl.removeClass('irk-btnloc');
                                                           myEl.addClass('irk-btnlocG');
-                                                    window.localStorage.setItem('Geo', 'YES');
+                                                          window.localStorage.setItem('Geo', 'YES');
                                                      }
 
                                                       var lat  = position.coords.latitude
                                                       var long = position.coords.longitude
                                                       $scope.geoLabel = 'GRANTED';
-                                                      console.log(lat + '   ' + long)
+
                                                    },function(err) {
                                                        window.localStorage.setItem('Geo','NO');
                                                        $ionicPopup.alert({
@@ -605,8 +604,6 @@ $scope.viewPermissions = function(){
                                                             $scope.geoLabel = 'DENIED';
                                                             $scope.Disable = false;
 
-
-                                                      console.log(err);
                                               });
                                             };
 
