@@ -1,7 +1,7 @@
 angular.module('signInCtrl',[])
 //=======Home screen controller======================
 .controller('signInCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
-  dataStoreManager,profileDataManager,surveyDataManager,$cordovaEmailComposer,syncDataFactory,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window,$q) {
+  dataStoreManager,consentDataManager,profileDataManager,surveyDataManager,$cordovaEmailComposer,syncDataFactory,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window,$q) {
 
 //==================================Select email view ==========
 profileDataManager.getEmailList().then(function(response){
@@ -186,10 +186,11 @@ $scope.remoteLoginSuccess = function(parentId){
         if (folder.data.length > 0) {
           var folderDetails = folder.data ;
           var folderId = folderDetails[0]._id;
+          $scope.folderId = folderId ;
           dataStoreManager.getItemListByFolderId(folderId,$scope.authToken).then(function(itemSet){
               if (itemSet.data) {
                  var itemList = itemSet.data ;
-                 var downloadableConsent = []; var downloadableProfile = [];
+                 var downloadableConsent = []; var downloadableProfile = []; var downloadableSettings = [];
                  for (var i = 0; i < itemList.length; i++) {
                    var itemName = itemList[i].name;
                    var item_id = itemList[i]._id;
@@ -198,6 +199,9 @@ $scope.remoteLoginSuccess = function(parentId){
                         }
                         else  if (itemName == 'consent') {
                            downloadableConsent.push(dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken));
+                        }
+                        else if (itemName.toLowerCase() == 'settings'){
+                          downloadableSettings.push(dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken));
                         }
                    }
 
@@ -221,16 +225,37 @@ $scope.remoteLoginSuccess = function(parentId){
                                           }
                                            $q.all(cacheItemIdLocally).then(function(cache){
                                                $q.all(downloadableConsent).then(function(consentToDownload){
-                                                  if (consentToDownload[0].status==200){
+                                                  if (consentToDownload.length > 0){
                                                      var data = consentToDownload[0].data;
                                                      var file_id = data[0]._id;
                                                      dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(consentData){
                                                          var fileJson = LZString.decompressFromEncodedURIComponent(consentData.data);
                                                          surveyDataManager.addResultToDb($scope.userId,JSON.parse(fileJson),'consent').then(function(response){
-                                                        });
-                                                       $ionicLoading.hide();
-                                                       $scope.modal.remove();
-                                                       $scope.launchpinScreen();
+                                                           $q.all(downloadableSettings).then(function(settingsToDownload){
+                                                              if (settingsToDownload[0].data.length > 0){
+                                                                 var data = settingsToDownload[0].data;
+                                                                 var file_id = data[0]._id;
+                                                                 var file_name = data[0].name;
+                                                                 if (file_name.toLowerCase()=="config_json") {
+                                                                   dataStoreManager.downloadFileById(file_id,$scope.authToken).then(function(settingsData){
+                                                                    var settingsJson = LZString.decompressFromEncodedURIComponent(settingsData.data);
+                                                                    var leftStatus = JSON.parse(settingsJson).left_study;
+                                                                    $ionicLoading.hide();
+                                                                    $scope.modal.remove();
+                                                                     if (leftStatus) {
+                                                                     //go to consent process
+                                                                     $scope.leftStatus = true;
+                                                                     }
+                                                                     $scope.launchpinScreen();
+                                                                    });
+                                                                   }
+                                                                 }else {
+                                                                  $ionicLoading.hide();
+                                                                  $scope.modal.remove();
+                                                                  $scope.launchpinScreen();
+                                                                }
+                                                             });
+                                                         });
                                                      });
                                                    }
                                                });
@@ -279,6 +304,140 @@ $scope.failureMessage = function(message){
   });
 }
 
+$scope.launchConsentProcess = function(){
+  consentDataManager.getAllConsentScreens().then(function(response){
+  $scope.enable_review = response.enable_review_questions;
+  $scope.consent_array = response.sections;
+  var taskListData =  userService.parseConsent($scope.consent_array,$scope.enable_review);
+   if (taskListData) {
+          var taskList =   '<ion-modal-view class="irk-modal">'+
+          '<irk-ordered-tasks>'+
+          taskListData +
+          '</irk-ordered-tasks>'+
+          '</ion-modal-view>';
+          $scope.modal = $ionicModal.fromTemplate(taskList, {
+              scope: $scope,
+              animation: 'slide-in-left',
+              hardwareBackButtonClose: false,
+          });
+          $scope.modal.show();
+    }else {
+       $ionicHistory.clearCache().then(function(){
+       $state.transitionTo('home');
+       });
+    }
+  });
+}
+
+$scope.closeModal = function() {
+  var localUserId = $scope.localUserId;
+  var email = $scope.emailId ;
+  if (irkResults.getResults().canceled) {
+      $scope.homePage();
+     }else if (irkResults.getResults()) {
+        // all set
+        var childresult = irkResults.getResults().childResults ;
+        var processFlag = false;
+          for (var j = 0; j < childresult.length; j++) {
+                if (childresult[j].type) {
+                  if(childresult[j].type.toLowerCase() == "IRK-CONSENT-REVIEW-STEP".toLowerCase()){
+                    if (childresult[j].answer) {
+                      processFlag = true;
+                    }
+                 }
+             }
+          }
+         if (processFlag) {
+             var enable_review = $scope.enable_review ;
+             if ( enable_review.toLowerCase()== "true") {
+             var consentArray = $scope.consent_array ;
+             var validateFalg = true ;
+             angular.forEach(consentArray, function(value, key){
+                                   var type  = value.type;
+                                   angular.forEach(value, function(value, key){
+                                          var 	main_typeNext = value.main_type;
+                                             if(main_typeNext.toLowerCase() == "review-questions"){
+                                                       var qtype = value.type
+                                                       if (qtype.toLowerCase() =="boolean" ) {
+                                                         var id = value.id ;
+                                                         var splitId = id.replace(/\./g,'_');
+                                                         var expected_answer = value["expected_answer"];
+                                                         for (var i = 0; i < childresult.length; i++) {
+                                                            var localId = childresult[i].id;
+                                                            if (localId == splitId) {
+                                                               var customAnswer  ;
+                                                               if (expected_answer.toLowerCase() == 'yes') {
+                                                               customAnswer = "true" ;
+                                                               }else {customAnswer = "false" ;}
+                                                               if (childresult[i].answer != customAnswer ) {
+                                                                 validateFalg = false ;
+                                                               }
+                                                            }
+                                                         }
+                                                 }
+                                         }
+                                 });
+               })
+             // check the user flag accoding to end user answer
+               if (validateFalg) {
+                 $scope.launchUserActivity();
+               }else {
+                     console.log("go to ineligible screen ");
+                     $scope.modal.remove();
+                     $ionicHistory.clearCache().then(function(){
+                      $state.transitionTo('not-eligibleUser');
+                     });
+               }
+           }else{
+             $scope.launchUserActivity();
+           }
+         }else {
+             $scope.homePage();
+         }
+     }
+}
+
+$scope.homePage = function(){
+  // clear all the user data and come to home page
+  var promiseA = profileDataManager.removeUser($scope.localUserId);
+  var promiseB = profileDataManager.removeUserSession($scope.localUserId);
+  var promiseC = surveyDataManager.removeUserSurveyResults($scope.localUserId);
+  var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.localUserId);
+  var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.localUserId);
+  var promiseF = syncDataFactory.removeUserCacheResults($scope.localUserId);
+  var promiseG = syncDataFactory.removeUserCacheServerResults($scope.localUserId);
+  var promiseH = syncDataFactory.removeUserCacheItemIds($scope.localUserId);
+  $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF,promiseG,promiseH])
+        .then(function(promiseResult) {
+
+  });
+  $scope.modal.remove();
+  $ionicHistory.clearCache().then(function(){
+  $ionicLoading.hide();
+  $rootScope.emailId = null;
+  $rootScope.loggedInStatus = false;
+  $state.transitionTo('home');
+  });
+}
+
+$scope.launchUserActivity = function(){
+      // update the leave study status in the server  then launch activity
+      var leaveData = '{"left_study": false}';
+      var folderId = $scope.folderId;
+      var authToken = $scope.authToken;
+      $ionicLoading.show();
+      syncDataFactory.leaveStudyUpdateStatus(folderId,authToken,leaveData).then(function(leaveStudyStatus){
+      $ionicHistory.clearCache().then(function(){
+        $scope.modal.remove();
+        $ionicLoading.hide();
+        $state.transitionTo('tab.Activities');
+      });
+    },function(error){
+        $ionicLoading.hide();
+    });
+}
+
+
 // =====================validate sign in form ============
 $scope.validateSignInForm = function (){
   var keepGoing = true; var formValid = true;
@@ -323,7 +482,7 @@ $scope.launchpinScreen = function(){
   $scope.ShowAndroid = true;
   }
 
-     $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
+  $ionicModal.fromTemplateUrl('templates/choosepassode.html', {
        scope: $scope,
        animation: 'slide-in-left',
          hardwareBackButtonClose: false,
@@ -344,7 +503,13 @@ $scope.createUserPin = function(localUserId,email){
 
   profileDataManager.addPasscodeToUserID(localUserId,$scope.passcode,email,$scope.authToken).then(function(res){
        $scope.modal.remove();
-       $scope.transition('tab.Activities');
+       if ($scope.leftStatus) {
+         $scope.localUserId = localUserId;
+         $scope.emailId = email ;
+         $scope.launchConsentProcess();
+       }else {
+         $scope.transition('tab.Activities');
+       }
      });
 
 }

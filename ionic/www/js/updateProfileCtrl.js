@@ -288,36 +288,46 @@ $scope.getDataOnSync = function(){
          $rootScope.popupAny = confirmPopup ;
          confirmPopup.then(function(res) {
                              if(res && $rootScope.AllowedToDisplayNextPopUp) {
-                               dataStoreManager.userLogout(logoutToken).then(function(res){
-                                if (res.status == 200) {
-                                 var promiseA = profileDataManager.removeUser($scope.userId);
-                                 var promiseB = profileDataManager.removeUserSession($scope.userId);
-                                 var promiseC = surveyDataManager.removeUserSurveyResults($scope.userId);
-                                 var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.userId);
-                                 var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.userId);
-                                 var promiseF = syncDataFactory.removeUserCacheResults($scope.userId);
-                                 var promiseG = syncDataFactory.removeUserCacheServerResults($scope.userId);
-                                 var promiseH = syncDataFactory.removeUserCacheItemIds($scope.userId);
-
-                              $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF,promiseG,promiseH])
-                                     .then(function(promiseResult) {
-                                      $scope.disableLocalNotification();
+                               // do a netwrok check
+                               // update the status in the server before logout and fire the request
+                               // create a config file
+                               var leaveData = '{"left_study": true}';
+                               var folderId = $scope.folderId;
+                               $ionicLoading.show();
+                               syncDataFactory.leaveStudyUpdateStatus(folderId,logoutToken,leaveData).then(function(leaveStudyStatus){
+                                   dataStoreManager.userLogout(logoutToken).then(function(res){
+                                    if (res.status == 200) {
+                                     var promiseA = profileDataManager.removeUser($scope.userId);
+                                     var promiseB = profileDataManager.removeUserSession($scope.userId);
+                                     var promiseC = surveyDataManager.removeUserSurveyResults($scope.userId);
+                                     var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.userId);
+                                     var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.userId);
+                                     var promiseF = syncDataFactory.removeUserCacheResults($scope.userId);
+                                     var promiseG = syncDataFactory.removeUserCacheServerResults($scope.userId);
+                                     var promiseH = syncDataFactory.removeUserCacheItemIds($scope.userId);
+                                     $q.all([promiseA, promiseB, promiseC,promiseD,promiseE,promiseF,promiseG,promiseH])
+                                           .then(function(promiseResult) {
+                                            $ionicLoading.hide();
+                                            $scope.disableLocalNotification();
+                                     });
+                                     $ionicHistory.clearCache().then(function(){
+                                     $ionicLoading.hide();
+                                     $rootScope.emailId = null;
+                                     $rootScope.loggedInStatus = false;
+                                     $rootScope.modal.remove();
+                                     $state.transitionTo('home');
+                                     });
+                                    }
+                                   },function(error){
+                                    $scope.callAlertDailog(error);
+                                   });
+                               },function(error){
+                               $scope.callAlertDailog(error);
                                });
 
-                               $ionicHistory.clearCache().then(function(){
-                               $rootScope.emailId = null;
-                               $rootScope.loggedInStatus = false;
-                               $rootScope.modal.remove();
-                               $state.transitionTo('home');
-                               });
-
-                              }
-                           },function(error){
-                               $scope.checkErrorAsyncCall(error);
-                           });
-                        } else {
+                         } else {
                           $scope.logout = false ;
-                      }
+               }
            });
        }else {
          $ionicPopup.alert({
@@ -329,15 +339,8 @@ $scope.getDataOnSync = function(){
 
   $scope.checkErrorAsyncCall = function(error){
       $ionicLoading.hide();
-      if(window.Connection) {
-              if(navigator.connection.type == Connection.NONE) {
-                  $ionicPopup.alert({
-                      title: "Internet Disconnected",
-                      template: "The Internet connection appears to be offline."
-                  });
-              }
-        }
-    }
+
+  }
 
     $scope.emailConsent = function (){
       var userId = $scope.userId;
@@ -1017,14 +1020,16 @@ $scope.checkNewPasscodeDigits = function(){
 
      $scope.callAlertDailog =  function (message){
           document.activeElement.blur(); // remove the keypad
-        $rootScope.alertDialog = $ionicPopup.alert({
+          $ionicLoading.hide();
+          $rootScope.alertDialog = $ionicPopup.alert({
            title: 'Data Invalid',
            template: message
           });
      }
 
      $scope.successAlertMsg = function (message) {
-      $rootScope.alertDialog =    $ionicPopup.alert({
+        $ionicLoading.hide();
+        $rootScope.alertDialog =    $ionicPopup.alert({
           title: 'Success',
           template: message
          });

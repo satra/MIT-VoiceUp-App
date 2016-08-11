@@ -1,31 +1,39 @@
 angular.module('consent',[])
 //=======Home screen controller======================
 .controller('consentCtrl', function($scope,$stateParams,$ionicHistory,$cordovaSQLite,$controller,
-  $ionicModal,$http,$compile,$ionicLoading,userService,$rootScope,databaseManager,consentDataManager,irkResults,irkConsentDocument,$state,$location,$window) {
+  $ionicModal,$http,$ionicLoading,userService,$rootScope,databaseManager,consentDataManager,irkResults,irkConsentDocument,$state,$location,$window) {
 
     consentDataManager.getAllConsentScreens().then(function(response){
     $scope.enable_review = response.enable_review_questions;
     $scope.consent_array = response.sections;
     var taskListData =  userService.parseConsent($scope.consent_array,$scope.enable_review);
-
-    var taskList =   '<ion-modal-view class="irk-modal">'+
-    '<irk-ordered-tasks>'+
-    taskListData +
-    '</irk-ordered-tasks>'+
-    '</ion-modal-view>';
-    var dynamicContent = angular.element(document.querySelector('#orderTasks'));
-    dynamicContent.append(taskList);
-    $compile(dynamicContent)($scope);
-
-   });
-
+     if (taskListData) {
+            var taskList =   '<ion-modal-view class="irk-modal">'+
+            '<irk-ordered-tasks>'+
+            taskListData +
+            '</irk-ordered-tasks>'+
+            '</ion-modal-view>';
+            $scope.modal = $ionicModal.fromTemplate(taskList, {
+                scope: $scope,
+                animation: 'slide-in-left',
+                hardwareBackButtonClose: false,
+            });
+            $scope.modal.show();
+      }else {
+         $ionicHistory.clearCache().then(function(){
+         $state.transitionTo('home');
+         });
+      }
+    });
 
 $scope.closeModal = function() {
   if (irkResults.getResults().canceled) {
+     $scope.modal.remove();
      $ionicHistory.clearCache().then(function(){
           $state.transitionTo('home');
           });
      }else if (irkResults.getResults()) {
+       $scope.modal.remove();
        var childresult = irkResults.getResults().childResults ;
        var processFlag = false;
        for (var j = 0; j < childresult.length; j++) {

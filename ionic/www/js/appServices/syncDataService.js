@@ -406,7 +406,8 @@ angular.module('syncDataService', [])
                var getResultItems = [];
                var girderTokens = [];
                profileDataManager.getUserList().then(function(response){
-                 for (var i = 0; i < response.length; i++) {
+                 if (response) {
+                  for (var i = 0; i < response.length; i++) {
                    var folderId = response.item(i).folderId ;
                    var emailID = response.item(i).emailId;
                    var token = response.item(i).token ;
@@ -414,6 +415,9 @@ angular.module('syncDataService', [])
                     if (emailID.trim() == loggedUserEmail.trim()) {
                       getResultItems.push(dataStoreManager.getItemListByFolderId(folderId,token));
                     }
+                  }
+                 }else {
+                   deferred.resolve(response);
                  }
                  $q.all(getResultItems).then(function(itemSetList){
                         var downloadableItems = [];
@@ -586,7 +590,82 @@ angular.module('syncDataService', [])
                    deferred.resolve(error);
               });
             return deferred.promise;
-         }
+         },
+      leaveStudyUpdateStatus :   function(folderId,authToken,studyData){
+        var deferred = $q.defer();
+        dataStoreManager.getItemListByFolderId(folderId,authToken).then(function(itemSet){
+                         if (itemSet.data.length >0) {
+                            var itemList = itemSet.data ;
+                            var settingsItemId = "";
+                            var downloadableProfile = [];
+                            for (var i = 0; i < itemList.length; i++) {
+                              var itemName = itemList[i].name;
+                              var item_id = itemList[i]._id;
+                                  if (itemName.toLowerCase() == 'settings') {
+                                     settingsItemId = item_id ;
+                                     downloadableProfile.push(dataStoreManager.downloadFilesListForItem(item_id,authToken));
+                                   }
+                            }
+                            $q.all(downloadableProfile).then(function(filesToDownload){
+                                    if (filesToDownload[0].status==200){
+                                          var syncData = studyData;
+                                          var data = filesToDownload[0].data;
+                                          if (data.length > 0) {
+                                            // file already created so do update content request and upload the data
+                                            var fileId = data[0]._id;
+                                            var fileSize = LZString.compressToEncodedURIComponent(syncData).length;
+                                            dataStoreManager.createUpdateRequest(authToken,fileId,fileSize).then(function(updateRequest){
+                                                if (updateRequest.length >0) {
+                                                  var responseData = updateRequest[0].data ;
+                                                  var updateId = responseData._id ;
+                                                  var dataString = LZString.compressToEncodedURIComponent(syncData);
+                                                  dataStoreManager.updateFileChunks(authToken,updateId,dataString).then(function(uploadChunk){
+                                                    deferred.resolve(uploadChunk);
+                                                  },function(error){
+                                                    deferred.resolve(error);
+                                                 });
+                                               }else {
+                                                   deferred.resolve(updateRequest);
+                                               }
+                                            },function(error){
+                                              deferred.resolve(error);
+                                          });
+                                          }else {
+                                                // no files created yet so create a file upload the data
+                                                var fileName = "config_json";
+                                                var dataString = LZString.compressToEncodedURIComponent(syncData);
+                                                var fileSize = dataString.length;
+                                                dataStoreManager.createFileForItem(authToken,settingsItemId,fileName,fileSize).then(function(fileCreateInfo){
+                                                    if (fileCreateInfo.status==200) {
+                                                      var fileCreateDetails = fileCreateInfo.data ;
+                                                      var fileCreateId = fileCreateDetails._id ;
+                                                      var dataString = LZString.compressToEncodedURIComponent(syncData);
+                                                      dataStoreManager.uploadAudioFileChunk(authToken,fileCreateId,dataString).then(function(dataUpload){
+                                                         deferred.resolve(dataUpload);
+                                                       },function(error){
+                                                         deferred.resolve(error);
+                                                     });
+                                                   }else {
+                                                     deferred.resolve(fileCreateInfo);
+                                                   }
+                                                },function(error){
+                                                  deferred.resolve(error);
+                                              });
+                                            }
+                                   }else {
+                                      deferred.resolve(filesToDownload);
+                                   }
+                                 },function(error){
+                                   deferred.resolve(error);
+                               });
+                             }else {
+                                deferred.resolve(itemSet);
+                             }
+                         },function(error){
+                            deferred.resolve(error);
+              });
+             return deferred.promise;
+           }
       }
 })
 

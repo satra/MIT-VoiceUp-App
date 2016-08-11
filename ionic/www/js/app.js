@@ -153,7 +153,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
 
   .state('beginConsent', {
     url: '/beginConsent',
-    templateUrl: 'templates/consent.html',
+    //templateUrl: 'templates/consent.html',
     controller: 'consentCtrl'
   })
 
