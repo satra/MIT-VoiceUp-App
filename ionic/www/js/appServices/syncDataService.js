@@ -73,7 +73,9 @@ angular.module('syncDataService', [])
       queryDataNeedToSyncUpdate : function(syncItem){
         var deferred = $q.defer();
         var db = databaseManager.getConnectionObject();
-        var query = "SELECT * FROM SyncData WHERE syncItem ='"+syncItem+"' AND globalId != '' AND folderId != '' AND itemId != '' AND updateFlag = 'true'  ";
+        //var query = "SELECT * FROM SyncData WHERE syncItem ='"+syncItem+"' AND globalId != '' AND folderId != '' AND itemId != '' AND updateFlag = 'true'  ";
+        var query = "SELECT * FROM SyncData WHERE globalId != '' AND folderId != '' AND itemId != '' AND updateFlag = 'true'  ";
+
         $cordovaSQLite.execute(db, query).then(function(res) {
                   var token = "";
                   if (res.rows.length > 0) {
@@ -349,7 +351,7 @@ angular.module('syncDataService', [])
                                       createUploadRequest.push(dataStoreManager.createUpdateRequest(girderToken,fileId,fileSize));
                                     }
                                }
-                       }
+                         }
                      }
                     $q.all(createUploadRequest).then(function(uploadChunkInfo){
                          var uploadChunkData = [];

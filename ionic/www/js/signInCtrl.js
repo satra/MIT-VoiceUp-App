@@ -1,7 +1,7 @@
 angular.module('signInCtrl',[])
 //=======Home screen controller======================
 .controller('signInCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
-  dataStoreManager,consentDataManager,profileDataManager,surveyDataManager,$cordovaEmailComposer,syncDataFactory,pinModalService,eligiblityDataManager,irkResults,$base64,$state,$location,$window,$q) {
+  dataStoreManager,consentDataManager,profileDataManager,surveyDataManager,$cordovaEmailComposer,syncDataFactory,pinModalService,eligiblityDataManager,irkConsentDocument,irkResults,$base64,$state,$location,$window,$q) {
 
 //==================================Select email view ==========
 profileDataManager.getEmailList().then(function(response){
@@ -198,9 +198,11 @@ $scope.remoteLoginSuccess = function(parentId){
                           downloadableProfile.push(dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken));
                         }
                         else  if (itemName == 'consent') {
+                           $scope.consentItemId = item_id ;
                            downloadableConsent.push(dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken));
                         }
                         else if (itemName.toLowerCase() == 'settings'){
+                          $scope.settingsItemId = item_id ;
                           downloadableSettings.push(dataStoreManager.downloadFilesListForItem(item_id,$scope.authToken));
                         }
                    }
@@ -349,6 +351,7 @@ $scope.closeModal = function() {
           }
          if (processFlag) {
              var enable_review = $scope.enable_review ;
+             $rootScope.consentResult = irkConsentDocument.getDocument();
              if ( enable_review.toLowerCase()== "true") {
              var consentArray = $scope.consent_array ;
              var validateFalg = true ;
@@ -425,18 +428,80 @@ $scope.launchUserActivity = function(){
       var leaveData = '{"left_study": false}';
       var folderId = $scope.folderId;
       var authToken = $scope.authToken;
-      $ionicLoading.show();
-      syncDataFactory.leaveStudyUpdateStatus(folderId,authToken,leaveData).then(function(leaveStudyStatus){
-      $ionicHistory.clearCache().then(function(){
-        $scope.modal.remove();
-        $ionicLoading.hide();
-        $state.transitionTo('tab.Activities');
+      var localUserId = $scope.localUserId;
+      var email = $scope.emailId ;
+      var settingsItemId = $scope.settingsItemId;
+      var consentItemId = $scope.consentItemId;
+      var configFileName = "config_json" ;
+      var consentFileName = "consent_json" ;
+      var updateQueue = [];
+
+      var docDefinition = $rootScope.consentResult;
+      if (docDefinition) {
+         docDefinition = JSON.stringify($rootScope.consentResult.docDefinition);
+      }
+
+    // update consent json in result table
+    updateQueue.push(syncDataFactory.addToSyncQueue($scope.authToken,localUserId,configFileName,leaveData,folderId,settingsItemId,true));
+    updateQueue.push(syncDataFactory.addToSyncQueue($scope.authToken,localUserId,consentFileName,docDefinition,folderId,consentItemId,true));
+    $ionicLoading.show();
+    $q.all(updateQueue).then(function(filesToDownload){
+      surveyDataManager.updateConsentFromResultTable(localUserId,docDefinition,'consent').then(function(response){
+        // start sync and upload services
+        $scope.syncServiceToUpdate();
       });
-    },function(error){
-        $ionicLoading.hide();
     });
+
+      // check data available in update table
+     /*    syncDataFactory.checkProfileJsonForUerID(localUserId,configFileName).then(function(rows){
+          if (rows.length >0) {
+            syncDataFactory.updateToSyncQueueData(localUserId,configFileName,leaveData,true).then(function(consentUpload){
+              if (consentUpload && $scope.authToken) {
+                  // start sync and upload services
+                   $scope.syncServiceToUpdate();
+                 }
+             });
+          }else {
+             syncDataFactory.addToSyncQueue($scope.authToken,localUserId,configFileName,leaveData,folderId,settingsItemId,true).then(function(consentUpload){
+               if (consentUpload && $scope.authToken)  {
+                  // start sync and upload services
+                   $scope.syncServiceToUpdate();
+                 }
+             });
+          }
+       });
+    */
 }
 
+$scope.syncServiceToUpdate = function () {
+    if(window.Connection) {
+              if(navigator.connection.type == Connection.NONE) {
+              $scope.launchActivityScreen();
+              }else {
+              syncDataFactory.queryDataNeedToSyncUpdate("config_json").then(function(syncData){
+                 if (syncData.rows.length > 0)  {
+                         $ionicLoading.show({template: 'Updating..'});
+                         syncDataFactory.startSyncServiesToUpdateData(syncData.rows).then(function(res){
+                         $scope.launchActivityScreen();
+                      },function(error){
+                      $scope.launchActivityScreen();
+                      });
+                   }
+                });
+              }
+          }else{
+          $scope.launchActivityScreen();
+      }
+}
+
+
+$scope.launchActivityScreen = function (){
+  $ionicHistory.clearCache().then(function(){
+    $scope.modal.remove();
+    $ionicLoading.hide();
+    $state.transitionTo('tab.Activities');
+   });
+}
 
 // =====================validate sign in form ============
 $scope.validateSignInForm = function (){

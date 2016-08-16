@@ -195,6 +195,19 @@ getQuestionExpiry : function  (questionId){
   },
 
 // ----------------update queries ================================
+  updateConsentFromResultTable : function  (userId,resultJson,resultType){
+    var deferred = $q.defer();
+    var db = databaseManager.getConnectionObject();
+    var query = "UPDATE Results SET resultJson = '"+resultJson+"' WHERE resultType = ? AND userId = ?";
+    var update =  $cordovaSQLite.execute(db, query , [resultType,userId] )
+                   .then(function(res) {
+                         return res ;
+                     }, function (err) {
+                       return err ;
+                 });
+   deferred.resolve(update);
+   return deferred.promise;
+   },
   updateSurveyResultToTempTable: function  (userId,questionId,isSkipped){
       var deferred = $q.defer();
       var db = databaseManager.getConnectionObject();
