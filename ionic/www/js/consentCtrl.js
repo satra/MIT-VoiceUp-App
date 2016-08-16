@@ -48,6 +48,8 @@ $scope.closeModal = function() {
 
     if (processFlag) {
           var enable_review = $scope.enable_review ;
+          $rootScope.consentFullJson = irkResults.getResults().childResults ;
+          $rootScope.consentResult = irkConsentDocument.getDocument();
           if ( enable_review.toLowerCase()== "true") {
           var consentArray = $scope.consent_array ;
           var validateFalg = true ;
@@ -79,8 +81,6 @@ $scope.closeModal = function() {
             })
           // check the user flag accoding to end user answer
           if (validateFalg) {
-            $rootScope.consentFullJson = irkResults.getResults().childResults ;
-            $rootScope.consentResult = irkConsentDocument.getDocument();
             $ionicHistory.clearCache().then(function(){
                 console.log("eligible go to sign up ");
                  $state.transitionTo('loadSignUp');
@@ -92,8 +92,6 @@ $scope.closeModal = function() {
                 });
           }
         }else{
-          $rootScope.consentFullJson = irkResults.getResults().childResults ;
-          $rootScope.consentResult = irkConsentDocument.getDocument();
           $ionicHistory.clearCache().then(function(){
                $state.transitionTo('loadSignUp');
             });
