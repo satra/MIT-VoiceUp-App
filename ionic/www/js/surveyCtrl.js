@@ -255,14 +255,16 @@ if (surveyHtml || onlySkippedQuestionHtml) {
 
                   $q.all(promises).then(function(data){
                       for (var T = 0; T < data.length; T++) {
-                        var steps = JSON.parse(data[T].steps);
-                        var questionId = data[T].taskId;
-                        var skippable = true;
-                        for (var k = 0; k < steps.length; k++) {
-                        surveyHtml += $scope.activitiesDivGenerator(questionId,steps[k],skippable);
+                        if (data[T]) {
+                          var steps = JSON.parse(data[T].steps);
+                          var questionId = data[T].taskId;
+                          var skippable = true;
+                          for (var k = 0; k < steps.length; k++) {
+                          surveyHtml += $scope.activitiesDivGenerator(questionId,steps[k],skippable);
+                         }
                       }
                     }
-                      if (surveyHtml) {
+                    if (surveyHtml) {
                             $scope.showTasksForSlectedSurvey(surveyHtml);
                       }
                   });
