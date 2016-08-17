@@ -1,15 +1,104 @@
 angular.module('homeCtrl',[])
 //=======Home screen controller======================
-.controller('homeCtrl', function($scope,$compile,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
+.controller('homeCtrl', function($scope,$timeout,$rootScope,$cordovaSQLite,$ionicPopup,$ionicHistory,$controller,$ionicModal,$http,$ionicLoading,userService,databaseManager,
   dataStoreManager,profileDataManager,$cordovaEmailComposer,pinModalService,eligiblityDataManager,irkResults,
-  $base64,$state,$location,$window,syncDataFactory,syncDataService,$q,$cordovaFileTransfer,$cordovaFile,$base64) {
+  $base64,$state,$location,$window,syncDataFactory,consentDataManager,syncDataService,$q,$cordovaFileTransfer,$cordovaFile,$base64) {
 
 $rootScope.emailId = null;
 
+
 //==================================Select email view ==========
-  $scope.openSignInChooseEmail = function() {
-    $scope.transition('signIn');
-  };
+$scope.openSignInChooseEmail = function() {
+      $scope.transition('signIn');
+};
+
+$scope.updateLocalDataBaseWithFreshDiff = function(localJSON){
+  var version = localJSON.version ;
+  var diffURL = localJSON.diffURL ;
+  var url = localJSON.URL ;
+  var eligibility = JSON.stringify(localJSON.eligibility);
+  var profile = JSON.stringify(localJSON.profile);
+  var consent_screens = JSON.stringify(localJSON.consent);
+  var completeJson = JSON.stringify(localJSON).replace(/'/g, "`") ;
+  var surveyJson =  localJSON.surveys;
+  var tasksJson =  localJSON.tasks;
+  userService.updateAppContent(version,url,diffURL,eligibility,profile,consent_screens,completeJson).then(function(dataUpdate){
+   if (dataUpdate) {
+        // update tasks and survey data
+        for (var survey in surveyJson) {
+          if (surveyJson.hasOwnProperty(survey)) {
+          var obj = surveyJson[survey];
+          var date = '';
+          var title = survey;
+          var id = survey;
+          var skippable = '';
+          var tasks = '' ;
+           for (var prop in obj) {
+             switch (prop) {
+               case "date": date = obj[prop];
+                   break;
+               case "skippable": skippable = JSON.stringify(obj[prop]);
+                   break;
+               case "tasks": tasks = JSON.stringify(obj[prop]);
+                   break;
+               default:
+             }
+           if (date && title && id && tasks) {
+               var dateArray =date.split(" ");
+               var day = dateArray[2];
+               var month = dateArray[3];
+               userService.updateSurveysTableById(day,month,title,id,skippable,tasks).then(function(respw){
+                console.log('update survey '+respw);
+               });
+             }
+           }
+         }
+       }
+      for (var task in tasksJson) {
+         if (tasksJson.hasOwnProperty(task)) {
+         var timeLimit = tasksJson[task].timelimit ;
+         var steps = JSON.stringify(tasksJson[task].steps).replace(/'/g, "`");
+         if (timeLimit === undefined || timeLimit === null) {
+         timeLimit = '';
+         }
+         userService.updateTasksTableById(task,steps,timeLimit).then(function(affectRows){
+           console.log(task+" updated ");
+         });
+       }
+      }
+    }
+  });
+}
+
+/*
+document.addEventListener("deviceready", function() {
+  if(window.Connection) {
+        //  $ionicLoading.show();
+            if(navigator.connection.type == Connection.NONE) {
+            $ionicLoading.hide();
+            }else {
+              var localJSON = null ;
+                  userService.getAppContent().then(function(localData){
+                            localJSON = JSON.parse(localData.completeJson) ;
+                            var savedVersion = localData.version;
+                            var diffURL = localData.diffURL ;
+                            userService.getSeverJson(diffURL).then(function(newJson){
+                            var delta = JSON.parse(JSON.stringify(newJson).replace(/\s/g, ""));
+                            var newVersion = delta.version[1] ;
+                            if (savedVersion.trim()!=newVersion.trim()) {
+                              var diffpatcher = jsondiffpatch.create();
+                              diffpatcher.patch(localJSON, delta);
+                              $scope.updateLocalDataBaseWithFreshDiff(localJSON);
+                            }else {
+                              $ionicLoading.hide();
+                            }
+                       });
+            });
+      }
+  }
+}, false);
+
+*/
 
 
 if(window.Connection) {
@@ -60,15 +149,17 @@ $scope.startUpdateSync = function(updateData){
   });
 }
 
+
 // learn controller parameters
 $scope.homeCalss = "icon icon ion-close-round";
 $scope.showCloseButton = true ;
-// label for email(ios)/download(android)
-if (ionic.Platform.isAndroid()) {
-$scope.emailOrDownloadConsentLabel  = "Download Consent Document";
-}else{
-$scope.emailOrDownloadConsentLabel  = "Email Consent Document";
-}
+
+     // label for email(ios)/download(android)
+      if (ionic.Platform.isAndroid()) {
+        $scope.emailOrDownloadConsentLabel  = "Download Consent Document";
+      }else{
+        $scope.emailOrDownloadConsentLabel  = "Email Consent Document";
+      }
 
 databaseManager.checkDatabaseExists().then(function(res){
        if (res == 5 ) {
@@ -159,8 +250,8 @@ databaseManager.checkDatabaseExists().then(function(res){
        }
  });
 
-  //openOnlineResource
-  $scope.openOnlineResource = function() {
+//openOnlineResource
+$scope.openOnlineResource = function() {
     $ionicModal.fromTemplateUrl('templates/modal-online-resource.html', {
       scope: $scope,
       animation: 'slide-in-up'

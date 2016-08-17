@@ -7,13 +7,13 @@ angular.module('userService', [])
 			  });
 		},
 		getLocalJson : function(){
-			return $http.get("assets/consent.json").then(function(response) {
+			return $http.get("assets/left.json").then(function(response) {
 					 return response.data;
 			});
 		},
 
-		getSeverJson:function(){
-			return $http.get("assets/diffJson.json").then(function(response) {
+		getSeverJson:function(diffURL){
+			return $http.get(diffURL).then(function(response) {
 					 return response.data;
 			});
 		},
@@ -34,6 +34,57 @@ angular.module('userService', [])
 					});
 		 return deferred.promise;
 		},
+
+		updateAppContent :  function (version,URL,diffURL,eligibility,profile,consent_screens,completeJson){
+			var deferred = $q.defer();
+			var db = databaseManager.getConnectionObject();
+	  	var query = "UPDATE AppContent SET version ='"+version+"', url='"+URL+"' , diffURL='"+diffURL+"' , profile='"+profile+"', eligibility='"+eligibility+"' , consent='"+consent_screens+"' , completeJson='"+completeJson+"' ";
+		  var updateAppContent = $cordovaSQLite.execute(db, query)
+	 										.then(function(res) {
+	 													deferred.resolve(res.rowsAffected);
+	 										 }, function (err) {
+												 	deferred.resolve(updateAppContent);
+	 									});
+		 return deferred.promise;
+		},
+		updateSurveysTableById : function(day,month,title,id,skippable,tasks){
+         var deferred = $q.defer();
+         var db = databaseManager.getConnectionObject();
+         var query = "UPDATE Surveys SET day ='"+day+"', month='"+month+"' , title='"+title+"' , skippable='"+skippable+"', tasks='"+tasks+"' WHERE  surveyId = '"+id+"'";
+         var updateAppContent = $cordovaSQLite.execute(db, query)
+                         .then(function(res) {
+														 if (res.rowsAffected == 0) {
+															var deferred = $q.defer();
+															databaseManager.createSurveysTable(day,month,title,id,skippable,tasks).then(function(respw){
+															 console.log('insert survey '+respw);
+															 return respw;
+															});
+														}
+														return res;
+                          }, function (err) {
+                             return err ;
+                       });
+        return deferred.promise;
+     },
+		updateTasksTableById : function(taskId,steps,timeLimit){
+	 	 var deferred = $q.defer();
+	 	 var db = databaseManager.getConnectionObject();
+	 	 var query = "UPDATE Tasks SET steps ='"+steps+"', timeLimit='"+timeLimit+"' WHERE  taskId = '"+taskId+"' ";
+	 	 var updateAppContent = $cordovaSQLite.execute(db, query)
+	 									 .then(function(res) {
+	 											 if (res.rowsAffected == 0) {
+	 												 var deferred = $q.defer();
+	 												 databaseManager.createTasksTable(taskId,steps,timeLimit).then(function(resp){
+	 												 console.log('createTasksTable  '+ resp);
+	 												   return resp;
+	 												 });
+	 											 }
+	 											 return res;
+	 										}, function (err) {
+	 											 return err ;
+	 								 });
+	 	return deferred.promise;
+	 },
 
 	  parseConsent: function($consent_array,$enable_review){
 			  var task = '';
