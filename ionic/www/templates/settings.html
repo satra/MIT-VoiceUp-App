@@ -6,35 +6,35 @@
     <h1 class="title">Settings</h1>
   </ion-header-bar>
 
-<ion-content>
-  <div class="list">
+  <ion-content>
+    <div class="list">
 
-        <a href="javascript:void(0)"  ng-click="logOut()" class="item IRK-FONT4 inlineht" >Leave Study</a>
+      <a href="javascript:void(0)" ng-click="logOut()" class="item IRK-FONT4 inlineht">Leave Study</a>
 
-        <li class="item item-toggle IRK-FONT4 inlineht ">
-              Pause Study
-             <label class="toggle toggle "  >
-                 <input type="checkbox"  type="submit" >
-                 <div class="track">
-                     <div class="handle"></div>
-                 </div>
-             </label>
-         </li>
+      <li class="item item-toggle IRK-FONT4 inlineht ">
+        Pause Study
+        <label class="toggle toggle ">
+          <input type="checkbox" type="submit">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </li>
 
-     <li class="item item-toggle IRK-FONT4 inlineht">
-         Daily Notification
-         <label class="toggle toggle" >
-             <input type="checkbox" ng-model="daily" ng-change="toggleDailyNotification()" type="submit">
-             <div class="track">
-                 <div class="handle"></div>
-             </div>
-         </label>
-     </li>
+      <li class="item item-toggle IRK-FONT4 inlineht">
+        Daily Notification
+        <label class="toggle toggle">
+          <input type="checkbox" ng-model="daily" ng-change="toggleDailyNotification()" type="submit">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </li>
 
-   <!--call the function in ng-click next to anchor tag-->
-     <a href="javascript:void(0)"  ng-click="emailConsent()" class="item IRK-FONT4 inlineht" ng-hide="hideDownloadButton" >{{emailOrDownloadConsentLabel}}</a>
+      <!--call the function in ng-click next to anchor tag-->
+      <a href="javascript:void(0)" ng-click="emailConsent()" class="item IRK-FONT4 inlineht" ng-hide="hideDownloadButton">{{emailOrDownloadConsentLabel}}</a>
 
-     <a href="javascript:void(0)" ng-click="viewPermissions()" class="item item-icon-right IRK-FONT4 inlineht">  View Permissions
+      <a href="javascript:void(0)" ng-click="viewPermissions()" class="item item-icon-right IRK-FONT4 inlineht">  View Permissions
      <div class="icon font-settings" > <i class="icon icon ion-ios-arrow-right icon  IRK-FONT1"></i></div>
 
       <a href="javascript:void(0)" ng-click="viewCopyrightInfo()" class="item item-icon-right IRK-FONT4 inlineht" > Copyrights Information
@@ -45,9 +45,9 @@
     <!-- <a href="javascript:void(0)" ng-click="verifyUser()" class="item item-icon-right IRK-FONT2 buttonRed" ng-hide="showVerifyButton">  Verify
     <a href="javascript:void(0)" ng-click="switchUser()" class="item item-icon-right IRK-FONT2 buttonRed" >  Logout -->
     <a type="button" ng-click="verifyUser()" class=" buttonRed marB2p irk-centered marT5p" ng-hide="hideVerifyButton"><b>VERIFY<b></a>
-      <a type="button" ng-click="switchUser()"class=" buttonRed marB2p marT5p irk-centered" ><b>LOGOUT<b></a>
+      <a type="button" ng-click="switchUser()" class=" buttonRed marB2p marT5p irk-centered"><b>LOGOUT<b></a>
 
 
   </ion-content>
 
-</ion-modal-view >
+</ion-modal-view>

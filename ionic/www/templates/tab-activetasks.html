@@ -1,14 +1,15 @@
 <ion-view hide-nav-bar="true" class="irk-modal">
-    <ion-header-bar>
-     <div class="buttons">
-      </div>
-      <h1 class="title">Dashboard</h1>
-    </ion-header-bar>
+  <ion-header-bar>
+    <div class="buttons">
+    </div>
+    <h1 class="title">Dashboard</h1>
+  </ion-header-bar>
   <ion-content>
-    <flex-calendar options="options" events="events"></flex-calendar> <br>
-    <canvas id="line"  class="chart chart-line"    ng-if="one"     data="data"   labels="labels"  legend="true" series="series" ></canvas>
-    <canvas id="line"  class="chart chart-line"    ng-if="two"     data="data1"  labels="labels1" legend="true" series="series1"  ></canvas>
-    <canvas id="bar"   class="chart chart-bar"     ng-if="three"   data="data2"  labels="labels2" legend="true" series="series2" ></canvas>
-    <canvas id="radar" class="chart chart-radar"   ng-if="four"    data="data3"  labels="labels3" legend="true" series="series3" ></canvas>
+    <flex-calendar options="options" events="events"></flex-calendar>
+    <br>
+    <canvas id="line" class="chart chart-line" ng-if="one" data="data" labels="labels" legend="true" series="series"></canvas>
+    <canvas id="line" class="chart chart-line" ng-if="two" data="data1" labels="labels1" legend="true" series="series1"></canvas>
+    <canvas id="bar" class="chart chart-bar" ng-if="three" data="data2" labels="labels2" legend="true" series="series2"></canvas>
+    <canvas id="radar" class="chart chart-radar" ng-if="four" data="data3" labels="labels3" legend="true" series="series3"></canvas>
   </ion-content>
 </ion-view>

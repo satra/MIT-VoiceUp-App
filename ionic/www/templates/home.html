@@ -1,31 +1,31 @@
-<ion-view  hide-nav-bar="true" class="pane IRK-BORBTM-NONE whitecolor">
+<ion-view hide-nav-bar="true" class="pane IRK-BORBTM-NONE whitecolor">
   <ion-header-bar class="IRK-BORBTM-NONE whitecolor">
     <h1 class="title"></h1>
     <div class="buttons">
       <button class="button button-clear" ng-click="openOnlineResource()"><i class="icon ion-ios-information infoColor padL10"></i></button>
     </div>
   </ion-header-bar>
-     <ion-content content scroll="false" >
-   <!-- <div class="irk-centered marT5p ">
+  <ion-content content scroll="false">
+    <!-- <div class="irk-centered marT5p ">
      <img src="img/logo-2.png" class=" marT5p">
    </div> -->
-   <div class="banner_holder">
-    <img src="img/logo-2.png"class="banner_holderImage">
-</div>
+    <div class="banner_holder">
+      <img src="img/logo-2.png" class="banner_holderImage">
+    </div>
 
-   <div class="irk-text-centered font22 fontB IRK-FONT5 irk-font-helvetica marB15">A Biomedical Research Study</div>
-         <div class="irk-text-centered IRK-FONT2 irk-font-helvetica marB45p" ng-click="sendConsentDoc()">
-           <a href="#"  class="vatag">{{emailOrDownloadConsentLabel}}</a></div>
-         <!-- <button class="irk-btn irk-centered  irk-font-helvetica marB20" ng-click="joinStudy()" ><b>JOIN STUDY<b></button>
+    <div class="irk-text-centered font22 fontB IRK-FONT5 irk-font-helvetica marB15">A Biomedical Research Study</div>
+    <div class="irk-text-centered IRK-FONT2 irk-font-helvetica marB45p" ng-click="sendConsentDoc()">
+      <a href="#" class="vatag">{{emailOrDownloadConsentLabel}}</a></div>
+    <!-- <button class="irk-btn irk-centered  irk-font-helvetica marB20" ng-click="joinStudy()" ><b>JOIN STUDY<b></button>
          <button class="irk-centered fontB IRK-FONT2 irk-font-helvetica IRK-TRANSPARENT-BUTTON-btm " ng-click="openSignInChooseEmail()" >Sign In</button> -->
-     </ion-content>
-     <ion-footer-bar class="irk-bottom-bar1" keyboard-attach irk-survey-bar>
-     <div>
-       <button class="irk-btn irk-centered  irk-font-helvetica" ng-click="joinStudy()" ><b>JOIN STUDY<b></button>
+  </ion-content>
+  <ion-footer-bar class="irk-bottom-bar1" keyboard-attach irk-survey-bar>
+    <div>
+      <button class="irk-btn irk-centered  irk-font-helvetica" ng-click="joinStudy()"><b>JOIN STUDY<b></button>
          <div class = "padT10">
          <button class = "irk-centered  button-clear IRK-FONT2 "ng-click="openSignInChooseEmail()"><b>Sign In</b></button>
-       </div>
-       <!-- <button class="irk-centered fontB IRK-FONT2 irk-font-helvetica IRK-TRANSPARENT-BUTTON-btm padT5p " ng-click="openSignInChooseEmail()" >Sign In</button> -->
-     </div>
-     </ion-footer-bar>
+    </div>
+    <!-- <button class="irk-centered fontB IRK-FONT2 irk-font-helvetica IRK-TRANSPARENT-BUTTON-btm padT5p " ng-click="openSignInChooseEmail()" >Sign In</button> -->
+    </div>
+  </ion-footer-bar>
 </ion-view>

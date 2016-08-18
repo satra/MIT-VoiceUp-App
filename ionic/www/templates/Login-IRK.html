@@ -6,20 +6,20 @@
       <button class="button button-clear IRK-FONT3" ng-click="GoBack()">Cancel</button>
     </div>
   </ion-header-bar>
-  <ion-content >
-      <div class="irk-centered  textfld IRK-MARBTM-30p IRK-FONT1 irk-font-helvetica">Sign in</div>
-<div class="list" id="signIn">
-   <label class="item item-input item-stacked-label irk-centered barTnone IRK-BORBTM-NONE">
-   <span class="input-label"></span>
-   <input class="irk-centered" type="Email" id="email" ng-model="$parent.signIn.email" placeholder="Email" class="form-item" >
-   </label>
-   <hr class = "borwidth">
-   <label class="item item-input item-stacked-label irk-centered barTnone IRK-BORBTM-NONE">
-   <span class="input-label"></span>
-   <input class="irk-centered" type="password" id="password" placeholder="Password" class="form-item">
-   </label>
-   <br>
-   <button class="irk-btn irk-centered irk-font-helvetica marT10p"  ng-click="signInSubmit('signin')"><b>SIGN IN<b></button>
+  <ion-content>
+    <div class="irk-centered  textfld IRK-MARBTM-30p IRK-FONT1 irk-font-helvetica">Sign in</div>
+    <div class="list" id="signIn">
+      <label class="item item-input item-stacked-label irk-centered barTnone IRK-BORBTM-NONE">
+        <span class="input-label"></span>
+        <input class="irk-centered" type="Email" id="email" ng-model="$parent.signIn.email" placeholder="Email" class="form-item">
+      </label>
+      <hr class="borwidth">
+      <label class="item item-input item-stacked-label irk-centered barTnone IRK-BORBTM-NONE">
+        <span class="input-label"></span>
+        <input class="irk-centered" type="password" id="password" placeholder="Password" class="form-item">
+      </label>
+      <br>
+      <button class="irk-btn irk-centered irk-font-helvetica marT10p" ng-click="signInSubmit('signin')"><b>SIGN IN<b></button>
    <button class="irk-centered marT10p  IRK-FONT2 irk-font-helvetica button button-clear" ng-click="forgotPassword()">Forgot Password?</button>
 </div>
   </ion-content>
