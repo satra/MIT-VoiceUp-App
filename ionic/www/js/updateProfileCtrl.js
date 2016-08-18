@@ -1,10 +1,11 @@
 angular.module('updateProfileCtrl', [])
   //=======Home screen controller======================
   .controller('updateProfileCtrl', function($scope, $rootScope, $ionicHistory, $state,
-    $ionicHistory, $cordovaSQLite, $ionicPopup, $q, $compile, $base64, $ionicModal, $http, $cordovaEmailComposer, $cordovaDatePicker,
-    $ionicLoading, profileDataManager, databaseManager, syncDataFactory, surveyDataManager, $state, dataStoreManager, $cordovaFileTransfer, $cordovaFile, $location, $window, $cordovaDeviceMotion, $cordovaMedia, $cordovaGeolocation) {
+    $ionicHistory, $cordovaSQLite, $ionicPopup, $q, $compile, $base64, $ionicModal, $http,
+    $cordovaEmailComposer, $cordovaDatePicker, $ionicLoading, profileDataManager, databaseManager,
+    syncDataFactory, surveyDataManager, $state, dataStoreManager, $cordovaFileTransfer, $cordovaFile,
+    $location, $window, $cordovaDeviceMotion, $cordovaMedia, $cordovaGeolocation, appConstants) {
     var email = $rootScope.emailId;
-
     $rootScope.emailId = email;
     if ($rootScope.emailId) {
       $scope.hideDownloadButton = false;
@@ -78,8 +79,8 @@ angular.module('updateProfileCtrl', [])
       if (emailId) {
         $rootScope.popupAny = $ionicPopup.show({
           template: '<input style="text-align: center" type="password" id="password_recover" >',
-          title: 'Enter Password',
-          subTitle: 'Please enter your account password',
+          title: appConstants.enterAccountPasswordTitle,
+          subTitle: appConstants.enterAccountPasswordSubTitle,
           scope: $scope,
           buttons: [{
             text: 'Cancel'
@@ -118,7 +119,7 @@ angular.module('updateProfileCtrl', [])
     $scope.failureMessage = function(message) {
       $ionicLoading.hide();
       $ionicPopup.alert({
-        title: 'Error',
+        title: appConstants.errorDailogTitle,
         template: message
       });
     }
@@ -126,7 +127,7 @@ angular.module('updateProfileCtrl', [])
     $scope.startSyncServices = function() {
       // start sync services to upload the data
       $ionicLoading.show({
-        template: 'Data Sync..'
+        template: appConstants.syncNewDataMessage
       });
       syncDataFactory.checkDataAvailableToSync().then(function(res) {
         if (res.length > 0) {
@@ -283,8 +284,8 @@ angular.module('updateProfileCtrl', [])
       $rootScope.AllowedToDisplayNextPopUp = true;
       if (logoutToken) {
         var confirmPopup = $ionicPopup.confirm({
-          title: 'Leave Study Confirm',
-          template: 'Are you sure you want to Leave Study?'
+          title: appConstants.leaveStudyMessageTitle,
+          template: appConstants.leaveStudyMessage
         });
         $rootScope.popupAny = confirmPopup;
         confirmPopup.then(function(res) {
@@ -292,7 +293,7 @@ angular.module('updateProfileCtrl', [])
             // do a netwrok check
             // update the status in the server before logout and fire the request
             // create a config file
-            var leaveData = '{"left_study": true}';
+            var leaveData = appConstants.leaveStudyServerData;
             var folderId = $scope.folderId;
             $ionicLoading.show();
             syncDataFactory.leaveStudyUpdateStatus(folderId, logoutToken, leaveData).then(function(leaveStudyStatus) {
@@ -332,8 +333,8 @@ angular.module('updateProfileCtrl', [])
         });
       } else {
         $ionicPopup.alert({
-          title: "Alert",
-          template: "Please verify the account to leave the study."
+          title: appConstants.syncOnceAccountVerifiedTitle,
+          template: appConstants.verifyAccountBeforeLeaveStudy
         });
       }
     }
@@ -372,7 +373,7 @@ angular.module('updateProfileCtrl', [])
                 window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
                 window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
                   var entry = fileSystem.root;
-                  entry.getDirectory("VoiceUp", {
+                  entry.getDirectory(appConstants.appFolderName, {
                     create: true,
                     exclusive: false
                   }, onSuccess, onFail);
@@ -384,22 +385,19 @@ angular.module('updateProfileCtrl', [])
                     .then(function(success) {
                       $ionicLoading.hide();
                       $ionicPopup.alert({
-                        title: 'Download',
-                        template: "Consent document downloaded to VoiceUp folder."
+                        title: appConstants.downloadConsentMessageTitle,
+                        template: appConstants.downloadConsentMessage
                       });
                     }, function(error) {
                       $ionicLoading.hide();
-                      console.log(error);
                     });
                 }
 
                 function onFail(error) {
                   $ionicLoading.hide();
-                  console.log(error);
                 }
               } else {
                 $ionicLoading.hide();
-                console.log("could not create the blob");
               }
             }, function(error) {
               $ionicLoading.hide();
@@ -410,7 +408,7 @@ angular.module('updateProfileCtrl', [])
                 attachments: [
                   "base64:consent.pdf//" + dataURL
                 ],
-                subject: 'Consent doc',
+                subject: appConstants.consentEmailSubjectName,
                 isHtml: true
               };
               $cordovaEmailComposer.isAvailable().then(function() {
@@ -515,7 +513,6 @@ angular.module('updateProfileCtrl', [])
         minuteInterval: 15
       };
       $cordovaDatePicker.show(options).then(function(date) {
-        console.log(date);
         if (date) {
           $scope.scheduleNotification(date);
         } else {
@@ -529,10 +526,10 @@ angular.module('updateProfileCtrl', [])
     $scope.scheduleNotification = function(notifDate) {
       cordova.plugins.notification.local.schedule({
         id: 1332,
-        title: "VoiceUp",
-        text: "Survey Reminder",
+        title: appConstants.scheduleNotificationTitle,
+        text: appConstants.scheduleNotificationText,
         at: notifDate,
-        every: "day"
+        every: appConstants.scheduleNotificationEvery
       });
       $scope.updateToggleValue();
     }
@@ -560,12 +557,9 @@ angular.module('updateProfileCtrl', [])
 
         var iEl = angular.element(document.querySelector('#btn1'));
         iEl.remove();
-
         $scope.geoloc = window.localStorage.getItem('Geo');
-
         if (window.localStorage.getItem('Geo') == 'YES') {
           $scope.geoLabel = 'GRANTED'
-
           var myEl = angular.element(document.querySelector('#geo'));
           myEl.removeClass('irk-btnloc');
           myEl.addClass('irk-btnlocG');
@@ -574,49 +568,34 @@ angular.module('updateProfileCtrl', [])
         } else {
           $scope.geoLabel = 'ALLOW'
         }
-
         $scope.allowGeoLocation = function() {
           $scope.Disable = true;
-
-          // cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
-          // $scope.geoLabel = 'Granted';
-          // }, function(error){
-          // $scope.geoLabel = 'Allow';
-          // });
           var posOptions = {
             timeout: 10000,
             enableHighAccuracy: false
           };
-
-
           $cordovaGeolocation
             .getCurrentPosition(posOptions)
-
-          .then(function(position) {
-            if (position) {
-              var myEl = angular.element(document.querySelector('#geo'));
-              myEl.removeClass('irk-btnloc');
-              myEl.addClass('irk-btnlocG');
-              window.localStorage.setItem('Geo', 'YES');
-            }
-
-            var lat = position.coords.latitude
-            var long = position.coords.longitude
-            $scope.geoLabel = 'GRANTED';
-
-          }, function(err) {
-            window.localStorage.setItem('Geo', 'NO');
-            $ionicPopup.alert({
-              title: 'Alert',
-              template: "Go to settings and allow location service for the app."
+            .then(function(position) {
+              if (position) {
+                var myEl = angular.element(document.querySelector('#geo'));
+                myEl.removeClass('irk-btnloc');
+                myEl.addClass('irk-btnlocG');
+                window.localStorage.setItem('Geo', 'YES');
+              }
+              var lat = position.coords.latitude
+              var long = position.coords.longitude
+              $scope.geoLabel = 'GRANTED';
+            }, function(err) {
+              window.localStorage.setItem('Geo', 'NO');
+              $ionicPopup.alert({
+                title: appConstants.syncOnceAccountVerifiedTitle,
+                template: appConstants.infoMessageToAllowLocationServiceLater
+              });
+              $scope.geoLabel = 'DENIED';
+              $scope.Disable = false;
             });
-            $scope.geoLabel = 'DENIED';
-            $scope.Disable = false;
-
-          });
         };
-
-
         var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess, accelerometerError, {
           frequency: 3000
         });
@@ -756,7 +735,7 @@ angular.module('updateProfileCtrl', [])
               if (value == '') {
                 formValid = false;
                 keepGoing = false;
-                $scope.callAlertDailog('Please enter your ' + lableId);
+                $scope.callAlertDailog(appConstants.missingFieldInGeneral + lableId);
               } else {
                 obj = {
                   "id": lableId,
@@ -772,7 +751,7 @@ angular.module('updateProfileCtrl', [])
               if (value == '') {
                 formValid = false;
                 keepGoing = false;
-                $scope.callAlertDailog('Please enter your ' + lableId);
+                $scope.callAlertDailog(appConstants.missingFieldInGeneral + lableId);
               } else {
                 obj = {
                   "id": lableId,
@@ -845,8 +824,8 @@ angular.module('updateProfileCtrl', [])
                     $scope.syncServiceToUpdate();
                   } else {
                     $ionicPopup.alert({
-                      title: "Alert",
-                      template: "Profile data will be synced once the user account is verified."
+                      title: appConstants.syncOnceAccountVerifiedTitle,
+                      template: appConstants.syncProfileDataOnAccountVerification
                     });
                   }
                 });
@@ -854,17 +833,15 @@ angular.module('updateProfileCtrl', [])
                 // call insert service
                 syncDataFactory.addToSyncQueue($scope.authToken, $scope.userId, "profile_json", profileJson, $scope.folderId, $scope.profileItemId, true).then(function(consentUpload) {
                   if (consentUpload && $scope.authToken) {
-                    // start sync and upload services
                     $scope.syncServiceToUpdate();
                   } else {
                     $ionicPopup.alert({
-                      title: "Alert",
-                      template: "Profile data will be synced once the user account is verified."
+                      title: appConstants.syncOnceAccountVerifiedTitle,
+                      template: appConstants.syncProfileDataOnAccountVerification
                     });
                   }
                 });
               }
-
             });
           }
         });
@@ -884,15 +861,15 @@ angular.module('updateProfileCtrl', [])
               syncDataFactory.queryDataNeedToSyncUpdate("profile_json").then(function(syncData) {
                 if (syncData.rows.length > 0) {
                   $ionicLoading.show({
-                    template: 'Data Sync..'
+                    template: appConstants.syncNewDataMessage
                   });
                   syncDataFactory.startSyncServiesToUpdateData(syncData.rows).then(function(res) {
                     $ionicLoading.hide();
                     var message = res.statusText;
-                    var title = "Data update success";
+                    var title = appConstants.updateDataSuccessTitle;
                     if (!message) {
-                      message = "Data added for later update.";
-                      title = "Data update failed";
+                      message = appConstants.profileDataCachedForLaterUpload;
+                      title = appConstants.profileDataCachedForLaterUploadMessage;
                     }
                     $ionicPopup.alert({
                       title: title,
@@ -909,8 +886,8 @@ angular.module('updateProfileCtrl', [])
           }
         } else {
           $ionicPopup.alert({
-            title: "Alert",
-            template: "Profile data will be synced once the user account is verified."
+            title: appConstants.syncOnceAccountVerifiedTitle,
+            template: appConstants.syncProfileDataOnAccountVerification
           });
         }
       });
@@ -921,8 +898,8 @@ angular.module('updateProfileCtrl', [])
     $scope.uploadFailure = function() {
       $ionicLoading.hide();
       $ionicPopup.alert({
-        title: "Data upload failure",
-        template: "Failed to sync the data, will be synced later."
+        title: appConstants.syncDataUploadFailedTitle,
+        template: appConstants.syncDataUploadFailedMessage
       });
     }
 
@@ -979,18 +956,16 @@ angular.module('updateProfileCtrl', [])
                 $scope.managePasscodeNew = false;
                 $scope.managePasscode = true;
               } else {
-                //  cordova.plugins.Keyboard.close();
                 //clear div
                 var passcode = angular.element(document.querySelector('#passcode'));
                 $scope.passcode = '';
                 passcode.val('');
-                // $compile(passcode)($scope);
-                $scope.callAlertDailog("Passcode doesn't match with the existing passcode.");
+                $scope.callAlertDailog(appConstants.passcodeMissMatchWithExistingPasscode);
               }
             });
           });
         } else if (passcode.length > 4) {
-          $scope.callAlertDailog("Passcode length should be max 4.");
+          $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
         }
       }
       //enter new passcode if size ? then launch to connfirm new passcode
@@ -1010,7 +985,7 @@ angular.module('updateProfileCtrl', [])
         $scope.managePasscodeConfirm = false;
 
       } else if (passcode.length > 4) {
-        $scope.callAlertDailog("Passcode length should be max 4.");
+        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
       }
     }
 
@@ -1028,7 +1003,7 @@ angular.module('updateProfileCtrl', [])
             profileDataManager.getUserIDByEmail(email).then(function(res) {
               profileDataManager.updatePasscodeToUserID(res.trim(), $scope.passcode).then(function(res) {
                 if (res) {
-                  $scope.successAlertMsg("Passcode updated.");
+                  $scope.successAlertMsg(appConstants.updatePasscodeSuccessMessage);
                   $scope.closePasscodeModal();
                 }
               });
@@ -1039,7 +1014,7 @@ angular.module('updateProfileCtrl', [])
           $scope.confirm_passcode = '';
           // $compile(confirm_passcode_div)($scope);
           confirm_passcode_div.val('');
-          $scope.callAlertDailog("Passcode should match with confirm");
+          $scope.callAlertDailog(appConstants.passcodeMissMatchWithConfirmPasscode);
           $scope.confirmLoop = $scope.confirmLoop + 1;
           if ($scope.confirmLoop >= 3) {
             document.activeElement.blur(); // remove the keypad
@@ -1055,7 +1030,7 @@ angular.module('updateProfileCtrl', [])
           }
         }
       } else if (confirm_passcode.length > 4) {
-        $scope.callAlertDailog("Passcode length should be max 4.");
+        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
       }
     }
 
@@ -1067,7 +1042,7 @@ angular.module('updateProfileCtrl', [])
       document.activeElement.blur(); // remove the keypad
       $ionicLoading.hide();
       $rootScope.alertDialog = $ionicPopup.alert({
-        title: 'Data Invalid',
+        title: appConstants.errorDailogTitle,
         template: message
       });
     }
@@ -1075,7 +1050,7 @@ angular.module('updateProfileCtrl', [])
     $scope.successAlertMsg = function(message) {
       $ionicLoading.hide();
       $rootScope.alertDialog = $ionicPopup.alert({
-        title: 'Success',
+        title: appConstants.updatePasscodeSuccessTitle,
         template: message
       });
     }

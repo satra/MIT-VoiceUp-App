@@ -241,11 +241,89 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
 })
 
 //.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
-.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
-  /*  .constant('config', {
-      'base_url': 'https://rig.mit.edu/girder/api/v1/'
-    })
-  */
+//.constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
+.constant('appConstants', {
+  'base_url': 'https://rig.mit.edu/girder/api/v1/',
+
+  //home controller messages
+  'syncNewDataMessage': 'Data Sync..',
+  'syncUpdateDataMessage': 'Update Sync..',
+  'checkInternetConnectionMessage': 'Please check network connection.',
+  'checkInternetConnectionMessageTitle': 'Network',
+  'downloadConsentMessageTitle': 'Download',
+  'downloadConsentMessage': 'Consent document downloaded to VoiceUp folder.',
+  'localConsentFilePath': 'file://assets/consent_mobile_20150528.pdf',
+  'consentEmailSubjectName': 'Consent doc',
+  'consentFileName': 'consent_mobile_20150528.pdf',
+  'appFolderName': 'VoiceUp',
+  'consentFileURL': 'http://voicesurvey.mit.edu/sites/default/files/documents/consent_mobile_20150528.pdf',
+
+  //sign up controller messages
+  'missingFieldInGeneral': 'Please enter your ',
+  'signUpValidationMessageTitle': 'Validation',
+  'passwordLengthOfSixCharacter': 'Password must be at least 6 characters.',
+  'confirmPasswordLengthOfSixCharacter': 'Confirm Password must be at least 6 characters.',
+  'failedToCreateUserWithEmptyStatus': "Failed to create the user try later.",
+  'passcodeMissMatchWithExistingPasscode': 'Passcode doesn\'t match with the existing passcode.',
+
+  // sign up with passcode creation
+  'passcodeOfFourDigitLength': 'Passcode length should be max 4.',
+  'passcodeMissMatchWithConfirmPasscode': "Passcode should match with confirm Passcode",
+  'passcodeMissMatchWithConfirmPasscode': "Passcode should match with confirm Passcode",
+
+
+  // geo location screen messages
+  'infoMessageToAllowLocationServiceLater': "Go to settings and allow location service for the app.",
+
+  // survey controller messages
+  'checkForServerUpdates': 'Updating..',
+  'errorDailogTitle': 'Error',
+  'displayOnlySkippedQuestionTitle': 'Only Skipped Question',
+  'displayOnlySkippedQuestionMessage': 'Do you want to display only skipped question ?',
+  'dataUploadSuccessTitle': 'Data upload success',
+  'dataUploadFailedTitle': 'Data upload failed',
+  'dataUploadFailedMessage': 'Data added for later upload.',
+  'syncOnceAccountVerifiedMessage': 'Survey will be synced once the user account is verified.',
+  'syncOnceAccountVerifiedTitle': 'Alert',
+  'syncDataUploadFailedTitle': 'Data upload failure',
+  'syncDataUploadFailedMessage': 'Failed to sync the data, will be synced later.',
+
+  // update profile and settings messages
+  'enterAccountPasswordTitle': 'Enter Password',
+  'enterAccountPasswordSubTitle': 'Please enter your account password',
+  'syncProfileDataOnAccountVerification': "Profile data will be synced once the user account is verified.",
+  'leaveStudyMessageTitle': 'Leave Study Confirm',
+  'leaveStudyMessage': 'Are you sure you want to Leave Study?',
+  'leaveStudyServerData': '{"left_study": true}',
+  'verifyAccountBeforeLeaveStudy': "Please verify the account to leave the study.",
+  'updateDataSuccessTitle': 'Data update succes',
+  'profileDataCachedForLaterUpload': "Data added for later update.",
+  'profileDataCachedForLaterUploadMessage': "Data update failed",
+  'updatePasscodeSuccessMessage': 'Passcode updated',
+  'updatePasscodeSuccessTitle': 'Success',
+
+  // notification message configuration
+  'scheduleNotificationTitle': "VoiceUp",
+  'scheduleNotificationText': "Survey Reminder",
+  'scheduleNotificationEvery': "day",
+
+  // sign in controller
+  'invalidPasscode': 'Invalid passcode',
+  'signInFailed': "Failed to Sign in.",
+  'leaveStudyFalseStatus': '{"left_study": false}',
+
+  //forgot password
+  'forgotPasswordTitle': 'Forgot Password',
+  'forgotPasswordSubTitle': 'Please enter your email',
+  'verifyTosyncFormSignUpDevice': "Please verify to sync the profile from the sign up device.",
+
+  // general
+  'failedToGetServerItems': 'Failed to get the server items.',
+  'failedToGetDataFromServer': 'Failed to get the data from server.',
+  'failedToGetProfile': 'Failed to get the profile data.',
+  'failedToGetFolderId': "Failed to get the server folder Id.",
+})
+
 
 .config(function($ionicConfigProvider) {
   $ionicConfigProvider.tabs.style('standard');

@@ -1,7 +1,10 @@
 angular.module('signInCtrl', [])
   //=======Home screen controller======================
-  .controller('signInCtrl', function($scope, $compile, $timeout, $rootScope, $cordovaSQLite, $ionicPopup, $ionicHistory, $controller, $ionicModal, $http, $ionicLoading, userService, databaseManager,
-    dataStoreManager, consentDataManager, profileDataManager, surveyDataManager, $cordovaEmailComposer, syncDataFactory, pinModalService, eligiblityDataManager, irkConsentDocument, irkResults, $base64, $state, $location, $window, $q) {
+  .controller('signInCtrl', function($scope, $compile, $timeout, $rootScope, $cordovaSQLite, $ionicPopup,
+    $ionicHistory, $controller, $ionicModal, $http, $ionicLoading, userService, databaseManager,
+    dataStoreManager, consentDataManager, profileDataManager, surveyDataManager, $cordovaEmailComposer,
+    syncDataFactory, pinModalService, eligiblityDataManager, irkConsentDocument, irkResults, $base64, $state,
+    $location, $window, $q, appConstants) {
 
     //==================================Select email view ==========
     profileDataManager.getEmailList().then(function(response) {
@@ -47,10 +50,8 @@ angular.module('signInCtrl', [])
     $scope.resetInput = function() {
       if (ionic.Platform.isIOS()) {
         $scope.ShowIos = true;
-        console.log("its iOs");
       } else if (ionic.Platform.isAndroid()) {
         $scope.ShowAndroid = true;
-        console.log("its android");
       }
       $scope.hidePasscodeDiv = false;
       $scope.hideImageDiv = true;
@@ -82,7 +83,7 @@ angular.module('signInCtrl', [])
               });
             } else {
               $scope.resetInput();
-              $scope.callAlertDailog('Invalid passcode!!!');
+              $scope.callAlertDailog(appConstants.invalidPasscode);
             }
           });
         }
@@ -167,14 +168,14 @@ angular.module('signInCtrl', [])
               if (res.status != 0) {
                 $scope.failureMessage(res.data.message);
               } else {
-                $scope.failureMessage("Failed to Sign in.");
+                $scope.failureMessage(appConstants.signInFailed);
               }
             }
           }, function(error) {
             if (error.status != 0) {
               $scope.failureMessage(error.data.message);
             } else {
-              $scope.failureMessage("Failed to Sign in.");
+              $scope.failureMessage(appConstants.signInFailed);
             }
           });
         }
@@ -267,24 +268,24 @@ angular.module('signInCtrl', [])
                       });
                     });
                   } else {
-                    $scope.failureMessage("Failed to get the profile data.");
+                    $scope.failureMessage(appConstants.failedToGetProfile);
                   }
                 } else {
-                  $scope.failureMessage("Failed to get the data from server.");
+                  $scope.failureMessage(appConstants.failedToGetDataFromServer);
                 }
               });
             } else {
-              $scope.failureMessage("Failed to get the server items.");
+              $scope.failureMessage(appConstants.failedToGetServerItems);
             }
           }, function(error) {
             if (error.status != 0) {
               $scope.failureMessage(error.data.message);
             } else {
-              $scope.failureMessage("Failed to get the server items.");
+              $scope.failureMessage(appConstants.failedToGetServerItems);
             }
           });
         } else {
-          $scope.failureMessage("Please verify to sync the profile from the sign up device.");
+          $scope.failureMessage(appConstants.verifyTosyncFormSignUpDevice);
           $ionicHistory.clearCache().then(function() {
             $scope.modal.remove();
             $state.transitionTo('home');
@@ -294,7 +295,7 @@ angular.module('signInCtrl', [])
         if (error.status != 0) {
           $scope.failureMessage(error.data.message);
         } else {
-          $scope.failureMessage("Failed to get the server folder Id.");
+          $scope.failureMessage(appConstants.failedToGetFolderId);
         }
       });
     }
@@ -302,7 +303,7 @@ angular.module('signInCtrl', [])
     $scope.failureMessage = function(message) {
       $ionicLoading.hide();
       $ionicPopup.alert({
-        title: 'Error',
+        title: appConstants.errorDailogTitle,
         template: message
       });
     }
@@ -428,7 +429,7 @@ angular.module('signInCtrl', [])
 
     $scope.launchUserActivity = function() {
       // update the leave study status in the server  then launch activity
-      var leaveData = '{"left_study": false}';
+      var leaveData = appConstants.leaveStudyFalseStatus;
       var folderId = $scope.folderId;
       var authToken = $scope.authToken;
       var localUserId = $scope.localUserId;
@@ -455,25 +456,6 @@ angular.module('signInCtrl', [])
         });
       });
 
-      // check data available in update table
-      /*    syncDataFactory.checkProfileJsonForUerID(localUserId,configFileName).then(function(rows){
-          if (rows.length >0) {
-            syncDataFactory.updateToSyncQueueData(localUserId,configFileName,leaveData,true).then(function(consentUpload){
-              if (consentUpload && $scope.authToken) {
-                  // start sync and upload services
-                   $scope.syncServiceToUpdate();
-                 }
-             });
-          }else {
-             syncDataFactory.addToSyncQueue($scope.authToken,localUserId,configFileName,leaveData,folderId,settingsItemId,true).then(function(consentUpload){
-               if (consentUpload && $scope.authToken)  {
-                  // start sync and upload services
-                   $scope.syncServiceToUpdate();
-                 }
-             });
-          }
-       });
-    */
     }
 
     $scope.syncServiceToUpdate = function() {
@@ -484,7 +466,7 @@ angular.module('signInCtrl', [])
           syncDataFactory.queryDataNeedToSyncUpdate("config_json").then(function(syncData) {
             if (syncData.rows.length > 0) {
               $ionicLoading.show({
-                template: 'Updating..'
+                template: appConstants.checkForServerUpdates
               });
               syncDataFactory.startSyncServiesToUpdateData(syncData.rows).then(function(res) {
                 $scope.launchActivityScreen();
@@ -524,7 +506,7 @@ angular.module('signInCtrl', [])
               if (value == '') {
                 formValid = false;
                 keepGoing = false;
-                $scope.callAlertDailog('Please enter your ' + placeholder);
+                $scope.callAlertDailog(appConstants.missingFieldInGeneral + placeholder);
               } else {
                 //is email valid
                 if (inputTag.hasClass('ng-invalid-email') || inputTag.hasClass('ng-invalid')) {
@@ -538,7 +520,7 @@ angular.module('signInCtrl', [])
               if (value == '') {
                 formValid = false;
                 keepGoing = false;
-                $scope.callAlertDailog('Please enter your ' + placeholder);
+                $scope.callAlertDailog(appConstants.missingFieldInGeneral + placeholder);
               }
               break;
             default:
@@ -551,7 +533,6 @@ angular.module('signInCtrl', [])
 
     //on forgot passcode launch pin screen and reset the passcode
     $scope.launchpinScreen = function() {
-
       if (ionic.Platform.isIOS()) {
         $scope.ShowIos = true;
       } else if (ionic.Platform.isAndroid()) {
@@ -573,10 +554,7 @@ angular.module('signInCtrl', [])
       });
     };
 
-
-
     $scope.createUserPin = function(localUserId, email) {
-
       profileDataManager.addPasscodeToUserID(localUserId, $scope.passcode, email, $scope.authToken).then(function(res) {
         $scope.modal.remove();
         if ($scope.leftStatus) {
@@ -587,7 +565,6 @@ angular.module('signInCtrl', [])
           $scope.transition('tab.Activities');
         }
       });
-
     }
 
     //===================================================passcode handler ============================
@@ -615,7 +592,7 @@ angular.module('signInCtrl', [])
           $scope.passcodeDiv = '';
           confirm_passcode_div.val(''); // clear the div
 
-          $scope.callAlertDailog("Passcode should match with confirm");
+          $scope.callAlertDailog(appConstants.passcodeMissMatchWithConfirmPasscode);
           $scope.confirmLoop = $scope.confirmLoop + 1;
           if ($scope.confirmLoop >= 3) {
             $scope.passcodeLabel = "Create passcode";
@@ -629,7 +606,7 @@ angular.module('signInCtrl', [])
           }
         }
       } else if (confirm_passcode.length > 4) {
-        $scope.callAlertDailog("Passcode length should be max 4.");
+        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
       }
     };
 
@@ -645,7 +622,7 @@ angular.module('signInCtrl', [])
         $scope.passcodeLabel = "Confirm Passcode";
         $scope.managePasscodeConfirm = false;
       } else if (passcode.length > 4) {
-        $scope.callAlertDailog("Passcode length should be max 4.");
+        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
       }
     };
 
@@ -653,8 +630,8 @@ angular.module('signInCtrl', [])
     $scope.forgotPassword = function() {
       var myPopup = $ionicPopup.show({
         template: '<input style="text-align: center" type="Email" id="email_recover" placeholder="Email" >',
-        title: 'Forgot Password',
-        subTitle: 'Please enter your email',
+        title: appConstants.forgotPasswordTitle,
+        subTitle: appConstants.forgotPasswordSubTitle,
         scope: $scope,
         buttons: [{
           text: 'Cancel'
@@ -695,7 +672,7 @@ angular.module('signInCtrl', [])
     $scope.callAlertDailog = function(message) {
       document.activeElement.blur(); // remove the keypad
       $ionicPopup.alert({
-        title: 'Alert',
+        title: appConstants.syncOnceAccountVerifiedTitle,
         template: message
       });
     };

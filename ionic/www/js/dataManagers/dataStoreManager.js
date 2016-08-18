@@ -1,5 +1,6 @@
 angular.module('dataStoreManager', [])
-  .factory('dataStoreManager', function($http, base_url, $q, $ionicPopup, $ionicLoading, databaseManager, $cordovaSQLite) {
+  .factory('dataStoreManager', function($http, appConstants, $q, $ionicPopup, $ionicLoading, databaseManager, $cordovaSQLite) {
+    var base_url = appConstants.base_url;
     //open connection
     return {
 

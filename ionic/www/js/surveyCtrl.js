@@ -1,7 +1,7 @@
 angular.module('surveyCtrl', [])
   // ==== Dummy contorller need to be removed later before production  ========
   .controller('surveyCtrl', function($scope, $ionicHistory, $state, $rootScope, $ionicModal,
-    surveyDataManager, $ionicLoading, $ionicPopup, irkResults, profileDataManager, dataStoreManager, syncDataFactory, $q, $cordovaFile) {
+    surveyDataManager, $ionicLoading, $ionicPopup, appConstants, irkResults, profileDataManager, dataStoreManager, syncDataFactory, $q, $cordovaFile) {
 
     $rootScope.loggedInStatus = true;
 
@@ -12,7 +12,7 @@ angular.module('surveyCtrl', [])
       } else {
         if ($rootScope.emailId) {
           $ionicLoading.show({
-            template: 'Updating..'
+            template: appConstants.checkForServerUpdates
           });
           syncDataFactory.startSyncServiesToFetchResults($rootScope.emailId).then(function(res) {
             $ionicLoading.hide();
@@ -86,7 +86,7 @@ angular.module('surveyCtrl', [])
     $scope.callAlertDailog = function(message) {
         document.activeElement.blur(); // remove the keypad
         $ionicPopup.alert({
-          title: 'Error',
+          title: appConstants.errorDailogTitle,
           template: message
         });
       }
@@ -210,8 +210,8 @@ angular.module('surveyCtrl', [])
               if (surveyHtml || onlySkippedQuestionHtml) {
                 if (isSkippedQuestions) {
                   $rootScope.popupAny = $ionicPopup.show({
-                    title: 'Only Skipped Question',
-                    subTitle: 'Do you want to display only skipped question ?',
+                    title: appConstants.displayOnlySkippedQuestionTitle,
+                    subTitle: appConstants.displayOnlySkippedQuestionMessage,
                     scope: $scope,
                     buttons: [{
                       text: '<b>YES</b>',
@@ -438,15 +438,15 @@ angular.module('surveyCtrl', [])
               syncDataFactory.checkDataAvailableToSync().then(function(res) {
                 if (res.length > 0) {
                   $ionicLoading.show({
-                    template: 'Data Sync..'
+                    template: appConstants.syncNewDataMessage
                   });
                   syncDataFactory.startSyncServiesTouploadData(res).then(function(res) {
                     $ionicLoading.hide();
                     var message = res.statusText;
-                    var title = "Data upload success";
+                    var title = appConstants.dataUploadSuccessTitle;
                     if (!message) {
-                      message = "Data added for later upload.";
-                      title = "Data upload failed";
+                      message = appConstants.dataUploadFailedMessage;
+                      title = appConstants.dataUploadFailedTitle;
                     }
                     $ionicPopup.alert({
                       title: title,
@@ -456,30 +456,24 @@ angular.module('surveyCtrl', [])
                     $scope.uploadFailure();
                   });
                 }
-
-
               });
-
-
             }
           }
         } else {
           $ionicLoading.hide();
           $ionicPopup.alert({
-            title: "Alert",
-            template: "Survey will be synced once the user account is verified."
+            title: appConstants.syncOnceAccountVerifiedTitle,
+            template: appConstants.syncOnceAccountVerifiedMessage
           });
         }
       });
-
     }
-
 
     $scope.uploadFailure = function() {
       $ionicLoading.hide();
       $ionicPopup.alert({
-        title: "Data upload failure",
-        template: "Failed to sync the data, will be synced later."
+        title: appConstants.syncDataUploadFailedTitle,
+        template: appConstants.syncDataUploadFailedMessage
       });
     }
 

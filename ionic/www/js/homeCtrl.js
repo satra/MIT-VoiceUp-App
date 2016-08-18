@@ -2,7 +2,7 @@ angular.module('homeCtrl', [])
   //=======Home screen controller======================
   .controller('homeCtrl', function($scope, $timeout, $rootScope, $cordovaSQLite, $ionicPopup, $ionicHistory, $controller, $ionicModal, $http, $ionicLoading, userService, databaseManager,
     dataStoreManager, profileDataManager, $cordovaEmailComposer, pinModalService, eligiblityDataManager, irkResults,
-    $base64, $state, $location, $window, syncDataFactory, consentDataManager, syncDataService, $q, $cordovaFileTransfer, $cordovaFile, $base64) {
+    $base64, $state, $location, $window, appConstants, syncDataFactory, consentDataManager, syncDataService, $q, $cordovaFileTransfer, $cordovaFile, $base64) {
 
     $rootScope.emailId = null;
 
@@ -122,7 +122,7 @@ angular.module('homeCtrl', [])
             }
             if (uploadData) {
               $ionicLoading.show({
-                template: 'Data Sync..'
+                template: appConstants.syncNewDataMessage
               });
               syncDataFactory.startSyncServiesTouploadData(res).then(function(res) {
                 $ionicLoading.hide();
@@ -147,7 +147,7 @@ angular.module('homeCtrl', [])
 
     $scope.startUpdateSync = function(updateData) {
       $ionicLoading.show({
-        template: 'Update Sync..'
+        template: appConstants.syncUpdateDataMessage
       });
       syncDataFactory.startSyncServiesToUpdateData(updateData).then(function(res) {
         $ionicLoading.hide();
@@ -292,17 +292,17 @@ angular.module('homeCtrl', [])
           if (navigator.connection.type == Connection.NONE) {
             $ionicLoading.hide();
             $ionicPopup.alert({
-              title: 'Download',
-              template: "Please check network connection."
+              title: appConstants.checkInternetConnectionMessageTitle,
+              template: appConstants.checkInternetConnectionMessage
             });
           } else {
             $ionicLoading.show();
-            var assetURL = encodeURI("http://voicesurvey.mit.edu/sites/default/files/documents/consent_mobile_20150528.pdf");
-            var DEV_PATH = cordova.file.externalRootDirectory + "consent_mobile_20150528.pdf";
+            var assetURL = encodeURI(appConstants.consentFileURL);
+            var DEV_PATH = cordova.file.externalRootDirectory + appConstants.consentFileName;
             window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
             window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
               var entry = fileSystem.root;
-              entry.getDirectory("VoiceUp", { // Give your directory name instead of Directory_Name
+              entry.getDirectory(appConstants.appFolderName, { // Give your directory name instead of Directory_Name
                 create: true,
                 exclusive: false
               }, onSuccess, onFail);
@@ -310,19 +310,19 @@ angular.module('homeCtrl', [])
             // onSuccess function for creating directory
             function onSuccess(parent) {
               dirPath = parent.nativeURL;
-              var DEV_PATH = parent.nativeURL + "consent_mobile_20150528.pdf";
+              var DEV_PATH = parent.nativeURL + appConstants.consentFileName;
               var fileTransfer = new FileTransfer();
               fileTransfer.download(assetURL, DEV_PATH,
                 function(entry) {
                   $ionicLoading.hide();
                   $ionicPopup.alert({
-                    title: 'Download',
-                    template: "Consent document downloaded to VoiceUp folder."
+                    title: appConstants.downloadConsentMessageTitle,
+                    template: appConstants.downloadConsentMessage
                   });
                 },
                 function(err) {
                   $ionicPopup.alert({
-                    title: 'Download Error',
+                    title: appConstants.downloadConsentMessageTitle,
                     template: err.exception
                   });
                   $ionicLoading.hide();
@@ -339,9 +339,9 @@ angular.module('homeCtrl', [])
       } else {
         var email = {
           attachments: [
-            'file://assets/consent_mobile_20150528.pdf'
+            appConstants.localConsentFilePath
           ],
-          subject: 'Consent doc',
+          subject: appConstants.consentEmailSubjectName,
           isHtml: true
         };
         $cordovaEmailComposer.isAvailable().then(function() {

@@ -1,6 +1,9 @@
 angular.module('signUp', [])
   //=======Home screen controller======================
-  .controller('signUpCtrl', function($scope, $timeout, $rootScope, $cordovaSQLite, $ionicHistory, $ionicPopup, $q, $compile, $ionicModal, $http, $ionicLoading, profileDataManager, databaseManager, dataStoreManager, syncDataFactory, $base64, surveyDataManager, $state, userService, $window, $cordovaDeviceMotion, $cordovaMedia, $cordovaGeolocation) {
+  .controller('signUpCtrl', function($scope, $timeout, $rootScope, appConstants, $cordovaSQLite,
+    $ionicHistory, $ionicPopup, $q, $compile, $ionicModal, $http, $ionicLoading, profileDataManager,
+    databaseManager, dataStoreManager, syncDataFactory, $base64, surveyDataManager, $state, userService,
+    $window, $cordovaDeviceMotion, $cordovaMedia, $cordovaGeolocation) {
 
     profileDataManager.getUserProfileFields().then(function(response) {
       var userProfile = response;
@@ -58,7 +61,7 @@ angular.module('signUp', [])
                 formValid = false;
                 keepGoing = false;
                 //clear the array
-                $scope.callAlertDailog('Please enter your ' + text);
+                $scope.callAlertDailog(appConstants.missingFieldInGeneral + text);
               } else {
                 obj = {
                   "id": lableId,
@@ -77,7 +80,7 @@ angular.module('signUp', [])
               if (value == '') {
                 formValid = false;
                 keepGoing = false;
-                $scope.callAlertDailog('Please enter your ' + text);
+                $scope.callAlertDailog(appConstants.missingFieldInGeneral + text);
               } else {
                 obj = {
                   "id": lableId,
@@ -96,7 +99,7 @@ angular.module('signUp', [])
               if (value == '') {
                 formValid = false;
                 keepGoing = false;
-                $scope.callAlertDailog('Please enter your ' + text);
+                $scope.callAlertDailog(appConstants.missingFieldInGeneral + text);
               } else {
                 //is email valid
                 if (inputValue.hasClass('ng-invalid-email') || inputValue.hasClass('ng-invalid')) {
@@ -124,12 +127,12 @@ angular.module('signUp', [])
               if (password == '') {
                 formValid = false;
                 keepGoing = false;
-                $scope.callAlertDailog('Please enter your ' + text);
+                $scope.callAlertDailog(appConstants.missingFieldInGeneral + text);
               } else {
                 if (password.length < 6) {
                   formValid = false;
                   keepGoing = false;
-                  $scope.callAlertDailog('Password must be at least 6 characters.');
+                  $scope.callAlertDailog(appConstants.passwordLengthOfSixCharacter);
                 } else {
                   girderArray.push({
                     'password': value
@@ -142,12 +145,12 @@ angular.module('signUp', [])
               if (password_confirm == '') {
                 formValid = false;
                 keepGoing = false;
-                $scope.callAlertDailog('Please enter your ' + text);
+                $scope.callAlertDailog(appConstants.missingFieldInGeneral + text);
               } else {
                 if (password_confirm.length < 6) {
                   formValid = false;
                   keepGoing = false;
-                  $scope.callAlertDailog('Confirm Password must be at least 6 characters.');
+                  $scope.callAlertDailog(appConstants.confirmPasswordLengthOfSixCharacter);
                 }
               }
               break;
@@ -216,15 +219,10 @@ angular.module('signUp', [])
           $scope.emailId = emailId;
           //clear the sign up form
           $scope.clearSignUpDiv();
-          //  profileDataManager.checkUserExistsByEmail(emailId).then(function(res){
-          //if(res){ //user email id already exits
-          //  $scope.callAlertDailog('User already exists ');
-          //}else { // insert this user to db
           $scope.password = password;
           $ionicLoading.show();
           var loginString = new Date().getTime();
           var login = girderArray[0].firstName + girderArray[1].lastName + loginString;
-          console.log(login);
           girderArray.push({
             'login': login
           });
@@ -276,19 +274,17 @@ angular.module('signUp', [])
             if (!error.statusText) {
               if (window.Connection) {
                 if (navigator.connection.type == Connection.NONE) {
-                  $scope.callAlertDailog("Please check your network connection.");
+                  $scope.callAlertDailog(appConstants.checkInternetConnectionMessage);
                 } else {
-                  $scope.callAlertDailog("Failed to create the user.");
+                  $scope.callAlertDailog(appConstants.failedToCreateUserWithEmptyStatus);
                 }
               }
             }
           });
-          // }
-          //  });
         } else {
           formValid = false;
           keepGoing = false;
-          $scope.callAlertDailog('Password should match with confirm password');
+          $scope.callAlertDailog(appConstants.passwordMissMatchWithConfirmPassword);
         }
       } else {
         // redefine the array make sure to clear the array
@@ -300,7 +296,7 @@ angular.module('signUp', [])
       document.activeElement.blur(); // remove the keypad
       $ionicLoading.hide();
       $ionicPopup.alert({
-        title: 'Sign Up Validation',
+        title: appConstants.signUpValidationMessageTitle,
         template: message
       });
     }
@@ -371,7 +367,7 @@ angular.module('signUp', [])
         $scope.passcodeLabel = "Confirm Passcode";
         $scope.managePasscodeConfirm = false;
       } else if (passcode.length > 4) {
-        $scope.callAlertDailog("Passcode length should be max 4.");
+        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
       }
     }
 
@@ -405,7 +401,7 @@ angular.module('signUp', [])
           $scope.confirm_passcode = '';
           //  $compile(confirm_passcode_div)($scope);
           confirm_passcode_div.val("");
-          $scope.callAlertDailog("Passcode should match with confirm Passcode ");
+          $scope.callAlertDailog(appConstants.passcodeMissMatchWithConfirmPasscode);
           $scope.confirmLoop = $scope.confirmLoop + 1;
           if ($scope.confirmLoop >= 3) {
             document.activeElement.blur(); // remove the keypad
@@ -421,7 +417,7 @@ angular.module('signUp', [])
           }
         }
       } else if (confirm_passcode.length > 4) {
-        $scope.callAlertDailog("Passcode length should be max 4.");
+        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
       }
     }
 
@@ -441,7 +437,6 @@ angular.module('signUp', [])
         //  $scope.accelerationLabel='Allow';
         $scope.microPhoneLabel = 'ALLOW';
         $scope.geoLabel = 'ALLOW';
-        console.log($scope.geoloc);
         if (window.localStorage.getItem('Geo') == 'YES') {
           var myEl = angular.element(document.querySelector('#geo'));
           myEl.removeClass('irk-btnloc');
@@ -526,30 +521,13 @@ angular.module('signUp', [])
     $scope.failureMessage = function(message) {
       $ionicLoading.hide();
       $ionicPopup.alert({
-        title: "Error",
+        title: appConstants.errorDailogTitle,
         template: message
       });
-
-      /*
-        alertPopup.then(function(res) {
-          $ionicLoading.show();
-
-          $timeout(function() {
-            $ionicLoading.hide();
-          }, 1000);
-
-        });
-        */
-
     }
 
     $scope.allowGeoLocation = function() {
       $scope.Disable = true;
-      // cordova.plugins.diagnostic.isLocationEnabled(function(enabled){
-      // $scope.geoLabel = 'Granted';
-      // }, function(error){
-      // $scope.geoLabel = 'Allow';
-      // });
       var posOptions = {
         timeout: 10000,
         enableHighAccuracy: false
@@ -570,22 +548,19 @@ angular.module('signUp', [])
         var lat = position.coords.latitude
         var long = position.coords.longitude
         $scope.geoLabel = 'GRANTED';
-        console.log(lat + '   ' + long)
+
       }, function(err) {
         window.localStorage.setItem('Geo', 'NO');
         $ionicPopup.alert({
-          title: 'Alert',
-          template: "Go to settings and allow location service for the app."
+          title: appConstants.syncOnceAccountVerifiedTitle,
+          template: appConstants.infoMessageToAllowLocationServiceLater
         });
         $scope.geoLabel = 'DENIED';
         $scope.Disable = false;
-        console.log(err);
       });
     };
 
-
     $scope.allowAccelerometer = function() {
-
       $scope.options = {
         frequency: 20, // Measure every 100ms
         deviation: 25 // We'll use deviation to determine the shake event, best values in the range between 25 and 30
@@ -595,9 +570,7 @@ angular.module('signUp', [])
       $scope.watch.then(null, function(error) {
           $scope.accelerationLabel = 'ALLOW';
           $scope.Disable = false;
-
         },
-
         function(accelerometerSuccess) {
           // Set current data
           var myEl = angular.element(document.querySelector('#acc'));
@@ -605,9 +578,6 @@ angular.module('signUp', [])
           myEl.addClass('irk-btnlocG');
           $scope.accelerationLabel = 'GRANTED';
           $scope.Disable = true;
-          // Detecta shake
-          //  $scope.detectShake(result);
-
         });
     };
 

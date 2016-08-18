@@ -1,5 +1,6 @@
 angular.module('syncDataService', [])
-  .factory('syncDataFactory', function($http, $cordovaSQLite, $q, profileDataManager, databaseManager, base_url, dataStoreManager, $ionicPopup, $ionicLoading) {
+  .factory('syncDataFactory', function($http, $cordovaSQLite, $q, profileDataManager, databaseManager, appConstants, dataStoreManager, $ionicPopup, $ionicLoading) {
+    var base_url = appConstants.base_url;
     return {
       //====================================Read =======================
       addToSyncQueue: function(girderToken, userId, syncItem, syncData, folderId, itemId, updateFlag) {
@@ -671,12 +672,10 @@ angular.module('syncDataService', [])
   })
 
 .service('syncDataService', function($http, $q) {
-
   return {
     getWS: function() {
       var path = 'jsonWS/context.json';
       return path;
     }
   };
-
 });

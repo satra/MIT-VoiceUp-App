@@ -96,16 +96,6 @@ angular.module('userService', [])
             var main_typeNext = valueIn.main_type;
             var type = valueIn.type;
             if (main_typeNext != 'consent-review' && main_typeNext != "review-questions") {
-              //   if (main_typeNext.toLowerCase() == "review-questions" && type.toLowerCase() =="boolean" ) {
-              /*	 var text = "";
-																	 if (valueIn.text) {
-																	 	text = valueIn.text ;
-																	 }
-																	 var trueText = valueIn["true-text"];
-																	 var falseText = valueIn["false-text"];
-																	 task +='<irk-task><irk-boolean-question-step  optional="false" id="H'+key+'" title="'+valueIn.title+'" text="'+text+'" true-text="'+trueText+'" false-text="'+falseText+'" /></irk-task>';
-                                */
-              //   }else {
               title = valueIn.title;
               if (valueIn.data) {
                 if (!title) {
@@ -122,7 +112,6 @@ angular.module('userService', [])
                   '" type="' + valueIn.type + '" text="Learn more" show-Learn-More="false" summary="' +
                   valueIn.summary + '" title="' + title + '" ></irk-visual-consent-step></irk-task>';
               }
-              // }
             }
           });
 
