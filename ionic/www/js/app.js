@@ -5,112 +5,112 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','userService','signInCtrl','surveyCtrl','databaseManager','surveyDataManager','eligiblityDataManager',
-'profileDataManager','consentDataManager','dataStoreManager','homeCtrl','dashboard','eligibility','signUp','consent',
-'updateProfileCtrl','customDirectives','ionicResearchKit','syncDataService', 'checklist-model','angular-svg-round-progressbar','base64','learnModule','eventManagerCtrl', 'passcodehandler','ngCordova','chart.js','flexcalendar','pascalprecht.translate'])
-.run(function($ionicPlatform,$ionicPopup,$rootScope,$ionicHistory,$state,profileDataManager,$ionicLoading,$ionicPopup) {
-  $ionicPlatform.ready(function() {
+angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signInCtrl', 'surveyCtrl', 'databaseManager', 'surveyDataManager', 'eligiblityDataManager',
+    'profileDataManager', 'consentDataManager', 'dataStoreManager', 'homeCtrl', 'dashboard', 'eligibility', 'signUp', 'consent',
+    'updateProfileCtrl', 'customDirectives', 'ionicResearchKit', 'syncDataService', 'checklist-model', 'angular-svg-round-progressbar', 'base64', 'learnModule', 'eventManagerCtrl', 'passcodehandler', 'ngCordova', 'chart.js', 'flexcalendar', 'pascalprecht.translate'
+  ])
+  .run(function($ionicPlatform, $ionicPopup, $rootScope, $ionicHistory, $state, profileDataManager, $ionicLoading, $ionicPopup) {
+    $ionicPlatform.ready(function() {
 
-    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-      cordova.plugins.Keyboard.disableScroll(true);
-    }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
+      if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+        cordova.plugins.Keyboard.disableScroll(true);
+      }
+      if (window.StatusBar) {
+        // org.apache.cordova.statusbar required
+        StatusBar.styleDefault();
+      }
 
 
-    document.addEventListener("resume", function() {
-      if ($rootScope.emailId) {
-           if ($rootScope.pinDalog) {
-               $rootScope.pinDalog.close();
-           }
-          if ($rootScope.loggedInStatus) {
-             $rootScope.promptToPinScreen($rootScope.emailId);
+      document.addEventListener("resume", function() {
+        if ($rootScope.emailId) {
+          if ($rootScope.pinDalog) {
+            $rootScope.pinDalog.close();
           }
-       }
+          if ($rootScope.loggedInStatus) {
+            $rootScope.promptToPinScreen($rootScope.emailId);
+          }
+        }
       }, false);
 
-      $rootScope.promptToPinScreen = function (email) {
-      var  template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/"  >';
-          if (ionic.Platform.isAndroid()) {
-            template =  '<input class = "CirclePasscode1" style="text-align: center;color: transparent;text-shadow: 0 0 0 black;" type="number" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/" >';
-          }
-        $rootScope.pinDalog =   $ionicPopup.show({
-          template:template,
+      $rootScope.promptToPinScreen = function(email) {
+        var template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/"  >';
+        if (ionic.Platform.isAndroid()) {
+          template = '<input class = "CirclePasscode1" style="text-align: center;color: transparent;text-shadow: 0 0 0 black;" type="number" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/" >';
+        }
+        $rootScope.pinDalog = $ionicPopup.show({
+          template: template,
           title: 'Enter Passcode',
           subTitle: email,
           scope: $rootScope,
-        buttons: [
-                   { text: 'Switch User',  onTap: function(e) {
-                     if ($rootScope.modal) {
-                       $rootScope.modal.remove();
-                     }
-                     if ($rootScope.permission) {
-                       $rootScope.permission.remove();
-                     }
-                     if ($rootScope.passcodeModal) {
-                       $rootScope.passcodeModal.remove();
-                     }
-                     if ($rootScope.popupAny) {
-                        $rootScope.popupAny.close();
-                        $rootScope.AllowedToDisplayNextPopUp = false ;
-                     }
-                     if ($rootScope.alertDialog) {
-                        $rootScope.alertDialog.close();
-                     }
-                     $ionicHistory.clearCache().then(function(){
-                        $rootScope.emailId = null;
-                        $rootScope.LoggedInStatus = false;
-                        $state.transitionTo('home');
-                     });
-                   }
-               },
-             {
+          buttons: [{
+            text: 'Switch User',
+            onTap: function(e) {
+              if ($rootScope.modal) {
+                $rootScope.modal.remove();
+              }
+              if ($rootScope.permission) {
+                $rootScope.permission.remove();
+              }
+              if ($rootScope.passcodeModal) {
+                $rootScope.passcodeModal.remove();
+              }
+              if ($rootScope.popupAny) {
+                $rootScope.popupAny.close();
+                $rootScope.AllowedToDisplayNextPopUp = false;
+              }
+              if ($rootScope.alertDialog) {
+                $rootScope.alertDialog.close();
+              }
+              $ionicHistory.clearCache().then(function() {
+                $rootScope.emailId = null;
+                $rootScope.LoggedInStatus = false;
+                $state.transitionTo('home');
+              });
+            }
+          }, {
             text: '<b>Done</b>',
             type: 'button-positive',
             onTap: function(e) {
-              var password = angular.element(document.querySelector('#passcodepin')).prop('value') ;
-               if (password.length != 0) {
-                   $ionicLoading.show();
-                   $rootScope.loginViaPasscodeForPin(email.trim(),password.trim());
-                }else{
+              var password = angular.element(document.querySelector('#passcodepin')).prop('value');
+              if (password.length != 0) {
+                $ionicLoading.show();
+                $rootScope.loginViaPasscodeForPin(email.trim(), password.trim());
+              } else {
                 e.preventDefault();
-                }
               }
             }
-          ]
+          }]
         });
 
       }
 
 
-    $rootScope.loginViaPasscodeForPin = function (email,passcode) {
-        profileDataManager.logInViaPasscode(email,passcode).then(function(res){
-                     if (res) {
-                      $ionicLoading.hide();
-                     }else {
-                       $ionicLoading.hide();
-                       $ionicPopup.alert({
-                        title: 'Error',
-                        template: "Invalid User"
-                      }).then(function(){
-                         $rootScope.promptToPinScreen($rootScope.emailId);
-                       });
-                     }
-                  });
+      $rootScope.loginViaPasscodeForPin = function(email, passcode) {
+        profileDataManager.logInViaPasscode(email, passcode).then(function(res) {
+          if (res) {
+            $ionicLoading.hide();
+          } else {
+            $ionicLoading.hide();
+            $ionicPopup.alert({
+              title: 'Error',
+              template: "Invalid User"
+            }).then(function() {
+              $rootScope.promptToPinScreen($rootScope.emailId);
+            });
+          }
+        });
       }
 
-  });
+    });
 
 
-$ionicPlatform.registerBackButtonAction(function (event) {
-                 event.preventDefault();
-   }, 100);
-})
+    $ionicPlatform.registerBackButtonAction(function(event) {
+      event.preventDefault();
+    }, 100);
+  })
 
-.config(function($stateProvider, $httpProvider,$urlRouterProvider,$ionicConfigProvider) {
+.config(function($stateProvider, $httpProvider, $urlRouterProvider, $ionicConfigProvider) {
 
   $ionicConfigProvider.views.swipeBackEnabled(false);
 
@@ -126,12 +126,12 @@ $ionicPlatform.registerBackButtonAction(function (event) {
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-// setup an abstract state for the tabs directive
-  .state('home', {
+  // setup an abstract state for the tabs directive
+    .state('home', {
     url: '/home',
     templateUrl: 'templates/home.html',
     controller: 'homeCtrl'
-   // controller: 'SurveyCtrl'
+      // controller: 'SurveyCtrl'
   })
 
   .state('signIn', {
@@ -146,7 +146,7 @@ $ionicPlatform.registerBackButtonAction(function (event) {
   })
 
   .state('not-eligibleUser', {
-   templateUrl: 'templates/not-eligible.html',
+    templateUrl: 'templates/not-eligible.html',
     url: '/not-eligibleUser',
     // controller: 'eligibilityCtrl'
   })
@@ -168,24 +168,24 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     controller: 'signUpCtrl'
   })
 
- .state('passcodeValidation', {
-   templateUrl: 'templates/choosepassode.html',
+  .state('passcodeValidation', {
+    templateUrl: 'templates/choosepassode.html',
     url: '/passcodeValidation',
     controller: 'passcodeValidation'
   })
 
   .state('signupverification', {
     templateUrl: 'templates/verification.html',
-     url: '/signupverification',
-     controller: 'verificationCtrl'
-   })
+    url: '/signupverification',
+    controller: 'verificationCtrl'
+  })
 
-    .state('onResumehandler', {
-      url: '/onresumehandler',
-      controller: 'eventManagerCtrl'
-    })
+  .state('onResumehandler', {
+    url: '/onresumehandler',
+    controller: 'eventManagerCtrl'
+  })
 
-// setup an abstract state for the tabs directive
+  // setup an abstract state for the tabs directive
   .state('tab', {
     url: '/tab',
     abstract: true,
@@ -208,8 +208,8 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     url: '/dashboard',
     views: {
       'tab-dashboard': {
-       templateUrl: 'templates/tab-activetasks.html',
-       controller: 'dashboardCtrl'
+        templateUrl: 'templates/tab-activetasks.html',
+        controller: 'dashboardCtrl'
       }
     }
   })
@@ -219,8 +219,8 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     url: '/profile',
     views: {
       'tab-profile': {
-          templateUrl: 'templates/tab-profile-update.html',
-          controller: 'updateProfileCtrl'
+        templateUrl: 'templates/tab-profile-update.html',
+        controller: 'updateProfileCtrl'
       }
     }
   })
@@ -235,15 +235,17 @@ $ionicPlatform.registerBackButtonAction(function (event) {
     }
   });
 
-   // if none of the above states are matched, use this as the fallback
-   $urlRouterProvider.otherwise('home');
-   //$urlRouterProvider.otherwise('home');
+  // if none of the above states are matched, use this as the fallback
+  $urlRouterProvider.otherwise('home');
+  //$urlRouterProvider.otherwise('home');
 })
 
 //.constant('base_url', 'http://23.89.199.27:8180/api/v1/')
 .constant('base_url', 'https://rig.mit.edu/girder/api/v1/')
-
-
+  /*  .constant('config', {
+      'base_url': 'https://rig.mit.edu/girder/api/v1/'
+    })
+  */
 
 .config(function($ionicConfigProvider) {
   $ionicConfigProvider.tabs.style('standard');
