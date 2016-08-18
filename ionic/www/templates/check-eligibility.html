@@ -1,54 +1,55 @@
 <ion-modal-view>
   <ion-header-bar>
-    <i class="icon ion-ios-arrow-thin-left icon-font1" ng-click="SignInback()"></i>
+ <i class="icon ion-ios-arrow-thin-left icon-font1" ng-click="SignInback()"></i>
     <h1 class="title"></h1>
     <div class="buttons">
 
-      <button class="button button-clear" ng-click="closeLogin()">Cancel</button>
+  <button class="button button-clear" ng-click="closeLogin()">Cancel</button>
     </div>
   </ion-header-bar>
 
-  <ion-content>
+<ion-content >
 
-    <form name="myForm">
+<form name="myForm">
 
-      <btc-image-choice-question-step id="q1" ng-required="true" title="question 1" optional="true">
-        <btc-image-choice value="YES" normal-state-image="ion-happy-outline" selected-state-image="
+<btc-image-choice-question-step id="q1" ng-required="true" title="question 1" optional="true">
+ <btc-image-choice value="YES" normal-state-image="ion-happy-outline" selected-state-image="
  ion-happy">
-        </btc-image-choice>
-        <btc-image-choice value="NO" normal-state-image="ion-happy-outline" selected-state-image="ion-sad">
-        </btc-image-choice>
-      </btc-image-choice-question-step>
+ </btc-image-choice>
+  <btc-image-choice value="NO" normal-state-image="ion-happy-outline" selected-state-image="ion-sad">
+ </btc-image-choice>
+</btc-image-choice-question-step>
 
-      <div class="irk-spacer"></div>
+<div class="irk-spacer"></div>
 
-      <btc-image-choice-question-step id="q2" title="Do you live in the United States of America?" text="Additional text can go here." optional="false" ng-required="true">
-        <btc-image-choice value="YES" normal-state-image="ion-happy-outline" selected-state-image="
+<btc-image-choice-question-step id="q2" title="Do you live in the United States of America?" text="Additional text can go here." optional="false" ng-required="true">
+ <btc-image-choice value="YES" normal-state-image="ion-happy-outline" selected-state-image="
  ion-happy">
-        </btc-image-choice>
-        <btc-image-choice value="NO" normal-state-image="ion-happy-outline" selected-state-image="ion-sad">
-        </btc-image-choice>
-      </btc-image-choice-question-step>
+ </btc-image-choice>
+  <btc-image-choice value="NO" normal-state-image="ion-happy-outline" selected-state-image="ion-sad">
+ </btc-image-choice>
+</btc-image-choice-question-step>
 
-      <div class="irk-spacer"></div>
-      <btc-image-choice-question-step id="q3" title="Are you comfortable reading and writing on your iPhone in English ?" optional="false" ng-required="true">
-        <btc-image-choice value="YES" normal-state-image="ion-happy-outline" selected-state-image="
+<div class="irk-spacer"></div>
+<btc-image-choice-question-step id="q3" title="Are you comfortable reading and writing on your iPhone in English ?" optional="false" ng-required="true">
+ <btc-image-choice value="YES" normal-state-image="ion-happy-outline" selected-state-image="
  ion-happy">
-        </btc-image-choice>
-        <btc-image-choice value="NO" normal-state-image="ion-happy-outline" selected-state-image="ion-sad">
-        </btc-image-choice>
-      </btc-image-choice-question-step>
+ </btc-image-choice>
+  <btc-image-choice value="NO" normal-state-image="ion-happy-outline" selected-state-image="ion-sad">
+ </btc-image-choice>
+</btc-image-choice-question-step>
 
-      <div class="irk-spacer"></div>
+<div class="irk-spacer"></div>
 
-    </form>
+</form>
 
-  </ion-content>
+</ion-content>
 
-  <ion-footer-bar class="irk-bottom-bar" keyboard-attach irk-survey-bar>
-    <div>
-      <a class="button button-block button-outline  button-positive" ng-disabled="isDisabled" ng-click="compareEligiblity()"><i class="icon ion-arrow-right-c icon-font1"></i></a>
-    </div>
-  </ion-footer-bar>
+<ion-footer-bar class="irk-bottom-bar" keyboard-attach irk-survey-bar>
+<div>
+ <a class="button button-block button-outline  button-positive" ng-disabled="isDisabled" ng-click="compareEligiblity()"><i class="icon ion-arrow-right-c icon-font1"></i></a>
+</div>
+</ion-footer-bar>
 
 </ion-modal-view>
+
