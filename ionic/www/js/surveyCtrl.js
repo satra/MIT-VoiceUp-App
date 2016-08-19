@@ -1,7 +1,7 @@
 angular.module('surveyCtrl', [])
   // ==== Dummy contorller need to be removed later before production  ========
   .controller('surveyCtrl', function($scope, $ionicHistory, $state, $rootScope, $ionicModal,
-    surveyDataManager, $ionicLoading, $ionicPopup, appConstants, irkResults, profileDataManager, dataStoreManager, syncDataFactory, $q, $cordovaFile) {
+    surveyDataManager, $ionicLoading, $ionicPopup, userService, $timeout, appConstants, irkResults, profileDataManager, dataStoreManager, syncDataFactory, $q, $cordovaFile) {
 
     $rootScope.loggedInStatus = true;
 
@@ -15,12 +15,115 @@ angular.module('surveyCtrl', [])
             template: appConstants.checkForServerUpdates
           });
           syncDataFactory.startSyncServiesToFetchResults($rootScope.emailId).then(function(res) {
-            $ionicLoading.hide();
+            $scope.checkForServerDataUpdates();
           }, function(error) {
             $ionicLoading.hide();
           });
         }
       }
+    }
+
+    //check for server updates on next version of data
+    $scope.checkForServerDataUpdates = function() {
+      var localJSON = '';
+      $ionicLoading.show({
+        template: appConstants.checkForServerUpdates
+      });
+      userService.getAppContent().then(function(localData) {
+        localJSON = JSON.parse(localData.completeJson);
+        var savedVersion = localData.version;
+        var diffURL = localData.diffURL;
+        userService.getSeverJson(diffURL).then(function(newJson) {
+          var delta = JSON.parse(JSON.stringify(newJson).replace(/\s/g, ""));
+          var newVersion = delta.version[1];
+          if (savedVersion.trim() != newVersion.trim()) {
+            var diffpatcher = jsondiffpatch.create();
+            diffpatcher.patch(localJSON, delta);
+            $scope.updateLocalDataBaseWithFreshDiff(localJSON);
+          } else {
+            $ionicLoading.hide();
+          }
+        }, function(error) {
+          $ionicLoading.hide();
+        });
+      }, function(error) {
+        $ionicLoading.hide();
+      });
+    }
+
+    $scope.updateLocalDataBaseWithFreshDiff = function(localJSON) {
+      var version = localJSON.version;
+      var diffURL = localJSON.diffURL;
+      var url = localJSON.URL;
+      var eligibility = JSON.stringify(localJSON.eligibility);
+      var profile = JSON.stringify(localJSON.profile);
+      var consent_screens = JSON.stringify(localJSON.consent);
+      var completeJson = JSON.stringify(localJSON).replace(/'/g, "`");
+      var surveyJson = localJSON.surveys;
+      var tasksJson = localJSON.tasks;
+      userService.updateAppContent(version, url, diffURL, eligibility, profile, consent_screens, completeJson).then(function(dataUpdate) {
+        if (dataUpdate) {
+          // an array of promises
+          var surveyListPromise = [];
+          var taskListPromise = [];
+          for (var survey in surveyJson) {
+            if (surveyJson.hasOwnProperty(survey)) {
+              var obj = surveyJson[survey];
+              var date = '';
+              var title = survey;
+              var id = survey;
+              var skippable = '';
+              var tasks = '';
+              for (var prop in obj) {
+                switch (prop) {
+                  case "date":
+                    date = obj[prop];
+                    break;
+                  case "skippable":
+                    skippable = JSON.stringify(obj[prop]);
+                    break;
+                  case "tasks":
+                    tasks = JSON.stringify(obj[prop]);
+                    break;
+                  default:
+                }
+                if (date && title && id && tasks) {
+                  var dateArray = date.split(" ");
+                  var day = dateArray[2];
+                  var month = dateArray[3];
+                  surveyListPromise.push(userService.updateSurveysTableById(day, month, title, id, skippable, tasks));
+                }
+              }
+            }
+          }
+          for (var task in tasksJson) {
+            if (tasksJson.hasOwnProperty(task)) {
+              var timeLimit = tasksJson[task].timelimit;
+              var steps = JSON.stringify(tasksJson[task].steps).replace(/'/g, "`");
+              if (timeLimit === undefined || timeLimit === null) {
+                timeLimit = '';
+              }
+              taskListPromise.push(userService.updateTasksTableById(task, steps, timeLimit));
+            }
+          }
+          // resolve both the promise out of for loop
+          $q.all(surveyListPromise).then(function(surevyResolvePromise) {
+            $q.all(taskListPromise).then(function(tasksResolvePromise) {
+              $ionicLoading.hide();
+            }, function(error) {
+              $ionicLoading.hide();
+            });
+          }, function(error) {
+            $ionicLoading.hide();
+          });
+        }
+      }, function(error) {
+        $ionicLoading.hide();
+      });
+
+      $timeout(function() {
+        $ionicLoading.hide();
+      }, 3000);
     }
 
     //on resume handler===================================================================
