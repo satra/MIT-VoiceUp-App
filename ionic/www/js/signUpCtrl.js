@@ -43,7 +43,7 @@ angular.module('signUp', [])
       var password_confirm = null;
       var emailId = null;
       var dataCache = [];
-      var girderArray = new Array();
+      var userSignUpData = new Array();
 
       //iterate the form and validate the form
       for (var i = 0; i < steps.length; i++) {
@@ -71,7 +71,7 @@ angular.module('signUp', [])
                   "value": value
                 };
                 dataCache.push(obj);
-                girderArray.push({
+                userSignUpData.push({
                   'firstName': value
                 });
               }
@@ -90,7 +90,7 @@ angular.module('signUp', [])
                   "value": value
                 };
                 dataCache.push(obj);
-                girderArray.push({
+                userSignUpData.push({
                   'lastName': value
                 });
               }
@@ -116,7 +116,7 @@ angular.module('signUp', [])
                     "value": value
                   };
                   dataCache.push(obj);
-                  girderArray.push({
+                  userSignUpData.push({
                     'email': value
                   });
                 }
@@ -134,7 +134,7 @@ angular.module('signUp', [])
                   keepGoing = false;
                   $scope.callAlertDailog(appConstants.passwordLengthOfSixCharacter);
                 } else {
-                  girderArray.push({
+                  userSignUpData.push({
                     'password': value
                   });
                 }
@@ -222,12 +222,12 @@ angular.module('signUp', [])
           $scope.password = password;
           $ionicLoading.show();
           var loginString = new Date().getTime();
-          var login = girderArray[0].firstName + girderArray[1].lastName + loginString;
-          girderArray.push({
+          var login = userSignUpData[0].firstName + userSignUpData[1].lastName + loginString;
+          userSignUpData.push({
             'login': login
           });
 
-          dataStoreManager.createGlobalUser(girderArray).then(function(res) {
+          dataStoreManager.createGlobalUser(userSignUpData).then(function(res) {
             if (res.status == 200) {
               var resultData = res.data;
               var userId = resultData._id;
@@ -261,7 +261,7 @@ angular.module('signUp', [])
                           surveyDataManager.addResultToDb(localUserId, consent, 'consent').then(function(response) {
                             $ionicLoading.hide();
                             $scope.removeSignUpDiv();
-                            $scope.launchpinScreen();
+                            $scope.launchPinScreen();
                           });
                         });
                       }
@@ -307,7 +307,7 @@ angular.module('signUp', [])
       });
     }
 
-    $scope.launchpinScreen = function() {
+    $scope.launchPinScreen = function() {
 
       if (ionic.Platform.isIOS()) {
         $scope.ShowIos = true;
@@ -388,10 +388,10 @@ angular.module('signUp', [])
         //check is both are equal
         if ($scope.passcode == confirm_passcode) {
           var email = $scope.emailId;
-          var girderToken = "";
+          var authToken = "";
           if (email) {
             profileDataManager.getUserIDByEmail(email).then(function(res) {
-              profileDataManager.addPasscodeToUserID(res, $scope.passcode, email, girderToken).then(function(res) {
+              profileDataManager.addPasscodeToUserID(res, $scope.passcode, email, authToken).then(function(res) {
                 $scope.openVerification();
               });
             });
