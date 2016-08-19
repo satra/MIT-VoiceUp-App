@@ -36,15 +36,16 @@ angular.module('dashboard', [])
     surveyDataManager.getResults(emailId.trim()).then(function(res) {
       if (res) {
         var chartData = JSON.parse(res["resultData"]).results;
-        var dataArray = new Array();
+
         //first graph
+        var dataArray = new Array();
         for (var i = 0; i < chartData.sections.length; i++) {
-          var datad = chartData.sections[i][0];
-          $scope.labels = datad.labels;
-          for (var j = 0; j < datad.data.length; j++) {
-            dataArray.push(datad.data[j]);
+          var chartSection = chartData.sections[i][0];
+          $scope.labels = chartSection.labels;
+          for (var j = 0; j < chartSection.data.length; j++) {
+            dataArray.push(chartSection.data[j]);
           }
-          $scope.series = datad.series;
+          $scope.series = chartSection.series;
           $scope.one = true;
           $scope.data = dataArray;
         }
@@ -52,10 +53,10 @@ angular.module('dashboard', [])
         //second graph
         var dataArray = new Array();
         for (var i = 0; i < chartData.sections.length; i++) {
-          var datad = chartData.sections[i][1];
-          $scope.labels1 = datad.labels;
-          dataArray.push(datad.data);
-          $scope.series1 = datad.series;
+          var chartSection = chartData.sections[i][1];
+          $scope.labels1 = chartSection.labels;
+          dataArray.push(chartSection.data);
+          $scope.series1 = chartSection.series;
         }
         $scope.two = true;
         $scope.data1 = dataArray;
@@ -63,10 +64,10 @@ angular.module('dashboard', [])
         //third graph
         var dataArray = new Array();
         for (var i = 0; i < chartData.sections.length; i++) {
-          var datad = chartData.sections[i][2];
-          $scope.labels2 = datad.labels;
-          dataArray.push(datad.data);
-          $scope.series2 = datad.series;
+          var chartSection = chartData.sections[i][2];
+          $scope.labels2 = chartSection.labels;
+          dataArray.push(chartSection.data);
+          $scope.series2 = chartSection.series;
         }
         $scope.three = true;
         $scope.data2 = dataArray;
@@ -74,12 +75,12 @@ angular.module('dashboard', [])
         //fourth graph
         var dataArray = new Array();
         for (var i = 0; i < chartData.sections.length; i++) {
-          var datad = chartData.sections[i][3];
-          $scope.labels3 = datad.labels;
-          for (var k = 0; k < datad.data.length; k++) {
-            dataArray.push(datad.data[k]);
+          var chartSection = chartData.sections[i][3];
+          $scope.labels3 = chartSection.labels;
+          for (var k = 0; k < chartSection.data.length; k++) {
+            dataArray.push(chartSection.data[k]);
           }
-          $scope.series3 = datad.series;
+          $scope.series3 = chartSection.series;
           $scope.four = true;
           $scope.data3 = dataArray;
         }
