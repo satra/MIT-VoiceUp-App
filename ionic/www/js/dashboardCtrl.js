@@ -1,4 +1,3 @@
-
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
@@ -6,141 +5,119 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('dashboard', [])
 
-  // calender
-.controller("dashboardCtrl", function($scope,$ionicHistory,$ionicPopup,$state,$ionicLoading,syncDataFactory,$rootScope,$http,surveyDataManager,$cordovaSQLite,databaseManager) {
+// calender
+.controller("dashboardCtrl", function($scope, $ionicHistory, $ionicPopup, $state, $ionicLoading, syncDataFactory, $rootScope, $http, surveyDataManager, $cordovaSQLite, databaseManager) {
 
 
-	// == take user to home screeen
-  $scope.switchUser = function (){
-          $ionicHistory.clearCache().then(function(){
-          $rootScope.emailId = null;
-          $state.transitionTo('home');
-          });
+  // == take user to home screeen
+  $scope.switchUser = function() {
+    $ionicHistory.clearCache().then(function() {
+      $rootScope.emailId = null;
+      $state.transitionTo('home');
+    });
   }
 
-  if(window.Connection) {
-            if(navigator.connection.type == Connection.NONE) {
-             $ionicLoading.hide();
-             $scope.fetchMapResults();
-            }else {
-              if ($rootScope.emailId) {
-                $ionicLoading.show({template: 'Updating..'});
-                syncDataFactory.startSyncServiesToFetchResults().then(function(res){
-                $ionicLoading.hide();
-                $scope.fetchMapResults () ;
-                },function(error){
-                $ionicLoading.hide();
-                $scope.fetchMapResults () ;
-                });
-              }
-           }
-  }
-
-$scope.events = [];
-surveyDataManager.getSurveyDates().then(function(res){
-            if (res) {
-                  var dateData = res;
-                  var eventsArray = new Array();
-                  for (var i =0; i<res.length;i++)
-                    {
-                    eventsArray.push({"date":res.item(i).creationDate});
-                 }
-                $scope.events = eventsArray;
-            }
-});
-
-$scope.fetchMapResults = function(){
-
-var emailId = $rootScope.emailId ;
-if (emailId) {
-surveyDataManager.getResults(emailId.trim()).then(function(res){
-  if (res) {
-  var chartData = JSON.parse(res["resultData"]).results;
-  var dataArray= new Array();
-  //graph1
-   for(var i=0;i<chartData.sections.length;i++)
-   {
-		 var datad = chartData.sections[i][0] ;
-  	 $scope.labels = datad.labels;
-     for(var j=0;j<datad.data.length;j++)
-      {
-       dataArray.push(datad.data[j]);
+  $scope.events = [];
+  surveyDataManager.getSurveyDates().then(function(res) {
+    if (res) {
+      var dateData = res;
+      var eventsArray = new Array();
+      for (var i = 0; i < res.length; i++) {
+        eventsArray.push({
+          "date": res.item(i).creationDate
+        });
       }
-  	 $scope.series = datad.series ;
-   	 $scope.data = dataArray;
+      $scope.events = eventsArray;
+    }
+  });
+
+  var emailId = $rootScope.emailId;
+  if (emailId) {
+    surveyDataManager.getResults(emailId.trim()).then(function(res) {
+      if (res) {
+        var chartData = JSON.parse(res["resultData"]).results;
+
+        //first graph
+        var dataArray = new Array();
+        for (var i = 0; i < chartData.sections.length; i++) {
+          var chartSection = chartData.sections[i][0];
+          $scope.labels = chartSection.labels;
+          for (var j = 0; j < chartSection.data.length; j++) {
+            dataArray.push(chartSection.data[j]);
+          }
+          $scope.series = chartSection.series;
+          $scope.one = true;
+          $scope.data = dataArray;
+        }
+
+        //second graph
+        var dataArray = new Array();
+        for (var i = 0; i < chartData.sections.length; i++) {
+          var chartSection = chartData.sections[i][1];
+          $scope.labels1 = chartSection.labels;
+          dataArray.push(chartSection.data);
+          $scope.series1 = chartSection.series;
+        }
+        $scope.two = true;
+        $scope.data1 = dataArray;
+
+        //third graph
+        var dataArray = new Array();
+        for (var i = 0; i < chartData.sections.length; i++) {
+          var chartSection = chartData.sections[i][2];
+          $scope.labels2 = chartSection.labels;
+          dataArray.push(chartSection.data);
+          $scope.series2 = chartSection.series;
+        }
+        $scope.three = true;
+        $scope.data2 = dataArray;
+
+        //fourth graph
+        var dataArray = new Array();
+        for (var i = 0; i < chartData.sections.length; i++) {
+          var chartSection = chartData.sections[i][3];
+          $scope.labels3 = chartSection.labels;
+          for (var k = 0; k < chartSection.data.length; k++) {
+            dataArray.push(chartSection.data[k]);
+          }
+          $scope.series3 = chartSection.series;
+          $scope.four = true;
+          $scope.data3 = dataArray;
+        }
+
+        var dataArray = new Array();
+        var labelArray = new Array();
+        var seriesArray = new Array();
+        for (var i = 0; i < chartData.sections.length; i++) {
+          var chartd = chartData.sections[i][4];
+          $scope.labels4 = chartd.labels;
+          dataArray.push(chartd.data);
+          $scope.series4 = chartd.series;
+          labelArray.push(chartd.labels);
+          seriesArray.push(chartd.series);
+        }
+
+        $scope.data4 = dataArray;
+        $scope.labels4 = labelArray;
+        $scope.series4 = seriesArray;
+      }
+    });
   }
 
-	var dataArray= new Array();
-	 //graph2
-		for(var i=0;i<chartData.sections.length;i++)
-		{
-		 var datad = chartData.sections[i][1] ;
-		 $scope.labels1 = datad.labels;
-		 dataArray.push(datad.data);
-		// console.log(datad);
-		 $scope.series1 = datad.series ;
-	 }
-	 $scope.data1 = dataArray;
 
-
-     var dataArray= new Array();
-   for(var i=0;i<chartData.sections.length;i++)
-    {
-     var datad = chartData.sections[i][2] ;
-     $scope.labels2 = datad.labels;
-     dataArray.push(datad.data);
-     $scope.series2 = datad.series ;
-   }
-   $scope.data2 = dataArray;
-     //graph4
-
-var dataArray= new Array();
-
- for(var i=0;i<chartData.sections.length;i++)
-  {
-   var datad = chartData.sections[i][3] ;
-   $scope.labels3 = datad.labels;
-   for(var k=0;k<datad.data.length;k++)
-   {
-   dataArray.push(datad.data[k]);
-   }
-   $scope.series3 = datad.series ;
-   $scope.data3 = dataArray;
- }
-
-var dataArray= new Array();
-var labelArray= new Array();
-var seriesArray= new Array();
- for(var i=0;i<chartData.sections.length;i++)
- {
-  var chartd = chartData.sections[i][4] ;
-  $scope.labels4 = chartd.labels;
-  dataArray.push(chartd.data);
-  $scope.series4 = chartd.series;
-  labelArray.push(chartd.labels);
-  seriesArray.push(chartd.series);
-}
-
-$scope.data4 = dataArray;
-$scope.labels4 = labelArray;
-$scope.series4 = seriesArray;
-   }
-  });
- }
-}
-    // calander//
-$scope.options = {
-    defaultDate:  new Date(),
+  // calander//
+  $scope.options = {
+    defaultDate: new Date(),
     minDate: "2015-01-01",
     maxDate: "2050-12-31",
     disabledDates: [
-        "2015-06-22",
-        "2015-07-27",
-        "2015-08-13",
-        "2015-08-15"
+      "2015-06-22",
+      "2015-07-27",
+      "2015-08-13",
+      "2015-08-15"
     ],
     dayNamesLength: 1, // 1 for "M", 2 for "Mo", 3 for "Mon"; 9 will show full day names. Default is 1.
-    mondayIsFirstDay: true,//set monday as first day of week. Default is false
+    mondayIsFirstDay: true, //set monday as first day of week. Default is false
     eventClick: function(date) { // called before dateClick and only if clicked day has events
       console.log(date);
     },
@@ -159,4 +136,4 @@ $scope.options = {
 });
 
 // calander ends here
-    // calander Widget//
+// calander Widget//

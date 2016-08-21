@@ -158,19 +158,22 @@ angular.module('ionicResearchKit',[])
         if (pdfDefinition) {
             pdfContent.push({ text: '\n\n\n', style: 'paragraph' });
             pdfContent.push({ image: pdfSignature, fit: [150, 150] });
-            pdfContent.push({
-                columns: [
-                    {
-                        width: '*',
-                        text: pdfName.toUpperCase()
-                    },
-                    {
-                        width: '*',
-                        text: $filter('date')(new Date(), "MM/dd/yyyy")
-                    }
-                ],
-                columnGap: 10
-            });
+            if (pdfName) {
+              pdfContent.push({
+                  columns: [
+                      {
+                          width: '*',
+                          text: pdfName.toUpperCase()
+                      },
+                      {
+                          width: '*',
+                          text: $filter('date')(new Date(), "MM/dd/yyyy")
+                      }
+                  ],
+                  columnGap: 10
+              });
+            }
+
             pdfContent.push({
                 columns: [
                     {
@@ -314,7 +317,10 @@ angular.module('ionicResearchKit',[])
                 };
 
                 $scope.doSkip = function() {
-                    $scope.doNext();
+                    if (slider.currentIndex() < slider.slidesCount()-1)
+                        slider.next();
+                    else
+                        $scope.doEnd();
                 };
 
                 $scope.doNext = function() {
@@ -1087,7 +1093,7 @@ angular.module('ionicResearchKit',[])
         require: '^?irkImageChoiceQuestionStep',
         template: function(elem, attr) {
             return  '<div class="col">'+
-                    '<button class="button button-clear '+(attr.type=='image'?'irk-image':'irk-icon-large icon')+' '+attr.normalStateImage+'"></button>'+
+                    '<button class="button button-clear '+(attr.type=='image'?'irk-image':'irk-icon-large button-stable icon')+' '+attr.normalStateImage+'"></button>'+
                     '</div>';
         },
         link: function(scope, element, attrs) {
@@ -1554,7 +1560,7 @@ angular.module('ionicResearchKit',[])
         restrict: 'E',
         controller: ['$scope', '$element', '$attrs', '$interval', function($scope, $element, $attrs, $interval) {
             $scope.startCountdown = function() {
-                $scope.duration = ($attrs.duration?$parseInt($attrs.duration,10):5);
+                $scope.duration = ($attrs.duration?parseInt($attrs.duration,10):5);
                 $scope.countdown = $scope.duration;
 
                 $scope.$parent.currentCountdown = $interval(function() {
@@ -1639,7 +1645,7 @@ angular.module('ionicResearchKit',[])
             }
 
             $scope.startProgress = function() {
-                $scope.duration = ($attrs.duration?$parseInt($attrs.duration,10):20);
+                $scope.duration = ($attrs.duration?parseInt($attrs.duration,10):20);
                 $scope.progress = 0;
                 $scope.toggleProgressBar(true);
 
@@ -1716,7 +1722,7 @@ angular.module('ionicResearchKit',[])
 .directive('irkAudioTask', function() {
     return {
         restrict: 'E',
-        controller: ['$scope', '$element', '$attrs', '$interval', '$cordovaMedia', '$ionicPopup', function($scope, $element, $attrs, $interval, $cordovaMedia, $ionicPopup) {
+        controller: ['$scope', '$element', '$attrs', '$interval', '$cordovaMedia', '$cordovaFile', '$ionicPopup', function($scope, $element, $attrs, $interval, $cordovaMedia, $cordovaFile, $ionicPopup) {
 
             $scope.activeStepID;
             $scope.audioSample;
@@ -1741,11 +1747,16 @@ angular.module('ionicResearchKit',[])
 
             $scope.queueAudio = function() {
                 if ($scope.$parent.formData[$scope.activeStepID].fileURL) {
-                    $scope.audioSample = $cordovaMedia.newMedia($scope.$parent.formData[$scope.activeStepID].fileURL);
+                  if (ionic.Platform.isAndroid()) {
+                      $scope.audioSample = $cordovaMedia.newMedia(cordova.file.externalRootDirectory + $scope.$parent.formData[$scope.activeStepID].fileURL);
+                    }else {
+                      $scope.audioSample = $cordovaMedia.newMedia("documents://" + $scope.$parent.formData[$scope.activeStepID].fileURL);
+                    }
                 }
             }
 
             $scope.recordAudio = function() {
+                var audioFileDirectory = (ionic.Platform.isAndroid() ? cordova.file.dataDirectory : cordova.file.documentsDirectory);
                 var audioFileName = "irk-sample" + (new Date().getTime()) + (ionic.Platform.isAndroid() ? ".amr" : ".wav");
                 $scope.$parent.formData[$scope.activeStepID].fileURL = audioFileName;
                 $scope.$parent.formData[$scope.activeStepID].contentType = "audio/" + (ionic.Platform.isAndroid() ? "amr" : "wav");
@@ -1753,12 +1764,13 @@ angular.module('ionicResearchKit',[])
                 //$scope.$parent.formData[$scope.activeStepID].fileURL = "documents://" + audioFileName;
                 //$scope.$parent.formData[$scope.activeStepID].contentType = "audio/m4a";
 
-
+              //  $scope.audioSample = $cordovaMedia.newMedia("documents://" + audioFileName);
                 if (ionic.Platform.isAndroid()) {
-                 $scope.audioSample = $cordovaMedia.newMedia(cordova.file.externalRootDirectory + audioFileName);
-               }else {
-                  $scope.audioSample = $cordovaMedia.newMedia("documents://" + audioFileName);
-               }
+                $scope.audioSample = $cordovaMedia.newMedia(cordova.file.externalRootDirectory + audioFileName);
+                }else {
+                $scope.audioSample = $cordovaMedia.newMedia("documents://" + audioFileName);
+                }
+
 
                 // Record audio
                 $scope.progress = $scope.duration;
@@ -1879,7 +1891,7 @@ angular.module('ionicResearchKit',[])
         template: function(elem, attr) {
             return  '<div class="irk-centered">'+
                     '<div class="irk-text-centered">'+
-                    '<h2>' + (attr.text ? attr.text : 'Your more specific voice instruction goes here. For example, say \'Aaaah\'.') + '</h2>'+
+                    '<h2 class= "FontIrkAudio">' + (attr.text ? attr.text : 'Your more specific voice instruction goes here. For example, say \'Aaaah\'.') + '</h2>'+
                     '</div>'+
                     '<div class="irk-audio-button-container" ng-show="audioActive">'+
                     '<ion-spinner icon="lines" class="spinner-positive irk-spinner-audio-task"></ion-spinner>' +
