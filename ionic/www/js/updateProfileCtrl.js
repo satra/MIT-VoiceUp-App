@@ -299,26 +299,7 @@ angular.module('updateProfileCtrl', [])
             syncDataFactory.leaveStudyUpdateStatus(folderId, logoutToken, leaveData).then(function(leaveStudyStatus) {
               dataStoreManager.userLogout(logoutToken).then(function(res) {
                 if (res.status == 200) {
-                  var promiseA = profileDataManager.removeUser($scope.userId);
-                  var promiseB = profileDataManager.removeUserSession($scope.userId);
-                  var promiseC = surveyDataManager.removeUserSurveyResults($scope.userId);
-                  var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.userId);
-                  var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.userId);
-                  var promiseF = syncDataFactory.removeUserCacheResults($scope.userId);
-                  var promiseG = syncDataFactory.removeUserCacheServerResults($scope.userId);
-                  var promiseH = syncDataFactory.removeUserCacheItemIds($scope.userId);
-                  $q.all([promiseA, promiseB, promiseC, promiseD, promiseE, promiseF, promiseG, promiseH])
-                    .then(function(promiseResult) {
-                      $ionicLoading.hide();
-                      $scope.disableLocalNotification();
-                    });
-                  $ionicHistory.clearCache().then(function() {
-                    $ionicLoading.hide();
-                    $rootScope.emailId = null;
-                    $rootScope.loggedInStatus = false;
-                    $rootScope.modal.remove();
-                    $state.transitionTo('home');
-                  });
+                  $scope.clearLocalUserData();
                 }
               }, function(error) {
                 $scope.callAlertDailog(error);
@@ -332,16 +313,46 @@ angular.module('updateProfileCtrl', [])
           }
         });
       } else {
-        $ionicPopup.alert({
-          title: appConstants.syncOnceAccountVerifiedTitle,
-          template: appConstants.verifyAccountBeforeLeaveStudy
+        var confirmPopup = $ionicPopup.confirm({
+          title: appConstants.leaveStudyMessageTitle,
+          template: appConstants.leaveStudyMessage
+        });
+        $rootScope.popupAny = confirmPopup;
+        confirmPopup.then(function(res) {
+          if (res && $rootScope.AllowedToDisplayNextPopUp) {
+            $scope.clearLocalUserData();
+          } else {
+            $scope.logout = false;
+          }
         });
       }
     }
 
     $scope.checkErrorAsyncCall = function(error) {
       $ionicLoading.hide();
+    }
 
+    $scope.clearLocalUserData = function() {
+      var promiseA = profileDataManager.removeUser($scope.userId);
+      var promiseB = profileDataManager.removeUserSession($scope.userId);
+      var promiseC = surveyDataManager.removeUserSurveyResults($scope.userId);
+      var promiseD = surveyDataManager.removeUserSurveyFromTempTable($scope.userId);
+      var promiseE = surveyDataManager.removeUserSurveyQuestionExpiry($scope.userId);
+      var promiseF = syncDataFactory.removeUserCacheResults($scope.userId);
+      var promiseG = syncDataFactory.removeUserCacheServerResults($scope.userId);
+      var promiseH = syncDataFactory.removeUserCacheItemIds($scope.userId);
+      $q.all([promiseA, promiseB, promiseC, promiseD, promiseE, promiseF, promiseG, promiseH])
+        .then(function(promiseResult) {
+          $ionicLoading.hide();
+          $scope.disableLocalNotification();
+        });
+      $ionicHistory.clearCache().then(function() {
+        $ionicLoading.hide();
+        $rootScope.emailId = null;
+        $rootScope.loggedInStatus = false;
+        $rootScope.modal.remove();
+        $state.transitionTo('home');
+      });
     }
 
     $scope.emailConsent = function() {
