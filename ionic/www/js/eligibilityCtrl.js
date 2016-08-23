@@ -79,7 +79,7 @@ angular.module('eligibility', [])
 
     // ==== Close the existing modal and open Sign in html in new modal========
     $scope.openSignIn = function() {
-      $ionicModal.fromTemplateUrl('templates/Login-IRK.html', {
+      $ionicModal.fromTemplateUrl('templates/login.html', {
         scope: $scope,
         animation: 'slide-in-left'
       }).then(function(modal) {

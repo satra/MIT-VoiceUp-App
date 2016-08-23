@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signInCtrl', 'surveyCtrl', 'databaseManager', 'surveyDataManager', 'eligiblityDataManager',
     'profileDataManager', 'consentDataManager', 'dataStoreManager', 'homeCtrl', 'dashboard', 'eligibility', 'signUp', 'consent',
-    'updateProfileCtrl', 'customDirectives', 'ionicResearchKit', 'syncDataService', 'checklist-model', 'angular-svg-round-progressbar', 'base64', 'learnModule', 'eventManagerCtrl', 'passcodehandler', 'ngCordova', 'chart.js', 'flexcalendar', 'pascalprecht.translate'
+    'updateProfileCtrl', 'customDirectives', 'ionicResearchKit', 'syncDataService', 'checklist-model', 'angular-svg-round-progressbar', 'base64', 'learnModule', 'ngCordova', 'chart.js', 'flexcalendar', 'pascalprecht.translate'
   ])
   .run(function($ionicPlatform, $ionicPopup, $rootScope, $ionicHistory, $state, profileDataManager, $ionicLoading, $ionicPopup) {
     $ionicPlatform.ready(function() {
@@ -163,7 +163,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
   })
 
   .state('loadSignUp', {
-    templateUrl: 'templates/SIGNUP-IRK.html',
+    templateUrl: 'templates/signUp.html',
     url: '/loadSignUp',
     controller: 'signUpCtrl'
   })
@@ -180,11 +180,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
     controller: 'verificationCtrl'
   })
 
-  .state('onResumehandler', {
-    url: '/onresumehandler',
-    controller: 'eventManagerCtrl'
-  })
-
   // setup an abstract state for the tabs directive
   .state('tab', {
     url: '/tab',
@@ -197,7 +192,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
     url: '/Activities',
     views: {
       'tab-Activities': {
-        templateUrl: 'templates/Activities.html',
+        templateUrl: 'templates/surveyActivities.html',
         controller: 'surveyCtrl'
       }
     }

@@ -3,7 +3,7 @@ angular.module('signInCtrl', [])
   .controller('signInCtrl', function($scope, $compile, $timeout, $rootScope, $cordovaSQLite, $ionicPopup,
     $ionicHistory, $controller, $ionicModal, $http, $ionicLoading, userService, databaseManager,
     dataStoreManager, consentDataManager, profileDataManager, surveyDataManager, $cordovaEmailComposer,
-    syncDataFactory, pinModalService, eligiblityDataManager, irkConsentDocument, irkResults, $base64, $state,
+    syncDataFactory, eligiblityDataManager, irkConsentDocument, irkResults, $base64, $state,
     $location, $window, $q, appConstants) {
 
     //==================================Select email view ==========
@@ -100,7 +100,7 @@ angular.module('signInCtrl', [])
 
     // ==== Close the existing modal and open Sign in html in new modal========
     $scope.openSignIn = function() {
-      $ionicModal.fromTemplateUrl('templates/Login-IRK.html', {
+      $ionicModal.fromTemplateUrl('templates/login.html', {
         scope: $scope,
         animation: 'slide-in-left',
         hardwareBackButtonClose: false,

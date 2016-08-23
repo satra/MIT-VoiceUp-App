@@ -1,7 +1,7 @@
 angular.module('homeCtrl', [])
   //=======Home screen controller======================
   .controller('homeCtrl', function($scope, $timeout, $rootScope, $cordovaSQLite, $ionicPopup, $ionicHistory, $controller, $ionicModal, $http, $ionicLoading, userService, databaseManager,
-    dataStoreManager, profileDataManager, $cordovaEmailComposer, pinModalService, eligiblityDataManager, irkResults,
+    dataStoreManager, profileDataManager, $cordovaEmailComposer, eligiblityDataManager, irkResults,
     $base64, $state, $location, $window, appConstants, syncDataFactory, consentDataManager, syncDataService, $q, $cordovaFileTransfer, $cordovaFile, $base64) {
 
     $rootScope.emailId = null;

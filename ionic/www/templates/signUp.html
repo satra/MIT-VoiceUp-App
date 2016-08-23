@@ -1,19 +1,19 @@
-<ion-modal-view class="irk-modal">
+<ion-modal-view id="signUpDiv" can-swipe-back="false">
   <ion-header-bar>
- <i class="icon ion-ios-arrow-thin-left icon-font1" ng-click="SignInback()"></i>
-    <h1 class="title">Sign Up</h1>
+
+    <h1 class="title">Signup</h1>
     <div class="buttons">
-  <button class="button button-clear" ng-click="closeLogin()">Cancel</button>
+      <button class="button button-clear IRK-FONT3" ng-click="backtohome()">Cancel</button>
     </div>
   </ion-header-bar>
+<ion-content>
+<div id="dynamicContent"  name="dynamicContent" >
 
-      <irk-form-step id="q11" title="Your question here." text="Additional text can go here." >
-        <!-- <irk-form-item title="Your section title."></irk-form-item> -->
-        <irk-form-item type="text" id="firstName" text="First Name" placeholder="John"></irk-form-item>
-        <irk-form-item type="text" id="lastName" text="Last Name" placeholder="Suhr"></irk-form-item>
-        <!-- <irk-form-item title="Your section title."></irk-form-item> -->
-        <irk-form-item type="email" id="email" text="Email" placeholder="john@suhr.com"></irk-form-item>
-        <irk-form-item type="tel" id="phone" text="Phone" placeholder="555-555-5555"></irk-form-item>
-      </irk-form-step>
+</div>
+<button  class="round1 irk-centered marT5p marB20 irk.font IRK-FONT3 irk-font-helvetica" ng-click="passcodeValidation()">
+<i class="icon ion-ios-arrow-thin-right icon-font-button"></i>
+</button>
+<button class="button button-clear marL45p irk-centered irk-font-helvetica IRK-FONT3" ng-click="skipSignUp()">Skip</button>
+</ion-content>
 
 </ion-modal-view>
