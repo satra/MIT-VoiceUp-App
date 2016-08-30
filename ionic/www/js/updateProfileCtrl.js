@@ -10,6 +10,7 @@ angular.module('updateProfileCtrl', [])
     if ($rootScope.emailId) {
       $scope.hideDownloadButton = false;
       $rootScope.hideDownloadButton = false;
+      $scope.appVersionNumber = $rootScope.savedVersion;
 
       // get girder-token from local db for the user logout and further WS calls
       profileDataManager.getAuthTokenForUser(email).then(function(response) {
