@@ -24,179 +24,7 @@ angular.module('surveyCtrl', [])
       }
     }
 
-    //check for server updates on next version of data
-    $scope.checkForServerDataUpdates = function() {
-      var localJSON = '';
-      $ionicLoading.show({
-        template: appConstants.checkForServerUpdates
-      });
-      userService.getAppContent().then(function(localData) {
-        localJSON = JSON.parse(localData.completeJson);
-        $rootScope.savedVersion = localData.version;
-        var savedVersion = localData.version;
-        var diffURL = localData.diffURL;
-        userService.getSeverJson(diffURL).then(function(newJson) {
-          var delta = JSON.parse(JSON.stringify(newJson).replace(/\s/g, ""));
-          var newVersion = delta.version[1];
-          if (savedVersion.trim() != newVersion.trim()) {
-            $rootScope.savedVersion = newVersion;
-            var diffpatcher = jsondiffpatch.create();
-            diffpatcher.patch(localJSON, delta);
-            $scope.updateLocalDataBaseWithFreshDiff(localJSON);
-          } else {
-            $ionicLoading.hide();
-          }
-        }, function(error) {
-          $ionicLoading.hide();
-        });
-      }, function(error) {
-        $ionicLoading.hide();
-      });
-    }
-
-    $scope.updateLocalDataBaseWithFreshDiff = function(localJSON) {
-      var version = localJSON.version;
-      var diffURL = localJSON.diffURL;
-      var url = localJSON.URL;
-      var eligibility = JSON.stringify(localJSON.eligibility);
-      var profile = JSON.stringify(localJSON.profile);
-      var consent_screens = JSON.stringify(localJSON.consent);
-      var completeJson = JSON.stringify(localJSON).replace(/'/g, "`");
-      var surveyJson = localJSON.surveys;
-      var tasksJson = localJSON.tasks;
-      userService.updateAppContent(version, url, diffURL, eligibility, profile, consent_screens, completeJson).then(function(dataUpdate) {
-        if (dataUpdate) {
-          // an array of promises
-          var surveyListPromise = [];
-          var taskListPromise = [];
-          for (var survey in surveyJson) {
-            if (surveyJson.hasOwnProperty(survey)) {
-              var obj = surveyJson[survey];
-              var date = '';
-              var title = survey;
-              var id = survey;
-              var skippable = '';
-              var tasks = '';
-              for (var prop in obj) {
-                switch (prop) {
-                  case "date":
-                    date = obj[prop];
-                    break;
-                  case "skippable":
-                    skippable = JSON.stringify(obj[prop]);
-                    break;
-                  case "tasks":
-                    tasks = JSON.stringify(obj[prop]);
-                    break;
-                  default:
-                }
-                if (date && title && id && tasks) {
-                  var dateArray = date.split(" ");
-                  var day = dateArray[2];
-                  var month = dateArray[3];
-                  surveyListPromise.push(userService.updateSurveysTableById(day, month, title, id, skippable, tasks));
-                }
-              }
-            }
-          }
-          for (var task in tasksJson) {
-            if (tasksJson.hasOwnProperty(task)) {
-              var timeLimit = tasksJson[task].timelimit;
-              var steps = JSON.stringify(tasksJson[task].steps).replace(/'/g, "`");
-              if (timeLimit === undefined || timeLimit === null) {
-                timeLimit = '';
-              }
-              taskListPromise.push(userService.updateTasksTableById(task, steps, timeLimit));
-            }
-          }
-          // resolve both the promise out of for loop
-          $q.all(surveyListPromise).then(function(surevyResolvePromise) {
-            $q.all(taskListPromise).then(function(tasksResolvePromise) {
-              $ionicLoading.hide();
-            }, function(error) {
-              $ionicLoading.hide();
-            });
-          }, function(error) {
-            $ionicLoading.hide();
-          });
-        }
-      }, function(error) {
-        $ionicLoading.hide();
-      });
-
-      $timeout(function() {
-        $ionicLoading.hide();
-      }, 3000);
-    }
-
-    //on resume handler===================================================================
-    $scope.hideImageDiv = true;
-    // == take user to home screeen
-    $scope.switchUser = function() {
-      $ionicHistory.clearCache().then(function() {
-        $rootScope.emailId = null;
-        $state.transitionTo('home');
-      });
-    }
-
-    // ==== Close the existing modal and open Sign in html in new modal======== make these as common function
-    $scope.openSignIn = function() {
-      $ionicHistory.clearCache().then(function() {
-        $scope.pin.remove();
-        $state.transitionTo('signIn');
-      });
-    };
-
-    // ==== Close the existing modal and open Sign in html in new modal========
-    $scope.showEligibilityTestView = function() {
-      $ionicHistory.clearCache().then(function() {
-        $scope.pin.remove();
-        $state.transitionTo('eligiblityTest');
-      });
-    };
-
-
-    //sign in via email and passcode on change of passcode call this function
-    $scope.loginViaPasscode = function() {
-      var inputValue = angular.element(document.querySelectorAll('#pinpasscode'));
-      var passcode = inputValue.prop('value');
-      if (passcode.length == 4) {
-        var emailDiv = angular.element(document.querySelectorAll('.passcode-dropdown'));
-        var email = emailDiv.prop('selectedOptions')[0].value;
-        if (email && passcode) {
-          //get IP like email ids
-          profileDataManager.logInViaPasscode(email, passcode).then(function(res) {
-            if (res) {
-              $scope.clearPinDiv();
-              // All set go to next page
-              $ionicHistory.clearCache().then(function() {
-                $rootScope.emailId = email; // save it to access in update profile
-                $scope.pin.hide();
-                $rootScope.activeUser = email;
-              });
-            } else {
-              $scope.clearPinDiv();
-              $scope.callAlertDailog('Invalid passcode!!!');
-            }
-          });
-        }
-      }
-    };
-
-    $scope.clearPinDiv = function() {
-      var passcode_div = angular.element(document.querySelector('#pinpasscode'));
-      passcode_div.val('');
-    }
-
-    //error handler dailog
-    $scope.callAlertDailog = function(message) {
-        document.activeElement.blur(); // remove the keypad
-        $ionicPopup.alert({
-          title: appConstants.errorDailogTitle,
-          template: message
-        });
-      }
-      //============== resume handler finished ============================================
+    //============== On launch activiteis surveys to temp table first time ============================================
 
     surveyDataManager.getSurveyListForToday().then(function(response) {
       $scope.list = response;
@@ -273,6 +101,251 @@ angular.module('surveyCtrl', [])
         });
       }
     });
+
+    //check for server updates on next version of data
+    $scope.checkForServerDataUpdates = function() {
+      var localJSON = '';
+      $ionicLoading.show({
+        template: appConstants.checkForServerUpdates
+      });
+      userService.getAppContent().then(function(localData) {
+        localJSON = JSON.parse(localData.completeJson);
+        $rootScope.savedVersion = localData.version;
+        var savedVersion = localData.version;
+        var diffURL = localData.diffURL;
+        userService.getSeverJson(diffURL).then(function(newJson) {
+          var delta = JSON.parse(JSON.stringify(newJson).replace(/\s/g, ""));
+          var newVersion = delta.version[1];
+          if (savedVersion.trim() != newVersion.trim()) {
+            $rootScope.savedVersion = newVersion;
+            var diffpatcher = jsondiffpatch.create();
+            diffpatcher.patch(localJSON, delta);
+            $scope.updateLocalDataBaseWithFreshDiff(localJSON);
+          } else {
+            $ionicLoading.hide();
+          }
+        }, function(error) {
+          $ionicLoading.hide();
+        });
+      }, function(error) {
+        $ionicLoading.hide();
+      });
+    }
+
+    $scope.updateLocalDataBaseWithFreshDiff = function(localJSON) {
+      $ionicLoading.show({
+        template: appConstants.checkForServerUpdates
+      });
+      var version = localJSON.version;
+      var diffURL = localJSON.diffURL;
+      var url = localJSON.URL;
+      var eligibility = JSON.stringify(localJSON.eligibility);
+      var profile = JSON.stringify(localJSON.profile);
+      var consent_screens = JSON.stringify(localJSON.consent);
+      var completeJson = JSON.stringify(localJSON).replace(/'/g, "`");
+      var surveyJson = localJSON.surveys;
+      var tasksJson = localJSON.tasks;
+      userService.updateAppContent(version, url, diffURL, eligibility, profile, consent_screens, completeJson).then(function(dataUpdate) {
+        if (dataUpdate) {
+          // an array of promises
+          var surveyListPromise = [];
+          var taskListPromise = [];
+          for (var survey in surveyJson) {
+            if (surveyJson.hasOwnProperty(survey)) {
+              var obj = surveyJson[survey];
+              var date = '';
+              var title = survey;
+              var id = survey;
+              var skippable = '';
+              var tasks = '';
+              for (var prop in obj) {
+                switch (prop) {
+                  case "date":
+                    date = obj[prop];
+                    break;
+                  case "skippable":
+                    skippable = JSON.stringify(obj[prop]);
+                    break;
+                  case "tasks":
+                    tasks = JSON.stringify(obj[prop]);
+                    break;
+                  default:
+                }
+                if (date && title && id && tasks) {
+                  var dateArray = date.split(" ");
+                  var day = dateArray[2];
+                  var month = dateArray[3];
+                  surveyListPromise.push(userService.updateSurveysTableById(day, month, title, id, skippable, tasks));
+                }
+              }
+            }
+          }
+          for (var task in tasksJson) {
+            if (tasksJson.hasOwnProperty(task)) {
+              var timeLimit = tasksJson[task].timelimit;
+              var steps = JSON.stringify(tasksJson[task].steps).replace(/'/g, "`");
+              if (timeLimit === undefined || timeLimit === null) {
+                timeLimit = '';
+              }
+              taskListPromise.push(userService.updateTasksTableById(task, steps, timeLimit));
+            }
+          }
+          $scope.flushSurveyTempTable(surveyListPromise, taskListPromise);
+        }
+      }, function(error) {
+        $ionicLoading.hide();
+      });
+
+      $timeout(function() {
+        $ionicLoading.hide();
+      }, 3000);
+    }
+
+    $scope.flushSurveyTempTable = function(surveyListPromise, taskListPromise) {
+      surveyDataManager.getUsersListFromTempTable().then(function(usersList) {
+        if (usersList.length > 0) {
+          var usersFromTempTable = usersList;
+          surveyDataManager.getSurveyListForToday().then(function(surveyForToday) {
+            if (surveyForToday.length > 0) {
+              var skippableList = JSON.parse(surveyForToday[0].skippable);
+              var tasksForToday = JSON.parse(surveyForToday[0].tasks);
+              var title = surveyForToday[0].title;
+              var promises = []; // an array of promises
+              for (var k = 0; k < tasksForToday.length; k++) {
+                var updatedQuestionId = tasksForToday[k];
+                promises.push(surveyDataManager.checkQuestionIdExistsFromTempTable(updatedQuestionId));
+              }
+              $q.all(promises).then(function(verify) {
+                var insertQueries = [];
+                var updateQueries = [];
+                var today = new Date();
+                var creationDate = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+                if (verify.length > 0) {
+                  for (var i = 0; i < verify.length; i++) {
+                    if (verify[i][0].status) {
+                      for (var j = 0; j < usersFromTempTable.length; j++) {
+                        var userId = usersList[j].userId;
+                        var questionId = verify[i][0].questionId;
+                        var skippable = false;
+                        for (var L = 0; L < skippableList.length; L++) {
+                          if (questionId == skippableList[L]) {
+                            skippable = true;
+                          }
+                        }
+                        insertQueries.push(surveyDataManager.addSurveyToUserForToday(userId, title, questionId, creationDate, skippable));
+                      }
+                    } else {
+                      if (verify[i][0].questionId) {
+                        var questionId = verify[i][0].questionId;
+                        for (var L = 0; L < skippableList.length; L++) {
+                          if (questionId == skippableList[L]) {
+                            skippable = true;
+                          }
+                        }
+                        updateQueries.push(surveyDataManager.updateSurveyTempTableForTodayBySurveyId(title, questionId, skippable));
+                      }
+                    }
+                  }
+                }
+                // run insert queries
+                $q.all(insertQueries).then(function(insertRows) {
+                  // run update queries
+                  $q.all(updateQueries).then(function(updateRows) {
+                    $scope.flushFinalListOfSurveyAndTaks(surveyListPromise, taskListPromise);
+                  });
+                });
+              });
+            }
+          });
+        } else {
+          $scope.flushFinalListOfSurveyAndTaks(surveyListPromise, taskListPromise);
+        }
+      });
+    }
+
+    $scope.flushFinalListOfSurveyAndTaks = function(surveyListPromise, taskListPromise) {
+      // resolve both the promise out of for loop
+      $q.all(surveyListPromise).then(function(surevyResolvePromise) {
+        $ionicLoading.hide();
+      }, function(error) {
+        $ionicLoading.hide();
+      });
+
+      $q.all(taskListPromise).then(function(tasksResolvePromise) {
+        $ionicLoading.hide();
+      }, function(error) {
+        $ionicLoading.hide();
+      });
+
+    }
+
+    //on resume handler===================================================================
+    $scope.hideImageDiv = true;
+    // == take user to home screeen
+    $scope.switchUser = function() {
+      $ionicHistory.clearCache().then(function() {
+        $rootScope.emailId = null;
+        $state.transitionTo('home');
+      });
+    }
+
+    // ==== Close the existing modal and open Sign in html in new modal======== make these as common function
+    $scope.openSignIn = function() {
+      $ionicHistory.clearCache().then(function() {
+        $scope.pin.remove();
+        $state.transitionTo('signIn');
+      });
+    };
+
+    // ==== Close the existing modal and open Sign in html in new modal========
+    $scope.showEligibilityTestView = function() {
+      $ionicHistory.clearCache().then(function() {
+        $scope.pin.remove();
+        $state.transitionTo('eligiblityTest');
+      });
+    };
+
+
+    //sign in via email and passcode on change of passcode call this function
+    $scope.loginViaPasscode = function() {
+      var inputValue = angular.element(document.querySelectorAll('#pinpasscode'));
+      var passcode = inputValue.prop('value');
+      if (passcode.length == 4) {
+        var emailDiv = angular.element(document.querySelectorAll('.passcode-dropdown'));
+        var email = emailDiv.prop('selectedOptions')[0].value;
+        if (email && passcode) {
+          //get IP like email ids
+          profileDataManager.logInViaPasscode(email, passcode).then(function(res) {
+            if (res) {
+              $scope.clearPinDiv();
+              // All set go to next page
+              $ionicHistory.clearCache().then(function() {
+                $rootScope.emailId = email; // save it to access in update profile
+                $scope.pin.hide();
+                $rootScope.activeUser = email;
+              });
+            } else {
+              $scope.clearPinDiv();
+              $scope.callAlertDailog('Invalid passcode!!!');
+            }
+          });
+        }
+      }
+    };
+
+    $scope.clearPinDiv = function() {
+      var passcode_div = angular.element(document.querySelector('#pinpasscode'));
+      passcode_div.val('');
+    }
+
+    //error handler dailog
+    $scope.callAlertDailog = function(message) {
+      document.activeElement.blur(); // remove the keypad
+      $ionicPopup.alert({
+        title: appConstants.errorDailogTitle,
+        template: message
+      });
+    }
 
     $scope.launchSurvey = function(idSelected) {
       $scope.cancelSteps = false;

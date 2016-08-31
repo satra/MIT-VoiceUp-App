@@ -24,6 +24,46 @@ angular.module('surveyDataManager', [])
         return deferred.promise;
       },
 
+      getUsersListFromTempTable: function() {
+        var deferred = $q.defer();
+        var db = databaseManager.getConnectionObject();
+        var query = "SELECT DISTINCT userId FROM SurveyTemp  ";
+        var consent = $cordovaSQLite.execute(db, query).then(function(res) {
+          var len = res.rows.length;
+          var itemsColl = [];
+          for (var i = 0; i < len; i++) {
+            itemsColl[i] = res.rows.item(i);
+          }
+          return itemsColl;
+          deferred.resolve(consent);
+        }, function(err) {});
+        deferred.resolve(consent);
+        return deferred.promise;
+      },
+      checkQuestionIdExistsFromTempTable: function(questionId) {
+        var deferred = $q.defer();
+        var db = databaseManager.getConnectionObject();
+        var query = "SELECT * FROM SurveyTemp WHERE questionId = '" + questionId + "'  ";
+        var consent = $cordovaSQLite.execute(db, query).then(function(res) {
+          var len = res.rows.length;
+          var itemsColl = [];
+          if (len > 0) {
+            for (var i = 0; i < len; i++) {
+              itemsColl[i] = res.rows.item(i);
+            }
+          } else {
+            itemsColl[0] = {
+              "status": "false",
+              "questionId": questionId
+            };
+          }
+          return itemsColl;
+          deferred.resolve(consent);
+        }, function(err) {});
+        deferred.resolve(consent);
+        return deferred.promise;
+      },
+
       getTaskListJson: function() {
         var deferred = $q.defer();
         var db = databaseManager.getConnectionObject();
@@ -189,6 +229,19 @@ angular.module('surveyDataManager', [])
         var db = databaseManager.getConnectionObject();
         var query = "UPDATE Results SET resultJson = '" + resultJson + "' WHERE resultType = ? AND userId = ?";
         var update = $cordovaSQLite.execute(db, query, [resultType, userId])
+          .then(function(res) {
+            return res;
+          }, function(err) {
+            return err;
+          });
+        deferred.resolve(update);
+        return deferred.promise;
+      },
+      updateSurveyTempTableForTodayBySurveyId: function(surveyId, questionId, skippable) {
+        var deferred = $q.defer();
+        var db = databaseManager.getConnectionObject();
+        var query = "UPDATE SurveyTemp SET skippable = '" + skippable + "' WHERE surveyId = ? AND questionId = ?";
+        var update = $cordovaSQLite.execute(db, query, [surveyId, questionId])
           .then(function(res) {
             return res;
           }, function(err) {
