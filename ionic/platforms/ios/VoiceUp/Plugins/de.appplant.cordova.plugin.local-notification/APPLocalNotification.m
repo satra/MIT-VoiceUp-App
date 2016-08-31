@@ -25,7 +25,6 @@
 #import "APPLocalNotificationOptions.h"
 #import "UIApplication+APPLocalNotification.h"
 #import "UILocalNotification+APPLocalNotification.h"
-//@import UserNotifications;
 
 @interface APPLocalNotification ()
 
@@ -692,30 +691,27 @@
  */
 - (void) fireEvent:(NSString*)event notification:(UILocalNotification*)notification
 {
-    {
-        NSString* js;
-        NSString* params = [NSString stringWithFormat:
-                            @"\"%@\"", self.applicationState];
-        
-        if (notification) {
-            NSString* args = [notification encodeToJSON];
-            
-            params = [NSString stringWithFormat:
-                      @"%@,'%@'",
-                      args, self.applicationState];
-        }
-        
-        js = [NSString stringWithFormat:
-              @"cordova.plugins.notification.local.core.fireEvent('%@', %@)",
-              event, params];
-        
-        if (deviceready) {
-            [self.commandDelegate evalJs:js];
-        } else {
-            [self.eventQueue addObject:js];
-        }
+    NSString* js;
+    NSString* params = [NSString stringWithFormat:
+                        @"\"%@\"", self.applicationState];
+
+    if (notification) {
+        NSString* args = [notification encodeToJSON];
+
+        params = [NSString stringWithFormat:
+                  @"%@,'%@'",
+                  args, self.applicationState];
     }
-    
+
+    js = [NSString stringWithFormat:
+          @"cordova.plugins.notification.local.core.fireEvent('%@', %@)",
+          event, params];
+
+    if (deviceready) {
+        [self.commandDelegate evalJs:js];
+    } else {
+        [self.eventQueue addObject:js];
+    }
 }
 
 @end

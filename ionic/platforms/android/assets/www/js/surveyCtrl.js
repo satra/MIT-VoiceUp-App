@@ -273,13 +273,6 @@ angular.module('surveyCtrl', [])
 
       $q.all(taskListPromise).then(function(tasksResolvePromise) {
         $ionicLoading.hide();
-
-        /*  databaseManager.createTasksTable(taskId, steps, timeLimit).then(function(resp) {
-           console.log('createTasksTable  ' + resp);
-           return resp;
-         });
-         */
-
       }, function(error) {
         $ionicLoading.hide();
       });

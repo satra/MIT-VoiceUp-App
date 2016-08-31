@@ -72,16 +72,14 @@ angular.module('userService', [])
         var query = "UPDATE Tasks SET steps ='" + steps + "', timeLimit='" + timeLimit + "' WHERE  taskId = '" + taskId + "' ";
         var updateAppContent = $cordovaSQLite.execute(db, query)
           .then(function(res) {
-            var itemsColl = [];
             if (res.rowsAffected == 0) {
-              itemsColl = {
-                "taskId": taskId,
-                "steps": steps,
-                "timeLimit": timeLimit
-              };
+              var deferred = $q.defer();
+              databaseManager.createTasksTable(taskId, steps, timeLimit).then(function(resp) {
+                console.log('createTasksTable  ' + resp);
+                return resp;
+              });
             }
-            return itemsColl;
-            deferred.resolve(updateAppContent);
+            return res;
           }, function(err) {
             return err;
           });
