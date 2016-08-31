@@ -1,0 +1,427 @@
+{
+	"URL": ["https: //raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160708.json ", "https://raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160709.json "],
+	"diffURL ": ["https://raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160708.patch ", "https://raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160709.patch "],
+	"surveys ": {
+		"VoiceDepression_iSurvey01 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey02 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey03 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey04 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey05 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey06 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey07 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey08 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey09 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey10 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey11 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey12 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey13 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey14 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey15 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey16 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey17 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey18 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey19 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey20 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey21 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey22 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey23 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey24 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey25 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey26 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey27 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey28 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey29 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey30 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		},
+		"VoiceDepression_iSurvey31 ": {
+			"skippable ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			},
+			"tasks ": {
+				"2 ": ["SAGE_3p "],
+				"_t ": "a ",
+				"_2 ": ["SAGE_3 ", 0, 0]
+			}
+		}
+	},
+	"tasks ": {
+		"SAGE_3 ": [{
+			"steps ": [{
+				"choices ": [{
+					"text ": "The best I have felt ",
+					"value ": 1
+				}, {
+					"text ": " Better than usual ",
+					"value ": 2
+				}, {
+					"text ": " Normal  ",
+					"value ": 3
+				}, {
+					"text ": " Down ",
+					"value ": 4
+				}, {
+					"text ": " Extremely down ",
+					"value ": 5
+				}],
+				"text ": "Select only one ",
+				"title ": "How is your mood today? ",
+				"type ": "irk-text-choice-question-step "
+			}]
+		}, 0, 0],
+		"SAGE_3p ": [{
+			"steps ": [{
+				"choices ": [{
+					"normal-state-image ": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood0.png ",
+					"value ": 1
+				}, {
+					"normal-state-image ": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood1.png ",
+					"value ": 2
+				}, {
+					"normal-state-image ": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood2.png ",
+					"value ": 3
+				}, {
+					"normal-state-image ": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood3.png ",
+					"value ": 4
+				}, {
+					"normal-state-image ": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood4.png ",
+					"value ": 5
+				}],
+				"text ": "Select only one ",
+				"title ": "How is your mood today? ",
+				"type ": "irk-image-choice-quetion-step "
+			}]
+		}]
+	},
+	"version ": ["0.1.0 ", "0.1.1 "]
+}

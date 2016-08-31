@@ -1,0 +1,27 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title"> </h1>
+    <div class="buttons">
+      <button class="button button-clear IRK-FONT3" ng-click="GoBack()">Cancel</button>
+    </div>
+  </ion-header-bar>
+
+<ion-content content scroll="false">
+<div class="irk-centered  textfld IRK-MARBTM-30p IRK-FONT1 irk-font-helvetica">Forgot Passcode</div>
+ <div class="list" id="signIn">
+   <label class="item item-input item-stacked-label irk-centered barTnone">
+   <span class="input-label"></span>
+   <input  class="backgroundTrans irk-centered" id="email" type="Email" placeholder="Email" class="form-item" ng-model="emailId" ng-disabled="true">
+   </label>
+
+   <label class="item item-input item-stacked-label irk-centered IRK-BORBTM-NONE">
+   <span class="input-label"></span>
+   <input class="irk-centered" type="password"  placeholder="Password" id="password" class="form-item" >
+   </label>
+
+   <br>
+   <button class="irk-btn irk-centered irk-font-helvetica marT30p"  ng-click="signInSubmit('passcode')">Sign in</button>
+  </div>
+</ion-content>
+
+</ion-modal-view>
