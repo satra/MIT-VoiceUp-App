@@ -1,0 +1,15 @@
+{
+    "devDependencies": {
+        "grunt": "",
+        "grunt-cli": "",
+        "grunt-contrib-clean": "",
+        "grunt-contrib-copy": "",
+        "grunt-contrib-jshint": "",
+        "grunt-contrib-watch": "",
+        "grunt-contrib-concat": "",
+        "grunt-contrib-uglify": "",
+        "grunt-notify": "",
+        "grunt-strip": "",
+        "grunt-text-replace": ""
+    }
+}

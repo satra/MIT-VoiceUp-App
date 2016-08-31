@@ -1,0 +1,180 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '-g',
+1 verbose cli   'jsondiffpatch' ]
+2 info using npm@2.15.8
+3 info using node@v4.4.7
+4 verbose install initial load of /usr/local/lib/package.json
+5 verbose readDependencies loading dependencies from /usr/local/lib/package.json
+6 silly cache add args [ 'jsondiffpatch', null ]
+7 verbose cache add spec jsondiffpatch
+8 silly cache add parsed spec Result {
+8 silly cache add   raw: 'jsondiffpatch',
+8 silly cache add   scope: null,
+8 silly cache add   name: 'jsondiffpatch',
+8 silly cache add   rawSpec: '',
+8 silly cache add   spec: 'latest',
+8 silly cache add   type: 'tag' }
+9 silly addNamed jsondiffpatch@latest
+10 verbose addNamed "latest" is being treated as a dist-tag for jsondiffpatch
+11 info addNameTag [ 'jsondiffpatch', 'latest' ]
+12 silly mapToRegistry name jsondiffpatch
+13 silly mapToRegistry using default registry
+14 silly mapToRegistry registry https://registry.npmjs.org/
+15 silly mapToRegistry data Result {
+15 silly mapToRegistry   raw: 'jsondiffpatch',
+15 silly mapToRegistry   scope: null,
+15 silly mapToRegistry   name: 'jsondiffpatch',
+15 silly mapToRegistry   rawSpec: '',
+15 silly mapToRegistry   spec: 'latest',
+15 silly mapToRegistry   type: 'tag' }
+16 silly mapToRegistry uri https://registry.npmjs.org/jsondiffpatch
+17 verbose addNameTag registry:https://registry.npmjs.org/jsondiffpatch not in flight; fetching
+18 verbose request uri https://registry.npmjs.org/jsondiffpatch
+19 verbose request no auth needed
+20 info attempt registry request try #1 at 5:31:12 PM
+21 verbose request id d14ab58fdf6d1c14
+22 verbose etag "AUON2WLMJWL214P66X9JXNJH8"
+23 http request GET https://registry.npmjs.org/jsondiffpatch
+24 http 304 https://registry.npmjs.org/jsondiffpatch
+25 verbose headers { date: 'Fri, 22 Jul 2016 12:01:15 GMT',
+25 verbose headers   via: '1.1 varnish',
+25 verbose headers   'cache-control': 'max-age=300',
+25 verbose headers   etag: '"AUON2WLMJWL214P66X9JXNJH8"',
+25 verbose headers   age: '154',
+25 verbose headers   connection: 'keep-alive',
+25 verbose headers   'x-served-by': 'cache-sin6920-SIN',
+25 verbose headers   'x-cache': 'HIT',
+25 verbose headers   'x-cache-hits': '1',
+25 verbose headers   'x-timer': 'S1469188875.409685,VS0,VE0',
+25 verbose headers   vary: 'Accept-Encoding' }
+26 silly get cb [ 304,
+26 silly get   { date: 'Fri, 22 Jul 2016 12:01:15 GMT',
+26 silly get     via: '1.1 varnish',
+26 silly get     'cache-control': 'max-age=300',
+26 silly get     etag: '"AUON2WLMJWL214P66X9JXNJH8"',
+26 silly get     age: '154',
+26 silly get     connection: 'keep-alive',
+26 silly get     'x-served-by': 'cache-sin6920-SIN',
+26 silly get     'x-cache': 'HIT',
+26 silly get     'x-cache-hits': '1',
+26 silly get     'x-timer': 'S1469188875.409685,VS0,VE0',
+26 silly get     vary: 'Accept-Encoding' } ]
+27 verbose etag https://registry.npmjs.org/jsondiffpatch from cache
+28 verbose get saving jsondiffpatch to /Users/vinay/.npm/registry.npmjs.org/jsondiffpatch/.cache.json
+29 verbose correctMkdir /Users/vinay/.npm correctMkdir not in flight; initializing
+30 silly addNameTag next cb for jsondiffpatch with tag latest
+31 silly addNamed jsondiffpatch@0.1.43
+32 verbose addNamed "0.1.43" is a plain semver version for jsondiffpatch
+33 silly cache afterAdd jsondiffpatch@0.1.43
+34 verbose afterAdd /Users/vinay/.npm/jsondiffpatch/0.1.43/package/package.json not in flight; writing
+35 verbose correctMkdir /Users/vinay/.npm correctMkdir not in flight; initializing
+36 verbose afterAdd /Users/vinay/.npm/jsondiffpatch/0.1.43/package/package.json written
+37 silly install resolved [ { name: 'jsondiffpatch',
+37 silly install resolved     version: '0.1.43',
+37 silly install resolved     author: { name: 'Benjamin Eidelman', email: 'beneidel@gmail.com' },
+37 silly install resolved     description: 'Diff & Patch for Javascript objects',
+37 silly install resolved     contributors: [ [Object] ],
+37 silly install resolved     bin: { jsondiffpatch: './bin/jsondiffpatch' },
+37 silly install resolved     scripts:
+37 silly install resolved      { test: 'gulp test && gulp test-browser',
+37 silly install resolved        bump: 'gulp bump',
+37 silly install resolved        cover: 'istanbul cover --root src gulp test',
+37 silly install resolved        'cover-report': 'open coverage/lcov-report/index.html',
+37 silly install resolved        'cover-publish': 'istanbul cover _mocha --report lcovonly && codeclimate < coverage/lcov.info' },
+37 silly install resolved     main: './src/main',
+37 silly install resolved     repository:
+37 silly install resolved      { type: 'git',
+37 silly install resolved        url: 'git+https://github.com/benjamine/jsondiffpatch.git' },
+37 silly install resolved     keywords: [ 'json', 'diff', 'patch' ],
+37 silly install resolved     dependencies: { chalk: '^0.5.1' },
+37 silly install resolved     devDependencies:
+37 silly install resolved      { 'bulk-require': '^0.2.1',
+37 silly install resolved        'codeclimate-test-reporter': '0.0.3',
+37 silly install resolved        'expect.js': '~0.3.1',
+37 silly install resolved        fiberglass: '0.0.22',
+37 silly install resolved        gulp: '^3.8.8',
+37 silly install resolved        istanbul: '^0.3.2',
+37 silly install resolved        mocha: '^1.21.4' },
+37 silly install resolved     bundleDependencies: [],
+37 silly install resolved     license: 'MIT',
+37 silly install resolved     engine: { node: '>=0.10' },
+37 silly install resolved     testling:
+37 silly install resolved      { harness: 'mocha',
+37 silly install resolved        files: 'test/index.js',
+37 silly install resolved        scripts: [Object],
+37 silly install resolved        browsers: [Object] },
+37 silly install resolved     engines: { node: '*' },
+37 silly install resolved     homepage: 'https://github.com/benjamine/jsondiffpatch',
+37 silly install resolved     gitHead: 'a7b3a6f68697873fa4e5a421a86a7ae3beb6798d',
+37 silly install resolved     bugs: { url: 'https://github.com/benjamine/jsondiffpatch/issues' },
+37 silly install resolved     _id: 'jsondiffpatch@0.1.43',
+37 silly install resolved     _shasum: 'c052889a99ef7eba19d0095f90f725cfa70a5611',
+37 silly install resolved     _from: 'jsondiffpatch@latest',
+37 silly install resolved     _npmVersion: '2.14.7',
+37 silly install resolved     _nodeVersion: '4.2.3',
+37 silly install resolved     _npmUser: { name: 'beneidel', email: 'beneidel@gmail.com' },
+37 silly install resolved     maintainers: [ [Object] ],
+37 silly install resolved     dist:
+37 silly install resolved      { shasum: 'c052889a99ef7eba19d0095f90f725cfa70a5611',
+37 silly install resolved        tarball: 'https://registry.npmjs.org/jsondiffpatch/-/jsondiffpatch-0.1.43.tgz' },
+37 silly install resolved     _npmOperationalInternal:
+37 silly install resolved      { host: 'packages-12-west.internal.npmjs.com',
+37 silly install resolved        tmp: 'tmp/jsondiffpatch-0.1.43.tgz_1459480983529_0.8022641930729151' },
+37 silly install resolved     directories: {},
+37 silly install resolved     _resolved: 'https://registry.npmjs.org/jsondiffpatch/-/jsondiffpatch-0.1.43.tgz',
+37 silly install resolved     readme: 'ERROR: No README data found!' } ]
+38 info install jsondiffpatch@0.1.43 into /usr/local/lib
+39 info installOne jsondiffpatch@0.1.43
+40 verbose installOne of jsondiffpatch to /usr/local/lib not in flight; installing
+41 verbose correctMkdir /Users/vinay/.npm/_locks correctMkdir not in flight; initializing
+42 verbose lock using /Users/vinay/.npm/_locks/jsondiffpatch-2a327a39d60b08d6.lock for /usr/local/lib/node_modules/jsondiffpatch
+43 silly install write writing jsondiffpatch 0.1.43 to /usr/local/lib/node_modules/jsondiffpatch
+44 verbose unbuild lib/node_modules/jsondiffpatch
+45 silly gentlyRm /usr/local/lib/node_modules/jsondiffpatch is being purged from base /usr/local
+46 verbose gentlyRm don't care about contents; nuking /usr/local/lib/node_modules/jsondiffpatch
+47 verbose tar unpack /Users/vinay/.npm/jsondiffpatch/0.1.43/package.tgz
+48 verbose tar unpacking to /usr/local/lib/node_modules/jsondiffpatch
+49 silly gentlyRm /usr/local/lib/node_modules/jsondiffpatch is being purged
+50 verbose gentlyRm don't care about contents; nuking /usr/local/lib/node_modules/jsondiffpatch
+51 silly gunzTarPerm modes [ '755', '644' ]
+52 error tar.unpack untar error /Users/vinay/.npm/jsondiffpatch/0.1.43/package.tgz
+53 verbose unlock done using /Users/vinay/.npm/_locks/jsondiffpatch-2a327a39d60b08d6.lock for /usr/local/lib/node_modules/jsondiffpatch
+54 verbose fstream_path /usr/local/lib/node_modules/jsondiffpatch
+55 verbose fstream_type Directory
+56 verbose fstream_class DirWriter
+57 verbose stack Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/jsondiffpatch'
+57 verbose stack     at Error (native)
+58 verbose fstream_stack /usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:35:25
+58 verbose fstream_stack /usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:47:53
+58 verbose fstream_stack FSReqWrap.oncomplete (fs.js:82:15)
+59 verbose cwd /Users/vinay/voiceupapp
+60 error Darwin 15.5.0
+61 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install" "-g" "jsondiffpatch"
+62 error node v4.4.7
+63 error npm  v2.15.8
+64 error path /usr/local/lib/node_modules/jsondiffpatch
+65 error code EACCES
+66 error errno -13
+67 error syscall mkdir
+68 error Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/jsondiffpatch'
+68 error     at Error (native)
+68 error  { [Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/jsondiffpatch']
+68 error   errno: -13,
+68 error   code: 'EACCES',
+68 error   syscall: 'mkdir',
+68 error   path: '/usr/local/lib/node_modules/jsondiffpatch',
+68 error   fstream_type: 'Directory',
+68 error   fstream_path: '/usr/local/lib/node_modules/jsondiffpatch',
+68 error   fstream_class: 'DirWriter',
+68 error   fstream_stack:
+68 error    [ '/usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:35:25',
+68 error      '/usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:47:53',
+68 error      'FSReqWrap.oncomplete (fs.js:82:15)' ] }
+69 error Please try running this command again as root/Administrator.
+70 verbose exit [ -13, true ]
+71 verbose unbuild lib/node_modules/jsondiffpatch
+72 silly gentlyRm /usr/local/lib/node_modules/jsondiffpatch is being purged from base /usr/local
+73 verbose gentlyRm don't care about contents; nuking /usr/local/lib/node_modules/jsondiffpatch
