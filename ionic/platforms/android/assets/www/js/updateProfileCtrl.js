@@ -451,7 +451,7 @@ angular.module('updateProfileCtrl', [])
       });
       $ionicModal.fromTemplateUrl('templates/settings.html', {
         scope: $scope,
-        animation: 'slide-in-up',
+        animation: 'slide-in-left',
         hardwareBackButtonClose: false,
       }).then(function(modal) {
         $rootScope.modal = modal;
@@ -557,7 +557,7 @@ angular.module('updateProfileCtrl', [])
 
       $ionicModal.fromTemplateUrl('templates/locationservice.html', {
         scope: $scope,
-        animation: 'slide-in-up',
+        animation: 'slide-in-left',
         hardwareBackButtonClose: false,
       }).then(function(modal) {
         $rootScope.permission = modal;
@@ -941,7 +941,7 @@ angular.module('updateProfileCtrl', [])
 
       $ionicModal.fromTemplateUrl('templates/updatePasscode.html', {
         scope: $scope,
-        animation: 'slide-in-up',
+        animation: 'slide-in-left',
         hardwareBackButtonClose: false,
       }).then(function(modal) {
         $rootScope.passcodeModal = modal;
@@ -1070,7 +1070,7 @@ angular.module('updateProfileCtrl', [])
     $scope.viewCopyrightInfo = function() {
       $ionicModal.fromTemplateUrl('templates/copyRightInfo.html', {
         scope: $scope,
-        animation: 'slide-in-up',
+        animation: 'slide-in-left',
         hardwareBackButtonClose: false,
       }).then(function(modal) {
         $rootScope.permission = modal;
@@ -1079,6 +1079,21 @@ angular.module('updateProfileCtrl', [])
     }
 
     $scope.closeCopyRightInfo = function() {
+      $rootScope.permission.remove();
+    }
+
+    $scope.appInfo = function() {
+      $ionicModal.fromTemplateUrl('templates/appInfo.html', {
+        scope: $scope,
+        animation: 'slide-in-left',
+        hardwareBackButtonClose: false,
+      }).then(function(modal) {
+        $rootScope.permission = modal;
+        $rootScope.permission.show();
+      });
+    }
+
+    $scope.closeAppInfoModal = function() {
       $rootScope.permission.remove();
     }
 

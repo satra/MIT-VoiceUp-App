@@ -414,7 +414,7 @@ angular.module('syncDataService', [])
               var emailID = response.item(i).emailId;
               var token = response.item(i).token;
               // if we remove this check will fetch the details for all the local users
-              if (emailID.trim() == loggedUserEmail.trim()) {
+              if (emailID.trim() == loggedUserEmail.trim() && folderId) {
                 getResultItems.push(dataStoreManager.getItemListByFolderId(folderId, token));
               }
             }

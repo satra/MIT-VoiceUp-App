@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		0047F0E823CC455CACF9632C /* CDVFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 78E01533AA934DAFB5E7FF98 /* CDVFileTransfer.m */; };
 		00695BAC51C7475D8B3F75BE /* CDVCapture.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 459EDB1FEED54F869FF43CAF /* CDVCapture.bundle */; };
@@ -47,6 +46,7 @@
 		F27874A7DCE845C4AC208C7C /* CDVAccelerometer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DE17F9AA9E6414E9D5B0F4E /* CDVAccelerometer.m */; };
 		FA68028F94C64C7488194DE7 /* Diagnostic.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D3A6C8BB9164C0FA476932E /* Diagnostic.m */; };
 		FD43E84243264FA7ABE41148 /* CDVDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = C6D712C0ABDF42F1A41B26F7 /* CDVDevice.m */; };
+		DABF6C3AF5EC4A7798EFA5F8 /* AppVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 991136CFFAFF4BBCBB01217A /* AppVersion.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +145,8 @@
 		ED33DF2A687741AEAF9F8254 /* Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		F289D741007646FB969F25A8 /* CoreLocation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = VoiceUp/config.xml; sourceTree = "<group>"; };
+		991136CFFAFF4BBCBB01217A /* AppVersion.m */ = {isa = PBXFileReference; name = "AppVersion.m"; path = "cordova-plugin-app-version/AppVersion.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		66592734BBB846679AB03568 /* AppVersion.h */ = {isa = PBXFileReference; name = "AppVersion.h"; path = "cordova-plugin-app-version/AppVersion.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -314,6 +316,8 @@
 				14DEAECBEF9A4F9CA614490C /* APPLocalNotificationOptions.h */,
 				3DA9F986CF8848A5BC520CFE /* UIApplication+APPLocalNotification.h */,
 				B1B275B2776241929E12E508 /* UILocalNotification+APPLocalNotification.h */,
+				991136CFFAFF4BBCBB01217A /* AppVersion.m */,
+				66592734BBB846679AB03568 /* AppVersion.h */,
 			);
 			name = Plugins;
 			path = VoiceUp/Plugins;
@@ -356,7 +360,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 730;
 				TargetAttributes = {
 					1D6058900D05DD3D006BFB54 = {
 						DevelopmentTeam = 3485DDCN2M;
@@ -459,6 +463,7 @@
 				2029F996CF174F54982B0CE0 /* APPLocalNotificationOptions.m in Sources */,
 				5B4668804BA54945BE14B3B1 /* UIApplication+APPLocalNotification.m in Sources */,
 				B791506999EA4B1794362D80 /* UILocalNotification+APPLocalNotification.m in Sources */,
+				DABF6C3AF5EC4A7798EFA5F8 /* AppVersion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

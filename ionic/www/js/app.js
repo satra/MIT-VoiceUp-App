@@ -140,7 +140,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
   })
 
   .state('eligiblityTest', {
-    templateUrl: 'templates/checkEligiblity.html',
+    //  templateUrl: 'templates/checkEligiblity.html',
     url: '/eligiblityTest',
     controller: 'eligibilityCtrl'
   })
