@@ -6,6 +6,7 @@ angular.module('homeCtrl', [])
 
     $rootScope.emailId = null;
 
+
     //==================================Select email view ==========
     $scope.openSignInChooseEmail = function() {
       $scope.transition('signIn');

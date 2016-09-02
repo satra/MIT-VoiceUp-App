@@ -38,10 +38,11 @@ angular.module('userService', [])
       updateAppContent: function(version, URL, diffURL, eligibility, profile, consent_screens, completeJson) {
         var deferred = $q.defer();
         var db = databaseManager.getConnectionObject();
-        var query = "UPDATE AppContent SET version ='" + version + "', url='" + URL + "' , diffURL='" + diffURL + "' , profile='" + profile + "', eligibility='" + eligibility + "' , consent='" + consent_screens + "' , completeJson='" + completeJson + "' ";
+        var modifiedDate = new Date().toLocaleString();
+        var query = "UPDATE AppContent SET version ='" + version + "', url='" + URL + "' , diffURL='" + diffURL + "' , profile='" + profile + "', eligibility='" + eligibility + "' , consent='" + consent_screens + "' , completeJson='" + completeJson + "' , modifiedDate='" + modifiedDate + "' ";
         var updateAppContent = $cordovaSQLite.execute(db, query)
           .then(function(res) {
-            deferred.resolve(res.rowsAffected);
+            deferred.resolve(modifiedDate);
           }, function(err) {
             deferred.resolve(updateAppContent);
           });

@@ -4,14 +4,15 @@ angular.module('updateProfileCtrl', [])
     $ionicHistory, $cordovaSQLite, $ionicPopup, $q, $compile, $base64, $ionicModal, $http,
     $cordovaEmailComposer, $cordovaDatePicker, $ionicLoading, profileDataManager, databaseManager,
     syncDataFactory, surveyDataManager, $state, dataStoreManager, $cordovaFileTransfer, $cordovaFile,
-    $location, $window, $cordovaDeviceMotion, $cordovaMedia, $cordovaGeolocation, appConstants) {
+    $location, $window, appConstants, $cordovaDeviceMotion, $cordovaAppVersion, $cordovaMedia, $cordovaGeolocation, appConstants) {
     var email = $rootScope.emailId;
     $rootScope.emailId = email;
     if ($rootScope.emailId) {
       $scope.hideDownloadButton = false;
       $rootScope.hideDownloadButton = false;
-      $scope.appVersionNumber = $rootScope.savedVersion;
-
+      $scope.appJsonVersion = $rootScope.savedVersion;
+      $scope.dbServerUrl = appConstants.base_url;
+      $scope.lastModifiedDate = $rootScope.modifiedDate;
       // get girder-token from local db for the user logout and further WS calls
       profileDataManager.getAuthTokenForUser(email).then(function(response) {
         if (response) {
@@ -1096,5 +1097,9 @@ angular.module('updateProfileCtrl', [])
     $scope.closeAppInfoModal = function() {
       $rootScope.permission.remove();
     }
+
+    $cordovaAppVersion.getVersionNumber().then(function(version) {
+      $scope.appVersion = version;
+    });
 
   });

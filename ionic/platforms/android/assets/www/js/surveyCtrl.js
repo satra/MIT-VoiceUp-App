@@ -18,6 +18,7 @@ angular.module('surveyCtrl', [])
             $scope.checkForServerDataUpdates();
             $ionicLoading.hide();
           }, function(error) {
+            $scope.checkForServerDataUpdates();
             $ionicLoading.hide();
           });
         }
@@ -111,6 +112,7 @@ angular.module('surveyCtrl', [])
       userService.getAppContent().then(function(localData) {
         localJSON = JSON.parse(localData.completeJson);
         $rootScope.savedVersion = localData.version;
+        $rootScope.modifiedDate = localData.modifiedDate;
         var savedVersion = localData.version;
         var diffURL = localData.diffURL;
         userService.getSeverJson(diffURL).then(function(newJson) {
@@ -147,6 +149,7 @@ angular.module('surveyCtrl', [])
       var tasksJson = localJSON.tasks;
       userService.updateAppContent(version, url, diffURL, eligibility, profile, consent_screens, completeJson).then(function(dataUpdate) {
         if (dataUpdate) {
+          $rootScope.modifiedDate = dataUpdate;
           // an array of promises
           var surveyListPromise = [];
           var taskListPromise = [];

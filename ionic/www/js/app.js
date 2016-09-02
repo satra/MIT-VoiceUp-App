@@ -36,7 +36,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
       $rootScope.promptToPinScreen = function(email) {
         var template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/"  >';
         if (ionic.Platform.isAndroid()) {
-          template = '<input class = "CirclePasscode1" style="text-align: center;color: transparent;text-shadow: 0 0 0 black;" type="number" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/" >';
+          template = '<input class = "CirclePasscode1" style="text-align: center;color: transparent;text-shadow: 0 0 0 black;" type="number" id="passcodepin" placeholder="passcode"  oninput="maxLengthCheck(this)" maxlength="4" pattern="[0-9]*" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/" >';
         }
         $rootScope.pinDalog = $ionicPopup.show({
           template: template,
@@ -323,5 +323,4 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
 .config(function($ionicConfigProvider) {
   $ionicConfigProvider.tabs.style('standard');
   $ionicConfigProvider.tabs.position('bottom');
-
 })

@@ -582,6 +582,12 @@ angular.module('signUp', [])
     };
 
     $scope.allDone = function() {
+      /*  if (!$scope.userSyncStatus) {
+          $scope.enableLocalNotification();
+        } else {
+          $scope.disableLocalNotification();
+        }
+        */
       $ionicModal.fromTemplateUrl('templates/alldone.html', {
         scope: $scope,
         animation: 'slide-in-left',
@@ -592,6 +598,44 @@ angular.module('signUp', [])
         $scope.modal.show();
       });
     };
+
+    $scope.enableLocalNotification = function() {
+      cordova.plugins.notification.local.hasPermission(function(granted) {
+        if (granted) {
+          console.log('permissions given');
+          $scope.scheduleNotification();
+        } else {
+          cordova.plugins.notification.local.registerPermission(function(granted) {
+            console.log('Permission has been granted: ' + granted);
+            if (granted) {
+              $scope.scheduleNotification();
+            } else {
+              console.log('Enable notifications from Device Settings');
+            }
+          });
+        }
+      });
+    }
+
+    $scope.scheduleNotification = function() {
+      var notifyDate = new Date();
+      notifyDate.setHours(18);
+      notifyDate.setMinutes(30);
+      notifyDate.setSeconds(00);
+      cordova.plugins.notification.local.schedule({
+        id: $scope.localUserId,
+        title: "Account verify",
+        text: $scope.emailId.trim(),
+        at: notifyDate,
+        every: appConstants.scheduleNotificationEvery
+      });
+    }
+
+    $scope.disableLocalNotification = function() {
+      cordova.plugins.notification.local.cancel($scope.localUserId, function() {
+        console.log("done");
+      });
+    }
 
     $scope.consentReview = function() {
       $ionicHistory.clearCache().then(function() {
