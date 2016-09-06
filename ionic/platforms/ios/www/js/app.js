@@ -281,6 +281,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
   'syncOnceAccountVerifiedMessage': 'Responses will be uploaded once the account is verified.',
   'syncOnceAccountVerifiedTitle': 'Alert',
   'syncDataUploadFailedTitle': 'Data upload failure',
+
+  'syncOnceAccountVerifiedFailedTitle': 'Verify Account',
+  'syncOnceAccountVerifiedFailedMessage': 'Please verify account to upload the responses.',
+
   'syncDataUploadFailedMessage': 'Failed to sync the data, will be synced later.',
 
   // update profile and settings messages
