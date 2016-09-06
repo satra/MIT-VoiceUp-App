@@ -60,6 +60,9 @@
         <param name="ios-package" onload="true" value="APPLocalNotification" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="AppVersion">
+        <param name="ios-package" value="AppVersion" />
+    </feature>
     <name>VoiceUp</name>
     <description>
       MIT VoiceUp - A Biomedical research study.

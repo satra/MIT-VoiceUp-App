@@ -63,6 +63,10 @@
                         {
                             "xml": "<feature name=\"LocalNotification\"><param name=\"ios-package\" onload=\"true\" value=\"APPLocalNotification\" /><param name=\"onload\" value=\"true\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"AppVersion\"><param name=\"ios-package\" value=\"AppVersion\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -145,6 +149,9 @@
             "PACKAGE_NAME": "com.btc.mit.voiceup"
         },
         "de.appplant.cordova.plugin.local-notification": {
+            "PACKAGE_NAME": "com.btc.mit.voiceup"
+        },
+        "cordova-plugin-app-version": {
             "PACKAGE_NAME": "com.btc.mit.voiceup"
         }
     },
@@ -559,6 +566,14 @@
                 "cordova.plugins.notification.local.core",
                 "plugin.notification.local.core"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-app-version/www/AppVersionPlugin.js",
+            "id": "cordova-plugin-app-version.AppVersionPlugin",
+            "pluginId": "cordova-plugin-app-version",
+            "clobbers": [
+                "cordova.getAppVersion"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -578,6 +593,7 @@
         "cordova-plugin-splashscreen": "3.2.2",
         "cordova-plugin-whitelist": "1.2.2",
         "cordova.plugins.diagnostic.api-22": "2.3.10-api-22",
-        "de.appplant.cordova.plugin.local-notification": "0.8.4"
+        "de.appplant.cordova.plugin.local-notification": "0.8.4",
+        "cordova-plugin-app-version": "0.1.9"
     }
 }

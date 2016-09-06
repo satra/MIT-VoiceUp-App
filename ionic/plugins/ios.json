@@ -51,6 +51,9 @@
         },
         "de.appplant.cordova.plugin.local-notification": {
             "PACKAGE_NAME": "com.btc.mit.voiceup"
+        },
+        "cordova-plugin-app-version": {
+            "PACKAGE_NAME": "com.btc.mit.voiceup"
         }
     },
     "dependent_plugins": {

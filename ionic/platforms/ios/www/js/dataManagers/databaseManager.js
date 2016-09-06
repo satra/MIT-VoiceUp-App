@@ -29,8 +29,9 @@ angular.module('databaseManager', [])
       createAppContentTable: function(version, URL, diffURL, eligibility, profile, consent_screens, completeJson) {
         var deferred = $q.defer();
         var db = this.getConnectionObject();
-        $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS AppContent(id INTEGER PRIMARY KEY AUTOINCREMENT, version TEXT, url TEXT,diffURL TEXT,profile TEXT, eligibility TEXT, consent TEXT,completeJson TEXT)');
-        var dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO AppContent (version, url, diffURL,profile, eligibility, consent, completeJson) VALUES (?,?,?,?,?,?,?)', [version, URL, diffURL, profile, eligibility, consent_screens, completeJson])
+        var creationDate = new Date().toLocaleString();
+        $cordovaSQLite.execute(db, 'CREATE TABLE IF NOT EXISTS AppContent(id INTEGER PRIMARY KEY AUTOINCREMENT, version TEXT, url TEXT,diffURL TEXT,profile TEXT, eligibility TEXT, consent TEXT,completeJson TEXT,creationDate TEXT, modifiedDate TEXT)');
+        var dataReturn = $cordovaSQLite.execute(db, 'INSERT INTO AppContent (version, url, diffURL,profile, eligibility, consent, completeJson,creationDate,modifiedDate) VALUES (?,?,?,?,?,?,?,?,?)', [version, URL, diffURL, profile, eligibility, consent_screens, completeJson, creationDate, creationDate])
           .then(function(res) {
             return res.insertId;
           });

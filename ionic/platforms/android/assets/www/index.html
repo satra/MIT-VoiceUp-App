@@ -92,5 +92,14 @@
     -->
   <ion-nav-view></ion-nav-view>
 </body>
+<!--
+    small chunk of script to restrict android num for on resume 
+  -->
+<script>
+  function maxLengthCheck(object) {
+    if (object.value.length > object.maxLength)
+      object.value = object.value.slice(0, object.maxLength)
+  }
+</script>
 
 </html>

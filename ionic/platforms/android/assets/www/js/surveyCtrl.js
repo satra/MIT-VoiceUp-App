@@ -18,6 +18,7 @@ angular.module('surveyCtrl', [])
             $scope.checkForServerDataUpdates();
             $ionicLoading.hide();
           }, function(error) {
+            $scope.checkForServerDataUpdates();
             $ionicLoading.hide();
           });
         }
@@ -111,10 +112,12 @@ angular.module('surveyCtrl', [])
       userService.getAppContent().then(function(localData) {
         localJSON = JSON.parse(localData.completeJson);
         $rootScope.savedVersion = localData.version;
+        $rootScope.modifiedDate = localData.modifiedDate;
         var savedVersion = localData.version;
         var diffURL = localData.diffURL;
         userService.getSeverJson(diffURL).then(function(newJson) {
-          var delta = JSON.parse(JSON.stringify(newJson).replace(/\s/g, ""));
+          //var delta = JSON.parse(JSON.stringify(newJson).replace(/\s/g, ""));
+          var delta = JSON.parse(JSON.stringify(newJson).replace(/"\s+|\s+"/g, '"'));
           var newVersion = delta.version[1];
           if (savedVersion.trim() != newVersion.trim()) {
             $rootScope.savedVersion = newVersion;
@@ -147,6 +150,7 @@ angular.module('surveyCtrl', [])
       var tasksJson = localJSON.tasks;
       userService.updateAppContent(version, url, diffURL, eligibility, profile, consent_screens, completeJson).then(function(dataUpdate) {
         if (dataUpdate) {
+          $rootScope.modifiedDate = dataUpdate;
           // an array of promises
           var surveyListPromise = [];
           var taskListPromise = [];
@@ -273,13 +277,6 @@ angular.module('surveyCtrl', [])
 
       $q.all(taskListPromise).then(function(tasksResolvePromise) {
         $ionicLoading.hide();
-
-        /*  databaseManager.createTasksTable(taskId, steps, timeLimit).then(function(resp) {
-           console.log('createTasksTable  ' + resp);
-           return resp;
-         });
-         */
-
       }, function(error) {
         $ionicLoading.hide();
       });
@@ -648,8 +645,8 @@ angular.module('surveyCtrl', [])
         } else {
           $ionicLoading.hide();
           $ionicPopup.alert({
-            title: appConstants.syncOnceAccountVerifiedTitle,
-            template: appConstants.syncOnceAccountVerifiedMessage
+            title: appConstants.syncOnceAccountVerifiedFailedTitle,
+            template: appConstants.syncOnceAccountVerifiedFailedMessage
           });
         }
       });

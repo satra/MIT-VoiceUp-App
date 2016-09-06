@@ -38,10 +38,11 @@ angular.module('userService', [])
       updateAppContent: function(version, URL, diffURL, eligibility, profile, consent_screens, completeJson) {
         var deferred = $q.defer();
         var db = databaseManager.getConnectionObject();
-        var query = "UPDATE AppContent SET version ='" + version + "', url='" + URL + "' , diffURL='" + diffURL + "' , profile='" + profile + "', eligibility='" + eligibility + "' , consent='" + consent_screens + "' , completeJson='" + completeJson + "' ";
+        var modifiedDate = new Date().toLocaleString();
+        var query = "UPDATE AppContent SET version ='" + version + "', url='" + URL + "' , diffURL='" + diffURL + "' , profile='" + profile + "', eligibility='" + eligibility + "' , consent='" + consent_screens + "' , completeJson='" + completeJson + "' , modifiedDate='" + modifiedDate + "' ";
         var updateAppContent = $cordovaSQLite.execute(db, query)
           .then(function(res) {
-            deferred.resolve(res.rowsAffected);
+            deferred.resolve(modifiedDate);
           }, function(err) {
             deferred.resolve(updateAppContent);
           });
@@ -72,16 +73,14 @@ angular.module('userService', [])
         var query = "UPDATE Tasks SET steps ='" + steps + "', timeLimit='" + timeLimit + "' WHERE  taskId = '" + taskId + "' ";
         var updateAppContent = $cordovaSQLite.execute(db, query)
           .then(function(res) {
-            var itemsColl = [];
             if (res.rowsAffected == 0) {
-              itemsColl = {
-                "taskId": taskId,
-                "steps": steps,
-                "timeLimit": timeLimit
-              };
+              var deferred = $q.defer();
+              databaseManager.createTasksTable(taskId, steps, timeLimit).then(function(resp) {
+                console.log('createTasksTable  ' + resp);
+                return resp;
+              });
             }
-            return itemsColl;
-            deferred.resolve(updateAppContent);
+            return res;
           }, function(err) {
             return err;
           });
