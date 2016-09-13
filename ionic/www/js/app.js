@@ -9,7 +9,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
     'profileDataManager', 'consentDataManager', 'dataStoreManager', 'homeCtrl', 'dashboard', 'eligibility', 'signUp', 'consent',
     'updateProfileCtrl', 'customDirectives', 'ionicResearchKit', 'syncDataService', 'checklist-model', 'angular-svg-round-progressbar', 'base64', 'learnModule', 'ngCordova', 'chart.js', 'flexcalendar', 'pascalprecht.translate'
   ])
-  .run(function($ionicPlatform, $ionicPopup, $rootScope, $ionicHistory, $state, profileDataManager, $ionicLoading, $ionicPopup) {
+  .run(function($ionicPlatform, $ionicPopup, $ionicTabsDelegate, $rootScope, $ionicHistory, $state, profileDataManager, $ionicLoading, $ionicPopup) {
     $ionicPlatform.ready(function() {
 
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -27,7 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
           if ($rootScope.pinDalog) {
             $rootScope.pinDalog.close();
           }
-          if ($rootScope.loggedInStatus) {
+          if ($rootScope.loggedInStatus && !$rootScope.requestFileSystem) {
             $rootScope.promptToPinScreen($rootScope.emailId);
           }
         }
@@ -83,6 +83,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
           }]
         });
 
+        $rootScope.pinDalog.then(function(res) {
+          return;
+        });
+
+
       }
 
 
@@ -90,6 +95,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
         profileDataManager.logInViaPasscode(email, passcode).then(function(res) {
           if (res) {
             $ionicLoading.hide();
+            if ($rootScope.surveyDate) {
+              var today = new Date();
+              var nowDate = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+              if ($rootScope.surveyDate != nowDate) {
+                //$ionicTabsDelegate.select(0, true);
+                $rootScope.surveyListForToday();
+              }
+            }
           } else {
             $ionicLoading.hide();
             $ionicPopup.alert({

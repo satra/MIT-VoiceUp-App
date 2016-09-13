@@ -53,7 +53,8 @@ angular.module('eligibility', [])
         "</ion-modal-view>";
       $scope.learnmore = $ionicModal.fromTemplate(checkEligibility, {
         scope: $scope,
-        animation: 'slide-in-left'
+        animation: 'slide-in-left',
+        hardwareBackButtonClose: false,
       });
       $scope.modal = $scope.learnmore;
       $scope.learnmore.show();
@@ -91,7 +92,8 @@ angular.module('eligibility', [])
         $ionicHistory.clearCache().then(function() {
           $ionicModal.fromTemplateUrl('templates/eligiblity-yes.html', {
             scope: $scope,
-            animation: 'slide-in-left'
+            animation: 'slide-in-left',
+            hardwareBackButtonClose: false,
           }).then(function(modal) {
             $scope.modal = modal;
             $scope.modal.show();
@@ -110,7 +112,8 @@ angular.module('eligibility', [])
     $scope.openSignIn = function() {
       $ionicModal.fromTemplateUrl('templates/login.html', {
         scope: $scope,
-        animation: 'slide-in-left'
+        animation: 'slide-in-left',
+        hardwareBackButtonClose: false,
       }).then(function(modal) {
         $scope.modal.remove();
         $scope.modal = modal;

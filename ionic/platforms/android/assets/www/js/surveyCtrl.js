@@ -3,209 +3,111 @@ angular.module('surveyCtrl', [])
   .controller('surveyCtrl', function($scope, $ionicHistory, $state, $rootScope, $ionicModal,
     surveyDataManager, $ionicLoading, $ionicPopup, userService, $timeout, appConstants, irkResults, profileDataManager, dataStoreManager, syncDataFactory, $q, $cordovaFile) {
 
+
     $rootScope.loggedInStatus = true;
 
-    // =================== if the internet available flush the results and profile data for the user
-    if (window.Connection) {
-      if (navigator.connection.type == Connection.NONE) {
-        $ionicLoading.hide();
-      } else {
-        if ($rootScope.emailId) {
-          $ionicLoading.show({
-            template: appConstants.checkForServerUpdates
-          });
-          syncDataFactory.startSyncServiesToFetchResults($rootScope.emailId).then(function(res) {
-            $scope.checkForServerDataUpdates();
-            $ionicLoading.hide();
-          }, function(error) {
-            $scope.checkForServerDataUpdates();
-            $ionicLoading.hide();
-          });
-        }
-      }
-    }
-
     //============== On launch activiteis surveys to temp table first time ============================================
+    $rootScope.surveyListForToday = function() {
+      surveyDataManager.getSurveyListForToday().then(function(response) {
+        $scope.list = response;
+        var surveyMainList = response;
+        var today = new Date();
+        var creationDate = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+        $rootScope.surveyDate = creationDate;
+        if (surveyMainList && $rootScope.emailId) {
+          profileDataManager.getUserIDByEmail($rootScope.emailId).then(function(userId) {
+            $scope.userId = userId;
+            // now check any entries for today in surveytmp table
+            surveyDataManager.checkSurveyExistsInTempTableForToday(creationDate, userId).then(function(res) {
+              if (!res) {
+                $ionicLoading.show();
+                // if survey question doesn't exists clear the table for the user
+                surveyDataManager.clearExistingTaskListFromTempTable($scope.userId)
+                  .then(function(res) {
+                    console.log('expiry entry from controller ' + res);
+                  });
 
-    surveyDataManager.getSurveyListForToday().then(function(response) {
-      $scope.list = response;
-      var surveyMainList = response;
-      var today = new Date();
-      var creationDate = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
-      if (surveyMainList && $rootScope.emailId) {
-        profileDataManager.getUserIDByEmail($rootScope.emailId).then(function(userId) {
-          $scope.userId = userId;
-          // now check any entries for today in surveytmp table
-          surveyDataManager.checkSurveyExistsInTempTableForToday(creationDate, userId).then(function(res) {
-            if (!res) {
-              $ionicLoading.show();
-              // if survey question doesn't exists clear the table for the user
-              surveyDataManager.clearExistingTaskListFromTempTable($scope.userId)
-                .then(function(res) {
-                  console.log('expiry entry from controller ' + res);
+                var promises = [];
+                // then loop through the survey and update history and temp table
+                for (var k = 0; k < surveyMainList.length; k++) {
+                  var taskList = JSON.parse(surveyMainList[k].tasks);
+                  var skippableList = JSON.parse(surveyMainList[k].skippable);
+                  var surveyId = surveyMainList[k].surveyId;
+                  for (var M = 0; M < taskList.length; M++) {
+                    var questionId = taskList[M];
+                    var skippable = false;
+                    for (var L = 0; L < skippableList.length; L++) {
+                      if (questionId == skippableList[L]) {
+                        skippable = true;
+                      }
+                    }
+                    promises.push(surveyDataManager.addSurveyToUserForToday($scope.userId, surveyId, questionId, creationDate, skippable));
+                  }
+                }
+                // resolve all the promises
+                $q.all(promises).then(function(res) {
+                  for (var i = 0; i < res.length; i++) {
+                    surveyDataManager.getSurveyTempRowByInsertId(res[i]).then(function(row) {
+                      if (row) {
+                        var questionId = row.questionId;
+                        surveyDataManager.getQuestionExpiry(questionId).then(function(limitExists) {
+                          if (limitExists) {
+                            expiryDays = today.getDate() + parseInt(limitExists.split("-")[0]);
+                            var expiryDate = expiryDays + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+                            surveyDataManager.addThisSurveyToExpiry($scope.userId, row.surveyId, row.questionId, creationDate, expiryDate, row.skippable)
+                              .then(function(resp) {
+                                console.log('expiry entry from controller ' + resp);
+                              });
+                          }
+                        });
+                      }
+                    });
+                  }
                 });
 
-              var promises = [];
-              // then loop through the survey and update history and temp table
-              for (var k = 0; k < surveyMainList.length; k++) {
-                var taskList = JSON.parse(surveyMainList[k].tasks);
-                var skippableList = JSON.parse(surveyMainList[k].skippable);
-                var surveyId = surveyMainList[k].surveyId;
-                for (var M = 0; M < taskList.length; M++) {
-                  var questionId = taskList[M];
-                  var skippable = false;
-                  for (var L = 0; L < skippableList.length; L++) {
-                    if (questionId == skippableList[L]) {
-                      skippable = true;
+                // pull from expiry table and put it in temp table where questions expiry still exists
+                surveyDataManager.getUnansweredQuestionsLessThanToDate($scope.userId, creationDate).then(function(resp) {
+                  if (resp) {
+                    for (var i = 0; i < resp.length; i++) {
+                      surveyDataManager.addSurveyToUserForToday($scope.userId, '', resp[i].questionId, creationDate, resp[i].skippable)
+                        .then(function(res) {
+                          console.log('log from un answered controller ' + res);
+                        });
                     }
+                    $ionicLoading.hide();
+                  } else {
+                    $ionicLoading.hide();
                   }
-                  promises.push(surveyDataManager.addSurveyToUserForToday($scope.userId, surveyId, questionId, creationDate, skippable));
-                }
+                });
               }
-              // resolve all the promises
-              $q.all(promises).then(function(res) {
-                for (var i = 0; i < res.length; i++) {
-                  surveyDataManager.getSurveyTempRowByInsertId(res[i]).then(function(row) {
-                    if (row) {
-                      var questionId = row.questionId;
-                      surveyDataManager.getQuestionExpiry(questionId).then(function(limitExists) {
-                        if (limitExists) {
-                          expiryDays = today.getDate() + parseInt(limitExists.split("-")[0]);
-                          var expiryDate = expiryDays + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
-                          surveyDataManager.addThisSurveyToExpiry($scope.userId, row.surveyId, row.questionId, creationDate, expiryDate, row.skippable)
-                            .then(function(resp) {
-                              console.log('expiry entry from controller ' + resp);
-                            });
-                        }
-                      });
-                    }
-                  });
-                }
-              });
-
-              // pull from expiry table and put it in temp table where questions expiry still exists
-              surveyDataManager.getUnansweredQuestionsLessThanToDate($scope.userId, creationDate).then(function(resp) {
-                if (resp) {
-                  for (var i = 0; i < resp.length; i++) {
-                    surveyDataManager.addSurveyToUserForToday($scope.userId, '', resp[i].questionId, creationDate, resp[i].skippable)
-                      .then(function(res) {
-                        console.log('log from un answered controller ' + res);
-                      });
-                  }
-                  $ionicLoading.hide();
-                } else {
-                  $ionicLoading.hide();
-                }
-              });
-            }
+            });
           });
-        });
-      }
-    });
-
-    //check for server updates on next version of data
-    $scope.checkForServerDataUpdates = function() {
-      var localJSON = '';
-      $ionicLoading.show({
-        template: appConstants.checkForServerUpdates
-      });
-      userService.getAppContent().then(function(localData) {
-        localJSON = JSON.parse(localData.completeJson);
-        $rootScope.savedVersion = localData.version;
-        $rootScope.modifiedDate = localData.modifiedDate;
-        var savedVersion = localData.version;
-        var diffURL = localData.diffURL;
-        userService.getSeverJson(diffURL).then(function(newJson) {
-          //var delta = JSON.parse(JSON.stringify(newJson).replace(/\s/g, ""));
-          var delta = JSON.parse(JSON.stringify(newJson).replace(/"\s+|\s+"/g, '"'));
-          var newVersion = delta.version[1];
-          if (savedVersion.trim() != newVersion.trim()) {
-            $rootScope.savedVersion = newVersion;
-            var diffpatcher = jsondiffpatch.create();
-            diffpatcher.patch(localJSON, delta);
-            $scope.updateLocalDataBaseWithFreshDiff(localJSON);
-          } else {
-            $ionicLoading.hide();
-          }
-        }, function(error) {
-          $ionicLoading.hide();
-        });
-      }, function(error) {
-        $ionicLoading.hide();
-      });
-    }
-
-    $scope.updateLocalDataBaseWithFreshDiff = function(localJSON) {
-      $ionicLoading.show({
-        template: appConstants.checkForServerUpdates
-      });
-      var version = localJSON.version;
-      var diffURL = localJSON.diffURL;
-      var url = localJSON.URL;
-      var eligibility = JSON.stringify(localJSON.eligibility);
-      var profile = JSON.stringify(localJSON.profile);
-      var consent_screens = JSON.stringify(localJSON.consent);
-      var completeJson = JSON.stringify(localJSON).replace(/'/g, "`");
-      var surveyJson = localJSON.surveys;
-      var tasksJson = localJSON.tasks;
-      userService.updateAppContent(version, url, diffURL, eligibility, profile, consent_screens, completeJson).then(function(dataUpdate) {
-        if (dataUpdate) {
-          $rootScope.modifiedDate = dataUpdate;
-          // an array of promises
-          var surveyListPromise = [];
-          var taskListPromise = [];
-          for (var survey in surveyJson) {
-            if (surveyJson.hasOwnProperty(survey)) {
-              var obj = surveyJson[survey];
-              var date = '';
-              var title = survey;
-              var id = survey;
-              var skippable = '';
-              var tasks = '';
-              for (var prop in obj) {
-                switch (prop) {
-                  case "date":
-                    date = obj[prop];
-                    break;
-                  case "skippable":
-                    skippable = JSON.stringify(obj[prop]);
-                    break;
-                  case "tasks":
-                    tasks = JSON.stringify(obj[prop]);
-                    break;
-                  default:
-                }
-                if (date && title && id && tasks) {
-                  var dateArray = date.split(" ");
-                  var day = dateArray[2];
-                  var month = dateArray[3];
-                  surveyListPromise.push(userService.updateSurveysTableById(day, month, title, id, skippable, tasks));
-                }
-              }
-            }
-          }
-          for (var task in tasksJson) {
-            if (tasksJson.hasOwnProperty(task)) {
-              var timeLimit = tasksJson[task].timelimit;
-              var steps = JSON.stringify(tasksJson[task].steps).replace(/'/g, "`");
-              if (timeLimit === undefined || timeLimit === null) {
-                timeLimit = '';
-              }
-              taskListPromise.push(userService.updateTasksTableById(task, steps, timeLimit));
-            }
-          }
-          $scope.flushSurveyTempTable(surveyListPromise, taskListPromise);
         }
+      });
+    }
+
+    $scope.flushFinalListOfSurveyAndTaks = function(surveyListPromise, taskListPromise, appPropertiesDownload) {
+      // resolve both the promise out of for loop
+      $q.all(surveyListPromise).then(function(surevyResolvePromise) {
+        $ionicLoading.hide();
       }, function(error) {
         $ionicLoading.hide();
       });
 
-      $timeout(function() {
+      $q.all(taskListPromise).then(function(tasksResolvePromise) {
         $ionicLoading.hide();
-      }, 3000);
+      }, function(error) {
+        $ionicLoading.hide();
+      });
+
+      $q.all(appPropertiesDownload).then(function(appPropertiesResolve) {
+        $ionicLoading.hide();
+      }, function(error) {
+        $ionicLoading.hide();
+      });
     }
 
-    $scope.flushSurveyTempTable = function(surveyListPromise, taskListPromise) {
+    $scope.flushSurveyTempTable = function(surveyListPromise, taskListPromise, appPropertiesDownload) {
       surveyDataManager.getUsersListFromTempTable().then(function(usersList) {
         if (usersList.length > 0) {
           var usersFromTempTable = usersList;
@@ -255,33 +157,223 @@ angular.module('surveyCtrl', [])
                 $q.all(insertQueries).then(function(insertRows) {
                   // run update queries
                   $q.all(updateQueries).then(function(updateRows) {
-                    $scope.flushFinalListOfSurveyAndTaks(surveyListPromise, taskListPromise);
+                    $scope.flushFinalListOfSurveyAndTaks(surveyListPromise, taskListPromise, appPropertiesDownload);
                   });
                 });
               });
             }
           });
         } else {
-          $scope.flushFinalListOfSurveyAndTaks(surveyListPromise, taskListPromise);
+          $scope.flushFinalListOfSurveyAndTaks(surveyListPromise, taskListPromise, appPropertiesDownload);
         }
       });
     }
 
-    $scope.flushFinalListOfSurveyAndTaks = function(surveyListPromise, taskListPromise) {
-      // resolve both the promise out of for loop
-      $q.all(surveyListPromise).then(function(surevyResolvePromise) {
-        $ionicLoading.hide();
-      }, function(error) {
-        $ionicLoading.hide();
-      });
-
-      $q.all(taskListPromise).then(function(tasksResolvePromise) {
-        $ionicLoading.hide();
-      }, function(error) {
-        $ionicLoading.hide();
-      });
-
+    $scope.fileSystemPath = function(fileSystem) {
+      var directoryEntry = fileSystem.root; // to get root path of directory
+      var rootdir = fileSystem.root;
+      $scope.fp = rootdir.toURL(); // Returns Fulpath of local directory
+      var deferred = $q.defer();
+      directoryEntry.getDirectory('appimages', {
+        create: true,
+        exclusive: false
+      }, $scope.onDirectorySuccess, $scope.onDirectoryFail); // creating folder in sdcard
     }
+
+    $scope.fileSystemSuccessToAccess = function(fileSystem) {
+      var directoryEntry = fileSystem.root; // to get root path of directory
+      var rootdir = fileSystem.root;
+      $scope.fp = rootdir.toURL(); // Returns Fulpath of local directory
+      var deferred = $q.defer();
+      directoryEntry.getDirectory('appimages', {
+        create: true,
+        exclusive: false
+      }, $scope.onDirectorySuccess, $scope.onDirectoryFail); // creating folder in sdcard
+    }
+
+    $scope.fileSystemFailToAccess = function(error) {
+      //Error while creating directory
+      console.log("Unable to create new directory: " + error.code);
+      $rootScope.isDirectoryCreated = false;
+      $rootScope.requestFileSystem = true;
+      $scope.refreshSurveyAndTaskTable();
+    }
+
+    $scope.onDirectoryFail = function(error) {
+      // Error while creating directory
+      console.log("Unable to create new directory: " + error.code);
+      $rootScope.isDirectoryCreated = false;
+      $rootScope.requestFileSystem = false;
+      $scope.refreshSurveyAndTaskTable();
+    }
+
+    $scope.onDirectorySuccess = function(parent) {
+      // Directory created successfuly
+      $rootScope.isDirectoryCreated = true;
+      $rootScope.requestFileSystem = false;
+      $scope.refreshSurveyAndTaskTable();
+    }
+
+    $scope.updateLocalDataBaseWithFreshDiff = function(localJSON) {
+      $ionicLoading.show({
+        template: appConstants.checkForServerUpdates
+      });
+      var version = localJSON.version;
+      var diffURL = localJSON.diffURL;
+      var url = localJSON.URL;
+      var eligibility = JSON.stringify(localJSON.eligibility);
+      var profile = JSON.stringify(localJSON.profile);
+      var consent_screens = JSON.stringify(localJSON.consent);
+      var completeJson = JSON.stringify(localJSON).replace(/'/g, "`");
+      $scope.surveyJson = localJSON.surveys;
+      $scope.tasksJson = localJSON.tasks;
+      userService.updateAppContent(version, url, diffURL, eligibility, profile, consent_screens, completeJson).then(function(dataUpdate) {
+        if (dataUpdate) {
+          $rootScope.modifiedDate = dataUpdate;
+          // call file system async call
+          var deferred = $q.defer();
+          $rootScope.requestFileSystem = true;
+          window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, $scope.fileSystemSuccessToAccess, $scope.fileSystemFailToAccess);
+        }
+      }, function(error) {
+        $ionicLoading.hide();
+      });
+
+      $timeout(function() {
+        $ionicLoading.hide();
+      }, 3000);
+    }
+
+
+    $scope.refreshSurveyAndTaskTable = function() {
+      var surveyJson = $scope.surveyJson;
+      var tasksJson = $scope.tasksJson;
+      // an array of promises
+      var surveyListPromise = [];
+      var taskListPromise = [];
+      var appPropertiesDownload = [];
+      for (var survey in surveyJson) {
+        if (surveyJson.hasOwnProperty(survey)) {
+          var obj = surveyJson[survey];
+          var date = '';
+          var title = survey;
+          var id = survey;
+          var skippable = '';
+          var tasks = '';
+          for (var prop in obj) {
+            switch (prop) {
+              case "date":
+                date = obj[prop];
+                break;
+              case "skippable":
+                skippable = JSON.stringify(obj[prop]);
+                break;
+              case "tasks":
+                tasks = JSON.stringify(obj[prop]);
+                break;
+              default:
+            }
+            if (date && title && id && tasks) {
+              var dateArray = date.split(" ");
+              var day = dateArray[2];
+              var month = dateArray[3];
+              surveyListPromise.push(userService.updateSurveysTableById(day, month, title, id, skippable, tasks));
+            }
+          }
+        }
+      }
+      for (var task in tasksJson) {
+        if (tasksJson.hasOwnProperty(task)) {
+          var timeLimit = tasksJson[task].timelimit;
+          var steps = JSON.stringify(tasksJson[task].steps).replace(/'/g, "`");
+          if (timeLimit === undefined || timeLimit === null) {
+            timeLimit = '';
+          }
+          var stepsData = tasksJson[task].steps;
+          for (var T = 0; T < stepsData.length; T++) {
+            if (stepsData[T].type) {
+              var type = stepsData[T].type;
+              if (type.toLowerCase() == "irk-image-choice-question-step") {
+                var choices = stepsData[T].choices;
+                if ($rootScope.isDirectoryCreated) {
+                  for (var K = 0; K < choices.length; K++) {
+                    if (choices[K]["normal-state-image"]) {
+                      appPropertiesDownload.push(download(choices[K]["normal-state-image"], "appimages", $scope.fp));
+                    }
+                    if (choices[K]["selected-state-image"]) {
+                      appPropertiesDownload.push(download(choices[K]["selected-state-image"], "appimages", $scope.fp));
+                    }
+                  }
+                }
+              }
+            }
+          }
+          taskListPromise.push(userService.updateTasksTableById(task, steps, timeLimit));
+        }
+      }
+      $scope.flushSurveyTempTable(surveyListPromise, taskListPromise, appPropertiesDownload);
+    }
+
+    //check for server updates on next version of data
+    $scope.checkForServerDataUpdates = function() {
+      var localJSON = '';
+      $ionicLoading.show({
+        template: appConstants.checkForServerUpdates
+      });
+      userService.getAppContent().then(function(localData) {
+        localJSON = JSON.parse(localData.completeJson);
+        $rootScope.savedVersion = localData.version;
+        $rootScope.modifiedDate = localData.modifiedDate;
+        var savedVersion = localData.version;
+        var diffURL = localData.diffURL;
+        userService.getSeverJson(diffURL).then(function(newJson) {
+          //var delta = JSON.parse(JSON.stringify(newJson).replace(/\s/g, ""));
+          var delta = JSON.parse(JSON.stringify(newJson).replace(/"\s+|\s+"/g, '"'));
+          var newVersion = delta.version[1];
+          if (savedVersion.trim() != newVersion.trim()) {
+            $rootScope.savedVersion = newVersion;
+            var diffpatcher = jsondiffpatch.create();
+            diffpatcher.patch(localJSON, delta);
+            $scope.updateLocalDataBaseWithFreshDiff(localJSON);
+          } else {
+            $ionicLoading.hide();
+          }
+        }, function(error) {
+          $ionicLoading.hide();
+        });
+      }, function(error) {
+        $ionicLoading.hide();
+      });
+    }
+
+
+    // =================== if the internet available flush the results and profile data for the user
+    if (window.Connection) {
+      if (navigator.connection.type == Connection.NONE) {
+        $ionicLoading.hide();
+        if ($rootScope.emailId) {
+          $ionicLoading.show({
+            template: appConstants.checkForServerUpdates
+          });
+          $scope.checkForServerDataUpdates();
+        }
+      } else {
+        if ($rootScope.emailId) {
+          $ionicLoading.show({
+            template: appConstants.checkForServerUpdates
+          });
+          syncDataFactory.startSyncServiesToFetchResults($rootScope.emailId).then(function(res) {
+            $scope.checkForServerDataUpdates();
+            $ionicLoading.hide();
+          }, function(error) {
+            $scope.checkForServerDataUpdates();
+            $ionicLoading.hide();
+          });
+        }
+      }
+    }
+
+    $rootScope.surveyListForToday();
 
     //on resume handler===================================================================
     $scope.hideImageDiv = true;
@@ -352,7 +444,21 @@ angular.module('surveyCtrl', [])
     }
 
     $scope.launchSurvey = function(idSelected) {
+      // CHECK
+      var fileDirectory = (ionic.Platform.isAndroid() ? cordova.file.externalRootDirectory : cordova.file.documentsDirectory);
+      $cordovaFile.checkDir(fileDirectory, "appimages")
+        .then(function(success) {
+          $scope.appImagesFolderExists = fileDirectory + "appimages/";
+          $scope.launchSurveyOnFolderCheck(idSelected);
+        }, function(error) {
+          $scope.appImagesFolderExists = false;
+          $scope.launchSurveyOnFolderCheck(idSelected);
+        });
+    };
+
+    $scope.launchSurveyOnFolderCheck = function(idSelected) {
       $scope.cancelSteps = false;
+      $scope.imageQuestionStyle = "";
       // get the survey attached for this user
       var today = new Date();
       var formattedDate = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
@@ -454,7 +560,7 @@ angular.module('surveyCtrl', [])
           }
         }
       }
-    };
+    }
 
     $scope.showTasksForSlectedSurvey = function(surveyHtml) {
       if ($rootScope.emailId) {
@@ -493,11 +599,12 @@ angular.module('surveyCtrl', [])
 
       $rootScope.loggedInStatus = false;
       $scope.captureDataValue = true;
+
       $scope.learnmore = $ionicModal.fromTemplate('<ion-modal-view class="irk-modal has-tabs"> ' +
         '<irk-ordered-tasks>' +
         surveyHtml +
         '</irk-ordered-tasks>' +
-        '</ion-modal-view> ', {
+        '</ion-modal-view> <style ng-bind-html="imageQuestionStyle"></style>', {
           scope: $scope,
           animation: 'slide-in-up'
         });
@@ -661,6 +768,7 @@ angular.module('surveyCtrl', [])
     }
 
 
+
     $scope.activitiesDivGenerator = function(customId, stepData, disableSkip) {
       var type = stepData.type;
       var customDiv = '';
@@ -732,7 +840,31 @@ angular.module('surveyCtrl', [])
         case 'irk-image-choice-question-step':
           var choice = '';
           for (var i = 0; i < stepData.choices.length; i++) {
-            choice += '<irk-image-choice text="" value="' + stepData.choices[i].value + '" normal-state-image="ion-sad" selected-state-image="ion-happy-outline" ></irk-image-choice>';
+            var normalClassName = "ion-happy-outline";
+            var selectedClassName = "ion-sad";
+            if (stepData.choices[i]["normal-state-image"]) {
+              var className = stepData.choices[i]["normal-state-image"].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
+              var normalStateImage = stepData.choices[i]["normal-state-image"];
+              if ($scope.appImagesFolderExists) {
+                normalClassName = 'normal-image' + className;
+                var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
+                normalStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
+                $scope.imageQuestionStyle += "." + normalClassName + "{  background-image: url('" + normalStateImage + "') !important;  background-position:top left !important;  background-size:contain !important;  background-repeat:no-repeat !important;}";
+              }
+            }
+
+            if (stepData.choices[i]["selected-state-image"]) {
+              var className = stepData.choices[i]["selected-state-image"].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
+              var selectedStateImage = stepData.choices[i]["selected-state-image"];
+              if ($scope.appImagesFolderExists) {
+                selectedClassName = 'selected-image' + className;
+                var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
+                selectedStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
+                $scope.imageQuestionStyle += "." + selectedClassName + "{  background-image: url('" + selectedStateImage + "') !important;  background-position:top left !important;  background-size:contain !important;  background-repeat:no-repeat !important;}";
+              }
+            }
+            choice += '<irk-image-choice text="" value="' + stepData.choices[i].value + '" normal-state-image="' + normalClassName + '" selected-state-image="' + selectedClassName + '" ></irk-image-choice>';
+
           }
           customDiv = '<irk-task > <irk-image-choice-question-step optional="' + disableSkip + '" id="' + customId + '" title="' + stepData.title + '" text="' + stepData.text + '">' +
             choice + '</irk-image-choice-question-step></irk-task>';
