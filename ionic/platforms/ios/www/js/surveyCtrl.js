@@ -863,7 +863,13 @@ angular.module('surveyCtrl', [])
                 $scope.imageQuestionStyle += "." + selectedClassName + "{  background-image: url('" + selectedStateImage + "') !important;  background-position:top left !important;  background-size:contain !important;  background-repeat:no-repeat !important;}";
               }
             }
-            choice += '<irk-image-choice text="" value="' + stepData.choices[i].value + '" normal-state-image="' + normalClassName + '" selected-state-image="' + selectedClassName + '" ></irk-image-choice>';
+
+            var text = "";
+            if (stepData.choices[i].text) {
+              text = stepData.choices[i].text;
+            }
+
+            choice += '<irk-image-choice text=' + text + ' value="' + stepData.choices[i].value + '" normal-state-image="' + normalClassName + '" selected-state-image="' + selectedClassName + '" ></irk-image-choice>';
 
           }
           customDiv = '<irk-task > <irk-image-choice-question-step optional="' + disableSkip + '" id="' + customId + '" title="' + stepData.title + '" text="' + stepData.text + '">' +
