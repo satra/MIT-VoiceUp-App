@@ -33,6 +33,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
         }
       }, false);
 
+    /*  $ionicPlatform.onHardwareBackButton(function(event) {
+         //e.stopPropagation();
+         console.log('you sure you want to exit?');
+         event.preventDefault();
+         event.stopPropagation();
+      });
+*/
       $rootScope.promptToPinScreen = function(email) {
         var template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/"  >';
         if (ionic.Platform.isAndroid()) {
@@ -82,12 +89,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
             }
           }]
         });
-
-        $rootScope.pinDalog.then(function(res) {
-          return;
-        });
-
-
       }
 
 
@@ -120,7 +121,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
 
     $ionicPlatform.registerBackButtonAction(function(event) {
       event.preventDefault();
-    }, 100);
+      event.stopPropagation();
+    }, 403);  // 403 higher priority 
   })
 
 .config(function($stateProvider, $httpProvider, $urlRouterProvider, $ionicConfigProvider) {
