@@ -1,34 +1,40 @@
 <ion-modal-view>
-    <ion-content content scroll="false">
+  <ion-content content scroll="false">
 
-        <!-- <div class="irk-image irk-centered  width150 marT10p">
+    <!-- <div class="irk-image irk-centered  width150 marT10p">
      <img src="img/logo-2.png" class="irk-step-image">
    </div> -->
-   <div class="banner_holder">
-       <img src="img/logo-2.png"class="banner_holderImage">
-   </div>
-        <div class="textcenter input"> <input type="text" class="fontB irk-centered" ng-disabled="true" ng-model="emailId"> </div> <br>
+    <div class="banner_holder">
+      <img src="img/logo-2.png" class="banner_holderImage">
+    </div>
+    <div class="textcenter input">
+      <input type="text" class="fontB irk-centered" ng-disabled="true" ng-model="emailId"> </div>
+    <br>
 
 
-<div ng-if = "ShowIos">
-        <div class=" irk-centered">
-            <label class=" item-input item-stacked-label" style="margin-top: 20px;">
-                <span style="font-size:20px;font-weight:bold;" class="font35">{{passcodeLabel}}</span>
-                <input class="CirclePasscode txtcenter "  style="line-height: 90%;" placeholder="OOOO" type="password" pattern="[0-9]*"  name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4" ng-hide="managePasscode" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/" >
-                <input class="CirclePasscode txtcenter " style="line-height: 90%;" placeholder="OOOO" type="password"  pattern="[0-9]*" inputmode="numeric"  name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()" maxlength="4" ng-hide="managePasscodeConfirm" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/">
-            </label>
-          </div>
-        </div>
-
-      <div ng-if = "ShowAndroid">
-      <div class="irk-centered">
-          <label class=" item-input item-stacked-label" style="margin-top: 20px;">
-              <span style="font-size:20px;font-weight:bold;" class="font35">{{passcodeLabel}}</span>
-              <input class="CirclePasscode txtcenter "  style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO"  type="number"  name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4" ng-hide="managePasscode" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()"ng-pattern="/^(0|[1-9][0-9]*)$/" ng-keyup="($event.keyCode == 32)" >
-              <input class="CirclePasscode txtcenter " style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="number"   name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()" maxlength="4" ng-hide="managePasscodeConfirm" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()"ng-pattern="/^(0|[1-9][0-9]*)$/" >
-          </label>
-        </div>
+    <div ng-if="ShowIos">
+      <div class=" irk-centered">
+        <label class=" item-input item-stacked-label" style="margin-top: 20px;">
+          <span style="font-size:20px;font-weight:bold;" class="font35">{{passcodeLabel}}</span>
+          <input class="CirclePasscode txtcenter " style="line-height: 90%;" placeholder="OOOO" type="password" pattern="[0-9]*" name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4" ng-hide="managePasscode" ng-cut="$event.preventDefault()"
+              ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()">
+          <input class="CirclePasscode txtcenter " style="line-height: 90%;" placeholder="OOOO" type="password" pattern="[0-9]*" inputmode="numeric" name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()"
+              maxlength="4" ng-hide="managePasscodeConfirm" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()">
+        </label>
       </div>
+    </div>
 
-    </ion-content>
+    <div ng-if="ShowAndroid">
+      <div class="irk-centered">
+        <label class=" item-input item-stacked-label" style="margin-top: 20px;">
+          <span style="font-size:20px;font-weight:bold;" class="font35">{{passcodeLabel}}</span>
+          <input class="CirclePasscode txtcenter " style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="number" name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4" ng-hide="managePasscode"
+              ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-keyup="($event.keyCode == 32)">
+          <input class="CirclePasscode txtcenter " style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="number" name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()"
+              maxlength="4" ng-hide="managePasscodeConfirm" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()">
+        </label>
+      </div>
+    </div>
+
+  </ion-content>
 </ion-modal-view>
