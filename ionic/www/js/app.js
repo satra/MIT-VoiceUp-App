@@ -33,7 +33,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
         }
       }, false);
 
-    /*  $ionicPlatform.onHardwareBackButton(function(event) {
+      /*  $ionicPlatform.onHardwareBackButton(function(event) {
          //e.stopPropagation();
          console.log('you sure you want to exit?');
          event.preventDefault();
@@ -122,7 +122,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
     $ionicPlatform.registerBackButtonAction(function(event) {
       event.preventDefault();
       event.stopPropagation();
-    }, 403);  // 403 higher priority 
+    }, 403); // 403 higher priority
   })
 
 .config(function($stateProvider, $httpProvider, $urlRouterProvider, $ionicConfigProvider) {
@@ -275,6 +275,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
   'confirmPasswordLengthOfSixCharacter': 'Confirm Password must be at least 6 characters.',
   'failedToCreateUserWithEmptyStatus': "Failed to create the user try later.",
   'passcodeMissMatchWithExistingPasscode': 'Passcode doesn\'t match with the existing passcode.',
+  'passwordMissMatchWithConfirmPassword': 'Password doesn\'t match with Confirm password',
 
   // sign up with passcode creation
   'passcodeOfFourDigitLength': 'Passcode length should be max 4.',
