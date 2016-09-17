@@ -35,11 +35,11 @@
       <div class="irk-centered">
         <label class=" item-input item-stacked-label" style="margin-top: 20px;">
           <span style="font-size:20px;font-weight:bold;" class="font35">{{passcodeLabel}}</span>
-          <input class="CirclePasscode  irk-centered" size="4" style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="number" name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4"
+          <input class="CirclePasscode  irk-centered" size="4" style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="text" name="passcode" id="passcode" ng-model="passcode" ng-change="checkPasscodeDigits()" maxlength="4"
               ng-hide="managePasscode" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()">
-          <input class="CirclePasscode irk-centered" size="4" style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="number" name="new_passcode" id="new_passcode" ng-model="new_passcode" ng-change="checkNewPasscodeDigits()"
+          <input class="CirclePasscode irk-centered" size="4" style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="text" name="new_passcode" id="new_passcode" ng-model="new_passcode" ng-change="checkNewPasscodeDigits()"
               maxlength="4" ng-hide="managePasscodeNew" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()">
-          <input class="CirclePasscode irk-centered" size="4" style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="number" name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()"
+          <input class="CirclePasscode irk-centered" size="4" style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="text" name="confirm_passcode" id="confirm_passcode" ng-model="confirm_passcode" ng-change="checkConfirmPasscodeDigits()"
               maxlength="4" ng-hide="managePasscodeConfirm" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()">
         </label>
       </div>

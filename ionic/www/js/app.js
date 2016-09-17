@@ -279,6 +279,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
 
   // sign up with passcode creation
   'passcodeOfFourDigitLength': 'Passcode length should be max 4.',
+  'numberOnly': 'Please enter numbers only.',
   'passcodeMissMatchWithConfirmPasscode': "Passcode should match with confirm Passcode",
   'passcodeMissMatchWithConfirmPasscode': "Passcode should match with confirm Passcode",
 

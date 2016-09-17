@@ -65,27 +65,36 @@ angular.module('signInCtrl', [])
       if (event.keyCode === 32 && event.keyCode === 13) {
         $event.preventDefault();
       }
-      var inputValue = angular.element(document.querySelectorAll('#passcode'));
-      var passcode = inputValue.prop('value');
-      if (passcode.length == 4) {
-        var emailDiv = angular.element(document.querySelectorAll('.passcode-dropdown'));
-        var email = emailDiv.prop('selectedOptions')[0].value;
-        if (email && passcode) {
-          //get IP like email ids
-          profileDataManager.logInViaPasscode(email, passcode).then(function(res) {
-            if (res) {
-              // All set go to next page
-              $ionicHistory.clearCache().then(function() {
-                $rootScope.emailId = email; // save it to access in update profile
-                $scope.modal.remove();
-                $rootScope.activeUser = email;
-                $state.transitionTo('tab.Activities');
-              });
-            } else {
-              $scope.resetInput();
-              $scope.callAlertDailog(appConstants.invalidPasscode);
-            }
-          });
+      var inputDiv = angular.element(document.querySelector('#passcode'));
+      var passcode = angular.element(document.querySelector('#passcode')).prop('value');
+      //  var inputValue = angular.element(document.querySelectorAll('#passcode'));
+      //    var passcode = inputValue.prop('value');
+      var isNumber = /^\d+$/.test(passcode);
+      if (!isNumber) {
+        inputDiv.val("");
+        $scope.callAlertDailog(appConstants.numberOnly);
+      } else {
+
+        if (passcode.length == 4) {
+          var emailDiv = angular.element(document.querySelectorAll('.passcode-dropdown'));
+          var email = emailDiv.prop('selectedOptions')[0].value;
+          if (email && passcode) {
+            //get IP like email ids
+            profileDataManager.logInViaPasscode(email, passcode).then(function(res) {
+              if (res) {
+                // All set go to next page
+                $ionicHistory.clearCache().then(function() {
+                  $rootScope.emailId = email; // save it to access in update profile
+                  $scope.modal.remove();
+                  $rootScope.activeUser = email;
+                  $state.transitionTo('tab.Activities');
+                });
+              } else {
+                $scope.resetInput();
+                $scope.callAlertDailog(appConstants.invalidPasscode);
+              }
+            });
+          }
         }
       }
     };
@@ -571,42 +580,48 @@ angular.module('signInCtrl', [])
     $scope.checkConfirmPasscodeDigits = function() {
       var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
       var confirm_passcode = confirm_passcode_div.prop('value');
-      if (confirm_passcode.length == 4) {
-        //check is both are equal
-        if ($scope.passcode == confirm_passcode) {
-          var email = $scope.emailId;
-          if (email) {
-            profileDataManager.getUserIDByEmail(email).then(function(res) {
-              // run delete query for the userId before add new passcode doesn't matter from which screen user come from
-              var localUserId = res;
-              profileDataManager.deletePasscodeOfUserID(localUserId).then(function(removeToken) {
-                $scope.createUserPin(localUserId, email);
-              }, function(error) {
-                $scope.createUserPin(localUserId, email);
+      var isNumber = /^\d+$/.test(confirm_passcode);
+      if (!isNumber) {
+        confirm_passcode_div.val("");
+        $scope.callAlertDailog(appConstants.numberOnly);
+      } else {
+        if (confirm_passcode.length == 4) {
+          //check is both are equal
+          if ($scope.passcode == confirm_passcode) {
+            var email = $scope.emailId;
+            if (email) {
+              profileDataManager.getUserIDByEmail(email).then(function(res) {
+                // run delete query for the userId before add new passcode doesn't matter from which screen user come from
+                var localUserId = res;
+                profileDataManager.deletePasscodeOfUserID(localUserId).then(function(removeToken) {
+                  $scope.createUserPin(localUserId, email);
+                }, function(error) {
+                  $scope.createUserPin(localUserId, email);
+                });
               });
-            });
-          }
-        } else {
-          //reset div
-          $scope.confirm_passcode = '';
-          $scope.passcodeDiv = '';
-          confirm_passcode_div.val(''); // clear the div
+            }
+          } else {
+            //reset div
+            $scope.confirm_passcode = '';
+            $scope.passcodeDiv = '';
+            confirm_passcode_div.val(''); // clear the div
 
-          $scope.callAlertDailog(appConstants.passcodeMissMatchWithConfirmPasscode);
-          $scope.confirmLoop = $scope.confirmLoop + 1;
-          if ($scope.confirmLoop >= 3) {
-            $scope.passcodeLabel = "Create passcode";
-            $scope.managePasscode = false;
-            $scope.managePasscodeConfirm = true;
-            $scope.confirmLoop = 0;
-            //clear div
-            var passcode_div = angular.element(document.querySelector('#passcode'));
-            $scope.passcode = '';
-            passcode_div.val(''); // clear the div
+            $scope.callAlertDailog(appConstants.passcodeMissMatchWithConfirmPasscode);
+            $scope.confirmLoop = $scope.confirmLoop + 1;
+            if ($scope.confirmLoop >= 3) {
+              $scope.passcodeLabel = "Create passcode";
+              $scope.managePasscode = false;
+              $scope.managePasscodeConfirm = true;
+              $scope.confirmLoop = 0;
+              //clear div
+              var passcode_div = angular.element(document.querySelector('#passcode'));
+              $scope.passcode = '';
+              passcode_div.val(''); // clear the div
+            }
           }
+        } else if (confirm_passcode.length > 4) {
+          $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
         }
-      } else if (confirm_passcode.length > 4) {
-        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
       }
     };
 
@@ -614,16 +629,25 @@ angular.module('signInCtrl', [])
       if (event.keyCode === 32 && event.keyCode === 13) {
         $event.preventDefault();
       }
+      var inputDiv = angular.element(document.querySelector('#passcode'));
       var passcode = angular.element(document.querySelector('#passcode')).prop('value');
-      if (passcode.length == 4) {
-        document.activeElement.blur(); // remove the keypad
-        $scope.passcode = passcode;
-        $scope.managePasscode = true;
-        $scope.passcodeLabel = "Confirm Passcode";
-        $scope.managePasscodeConfirm = false;
-      } else if (passcode.length > 4) {
-        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
+      var isNumber = /^\d+$/.test(passcode);
+      if (!isNumber) {
+        inputDiv.val("");
+        $scope.callAlertDailog(appConstants.numberOnly);
+      } else {
+
+        if (passcode.length == 4) {
+          document.activeElement.blur(); // remove the keypad
+          $scope.passcode = passcode;
+          $scope.managePasscode = true;
+          $scope.passcodeLabel = "Confirm Passcode";
+          $scope.managePasscodeConfirm = false;
+        } else if (passcode.length > 4) {
+          $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
+        }
       }
+
     };
 
     //==================forgot password login via email ================
