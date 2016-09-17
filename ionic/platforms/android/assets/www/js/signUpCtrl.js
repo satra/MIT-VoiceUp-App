@@ -356,9 +356,7 @@ angular.module('signUp', [])
       //=================================================== forgot passcode handler ============================
 
     $scope.checkPasscodeDigits = function() {
-      if (event.keyCode === 32) {
-        $event.preventDefault();
-      }
+
       var passcode = angular.element(document.querySelector('#passcode')).prop('value');
       if (passcode.length == 4) {
         $scope.passcode = passcode;
@@ -379,9 +377,7 @@ angular.module('signUp', [])
     $scope.confirmLoop = 0;
 
     $scope.checkConfirmPasscodeDigits = function() {
-      if (event.keyCode === 32) {
-        $event.preventDefault();
-      }
+
       var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
       var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value');
       if (confirm_passcode.length == 4) {

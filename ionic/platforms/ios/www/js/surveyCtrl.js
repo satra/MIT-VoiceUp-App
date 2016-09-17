@@ -245,6 +245,30 @@ angular.module('surveyCtrl', [])
     }
 
 
+    $scope.download = function(URL, Folder_Name, fp) {
+      $ionicLoading.show();
+      var download_link = encodeURI(URL);
+      ext = download_link.substr(download_link.lastIndexOf('.') + 1); //Get extension of URL
+      var File_Name = download_link.substr(download_link.lastIndexOf('/') + 1);
+      var filePath = fp + "/" + Folder_Name + "/" + File_Name; // fullpath and name of the file which we want to give
+      $scope.filetransfer(download_link, filePath);
+    }
+
+    $scope.filetransfer = function(download_link, fp) {
+      var fileTransfer = new FileTransfer();
+      $ionicLoading.show();
+      fileTransfer.download(download_link, fp,
+        function(entry) {
+          //$ionicLoading.hide();
+          console.log("download complete: " + entry.fullPath);
+        },
+        function(error) {
+          //$ionicLoading.hide();
+          console.log("download error source " + error.source);
+        }
+      );
+    }
+
     $scope.refreshSurveyAndTaskTable = function() {
       var surveyJson = $scope.surveyJson;
       var tasksJson = $scope.tasksJson;
@@ -298,10 +322,10 @@ angular.module('surveyCtrl', [])
                 if ($rootScope.isDirectoryCreated) {
                   for (var K = 0; K < choices.length; K++) {
                     if (choices[K]["normal-state-image"]) {
-                      appPropertiesDownload.push(download(choices[K]["normal-state-image"], "appimages", $scope.fp));
+                      appPropertiesDownload.push($scope.download(choices[K]["normal-state-image"], "appimages", $scope.fp));
                     }
                     if (choices[K]["selected-state-image"]) {
-                      appPropertiesDownload.push(download(choices[K]["selected-state-image"], "appimages", $scope.fp));
+                      appPropertiesDownload.push($scope.download(choices[K]["selected-state-image"], "appimages", $scope.fp));
                     }
                   }
                 }
@@ -840,8 +864,8 @@ angular.module('surveyCtrl', [])
         case 'irk-image-choice-question-step':
           var choice = '';
           for (var i = 0; i < stepData.choices.length; i++) {
-            var normalClassName = "ion-happy-outline";
-            var selectedClassName = "ion-sad";
+            var normalClassName = "ion-sad";
+            var selectedClassName = "ion-happy-outline";
             if (stepData.choices[i]["normal-state-image"]) {
               var className = stepData.choices[i]["normal-state-image"].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
               var normalStateImage = stepData.choices[i]["normal-state-image"];

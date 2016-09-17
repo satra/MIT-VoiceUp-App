@@ -101,30 +101,6 @@
     if (object.value.length > object.maxLength)
       object.value = object.value.slice(0, object.maxLength)
   }
-
-  // file download
-  function download(URL, Folder_Name, fp) {
-    var download_link = encodeURI(URL);
-    ext = download_link.substr(download_link.lastIndexOf('.') + 1); //Get extension of URL
-    var File_Name = download_link.substr(download_link.lastIndexOf('/') + 1);
-    var filePath = fp + "/" + Folder_Name + "/" + File_Name; // fullpath and name of the file which we want to give
-    // download function call
-    filetransfer(download_link, filePath);
-  }
-
-  function filetransfer(download_link, fp) {
-    var fileTransfer = new FileTransfer();
-    // File download function with URL and local path
-    fileTransfer.download(download_link, fp,
-      function(entry) {
-        console.log("download complete: " + entry.fullPath);
-      },
-      function(error) {
-        //Download abort errors or download failed errors
-        console.log("download error source " + error.source);
-      }
-    );
-  }
 </script>
 
 </html>
