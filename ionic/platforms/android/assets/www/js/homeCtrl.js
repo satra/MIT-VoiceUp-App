@@ -12,6 +12,7 @@ angular.module('homeCtrl', [])
       $scope.transition('signIn');
     };
 
+
     if (window.Connection) {
       if (navigator.connection.type == Connection.NONE) {
         $ionicLoading.hide();
@@ -76,6 +77,34 @@ angular.module('homeCtrl', [])
       $scope.emailOrDownloadConsentLabel = "Email Consent Document";
     }
 
+    $scope.fileSystemSuccessToAccess = function(fileSystem) {
+      var directoryEntry = fileSystem.root; // to get root path of directory
+      var rootdir = fileSystem.root;
+      $scope.fp = rootdir.toURL(); // Returns Fulpath of local directory
+      var deferred = $q.defer();
+      directoryEntry.getDirectory('appimages', {
+        create: true,
+        exclusive: false
+      }, $scope.onDirectorySuccess, $scope.onDirectoryFail); // creating folder in sdcard
+    }
+
+    $scope.fileSystemFailToAccess = function(error) {
+      //Error while creating directory
+      console.log("Unable to create new directory: " + error.code);
+      $scope.refreshSurveyAndTaskTable();
+    }
+
+    $scope.onDirectoryFail = function(error) {
+      // Error while creating directory
+      console.log("Unable to create new directory: " + error.code);
+      $scope.refreshSurveyAndTaskTable();
+    }
+
+    $scope.onDirectorySuccess = function(parent) {
+      // Directory created successfuly
+      $scope.refreshSurveyAndTaskTable();
+    }
+
     databaseManager.checkDatabaseExists().then(function(res) {
       if (res == 5) {
         //call a method and read from local json and create schema
@@ -85,63 +114,12 @@ angular.module('homeCtrl', [])
           var profile = JSON.stringify(response.profile);
           var consent_screens = JSON.stringify(response.consent);
           var completeJson = JSON.stringify(response);
-          var surveyJson = response.surveys;
-          var tasksJson = response.tasks;
+          $scope.surveyJson = response.surveys;
+          $scope.tasksJson = response.tasks;
           var today = new Date();
 
           databaseManager.createAppContentTable(response.version, response.URL, response.diffURL, eligibility, profile, consent_screens, completeJson).then(function(resp) {
-            for (var survey in surveyJson) {
-              if (surveyJson.hasOwnProperty(survey)) {
-                var obj = surveyJson[survey];
-                var date = '';
-                var title = survey;
-                var id = survey;
-                var skippable = '';
-                var tasks = '';
-                for (var prop in obj) {
-                  switch (prop) {
-                    case "date":
-                      date = obj[prop];
-                      break;
-                    case "skippable":
-                      skippable = JSON.stringify(obj[prop]);
-                      break;
-                    case "tasks":
-                      tasks = JSON.stringify(obj[prop]);
-                      break;
-                    default:
-                  }
-                  if (date && title && id && tasks) {
-                    var dateArray = date.split(" ");
-                    var day = dateArray[2];
-                    var month = dateArray[3];
-                    databaseManager.createSurveysTable(day, month, title, id, skippable, tasks).then(function(respw) {
-                      console.log('insert survey ' + respw);
-                    });
-                  }
-                }
-              }
-            }
-            for (var task in tasksJson) {
-              if (tasksJson.hasOwnProperty(task)) {
-                var timeLimit = tasksJson[task].timelimit;
-                var steps = JSON.stringify(tasksJson[task].steps);
-                if (timeLimit === undefined || timeLimit === null) {
-                  timeLimit = '';
-                }
-                databaseManager.createTasksTable(task, steps, timeLimit).then(function(resp) {
-                  console.log('createTasksTable  ' + resp);
-                });
-              }
-            }
-            databaseManager.createSurveyTempTable().then(function(resp) {
-              console.log('createSurveyTempTable  ' + resp);
-            });
-
-            databaseManager.createSurveyQuestionExpiryTable().then(function(resp) {
-              console.log('createSurveyQuestionExpiryTable  ' + resp);
-            });
-
+            window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, $scope.fileSystemSuccessToAccess, $scope.fileSystemFailToAccess);
           });
 
           databaseManager.createSurveyTempTable().then(function(resp) {
@@ -168,11 +146,69 @@ angular.module('homeCtrl', [])
       }
     });
 
+    $scope.refreshSurveyAndTaskTable = function() {
+      var surveyJson = $scope.surveyJson;
+      var tasksJson = $scope.tasksJson;
+      for (var survey in surveyJson) {
+        if (surveyJson.hasOwnProperty(survey)) {
+          var obj = surveyJson[survey];
+          var date = '';
+          var title = survey;
+          var id = survey;
+          var skippable = '';
+          var tasks = '';
+          for (var prop in obj) {
+            switch (prop) {
+              case "date":
+                date = obj[prop];
+                break;
+              case "skippable":
+                skippable = JSON.stringify(obj[prop]);
+                break;
+              case "tasks":
+                tasks = JSON.stringify(obj[prop]);
+                break;
+              default:
+            }
+            if (date && title && id && tasks) {
+              var dateArray = date.split(" ");
+              var day = dateArray[2];
+              var month = dateArray[3];
+              databaseManager.createSurveysTable(day, month, title, id, skippable, tasks).then(function(respw) {
+                console.log('insert survey ' + respw);
+              });
+            }
+          }
+        }
+      }
+      for (var task in tasksJson) {
+        if (tasksJson.hasOwnProperty(task)) {
+          var timeLimit = tasksJson[task].timelimit;
+          var steps = JSON.stringify(tasksJson[task].steps);
+          if (timeLimit === undefined || timeLimit === null) {
+            timeLimit = '';
+          }
+          databaseManager.createTasksTable(task, steps, timeLimit).then(function(resp) {
+            console.log('createTasksTable  ' + resp);
+          });
+        }
+      }
+      databaseManager.createSurveyTempTable().then(function(resp) {
+        console.log('createSurveyTempTable  ' + resp);
+      });
+
+      databaseManager.createSurveyQuestionExpiryTable().then(function(resp) {
+        console.log('createSurveyQuestionExpiryTable  ' + resp);
+      });
+
+    }
+
     //openOnlineResource
     $scope.openOnlineResource = function() {
       $ionicModal.fromTemplateUrl('templates/modal-online-resource.html', {
         scope: $scope,
-        animation: 'slide-in-up'
+        animation: 'slide-in-up',
+        hardwareBackButtonClose: false,
       }).then(function(modal) {
         $scope.modal = modal;
         $scope.modal.show();

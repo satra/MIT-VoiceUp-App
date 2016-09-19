@@ -9,7 +9,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
     'profileDataManager', 'consentDataManager', 'dataStoreManager', 'homeCtrl', 'dashboard', 'eligibility', 'signUp', 'consent',
     'updateProfileCtrl', 'customDirectives', 'ionicResearchKit', 'syncDataService', 'checklist-model', 'angular-svg-round-progressbar', 'base64', 'learnModule', 'ngCordova', 'chart.js', 'flexcalendar', 'pascalprecht.translate'
   ])
-  .run(function($ionicPlatform, $ionicPopup, $rootScope, $ionicHistory, $state, profileDataManager, $ionicLoading, $ionicPopup) {
+  .run(function($ionicPlatform, $ionicPopup, $ionicTabsDelegate, $rootScope, $ionicHistory, $state, profileDataManager, $ionicLoading, $ionicPopup) {
     $ionicPlatform.ready(function() {
 
       if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -27,16 +27,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
           if ($rootScope.pinDalog) {
             $rootScope.pinDalog.close();
           }
-          if ($rootScope.loggedInStatus) {
+          if ($rootScope.loggedInStatus && !$rootScope.requestFileSystem) {
             $rootScope.promptToPinScreen($rootScope.emailId);
           }
         }
       }, false);
 
+      /*  $ionicPlatform.onHardwareBackButton(function(event) {
+         //e.stopPropagation();
+         console.log('you sure you want to exit?');
+         event.preventDefault();
+         event.stopPropagation();
+      });
+*/
       $rootScope.promptToPinScreen = function(email) {
-        var template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/"  >';
+        var template = '<input style="text-align: center" type="password" id="passcodepin" placeholder="passcode" maxlength="4" pattern="[0-9]*"ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" >';
         if (ionic.Platform.isAndroid()) {
-          template = '<input class = "CirclePasscode1" style="text-align: center;color: transparent;text-shadow: 0 0 0 black;" type="number" id="passcodepin" placeholder="passcode"  oninput="maxLengthCheck(this)" maxlength="4" pattern="[0-9]*" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()" ng-pattern="/^(0|[1-9][0-9]*)$/" >';
+          template = '<input class = "CirclePasscode1" style="text-align: center;color: transparent;text-shadow: 0 0 0 black;" type="number" id="passcodepin" placeholder="passcode"  oninput="maxLengthCheck(this)" maxlength="4" pattern="[0-9]*" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()"  >';
         }
         $rootScope.pinDalog = $ionicPopup.show({
           template: template,
@@ -82,7 +89,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
             }
           }]
         });
-
       }
 
 
@@ -90,6 +96,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
         profileDataManager.logInViaPasscode(email, passcode).then(function(res) {
           if (res) {
             $ionicLoading.hide();
+            if ($rootScope.surveyDate) {
+              var today = new Date();
+              var nowDate = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+              if ($rootScope.surveyDate != nowDate) {
+                //$ionicTabsDelegate.select(0, true);
+                $rootScope.surveyListForToday();
+              }
+            }
           } else {
             $ionicLoading.hide();
             $ionicPopup.alert({
@@ -107,7 +121,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
 
     $ionicPlatform.registerBackButtonAction(function(event) {
       event.preventDefault();
-    }, 100);
+      event.stopPropagation();
+    }, 403); // 403 higher priority
   })
 
 .config(function($stateProvider, $httpProvider, $urlRouterProvider, $ionicConfigProvider) {
@@ -260,9 +275,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'userService', 'signI
   'confirmPasswordLengthOfSixCharacter': 'Confirm Password must be at least 6 characters.',
   'failedToCreateUserWithEmptyStatus': "Failed to create the user try later.",
   'passcodeMissMatchWithExistingPasscode': 'Passcode doesn\'t match with the existing passcode.',
+  'passwordMissMatchWithConfirmPassword': 'Password doesn\'t match with Confirm password',
 
   // sign up with passcode creation
   'passcodeOfFourDigitLength': 'Passcode length should be max 4.',
+  'numberOnly': 'Please enter numbers only.',
   'passcodeMissMatchWithConfirmPasscode': "Passcode should match with confirm Passcode",
   'passcodeMissMatchWithConfirmPasscode': "Passcode should match with confirm Passcode",
 
