@@ -86,6 +86,69 @@ angular.module('surveyCtrl', [])
       });
     }
 
+    //============== On launch activiteis surveys to temp table first time ============================================
+    $scope.surveyListForTodayOnJSONUpdate = function() {
+      $ionicLoading.show();
+      surveyDataManager.getSurveyListForToday().then(function(response) {
+        $scope.list = response;
+        var surveyMainList = response;
+        var today = new Date();
+        var creationDate = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+        $rootScope.surveyDate = creationDate;
+        if (surveyMainList && $rootScope.emailId) {
+          profileDataManager.getUserIDByEmail($rootScope.emailId).then(function(userId) {
+            $scope.userId = userId;
+            // if survey question doesn't exists clear the table for the user
+            surveyDataManager.clearExistingTaskListFromTempTable($scope.userId)
+              .then(function(res) {
+                console.log('expiry entry from controller ' + res);
+                var promises = [];
+                // then loop through the survey and update history and temp table
+                for (var k = 0; k < surveyMainList.length; k++) {
+                  var taskList = JSON.parse(surveyMainList[k].tasks);
+                  var skippableList = JSON.parse(surveyMainList[k].skippable);
+                  var surveyId = surveyMainList[k].surveyId;
+                  for (var M = 0; M < taskList.length; M++) {
+                    var questionId = taskList[M];
+                    var skippable = false;
+                    for (var L = 0; L < skippableList.length; L++) {
+                      if (questionId == skippableList[L]) {
+                        skippable = true;
+                      }
+                    }
+                    promises.push(surveyDataManager.addSurveyToUserForToday($scope.userId, surveyId, questionId, creationDate, skippable));
+                  }
+                }
+                // resolve all the promises
+                $q.all(promises).then(function(res) {
+                  for (var i = 0; i < res.length; i++) {
+                    surveyDataManager.getSurveyTempRowByInsertId(res[i]).then(function(row) {
+                      if (row) {
+                        var questionId = row.questionId;
+                        surveyDataManager.getQuestionExpiry(questionId).then(function(limitExists) {
+                          if (limitExists) {
+                            expiryDays = today.getDate() + parseInt(limitExists.split("-")[0]);
+                            var expiryDate = expiryDays + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+                            surveyDataManager.addThisSurveyToExpiry($scope.userId, row.surveyId, row.questionId, creationDate, expiryDate, row.skippable)
+                              .then(function(resp) {
+                                $ionicLoading.hide();
+                                console.log('expiry entry from controller ' + resp);
+                              });
+                          } else {
+                            $ionicLoading.hide();
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
+              });
+          });
+        }
+      });
+    }
+
+
     $scope.flushFinalListOfSurveyAndTaks = function(surveyListPromise, taskListPromise, appPropertiesDownload) {
       // resolve both the promise out of for loop
       $q.all(surveyListPromise).then(function(surevyResolvePromise) {
@@ -102,8 +165,12 @@ angular.module('surveyCtrl', [])
 
       $q.all(appPropertiesDownload).then(function(appPropertiesResolve) {
         $ionicLoading.hide();
+        console.log("downloadImages Done");
+        $scope.surveyListForTodayOnJSONUpdate();
       }, function(error) {
         $ionicLoading.hide();
+        console.log("error in downloading images");
+        $scope.surveyListForTodayOnJSONUpdate();
       });
     }
 
@@ -245,30 +312,6 @@ angular.module('surveyCtrl', [])
     }
 
 
-    $scope.download = function(URL, Folder_Name, fp) {
-      $ionicLoading.show();
-      var download_link = encodeURI(URL);
-      ext = download_link.substr(download_link.lastIndexOf('.') + 1); //Get extension of URL
-      var File_Name = download_link.substr(download_link.lastIndexOf('/') + 1);
-      var filePath = fp + "/" + Folder_Name + "/" + File_Name; // fullpath and name of the file which we want to give
-      $scope.filetransfer(download_link, filePath);
-    }
-
-    $scope.filetransfer = function(download_link, fp) {
-      var fileTransfer = new FileTransfer();
-      $ionicLoading.show();
-      fileTransfer.download(download_link, fp,
-        function(entry) {
-          //$ionicLoading.hide();
-          console.log("download complete: " + entry.fullPath);
-        },
-        function(error) {
-          //$ionicLoading.hide();
-          console.log("download error source " + error.source);
-        }
-      );
-    }
-
     $scope.refreshSurveyAndTaskTable = function() {
       var surveyJson = $scope.surveyJson;
       var tasksJson = $scope.tasksJson;
@@ -306,6 +349,9 @@ angular.module('surveyCtrl', [])
           }
         }
       }
+
+      var fileTransfer = new FileTransfer();
+
       for (var task in tasksJson) {
         if (tasksJson.hasOwnProperty(task)) {
           var timeLimit = tasksJson[task].timelimit;
@@ -322,10 +368,19 @@ angular.module('surveyCtrl', [])
                 if ($rootScope.isDirectoryCreated) {
                   for (var K = 0; K < choices.length; K++) {
                     if (choices[K]["normal-state-image"]) {
-                      appPropertiesDownload.push($scope.download(choices[K]["normal-state-image"], "appimages", $scope.fp));
+                      var download_link = encodeURI(choices[K]["normal-state-image"]);
+                      ext = download_link.substr(download_link.lastIndexOf('.') + 1); //Get extension of URL
+                      var File_Name = download_link.substr(download_link.lastIndexOf('/') + 1);
+                      var filePath = $scope.fp + "/appimages/" + File_Name; // fullpath and name of the file which we want to give
+                      appPropertiesDownload.push(fileTransfer.download(download_link, filePath));
                     }
                     if (choices[K]["selected-state-image"]) {
-                      appPropertiesDownload.push($scope.download(choices[K]["selected-state-image"], "appimages", $scope.fp));
+                      //  appPropertiesDownload.push($scope.download(choices[K]["selected-state-image"], "appimages", $scope.fp));
+                      var download_link = encodeURI(choices[K]["selected-state-image"]);
+                      ext = download_link.substr(download_link.lastIndexOf('.') + 1); //Get extension of URL
+                      var File_Name = download_link.substr(download_link.lastIndexOf('/') + 1);
+                      var filePath = $scope.fp + "/appimages/" + File_Name; // fullpath and name of the file which we want to give
+                      appPropertiesDownload.push(fileTransfer.download(download_link, filePath));
                     }
                   }
                 }
@@ -372,33 +427,20 @@ angular.module('surveyCtrl', [])
 
 
     // =================== if the internet available flush the results and profile data for the user
-    if (window.Connection) {
-      if (navigator.connection.type == Connection.NONE) {
-        $ionicLoading.hide();
-        if ($rootScope.emailId) {
-          $ionicLoading.show({
-            template: appConstants.checkForServerUpdates
-          });
-          $scope.checkForServerDataUpdates();
-        }
-      } else {
-        if ($rootScope.emailId) {
-          $ionicLoading.show({
-            template: appConstants.checkForServerUpdates
-          });
-          syncDataFactory.startSyncServiesToFetchResults($rootScope.emailId).then(function(res) {
-            $scope.checkForServerDataUpdates();
-            $ionicLoading.hide();
-          }, function(error) {
-            $scope.checkForServerDataUpdates();
-            $ionicLoading.hide();
-          });
-        }
-      }
+    if ($rootScope.emailId) {
+      $ionicLoading.show({
+        template: appConstants.checkForServerUpdates
+      });
+      syncDataFactory.startSyncServiesToFetchResults($rootScope.emailId).then(function(res) {
+        $scope.checkForServerDataUpdates();
+        //$ionicLoading.hide();
+      }, function(error) {
+        $scope.checkForServerDataUpdates();
+        //$ionicLoading.hide();
+      });
     }
 
     $rootScope.surveyListForToday();
-
     //on resume handler===================================================================
     $scope.hideImageDiv = true;
     // == take user to home screeen
@@ -483,6 +525,7 @@ angular.module('surveyCtrl', [])
     $scope.launchSurveyOnFolderCheck = function(idSelected) {
       $scope.cancelSteps = false;
       $scope.imageQuestionStyle = "";
+      $scope.imageQuestionStyle += ".abcd{opacity:0.6;}";
       // get the survey attached for this user
       var today = new Date();
       var formattedDate = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
@@ -621,7 +664,7 @@ angular.module('surveyCtrl', [])
         $rootScope.modal.remove();
       }
 
-      $rootScope.loggedInStatus = false;
+      //  $rootScope.loggedInStatus = false;
       $scope.captureDataValue = true;
 
       $scope.learnmore = $ionicModal.fromTemplate('<ion-modal-view class="irk-modal has-tabs"> ' +
@@ -866,6 +909,7 @@ angular.module('surveyCtrl', [])
           for (var i = 0; i < stepData.choices.length; i++) {
             var normalClassName = "ion-sad";
             var selectedClassName = "ion-happy-outline";
+
             if (stepData.choices[i]["normal-state-image"]) {
               var className = stepData.choices[i]["normal-state-image"].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
               var normalStateImage = stepData.choices[i]["normal-state-image"];
@@ -885,6 +929,15 @@ angular.module('surveyCtrl', [])
                 var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
                 selectedStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
                 $scope.imageQuestionStyle += "." + selectedClassName + "{  background-image: url('" + selectedStateImage + "') !important;  background-position:top left !important;  background-size:contain !important;  background-repeat:no-repeat !important;}";
+              }
+            } else if (stepData.choices[i]["normal-state-image"]) {
+              var className = stepData.choices[i]["normal-state-image"].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
+              var selectedStateImage = stepData.choices[i]["normal-state-image"];
+              if ($scope.appImagesFolderExists) {
+                selectedClassName = 'selected-image' + className;
+                var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
+                selectedStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
+                $scope.imageQuestionStyle += "." + selectedClassName + "{  background-image: url('" + selectedStateImage + "') !important;  background-position:top left !important;  background-size:contain !important;  background-repeat:no-repeat !important; opacity:0.6;}";
               }
             }
 
