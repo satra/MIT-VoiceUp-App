@@ -74,6 +74,7 @@
   <script type="text/javascript" src="lib/jsondiffpatch/public/build/jsondiffpatch-formatters.min.js"></script>
   <link rel="stylesheet" href="lib/jsondiffpatch/public/formatters-styles/html.css" type="text/css" />
   <link rel="stylesheet" href="lib/jsondiffpatch/public/formatters-styles/annotated.css" type="text/css" />
+  <SCRIPT TYPE="text/javascript" LANGUAGE="JavaScript" SRC="lib/diff_match_patch.js"></SCRIPT>
 
 </head>
 
@@ -92,5 +93,14 @@
     -->
   <ion-nav-view></ion-nav-view>
 </body>
+<!--
+    small chunk of script to restrict android num for on resume
+  -->
+<script>
+  function maxLengthCheck(object) {
+    if (object.value.length > object.maxLength)
+      object.value = object.value.slice(0, object.maxLength)
+  }
+</script>
 
 </html>

@@ -1,6 +1,6 @@
 {
-  "name": "VoiceUp",
-  "version": "1.0",
+  "name": "MITVoiceUp",
+  "version": "0.1.1",
   "description": "MIT VoiceUp - A Biomedical research study.",
   "dependencies": {
     "gulp": "^3.5.6",
@@ -22,6 +22,7 @@
     "cordova-plugin-media",
     "cordova-plugin-file",
     "cordova-plugin-compat",
+    "cordova-plugin-app-version",
     "cordova-plugin-media-capture",
     {
       "locator": "https://github.com/testfairy/testfairy-cordova-plugin",

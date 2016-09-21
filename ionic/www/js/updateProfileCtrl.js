@@ -4,14 +4,15 @@ angular.module('updateProfileCtrl', [])
     $ionicHistory, $cordovaSQLite, $ionicPopup, $q, $compile, $base64, $ionicModal, $http,
     $cordovaEmailComposer, $cordovaDatePicker, $ionicLoading, profileDataManager, databaseManager,
     syncDataFactory, surveyDataManager, $state, dataStoreManager, $cordovaFileTransfer, $cordovaFile,
-    $location, $window, $cordovaDeviceMotion, $cordovaMedia, $cordovaGeolocation, appConstants) {
+    $location, $window, appConstants, $cordovaDeviceMotion, $cordovaAppVersion, $cordovaMedia, $cordovaGeolocation, appConstants) {
     var email = $rootScope.emailId;
     $rootScope.emailId = email;
     if ($rootScope.emailId) {
       $scope.hideDownloadButton = false;
       $rootScope.hideDownloadButton = false;
-      $scope.appVersionNumber = $rootScope.savedVersion;
-
+      $scope.appJsonVersion = $rootScope.savedVersion;
+      $scope.dbServerUrl = appConstants.base_url;
+      $scope.lastModifiedDate = $rootScope.modifiedDate;
       // get girder-token from local db for the user logout and further WS calls
       profileDataManager.getAuthTokenForUser(email).then(function(response) {
         if (response) {
@@ -451,7 +452,7 @@ angular.module('updateProfileCtrl', [])
       });
       $ionicModal.fromTemplateUrl('templates/settings.html', {
         scope: $scope,
-        animation: 'slide-in-up',
+        animation: 'slide-in-left',
         hardwareBackButtonClose: false,
       }).then(function(modal) {
         $rootScope.modal = modal;
@@ -557,7 +558,7 @@ angular.module('updateProfileCtrl', [])
 
       $ionicModal.fromTemplateUrl('templates/locationservice.html', {
         scope: $scope,
-        animation: 'slide-in-up',
+        animation: 'slide-in-left',
         hardwareBackButtonClose: false,
       }).then(function(modal) {
         $rootScope.permission = modal;
@@ -941,7 +942,7 @@ angular.module('updateProfileCtrl', [])
 
       $ionicModal.fromTemplateUrl('templates/updatePasscode.html', {
         scope: $scope,
-        animation: 'slide-in-up',
+        animation: 'slide-in-left',
         hardwareBackButtonClose: false,
       }).then(function(modal) {
         $rootScope.passcodeModal = modal;
@@ -954,30 +955,37 @@ angular.module('updateProfileCtrl', [])
         if (event.keyCode === 32) {
           $event.preventDefault();
         }
+        var inputDiv = angular.element(document.querySelector('#passcode'));
         var passcode = angular.element(document.querySelector('#passcode')).prop('value');
-        if (passcode.length == 4) {
-          //check current passcode is valid
-          $scope.passcode = passcode;
-          var email = $scope.emailId;
+        var isNumber = /^\d+$/.test(passcode);
+        if (!isNumber) {
+          inputDiv.val("");
+          $scope.callAlertDailog(appConstants.numberOnly);
+        } else {
+          if (passcode.length == 4) {
+            //check current passcode is valid
+            $scope.passcode = passcode;
+            var email = $scope.emailId;
 
-          profileDataManager.getUserIDByEmail(email.trim()).then(function(userId) {
-            profileDataManager.checkPasscodeExistsForUserID(userId.trim(), passcode.trim()).then(function(res) {
-              if (res) {
-                document.activeElement.blur(); // remove the keypad
-                $scope.passcodeLabel = "Enter New Passcode";
-                $scope.managePasscodeNew = false;
-                $scope.managePasscode = true;
-              } else {
-                //clear div
-                var passcode = angular.element(document.querySelector('#passcode'));
-                $scope.passcode = '';
-                passcode.val('');
-                $scope.callAlertDailog(appConstants.passcodeMissMatchWithExistingPasscode);
-              }
+            profileDataManager.getUserIDByEmail(email.trim()).then(function(userId) {
+              profileDataManager.checkPasscodeExistsForUserID(userId.trim(), passcode.trim()).then(function(res) {
+                if (res) {
+                  document.activeElement.blur(); // remove the keypad
+                  $scope.passcodeLabel = "Enter New Passcode";
+                  $scope.managePasscodeNew = false;
+                  $scope.managePasscode = true;
+                } else {
+                  //clear div
+                  var passcode = angular.element(document.querySelector('#passcode'));
+                  $scope.passcode = '';
+                  passcode.val('');
+                  $scope.callAlertDailog(appConstants.passcodeMissMatchWithExistingPasscode);
+                }
+              });
             });
-          });
-        } else if (passcode.length > 4) {
-          $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
+          } else if (passcode.length > 4) {
+            $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
+          }
         }
       }
       //enter new passcode if size ? then launch to connfirm new passcode
@@ -985,19 +993,27 @@ angular.module('updateProfileCtrl', [])
       if (event.keyCode === 32) {
         $event.preventDefault();
       }
+      var inputDiv = angular.element(document.querySelector('#new_passcode'));
       var passcode = angular.element(document.querySelector('#new_passcode')).prop('value');
-      if (passcode.length == 4) {
-        //check current passcode is valid
-        $scope.passcode = passcode.trim();
-        var email = $scope.emailId;
-        document.activeElement.blur(); // remove the keypad
-        $scope.passcodeLabel = "Confirm Passcode";
-        $scope.managePasscode = true;
-        $scope.managePasscodeNew = true;
-        $scope.managePasscodeConfirm = false;
+      var isNumber = /^\d+$/.test(passcode);
+      if (!isNumber) {
+        inputDiv.val("");
+        $scope.callAlertDailog(appConstants.numberOnly);
+      } else {
 
-      } else if (passcode.length > 4) {
-        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
+        if (passcode.length == 4) {
+          //check current passcode is valid
+          $scope.passcode = passcode.trim();
+          var email = $scope.emailId;
+          document.activeElement.blur(); // remove the keypad
+          $scope.passcodeLabel = "Confirm Passcode";
+          $scope.managePasscode = true;
+          $scope.managePasscodeNew = true;
+          $scope.managePasscodeConfirm = false;
+
+        } else if (passcode.length > 4) {
+          $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
+        }
       }
     }
 
@@ -1007,42 +1023,48 @@ angular.module('updateProfileCtrl', [])
       }
       var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
       var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value');
-      if (confirm_passcode.length == 4) {
-        //check is both are equal
-        if ($scope.passcode == confirm_passcode) {
-          var email = $scope.emailId;
-          if (email) {
-            profileDataManager.getUserIDByEmail(email).then(function(res) {
-              profileDataManager.updatePasscodeToUserID(res.trim(), $scope.passcode).then(function(res) {
-                if (res) {
-                  $scope.successAlertMsg(appConstants.updatePasscodeSuccessMessage);
-                  $scope.closePasscodeModal();
-                }
+      var isNumber = /^\d+$/.test(confirm_passcode);
+      if (!isNumber) {
+        confirm_passcode_div.val("");
+        $scope.callAlertDailog(appConstants.numberOnly);
+      } else {
+        if (confirm_passcode.length == 4) {
+          //check is both are equal
+          if ($scope.passcode == confirm_passcode) {
+            var email = $scope.emailId;
+            if (email) {
+              profileDataManager.getUserIDByEmail(email).then(function(res) {
+                profileDataManager.updatePasscodeToUserID(res.trim(), $scope.passcode).then(function(res) {
+                  if (res) {
+                    $scope.successAlertMsg(appConstants.updatePasscodeSuccessMessage);
+                    $scope.closePasscodeModal();
+                  }
+                });
               });
-            });
+            }
+          } else {
+            //clear div for confirm password
+            $scope.confirm_passcode = '';
+            // $compile(confirm_passcode_div)($scope);
+            confirm_passcode_div.val('');
+            $scope.callAlertDailog(appConstants.passcodeMissMatchWithConfirmPasscode);
+            $scope.confirmLoop = $scope.confirmLoop + 1;
+            if ($scope.confirmLoop >= 3) {
+              document.activeElement.blur(); // remove the keypad
+              $scope.passcodeLabel = "Enter New Passcode";
+              $scope.confirmLoop = 0;
+              $scope.managePasscode = true;
+              $scope.managePasscodeNew = false;
+              $scope.managePasscodeConfirm = true;
+              //clear div
+              var passcode_div = angular.element(document.querySelector('#new_passcode'));
+              $scope.new_passcode = '';
+              $compile(passcode_div)($scope);
+            }
           }
-        } else {
-          //clear div for confirm password
-          $scope.confirm_passcode = '';
-          // $compile(confirm_passcode_div)($scope);
-          confirm_passcode_div.val('');
-          $scope.callAlertDailog(appConstants.passcodeMissMatchWithConfirmPasscode);
-          $scope.confirmLoop = $scope.confirmLoop + 1;
-          if ($scope.confirmLoop >= 3) {
-            document.activeElement.blur(); // remove the keypad
-            $scope.passcodeLabel = "Enter New Passcode";
-            $scope.confirmLoop = 0;
-            $scope.managePasscode = true;
-            $scope.managePasscodeNew = false;
-            $scope.managePasscodeConfirm = true;
-            //clear div
-            var passcode_div = angular.element(document.querySelector('#new_passcode'));
-            $scope.new_passcode = '';
-            $compile(passcode_div)($scope);
-          }
+        } else if (confirm_passcode.length > 4) {
+          $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
         }
-      } else if (confirm_passcode.length > 4) {
-        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
       }
     }
 
@@ -1070,7 +1092,7 @@ angular.module('updateProfileCtrl', [])
     $scope.viewCopyrightInfo = function() {
       $ionicModal.fromTemplateUrl('templates/copyRightInfo.html', {
         scope: $scope,
-        animation: 'slide-in-up',
+        animation: 'slide-in-left',
         hardwareBackButtonClose: false,
       }).then(function(modal) {
         $rootScope.permission = modal;
@@ -1081,5 +1103,24 @@ angular.module('updateProfileCtrl', [])
     $scope.closeCopyRightInfo = function() {
       $rootScope.permission.remove();
     }
+
+    $scope.appInfo = function() {
+      $ionicModal.fromTemplateUrl('templates/appInfo.html', {
+        scope: $scope,
+        animation: 'slide-in-left',
+        hardwareBackButtonClose: false,
+      }).then(function(modal) {
+        $rootScope.permission = modal;
+        $rootScope.permission.show();
+      });
+    }
+
+    $scope.closeAppInfoModal = function() {
+      $rootScope.permission.remove();
+    }
+
+    $cordovaAppVersion.getVersionNumber().then(function(version) {
+      $scope.appVersion = version;
+    });
 
   });

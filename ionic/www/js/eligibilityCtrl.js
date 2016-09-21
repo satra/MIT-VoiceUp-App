@@ -1,6 +1,6 @@
 angular.module('eligibility', [])
   //=======Home screen controller======================
-  .controller('eligibilityCtrl', function($scope, $stateParams, $ionicHistory, $compile, $cordovaSQLite, $controller, $ionicModal, $http, $ionicLoading, userService, databaseManager, eligiblityDataManager, consentDataManager, irkResults, $state, $location, $window) {
+  .controller('eligibilityCtrl', function($scope, $stateParams, $ionicHistory, $cordovaSQLite, $controller, $ionicModal, $http, $ionicLoading, userService, databaseManager, eligiblityDataManager, consentDataManager, irkResults, $state, $location, $window) {
     //========================select eligiblity test view
 
     eligiblityDataManager.getEligibilityQuestions().then(function(eligiblityData) {
@@ -27,9 +27,37 @@ angular.module('eligibility', [])
           '<div class="irk-spacer"></div>';
       });
 
-      var dynamicContent = angular.element(document.querySelector('#questionList'));
-      dynamicContent.append(optionList);
-      $compile(dynamicContent)($scope);
+      //  var dynamicContent = angular.element(document.querySelector('#questionList'));
+      //  dynamicContent.append(optionList);
+      //  $compile(dynamicContent)($scope);
+
+      var checkEligibility = " <ion-modal-view> " +
+        "<ion-header-bar>" +
+        "<h1 class='title'></h1>" +
+        "<div class='buttons'>" +
+        "<button class='button button-clear IRK-FONT2' ng-click='sectionBack()'>Cancel</button>" +
+        "</div>" +
+        "</ion-header-bar>" +
+        "<ion-content >" +
+        "<form name='myForm'>" +
+        "<div class='irk-spacer'></div>" +
+        "<div id='questionList'> " +
+        optionList + "</div>" +
+        "</form>" +
+        "</ion-content>" +
+        "<ion-footer-bar class='irk-bottom-bar' keyboard-attach irk-survey-bar>" +
+        "<div>" +
+        "<button class='irk-centered fontB irk-font-helvetica {{roundClass}}' ng-disabled='isDisabled' ng-click='compareEligiblity()'><b>DONE<b></button>" +
+        "</div>" +
+        "</ion-footer-bar>" +
+        "</ion-modal-view>";
+      $scope.learnmore = $ionicModal.fromTemplate(checkEligibility, {
+        scope: $scope,
+        animation: 'slide-in-left',
+        hardwareBackButtonClose: false,
+      });
+      $scope.modal = $scope.learnmore;
+      $scope.learnmore.show();
     });
 
     $scope.checkEligibilitySubmitEnable = function(id, answer) {
@@ -60,16 +88,19 @@ angular.module('eligibility', [])
 
       // if all set load sign up page
       if (check) {
+        $scope.modal.remove();
         $ionicHistory.clearCache().then(function() {
           $ionicModal.fromTemplateUrl('templates/eligiblity-yes.html', {
             scope: $scope,
-            animation: 'slide-in-left'
+            animation: 'slide-in-left',
+            hardwareBackButtonClose: false,
           }).then(function(modal) {
             $scope.modal = modal;
             $scope.modal.show();
           });
         });
       } else {
+        $scope.modal.remove();
         $ionicHistory.clearCache().then(function() {
           $state.go('not-eligibleUser');
         });
@@ -81,7 +112,8 @@ angular.module('eligibility', [])
     $scope.openSignIn = function() {
       $ionicModal.fromTemplateUrl('templates/login.html', {
         scope: $scope,
-        animation: 'slide-in-left'
+        animation: 'slide-in-left',
+        hardwareBackButtonClose: false,
       }).then(function(modal) {
         $scope.modal.remove();
         $scope.modal = modal;
@@ -91,6 +123,7 @@ angular.module('eligibility', [])
 
     // ==== on click of back from sign in screen ========
     $scope.sectionBack = function() {
+      $scope.modal.remove();
       $state.transitionTo('home', null, {
         'reload': false
       });

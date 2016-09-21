@@ -356,18 +356,22 @@ angular.module('signUp', [])
       //=================================================== forgot passcode handler ============================
 
     $scope.checkPasscodeDigits = function() {
-      if (event.keyCode === 32) {
-        $event.preventDefault();
-      }
+      var inputDiv = angular.element(document.querySelector('#passcode'));
       var passcode = angular.element(document.querySelector('#passcode')).prop('value');
-      if (passcode.length == 4) {
-        $scope.passcode = passcode;
-        $scope.managePasscode = true;
-        document.activeElement.blur(); // remove the keypad
-        $scope.passcodeLabel = "Confirm Passcode";
-        $scope.managePasscodeConfirm = false;
-      } else if (passcode.length > 4) {
-        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
+      var isNumber = /^\d+$/.test(passcode);
+      if (!isNumber) {
+        inputDiv.val("");
+        $scope.callAlertDailog(appConstants.numberOnly);
+      } else {
+        if (passcode.length == 4) {
+          $scope.passcode = passcode;
+          $scope.managePasscode = true;
+          document.activeElement.blur(); // remove the keypad
+          $scope.passcodeLabel = "Confirm Passcode";
+          $scope.managePasscodeConfirm = false;
+        } else if (passcode.length > 4) {
+          $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
+        }
       }
     }
 
@@ -379,45 +383,49 @@ angular.module('signUp', [])
     $scope.confirmLoop = 0;
 
     $scope.checkConfirmPasscodeDigits = function() {
-      if (event.keyCode === 32) {
-        $event.preventDefault();
-      }
+
       var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
       var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value');
-      if (confirm_passcode.length == 4) {
-        //check is both are equal
-        if ($scope.passcode == confirm_passcode) {
-          var email = $scope.emailId;
-          var authToken = "";
-          if (email) {
-            profileDataManager.getUserIDByEmail(email).then(function(res) {
-              profileDataManager.addPasscodeToUserID(res, $scope.passcode, email, authToken).then(function(res) {
-                $scope.openVerification();
+      var isNumber = /^\d+$/.test(confirm_passcode);
+      if (!isNumber) {
+        confirm_passcode_div.val("");
+        $scope.callAlertDailog(appConstants.numberOnly);
+      } else {
+        if (confirm_passcode.length == 4) {
+          //check is both are equal
+          if ($scope.passcode == confirm_passcode) {
+            var email = $scope.emailId;
+            var authToken = "";
+            if (email) {
+              profileDataManager.getUserIDByEmail(email).then(function(res) {
+                profileDataManager.addPasscodeToUserID(res, $scope.passcode, email, authToken).then(function(res) {
+                  $scope.openVerification();
+                });
               });
-            });
+            }
+          } else {
+            //reset div
+            $scope.confirm_passcode = '';
+            //  $compile(confirm_passcode_div)($scope);
+            confirm_passcode_div.val("");
+            $scope.callAlertDailog(appConstants.passcodeMissMatchWithConfirmPasscode);
+            $scope.confirmLoop = $scope.confirmLoop + 1;
+            if ($scope.confirmLoop >= 3) {
+              document.activeElement.blur(); // remove the keypad
+              $scope.passcodeLabel = "Create passcode";
+              $scope.managePasscode = false;
+              $scope.managePasscodeConfirm = true;
+              $scope.confirmLoop = 0;
+              //clear div
+              var passcode_div = angular.element(document.querySelector('#passcode'));
+              $scope.passcode = '';
+              // $compile(passcode_div)($scope);
+              passcode_div.val("");
+            }
           }
-        } else {
-          //reset div
-          $scope.confirm_passcode = '';
-          //  $compile(confirm_passcode_div)($scope);
-          confirm_passcode_div.val("");
-          $scope.callAlertDailog(appConstants.passcodeMissMatchWithConfirmPasscode);
-          $scope.confirmLoop = $scope.confirmLoop + 1;
-          if ($scope.confirmLoop >= 3) {
-            document.activeElement.blur(); // remove the keypad
-            $scope.passcodeLabel = "Create passcode";
-            $scope.managePasscode = false;
-            $scope.managePasscodeConfirm = true;
-            $scope.confirmLoop = 0;
-            //clear div
-            var passcode_div = angular.element(document.querySelector('#passcode'));
-            $scope.passcode = '';
-            // $compile(passcode_div)($scope);
-            passcode_div.val("");
-          }
+        } else if (confirm_passcode.length > 4) {
+          $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
         }
-      } else if (confirm_passcode.length > 4) {
-        $scope.callAlertDailog(appConstants.passcodeOfFourDigitLength);
       }
     }
 
@@ -582,6 +590,12 @@ angular.module('signUp', [])
     };
 
     $scope.allDone = function() {
+      /*  if (!$scope.userSyncStatus) {
+          $scope.enableLocalNotification();
+        } else {
+          $scope.disableLocalNotification();
+        }
+        */
       $ionicModal.fromTemplateUrl('templates/alldone.html', {
         scope: $scope,
         animation: 'slide-in-left',
@@ -592,6 +606,44 @@ angular.module('signUp', [])
         $scope.modal.show();
       });
     };
+
+    $scope.enableLocalNotification = function() {
+      cordova.plugins.notification.local.hasPermission(function(granted) {
+        if (granted) {
+          console.log('permissions given');
+          $scope.scheduleNotification();
+        } else {
+          cordova.plugins.notification.local.registerPermission(function(granted) {
+            console.log('Permission has been granted: ' + granted);
+            if (granted) {
+              $scope.scheduleNotification();
+            } else {
+              console.log('Enable notifications from Device Settings');
+            }
+          });
+        }
+      });
+    }
+
+    $scope.scheduleNotification = function() {
+      var notifyDate = new Date();
+      notifyDate.setHours(18);
+      notifyDate.setMinutes(30);
+      notifyDate.setSeconds(00);
+      cordova.plugins.notification.local.schedule({
+        id: $scope.localUserId,
+        title: "Account verify",
+        text: $scope.emailId.trim(),
+        at: notifyDate,
+        every: appConstants.scheduleNotificationEvery
+      });
+    }
+
+    $scope.disableLocalNotification = function() {
+      cordova.plugins.notification.local.cancel($scope.localUserId, function() {
+        console.log("done");
+      });
+    }
 
     $scope.consentReview = function() {
       $ionicHistory.clearCache().then(function() {
