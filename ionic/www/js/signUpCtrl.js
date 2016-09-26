@@ -358,11 +358,17 @@ angular.module('signUp', [])
     $scope.checkPasscodeDigits = function() {
       var inputDiv = angular.element(document.querySelector('#passcode'));
       var passcode = angular.element(document.querySelector('#passcode')).prop('value');
-      var isNumber = /^\d+$/.test(passcode);
-      if (!isNumber) {
-        inputDiv.val("");
-        $scope.callAlertDailog(appConstants.numberOnly);
-      } else {
+      //  var isNumber = /^\d+$/.test(passcode);
+      var isNumber = true;
+      /* if (ionic.Platform.isAndroid()) {
+        if (passcode[0] == "0") {
+          isNumber = false;
+          inputDiv.val("");
+          $scope.callAlertDailog(appConstants.numberOnly);
+        }
+      }
+      */
+      if (isNumber) {
         if (passcode.length == 4) {
           $scope.passcode = passcode;
           $scope.managePasscode = true;
@@ -386,11 +392,18 @@ angular.module('signUp', [])
 
       var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
       var confirm_passcode = angular.element(document.querySelector('#confirm_passcode')).prop('value');
-      var isNumber = /^\d+$/.test(confirm_passcode);
-      if (!isNumber) {
-        confirm_passcode_div.val("");
-        $scope.callAlertDailog(appConstants.numberOnly);
-      } else {
+      //var isNumber = /^\d+$/.test(confirm_passcode);
+
+      var isNumber = true;
+      /*  if (ionic.Platform.isAndroid()) {
+          if (confirm_passcode[0] == "0") {
+            isNumber = false;
+            confirm_passcode_div.val("");
+            $scope.callAlertDailog(appConstants.numberOnly);
+          }
+        }
+        */
+      if (isNumber) {
         if (confirm_passcode.length == 4) {
           //check is both are equal
           if ($scope.passcode == confirm_passcode) {
