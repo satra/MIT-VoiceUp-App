@@ -154,6 +154,9 @@ angular.module('homeCtrl', [])
           var obj = surveyJson[survey];
           var date = '';
           var title = survey;
+          if (obj["name"]) {
+            title = obj["name"].replace(/'/g, "`");
+          }
           var id = survey;
           var skippable = '';
           var tasks = '';

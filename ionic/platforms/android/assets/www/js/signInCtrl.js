@@ -69,12 +69,22 @@ angular.module('signInCtrl', [])
       var passcode = angular.element(document.querySelector('#passcode')).prop('value');
       //  var inputValue = angular.element(document.querySelectorAll('#passcode'));
       //    var passcode = inputValue.prop('value');
-      var isNumber = /^\d+$/.test(passcode);
-      if (!isNumber) {
-        inputDiv.val("");
-        $scope.callAlertDailog(appConstants.numberOnly);
-      } else {
 
+      var isNumber = true;
+      /*  if (ionic.Platform.isAndroid()) {
+          var ensureNoSpecialChar = true;
+          if (str.indexOf('.') !== -1) {
+            ensureNoSpecialChar = false;
+          }
+          if (passcode[0] == "0" || ensureNoSpecialChar) {
+            isNumber = false;
+            inputDiv.val("");
+            $scope.callAlertDailog(appConstants.numberOnly);
+          }
+        }
+        */
+
+      if (isNumber) {
         if (passcode.length == 4) {
           var emailDiv = angular.element(document.querySelectorAll('.passcode-dropdown'));
           var email = emailDiv.prop('selectedOptions')[0].value;
@@ -580,11 +590,16 @@ angular.module('signInCtrl', [])
     $scope.checkConfirmPasscodeDigits = function() {
       var confirm_passcode_div = angular.element(document.querySelector('#confirm_passcode'));
       var confirm_passcode = confirm_passcode_div.prop('value');
-      var isNumber = /^\d+$/.test(confirm_passcode);
-      if (!isNumber) {
-        confirm_passcode_div.val("");
-        $scope.callAlertDailog(appConstants.numberOnly);
-      } else {
+      var isNumber = true;
+      /*  if (ionic.Platform.isAndroid()) {
+          if (confirm_passcode[0] == "0") {
+            isNumber = false;
+            confirm_passcode_div.val("");
+            $scope.callAlertDailog(appConstants.numberOnly);
+          }
+        }
+        */
+      if (isNumber) {
         if (confirm_passcode.length == 4) {
           //check is both are equal
           if ($scope.passcode == confirm_passcode) {
@@ -631,12 +646,18 @@ angular.module('signInCtrl', [])
       }
       var inputDiv = angular.element(document.querySelector('#passcode'));
       var passcode = angular.element(document.querySelector('#passcode')).prop('value');
-      var isNumber = /^\d+$/.test(passcode);
-      if (!isNumber) {
-        inputDiv.val("");
-        $scope.callAlertDailog(appConstants.numberOnly);
-      } else {
 
+      //var isNumber = /^\d+$/.test(passcode);
+      var isNumber = true;
+      /*    if (ionic.Platform.isAndroid()) {
+            if (passcode[0] == "0") {
+              isNumber = false;
+              inputDiv.val("");
+              $scope.callAlertDailog(appConstants.numberOnly);
+            }
+          }
+          */
+      if (isNumber) {
         if (passcode.length == 4) {
           document.activeElement.blur(); // remove the keypad
           $scope.passcode = passcode;

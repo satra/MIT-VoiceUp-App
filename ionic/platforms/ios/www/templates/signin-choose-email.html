@@ -30,7 +30,7 @@
         <input ng-if="ShowIos" class=" CirclePasscode  irk-centered " size="4" style="line-height: 90%;" placeholder="OOOO" type="text" name="passcode" id="passcode" maxlength="4" ng-change="loginViaPasscode()" pattern="[0-9]*" ng-model="passcode" ng-cut="$event.preventDefault()"
             ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()">
 
-        <input ng-if="ShowAndroid" class=" CirclePasscode  irk-centered " size="4" style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="text" name="passcode" id="passcode" maxlength="4" ng-change="loginViaPasscode()"
+        <input ng-if="ShowAndroid" class=" CirclePasscode  irk-centered " size="4" style="line-height: 90%;color: transparent;text-shadow: 0 0 0 black;" placeholder="OOOO" type="number" name="passcode" id="passcode" maxlength="4" ng-change="loginViaPasscode()"
             ng-model="passcode" ng-cut="$event.preventDefault()" ng-copy="$event.preventDefault()" ng-paste="$event.preventDefault()">
       </label>
       <div>

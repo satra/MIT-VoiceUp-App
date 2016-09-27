@@ -20,14 +20,13 @@
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
     "cordova-plugin-media",
+    "cordova-plugin-app-version",
     "cordova-plugin-file",
     "cordova-plugin-compat",
-    "cordova-plugin-media-capture",
-    {
+    "cordova-plugin-media-capture", {
       "locator": "https://github.com/testfairy/testfairy-cordova-plugin",
       "id": "com.testfairy.cordova-plugin"
-    },
-    {
+    }, {
       "locator": "https://github.com/katzer/cordova-plugin-email-composer.git",
       "id": "cordova-plugin-email-composer"
     },
@@ -35,12 +34,10 @@
     "cordova-plugin-geolocation",
     "cordova-plugin-network-information",
     "cordova-plugin-file-transfer",
-    "cordova.plugins.diagnostic.api-22",
-    {
+    "cordova.plugins.diagnostic.api-22", {
       "locator": "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker.git",
       "id": "cordova-plugin-datepicker"
-    },
-    {
+    }, {
       "locator": "https://github.com/katzer/cordova-plugin-local-notifications",
       "id": "de.appplant.cordova.plugin.local-notification"
     },

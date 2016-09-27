@@ -324,6 +324,9 @@ angular.module('surveyCtrl', [])
           var obj = surveyJson[survey];
           var date = '';
           var title = survey;
+          if (obj["name"]) {
+            title = obj["name"].replace(/'/g, "`");
+          }
           var id = survey;
           var skippable = '';
           var tasks = '';
@@ -953,22 +956,6 @@ angular.module('surveyCtrl', [])
             choice + '</irk-image-choice-question-step></irk-task>';
           break;
 
-          /*  case 'irk-image-choice-question-step':
-              var choice = '';
-              for (var i = 0; i < stepData.choices.length; i++) {
-                var css = "";
-                if (stepData.choices[i]["normal-state-image"]) {
-                  var normalStateImageURL = stepData.choices[i]["normal-state-image"];
-                  css = " width: 50px;height: 50px;display: block;background-image: url('" + normalStateImageURL + "');background-size:contain; background-position:50% 50%; background-repeat: no-repeat;";
-                }
-                //  choice += " <style type='text/css'>.redBackground{ " + css + "}</style>";
-                choice += '<irk-image-choice style="' + css + '" text="" value="' + stepData.choices[i].value + '" normal-state-image="ion-sad" selected-state-image="ion-happy-outline" ></irk-image-choice>';
-              }
-              customDiv = '<irk-task > <irk-image-choice-question-step optional="' + disableSkip + '" id="' + customId + '" title="' + stepData.title + '" text="' + stepData.text + '">' +
-                choice + '</irk-image-choice-question-step></irk-task>';
-              break;
-
-              */
 
         case 'irk-form-step':
           var choice = '';
