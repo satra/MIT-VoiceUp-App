@@ -1,5 +1,5 @@
 {
-  "URL": "https://raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160708.json",
+  "URL": "https://raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160913.json",
   "consent": {
     "enable_review_questions": "False",
     "sections": [
@@ -62,7 +62,7 @@
       ],
       [
         {
-          "data": "<p>There are risks, discomforts, and inconveniences associated with any research study. These deserve careful thought.</p> <p>- This is not a treatment study and we do not expect any medical side effects from participating.</p> <p>- Some survey questions may make you feel uncomfortable. Know that the information you provide is entirely up to you and you are free to skip questions that you do not want to answer.</p> <p>- Other people may glimpse the study notifications and/or reminders on your phone and realize you are enrolled in this study. This can make some people feel self-conscious.</p> <p>- Be safe \u2013 just as you would not text while driving, do not fulfill study tasks activities while driving. Wait until you are in a safe place to perform study-related activities!</p> <p>- We take great care to protect your information, however there is a slight risk of loss of privacy. This is a low risk because we separate your personal information (information that can directly identify you, such as your name or phone number) from the research data to respect your privacy. However, even with removal of this information, experts in re-identification may be able to reverse our processes and/or attempt to re-identify an individual given enough cross-reference information about him or her.</p> <p>- Accidental public disclosure may occur due to unintended data breaches including hacking or other activities outside of the procedures authorized by the study. In such a case, your data may be misused or used for unauthorized purposes.</p> <p>- Data collected in this study will count against your existing mobile data plan. You may configure the application to only use WiFi connections to limit the impact this data collection has on your data plan.</p> <p>- Participation in this study may involve risks that are not known at this time. You will be told about any new information that might change your decision to be in this study.</p> <p>- There will be questions associated with depression including if you may be suicidal. The investigators will not provide clinical care but you will be provided a list of resources.</p> <p>The treatment or procedure may involve risks that are currently unforeseeable.</p> <p>At the beginning of the survey, the application will remind you to go to a quiet, distraction-free location where you will be able to speak out loud. It is best to complete the surveys in a room without any other people. This will limit any noises or distractions and will also provide you with the most privacy and comfort when responding to survey questions with touchscreen or audio/video recordings.</p> <p><b>Incidental Findings</b></p> <p>The tests performed in this study are for specific research purposes and are not optimized to find medical abnormalities.  The investigators for this project may not be trained to perform medical diagnosis.  The analyses performed in this study are for specific research purposes and are not optimized to find medical abnormalities. However, the investigator may notice a finding that seems abnormal, such as vocal tremor or positive symptoms for bipolar, which might be detected during the study or during retrospective review of the data.  If this occurs, the investigator will contact you and inform you of the finding.  The decision as to whether to proceed with further examination of treatment lies solely with you and your physician.</p>",
+          "data": "<p>There are risks, discomforts, and inconveniences associated with any research study. These deserve careful thought.</p> <p>- This is not a treatment study and we do not expect any medical side effects from participating.</p> <p>- Some survey questions may make you feel uncomfortable. Know that the information you provide is entirely up to you and you are free to skip questions that you do not want to answer.</p> <p>- Other people may glimpse the study notifications and/or reminders on your phone and realize you are enrolled in this study. This can make some people feel self-conscious.</p> <p>- Be safe \u2013 just as you would not text while driving, do not fulfill study tasks activities while driving. Wait until you are in a safe place to perform study-related activities!</p> <p>- We take great care to protect your information, however there is a slight risk of loss of privacy. This is a low risk because we separate your personal information (information that can directly identify you, such as your name or phone number) from the research data to respect your privacy. However, even with removal of this information, experts in re-identification may be able to reverse our processes and/or attempt to re-identify an individual given enough cross-reference information about him or her.</p> <p>- Accidental public disclosure may occur due to unintended data breaches including hacking or other activities outside of the procedures authorized by the study. In such a case, your data may be misused or used for unauthorized purposes.</p> <p>- Data collected in this study will count against your existing mobile data plan. You may configure the application to only use WiFi connections to limit the impact this data collection has on your data plan.</p> <p>- Participation in this study may involve risks that are not known at this time. You will be told about any new information that might change your decision to be in this study.</p> <p>- There will be questions associated with depression including if you may be suicidal. The investigators will not provide clinical care but you will be provided a list of resources.</p> <p>The treatment or procedure may involve risks that are currently unforeseeable.</p> <p>At the beginning of the survey, the application will remind you to go to a quiet, distraction-free location where you will be able to speak out loud. It is best to complete the surveys in a room without any other people. This will limit any noises or distractions and will also provide you with the most privacy and comfort when responding to survey questions with touchscreen or audio/video recordings.</p>",
           "id": "c4.1",
           "main_type": "visual-consent",
           "summary": "A description of potential risks and discomforts associated with this study",
@@ -104,7 +104,7 @@
           "type": "custom"
         },
         {
-          "data": "",
+          "data": "<p>There is no financial obligation to you for participating in this research study other than to your mobile data plan if applicable.</p>",
           "id": "c5.4",
           "main_type": "visual-consent",
           "summary": "<p>There is no financial obligation to you for participating in this research study other than to your mobile data plan if applicable.</p>",
@@ -112,7 +112,7 @@
           "type": "custom"
         },
         {
-          "data": "",
+          "data": "<p>Since no medical treatments are provided during this study there are no alternative therapies. The only alternative is to not participate.</p>",
           "id": "c5.5",
           "main_type": "visual-consent",
           "summary": "<p>Since no medical treatments are provided during this study there are no alternative therapies. The only alternative is to not participate.</p>",
@@ -215,7 +215,7 @@
     ],
     "version": "0.1.1"
   },
-  "diffURL": "https://raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160708.patch",
+  "diffURL": "https://raw.githubusercontent.com/satra/voiceup-mdd/master/specs/specs_160913_diff.patch",
   "eligibility": [
     {
       "expected_answer": "Yes",
@@ -304,11 +304,12 @@
   "surveys": {
     "VoiceDepression_iSurvey01": {
       "date": "0 3 1 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_55",
         "MIT_5",
@@ -316,10 +317,10 @@
         "OCD_ADAA_6"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_55",
         "MIT_5",
@@ -329,11 +330,12 @@
     },
     "VoiceDepression_iSurvey02": {
       "date": "0 3 2 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_49",
         "MIT_24",
@@ -341,10 +343,10 @@
         "PCL_C_18"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_49",
         "MIT_24",
@@ -354,11 +356,12 @@
     },
     "VoiceDepression_iSurvey03": {
       "date": "0 3 3 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_53",
         "MIT_8",
@@ -366,10 +369,10 @@
         "QIDS_6"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_53",
         "MIT_8",
@@ -379,11 +382,12 @@
     },
     "VoiceDepression_iSurvey04": {
       "date": "0 3 4 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_47",
         "MIT_28",
@@ -391,10 +395,10 @@
         "QIDS_16"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_47",
         "MIT_28",
@@ -404,11 +408,12 @@
     },
     "VoiceDepression_iSurvey05": {
       "date": "0 3 5 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_55",
         "MIT_10",
@@ -416,10 +421,10 @@
         "PCL_C_11"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_55",
         "MIT_10",
@@ -429,11 +434,12 @@
     },
     "VoiceDepression_iSurvey06": {
       "date": "0 3 6 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_95",
         "MIT_9",
@@ -441,10 +447,10 @@
         "QIDS_13"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_95",
         "MIT_9",
@@ -454,11 +460,12 @@
     },
     "VoiceDepression_iSurvey07": {
       "date": "0 3 7 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_5",
         "MIT_3",
@@ -469,13 +476,14 @@
         "PHQ8_5",
         "PHQ8_6",
         "PHQ8_7",
-        "PHQ8_8"
+        "PHQ8_8",
+        "PHQ8_9"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_5",
         "MIT_3",
@@ -486,26 +494,28 @@
         "PHQ8_5",
         "PHQ8_6",
         "PHQ8_7",
-        "PHQ8_8"
+        "PHQ8_8",
+        "PHQ8_9"
       ]
     },
     "VoiceDepression_iSurvey08": {
       "date": "0 3 8 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_71",
         "PCL_C_17",
         "OCD_ADAA_2"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_71",
         "PCL_C_17",
@@ -514,11 +524,12 @@
     },
     "VoiceDepression_iSurvey09": {
       "date": "0 3 9 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_31",
         "MIT_17",
@@ -526,10 +537,10 @@
         "PCL_C_4"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_31",
         "MIT_17",
@@ -539,11 +550,12 @@
     },
     "VoiceDepression_iSurvey10": {
       "date": "0 3 10 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_45",
         "MIT_29",
@@ -551,10 +563,10 @@
         "PCL_C_13"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_45",
         "MIT_29",
@@ -564,11 +576,12 @@
     },
     "VoiceDepression_iSurvey11": {
       "date": "0 3 11 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_72",
         "MIT_28",
@@ -576,10 +589,10 @@
         "OCD_ADAA_3"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_72",
         "MIT_28",
@@ -589,11 +602,12 @@
     },
     "VoiceDepression_iSurvey12": {
       "date": "0 3 12 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_46",
         "MIT_26",
@@ -601,10 +615,10 @@
         "OCD_ADAA_7"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_46",
         "MIT_26",
@@ -614,11 +628,12 @@
     },
     "VoiceDepression_iSurvey13": {
       "date": "0 3 13 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "HarvardIEEE_13",
         "MIT_18",
@@ -626,10 +641,10 @@
         "PHQ8_8"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "HarvardIEEE_13",
         "MIT_18",
@@ -639,11 +654,12 @@
     },
     "VoiceDepression_iSurvey14": {
       "date": "0 3 14 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_1",
         "MIT_16",
@@ -663,10 +679,10 @@
         "SHAPS_14"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_1",
         "MIT_16",
@@ -688,21 +704,22 @@
     },
     "VoiceDepression_iSurvey15": {
       "date": "0 3 15 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_50",
         "PCL_C_7",
         "OCD_ADAA_15"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_50",
         "PCL_C_7",
@@ -711,11 +728,12 @@
     },
     "VoiceDepression_iSurvey16": {
       "date": "0 3 16 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "HarvardIEEE_3",
         "MIT_26",
@@ -723,10 +741,10 @@
         "SHAPS_5"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "HarvardIEEE_3",
         "MIT_26",
@@ -736,11 +754,12 @@
     },
     "VoiceDepression_iSurvey17": {
       "date": "0 3 17 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_65",
         "MIT_26",
@@ -748,10 +767,10 @@
         "PCL_C_6"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_65",
         "MIT_26",
@@ -761,11 +780,12 @@
     },
     "VoiceDepression_iSurvey18": {
       "date": "0 3 18 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_2",
         "MIT_9",
@@ -773,10 +793,10 @@
         "OCD_ADAA_5"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_2",
         "MIT_9",
@@ -786,11 +806,12 @@
     },
     "VoiceDepression_iSurvey19": {
       "date": "0 3 19 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_36",
         "MIT_6",
@@ -798,10 +819,10 @@
         "SHAPS_5"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_36",
         "MIT_6",
@@ -811,11 +832,12 @@
     },
     "VoiceDepression_iSurvey20": {
       "date": "0 3 20 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "Caterpillar",
         "MIT_24",
@@ -823,10 +845,10 @@
         "PCL_C_3"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "Caterpillar",
         "MIT_24",
@@ -836,11 +858,12 @@
     },
     "VoiceDepression_iSurvey21": {
       "date": "0 3 21 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_69",
         "PHQ8_1",
@@ -850,13 +873,14 @@
         "PHQ8_5",
         "PHQ8_6",
         "PHQ8_7",
-        "PHQ8_8"
+        "PHQ8_8",
+        "PHQ8_9"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_69",
         "PHQ8_1",
@@ -866,16 +890,18 @@
         "PHQ8_5",
         "PHQ8_6",
         "PHQ8_7",
-        "PHQ8_8"
+        "PHQ8_8",
+        "PHQ8_9"
       ]
     },
     "VoiceDepression_iSurvey22": {
       "date": "0 3 22 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_25",
         "MIT_21",
@@ -883,10 +909,10 @@
         "PCL_C_14"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_25",
         "MIT_21",
@@ -896,11 +922,12 @@
     },
     "VoiceDepression_iSurvey23": {
       "date": "0 3 23 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_58",
         "MIT_4",
@@ -908,10 +935,10 @@
         "OCD_ADAA_10"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_58",
         "MIT_4",
@@ -921,36 +948,38 @@
     },
     "VoiceDepression_iSurvey24": {
       "date": "0 3 24 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_73",
         "MIT_10",
         "OCD_ADAA_10",
-        "PHQ8_8"
+        "PHQ8_9"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_73",
         "MIT_10",
         "OCD_ADAA_10",
-        "PHQ8_8"
+        "PHQ8_9"
       ]
     },
     "VoiceDepression_iSurvey25": {
       "date": "0 3 25 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "HarvardIEEE_12",
         "MIT_22",
@@ -958,10 +987,10 @@
         "OCD_ADAA_3"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "HarvardIEEE_12",
         "MIT_22",
@@ -971,11 +1000,12 @@
     },
     "VoiceDepression_iSurvey26": {
       "date": "0 3 26 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_41",
         "MIT_5",
@@ -983,10 +1013,10 @@
         "QIDS_16"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_41",
         "MIT_5",
@@ -996,11 +1026,12 @@
     },
     "VoiceDepression_iSurvey27": {
       "date": "0 3 27 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_88",
         "MIT_9",
@@ -1008,10 +1039,10 @@
         "PCL_C_17"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_88",
         "MIT_9",
@@ -1021,11 +1052,12 @@
     },
     "VoiceDepression_iSurvey28": {
       "date": "0 3 28 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_30",
         "MIT_26",
@@ -1050,10 +1082,10 @@
         "PCL_C_19"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_30",
         "MIT_26",
@@ -1080,11 +1112,12 @@
     },
     "VoiceDepression_iSurvey29": {
       "date": "0 3 29 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_61",
         "MIT_12",
@@ -1092,10 +1125,10 @@
         "QIDS_9"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_61",
         "MIT_12",
@@ -1105,11 +1138,12 @@
     },
     "VoiceDepression_iSurvey30": {
       "date": "0 3 30 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_46",
         "MIT_17",
@@ -1117,10 +1151,10 @@
         "PHQ8_7"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_46",
         "MIT_17",
@@ -1130,11 +1164,12 @@
     },
     "VoiceDepression_iSurvey31": {
       "date": "0 3 31 * *",
+      "name": "Today's survey",
       "skippable": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_97",
         "MIT_19",
@@ -1142,10 +1177,10 @@
         "OCD_ADAA_5"
       ],
       "tasks": [
-        "SAGE_1",
-        "SAGE_2",
-        "SAGE_3",
-        "SAGE_4",
+        "SAGE_1p",
+        "SAGE_2p",
+        "SAGE_3p",
+        "SAGE_4p",
         "SAGE_5",
         "EmoSentence_97",
         "MIT_19",
@@ -1837,7 +1872,7 @@
           "type": "instruction"
         },
         {
-          "duration": 3,
+          "duration": 20,
           "text": "Answer: Count from 1 to 20.",
           "type": "irk-audio-task"
         }
@@ -1853,7 +1888,7 @@
           "type": "instruction"
         },
         {
-          "duration": 4,
+          "duration": 25,
           "text": "Answer: Say the letters of the alphabet.",
           "type": "irk-audio-task"
         }
@@ -1869,7 +1904,7 @@
           "type": "instruction"
         },
         {
-          "duration": 3,
+          "duration": 5,
           "text": "Answer: Say 'pa-ta-ka' five times fast.",
           "type": "irk-audio-task"
         }
@@ -1901,8 +1936,8 @@
           "type": "instruction"
         },
         {
-          "duration": 7,
-          "text": "Answer: Say the phrase 'good morning' as if you were greeting a friend.",
+          "duration": 3,
+          "text": "Say the phrase 'good morning' as if you were greeting a friend.",
           "type": "irk-audio-task"
         }
       ]
@@ -2904,6 +2939,34 @@
             }
           ],
           "text": "Select only one",
+          "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Moving or speaking so slowly that other people could have noticed? Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual",
+          "type": "irk-text-choice-question-step"
+        }
+      ],
+      "timelimit": "7-0"
+    },
+    "PHQ8_9": {
+      "steps": [
+        {
+          "choices": [
+            {
+              "text": "Not at all",
+              "value": 1
+            },
+            {
+              "text": " Several days",
+              "value": 2
+            },
+            {
+              "text": " More than half the days",
+              "value": 3
+            },
+            {
+              "text": " Nearly every day",
+              "value": 4
+            }
+          ],
+          "text": "Select only one",
           "title": "Over the last two weeks, how often have you been bothered by any of the following problems? Thoughts that you would be better off dead or of hurting yourself in some way ",
           "type": "irk-text-choice-question-step"
         }
@@ -3099,127 +3162,147 @@
         }
       ]
     },
-    "SAGE_1": {
+    "SAGE_1p": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Perfectly crisp concentration",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition0.png",
+              "text": "1",
               "value": 1
             },
             {
-              "text": " No issues with concentration",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition1.png",
+              "text": "2",
               "value": 2
             },
             {
-              "text": " Occasional difficulties with concentration",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition2.png",
+              "text": "3",
               "value": 3
             },
             {
-              "text": " Difficulties with concentration",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition3.png",
+              "text": "4",
               "value": 4
             },
             {
-              "text": " No concentration",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition4.png",
+              "text": "5",
               "value": 5
             }
           ],
           "text": "Select only one",
           "title": "How is your concentration today?",
-          "type": "irk-text-choice-question-step"
+          "type": "irk-image-choice-question-step"
         }
       ]
     },
-    "SAGE_2": {
+    "SAGE_2p": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Ready to take on the world",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue0.png",
+              "text": "1",
               "value": 1
             },
             {
-              "text": " Filled with energy through the day",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue1.png",
+              "text": "2",
               "value": 2
             },
             {
-              "text": " Energy to make it through the day",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue2.png",
+              "text": "3",
               "value": 3
             },
             {
-              "text": " Energy to do basic functions",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue3.png",
+              "text": "4",
               "value": 4
             },
             {
-              "text": " No energy",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue4.png",
+              "text": "5",
               "value": 5
             }
           ],
           "text": "Select only one",
           "title": "How is your energy today?",
-          "type": "irk-text-choice-question-step"
+          "type": "irk-image-choice-question-step"
         }
       ]
     },
-    "SAGE_3": {
+    "SAGE_3p": {
       "steps": [
         {
           "choices": [
             {
-              "text": "The best I have felt",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood0.png",
+              "text": "1",
               "value": 1
             },
             {
-              "text": " Better than usual",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood1.png",
+              "text": "2",
               "value": 2
             },
             {
-              "text": " Normal ",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood2.png",
+              "text": "3",
               "value": 3
             },
             {
-              "text": " Down",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood3.png",
+              "text": "4",
               "value": 4
             },
             {
-              "text": " Extremely down",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood4.png",
+              "text": "5",
               "value": 5
             }
           ],
           "text": "Select only one",
           "title": "How is your mood today?",
-          "type": "irk-text-choice-question-step"
+          "type": "irk-image-choice-question-step"
         }
       ]
     },
-    "SAGE_4": {
+    "SAGE_4p": {
       "steps": [
         {
           "choices": [
             {
-              "text": "Eliminated all deficit",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep0.png",
+              "text": "1",
               "value": 1
             },
             {
-              "text": " Made up some deficit",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep1.png",
+              "text": "2",
               "value": 2
             },
             {
-              "text": " Almost enough",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep2.png",
+              "text": "3",
               "value": 3
             },
             {
-              "text": " Barely enough",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep3.png",
+              "text": "4",
               "value": 4
             },
             {
-              "text": " No real sleep",
+              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep4.png",
+              "text": "5",
               "value": 5
             }
           ],
           "text": "Select only one",
           "title": "How did you sleep?",
-          "type": "irk-text-choice-question-step"
+          "type": "irk-image-choice-question-step"
         }
       ]
     },
@@ -3633,5 +3716,5 @@
       ]
     }
   },
-  "version": "0.1.0"
+  "version": "0.1.2"
 }
