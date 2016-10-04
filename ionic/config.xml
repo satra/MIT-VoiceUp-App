@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="edu.mit.voiceup" version="0.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="edu.mit.voiceup" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>MITVoiceUp</name>
   <description>
       MIT VoiceUp - A Biomedical research study.
@@ -8,12 +8,9 @@
     MIT
 </author>
   <content src="index.html"/>
-<!--  <allow-navigation href="http://*/*" /> -->
-
   <access origin="*"/>
-  <preference name="AndroidPersistentFileLocation" value="Compatibility" />
-  <preference name="AndroidExtraFilesystems" value="sdcard,cache" />
-
+  <preference name="AndroidPersistentFileLocation" value="Compatibility"/>
+  <preference name="AndroidExtraFilesystems" value="sdcard,cache"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>

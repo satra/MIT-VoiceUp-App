@@ -1,6 +1,6 @@
 {
   "name": "MITVoiceUp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MIT VoiceUp - A Biomedical research study.",
   "dependencies": {
     "gulp": "^3.5.6",
@@ -32,8 +32,7 @@
     "cordova-plugin-device-motion",
     "cordova-plugin-geolocation",
     "cordova-plugin-network-information",
-    "cordova-plugin-file-transfer",
-    "cordova.plugins.diagnostic.api-22", {
+    "cordova-plugin-file-transfer", {
       "locator": "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker.git",
       "id": "cordova-plugin-datepicker"
     }, {

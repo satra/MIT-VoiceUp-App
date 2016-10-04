@@ -404,6 +404,7 @@ angular.module('surveyCtrl', [])
       });
       userService.getAppContent().then(function(localData) {
         localJSON = JSON.parse(localData.completeJson);
+        $scope.updateLocalDataBaseWithFreshDiff(localJSON);
         $rootScope.savedVersion = localData.version;
         $rootScope.modifiedDate = localData.modifiedDate;
         var savedVersion = localData.version;

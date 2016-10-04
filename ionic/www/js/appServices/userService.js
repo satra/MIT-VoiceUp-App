@@ -2,7 +2,7 @@ angular.module('userService', [])
   .factory('userService', function($http, $cordovaSQLite, databaseManager, $q) {
     return {
       getConfigJson: function() {
-        return $http.get("assets/consent.json").then(function(response) {
+        return $http.get("assets/specs.json").then(function(response) {
           return response.data;
         });
       },
