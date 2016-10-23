@@ -155,7 +155,7 @@ angular.module('homeCtrl', [])
           var date = '';
           var title = survey;
           if (obj["name"]) {
-            title = obj["name"].replace(/'/g, "`");
+            title = obj["name"]; //.replace(/'/g, "&rsquo;");
           }
           var id = survey;
           var skippable = '';

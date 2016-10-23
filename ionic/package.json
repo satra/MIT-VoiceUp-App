@@ -1,6 +1,6 @@
 {
-  "name": "VoiceUp",
-  "version": "1.0",
+  "name": "MITVoiceUp",
+  "version": "0.1.1",
   "description": "MIT VoiceUp - A Biomedical research study.",
   "dependencies": {
     "gulp": "^3.5.6",
@@ -15,7 +15,6 @@
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
-    "cordova-plugin-console",
     "cordova-plugin-whitelist",
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
@@ -33,13 +32,15 @@
     "cordova-plugin-device-motion",
     "cordova-plugin-geolocation",
     "cordova-plugin-network-information",
-    "cordova-plugin-file-transfer",
-    "cordova.plugins.diagnostic.api-22", {
+    "cordova-plugin-file-transfer", {
       "locator": "https://github.com/VitaliiBlagodir/cordova-plugin-datepicker.git",
       "id": "cordova-plugin-datepicker"
     }, {
       "locator": "https://github.com/katzer/cordova-plugin-local-notifications",
       "id": "de.appplant.cordova.plugin.local-notification"
+    }, {
+      "locator": "https://github.com/mikaoelitiana/cordova-plugin-ios-no-export-compliance.git",
+      "id": "cordova-plugin-ios-no-export-compliance"
     },
     "cordova-plugin-app-event"
   ],
