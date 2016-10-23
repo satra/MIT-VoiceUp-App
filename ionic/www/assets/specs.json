@@ -3167,27 +3167,27 @@
         {
           "choices": [
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition0.png",
+              "normal-state-image": "assets/specimg/sage_cognition0.png",
               "text": "1",
               "value": 1
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition1.png",
+              "normal-state-image": "assets/specimg/sage_cognition1.png",
               "text": "2",
               "value": 2
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition2.png",
+              "normal-state-image": "assets/specimg/sage_cognition2.png",
               "text": "3",
               "value": 3
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition3.png",
+              "normal-state-image": "assets/specimg/sage_cognition3.png",
               "text": "4",
               "value": 4
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_cognition4.png",
+              "normal-state-image": "assets/specimg/sage_cognition4.png",
               "text": "5",
               "value": 5
             }
@@ -3203,27 +3203,27 @@
         {
           "choices": [
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue0.png",
+              "normal-state-image": "assets/specimg/sage_fatigue0.png",
               "text": "1",
               "value": 1
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue1.png",
+              "normal-state-image": "assets/specimg/sage_fatigue1.png",
               "text": "2",
               "value": 2
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue2.png",
+              "normal-state-image": "assets/specimg/sage_fatigue2.png",
               "text": "3",
               "value": 3
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue3.png",
+              "normal-state-image": "assets/specimg/sage_fatigue3.png",
               "text": "4",
               "value": 4
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_fatigue4.png",
+              "normal-state-image": "assets/specimg/sage_fatigue4.png",
               "text": "5",
               "value": 5
             }
@@ -3239,27 +3239,27 @@
         {
           "choices": [
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood0.png",
+              "normal-state-image": "assets/specimg/sage_mood0.png",
               "text": "1",
               "value": 1
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood1.png",
+              "normal-state-image": "assets/specimg/sage_mood1.png",
               "text": "2",
               "value": 2
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood2.png",
+              "normal-state-image": "assets/specimg/sage_mood2.png",
               "text": "3",
               "value": 3
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood3.png",
+              "normal-state-image": "assets/specimg/sage_mood3.png",
               "text": "4",
               "value": 4
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_mood4.png",
+              "normal-state-image": "assets/specimg/sage_mood4.png",
               "text": "5",
               "value": 5
             }
@@ -3275,27 +3275,27 @@
         {
           "choices": [
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep0.png",
+              "normal-state-image": "assets/specimg/sage_sleep0.png",
               "text": "1",
               "value": 1
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep1.png",
+              "normal-state-image": "assets/specimg/sage_sleep1.png",
               "text": "2",
               "value": 2
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep2.png",
+              "normal-state-image": "assets/specimg/sage_sleep2.png",
               "text": "3",
               "value": 3
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep3.png",
+              "normal-state-image": "assets/specimg/sage_sleep3.png",
               "text": "4",
               "value": 4
             },
             {
-              "normal-state-image": "https://raw.githubusercontent.com/sitek/mobile-surveys/master/sage_moodquestions/sage_sleep4.png",
+              "normal-state-image": "assets/specimg/sage_sleep4.png",
               "text": "5",
               "value": 5
             }

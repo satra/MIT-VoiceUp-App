@@ -325,7 +325,7 @@ angular.module('surveyCtrl', [])
           var date = '';
           var title = survey;
           if (obj["name"]) {
-            title = obj["name"].replace(/'/g, "`");
+            title = obj["name"]; //.replace(/'/g, "&rsquo;");
           }
           var id = survey;
           var skippable = '';
@@ -358,7 +358,7 @@ angular.module('surveyCtrl', [])
       for (var task in tasksJson) {
         if (tasksJson.hasOwnProperty(task)) {
           var timeLimit = tasksJson[task].timelimit;
-          var steps = JSON.stringify(tasksJson[task].steps).replace(/'/g, "`");
+          var steps = JSON.stringify(tasksJson[task].steps).replace(/'/g, "&rsquo;");
           if (timeLimit === undefined || timeLimit === null) {
             timeLimit = '';
           }
@@ -404,7 +404,7 @@ angular.module('surveyCtrl', [])
       });
       userService.getAppContent().then(function(localData) {
         localJSON = JSON.parse(localData.completeJson);
-        $scope.updateLocalDataBaseWithFreshDiff(localJSON);
+        //$scope.updateLocalDataBaseWithFreshDiff(localJSON);
         $rootScope.savedVersion = localData.version;
         $rootScope.modifiedDate = localData.modifiedDate;
         var savedVersion = localData.version;
@@ -919,8 +919,10 @@ angular.module('surveyCtrl', [])
               var normalStateImage = stepData.choices[i]["normal-state-image"];
               if ($scope.appImagesFolderExists) {
                 normalClassName = 'normal-image' + className;
-                var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
-                normalStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
+                if (normalStateImage.substr(0, 4) == 'http') {
+                    var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
+                    normalStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
+                }
                 $scope.imageQuestionStyle += "." + normalClassName + "{  background-image: url('" + normalStateImage + "') !important;  background-position:top left !important;  background-size:contain !important;  background-repeat:no-repeat !important;}";
               }
             }
@@ -930,17 +932,22 @@ angular.module('surveyCtrl', [])
               var selectedStateImage = stepData.choices[i]["selected-state-image"];
               if ($scope.appImagesFolderExists) {
                 selectedClassName = 'selected-image' + className;
-                var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
-                selectedStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
+                if (selectedStateImage.substr(0, 4) == 'http') {
+                   var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
+                   selectedStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
+                }
                 $scope.imageQuestionStyle += "." + selectedClassName + "{  background-image: url('" + selectedStateImage + "') !important;  background-position:top left !important;  background-size:contain !important;  background-repeat:no-repeat !important;}";
               }
-            } else if (stepData.choices[i]["normal-state-image"]) {
+            } else
+            if (stepData.choices[i]["normal-state-image"]) {
               var className = stepData.choices[i]["normal-state-image"].replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '');
               var selectedStateImage = stepData.choices[i]["normal-state-image"];
               if ($scope.appImagesFolderExists) {
                 selectedClassName = 'selected-image' + className;
-                var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
-                selectedStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
+                if (selectedStateImage.substr(0, 4) == 'http') {
+                    var imageName = normalStateImage.substr(normalStateImage.lastIndexOf('/') + 1);
+                    selectedStateImage = $scope.appImagesFolderExists + imageName; // fullpath and name of the file which we want to give
+                }
                 $scope.imageQuestionStyle += "." + selectedClassName + "{  background-image: url('" + selectedStateImage + "') !important;  background-position:top left !important;  background-size:contain !important;  background-repeat:no-repeat !important; opacity:0.6;}";
               }
             }
