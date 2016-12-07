@@ -1,6 +1,6 @@
 {
   "name": "MITVoiceUp",
-  "version": "0.1.1",
+  "version": "0.1.5",
   "description": "MIT VoiceUp - A Biomedical research study.",
   "dependencies": {
     "gulp": "^3.5.6",
