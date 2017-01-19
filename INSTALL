@@ -1,7 +1,7 @@
 App Framework Installation and Setup
 
 INSTALL ANDROID STUDIO
-https://developer.android.com/studio/install.html
+https://developer.android.com/studio/index.html
 Open application:
 Configure -> SDK Manager -> Launch Standalone SDK Manager
 	Check “Android 7.0 (API 24)” and install packages
@@ -20,6 +20,7 @@ ionic state reset
 
 INSTALL DOCKER
 https://docs.docker.com/engine/installation/
+sudo apt install docker-compose
 
 INSTALL GIRDER
 #git clone https://github.com/girder/girder.git
