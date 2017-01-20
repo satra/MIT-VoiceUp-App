@@ -97,4 +97,9 @@ git clone https://github.com/satra/MIT-VoiceUp-App.git
 # Edit MIT-VoiceUp-App/ionic/www/js/app.js:
 #	.constant('appConstants', {
 #  		'base_url': 'http://localhost:8080/api/v1/',
-ionic serve 
+ionic serve
+
+#-------------------------------------------------------------------------------
+# Run on a device or simulator
+#-------------------------------------------------------------------------------
+ionic run ios[android,browser]
