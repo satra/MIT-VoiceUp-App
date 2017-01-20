@@ -87,7 +87,7 @@ npm install -g cordova ios-sim ios-deploy
 ionic state reset
 
 #-------------------------------------------------------------------------------
-# Install Satra’s Ionic-ResearchKit/Girder MIT VoiceUp app
+# Install Ionic-ResearchKit + MIT's VoiceUp app
 #-------------------------------------------------------------------------------
 git clone https://github.com/satra/MIT-VoiceUp-App.git
 
