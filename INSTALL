@@ -90,7 +90,6 @@ sudo chown -R arno /usr/local/lib/node_modules/
 #-------------------------------------------------------------------------------
 npm install -g ionic
 npm install -g cordova ios-sim ios-deploy
-ionic state reset
 
 #-------------------------------------------------------------------------------
 # Install Ionic-ResearchKit + MIT's VoiceUp app
@@ -114,7 +113,8 @@ ionic share EMAIL
 #-------------------------------------------------------------------------------
 # Package and run on a device or simulator
 #-------------------------------------------------------------------------------
-ionic upload  # after creating ionic account
-ionic package build android --profile dev
-cordova platform add android
-ionic run android #[android,ios,browser]
+ionic state reset
+#ionic upload  # after creating ionic account
+#ionic package build android --profile dev
+#cordova platform add android
+#ionic run android #[android,ios,browser]
