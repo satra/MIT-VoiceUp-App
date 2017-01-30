@@ -1,0 +1,120 @@
+#-------------------------------------------------------------------------------
+# Ionic-ResearchKit app framework installation and setup:
+# Set up Girder in Docker (locally or on AWS).
+# Set up Ionic-ResearchKit app (locally).
+#-------------------------------------------------------------------------------
+
+################################################################################
+# INSTALL BACKEND
+################################################################################
+
+#-------------------------------------------------------------------------------
+# Install Docker
+# https://docs.docker.com/engine/installation/
+#-------------------------------------------------------------------------------
+sudo apt install docker-compose
+
+#-------------------------------------------------------------------------------
+# Install Girder in Docker
+#-------------------------------------------------------------------------------
+# git clone https://github.com/girder/girder.git
+git clone https://github.com/satra/girder.git
+mkdir apps
+mkdir apps/db
+mkdir apps/assetstore
+
+# Edit docker-compose.yml file to mount mongodb outside of the docker instance:
+/*
+ mongodb:
+     ports:
+         - "27017"
+     volumes:
+         - “/root/apps/db:/data/db"
+ 
+ girder:
+     image: girder/girder
+     ports:
+         - "8080:8080"
+     links:
+         - "mongodb:mongodb"
+     command: -d mongodb://mongodb:27017/girder
+     volumes:
+         - “/root/apps/assetstore:/assetstore"
+*/
+
+# In OSX/Win Docker, click Docker icon and make sure Docker-File->Sharing includes volumes inside Girder’s docker-compose.yml file.
+# In AWS, set up S3 bucket, then set permissions for user to access the bucket:
+#     IAM -> Users -> Permissions -> Add permissions -> Attach existing policies directly -> AmazonS3FullAccess
+cd girder
+# If installing on computer: pip install -e .
+# If installing in docker container: docker-compose up
+# On AWS: sudo docker-compose up
+sudo docker-compose up
+
+# Within Girder’s console in the browser (http://localhost:8080/#assetstores), 
+# create new Filesystem assetstore (set assetstore name: http://localhost:8080/#assetstores):
+#	Assetstore name: myAssetstore (example)
+#	Root directory: /assetstore
+# Girder’s REST API: http://localhost:8080/api/
+
+################################################################################
+# INSTALL APP-MAKING TOOLS
+################################################################################
+
+#-------------------------------------------------------------------------------
+# Install Android Studio
+# https://developer.android.com/studio/index.html
+#-------------------------------------------------------------------------------
+# - Open application
+# - Configure -> SDK Manager -> Launch Standalone SDK Manager
+# - Check correct Android version and install packages
+# - Android SDK License -> Accept License -> Install
+
+#-------------------------------------------------------------------------------
+# Install Java JDK
+# http://www.oracle.com/technetwork/java/javase/downloads
+#-------------------------------------------------------------------------------
+export JAVA_HOME="$(/System/Library/Frameworks/JavaVM.framework/Versions/Current/Commands/java_home)"
+
+#-------------------------------------------------------------------------------
+# Install NodeJS
+# https://nodejs.org/en/
+#-------------------------------------------------------------------------------
+sudo chown -R arno /usr/local/lib/node_modules/
+
+#-------------------------------------------------------------------------------
+# Install Ionic
+# https://ionicframework.com/getting-started/
+# Run sample app after installation: 
+#     ionic start --v2 myApp tabs; cd myApp; ionic serve
+#-------------------------------------------------------------------------------
+npm install -g ionic
+npm install -g cordova ios-sim ios-deploy
+
+#-------------------------------------------------------------------------------
+# Install Ionic-ResearchKit + MIT's VoiceUp app
+#-------------------------------------------------------------------------------
+git clone https://github.com/satra/MIT-VoiceUp-App.git
+
+#-------------------------------------------------------------------------------
+# Run app in local browser
+#-------------------------------------------------------------------------------
+# Edit MIT-VoiceUp-App/ionic/www/js/app.js:
+#	.constant('appConstants', {
+#  		'base_url': 'http://localhost:8080/api/v1/',
+ionic serve
+
+#-------------------------------------------------------------------------------
+# Share app to test in Ionic View (http://view.ionic.io):
+#-------------------------------------------------------------------------------
+ionic upload  # after creating ionic account
+ionic share EMAIL
+
+#-------------------------------------------------------------------------------
+# Package and run on a device or simulator
+#-------------------------------------------------------------------------------
+ionic state reset
+#ionic upload  # after creating ionic account
+#ionic package build android --profile dev
+#cordova platform add android
+#ionic run android #[android,ios,browser]
