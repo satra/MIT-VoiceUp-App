@@ -1,6 +1,6 @@
 {
   "name": "MITVoiceUp",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "MIT VoiceUp - A Biomedical research study.",
   "dependencies": {
     "gulp": "^3.5.6",
@@ -18,7 +18,7 @@
     "cordova-plugin-whitelist",
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
-    "cordova-plugin-media",
+    "cordova-plugin-media@2.3.0",
     "cordova-plugin-app-version",
     "cordova-plugin-file",
     "cordova-plugin-compat",
