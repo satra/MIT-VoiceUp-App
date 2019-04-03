@@ -1,3 +1,5 @@
+NOTE: This repository is no longer being maintained. We are contrubuting to a new platform [Mindlogger](https://mindlogger.info).
+
 # MIT VoiceUp Application Framework and Code
 
 <center>
